@@ -1,4 +1,0 @@
-deckjs:
-  theme: swiss
-  transition: horizontal-slide
-  extensions: [goto, hash, menu, navigation, scale, status]
