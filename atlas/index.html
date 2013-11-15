@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset=utf-8 />
-<title>Geocoding</title>
+<title>Atlas for World Regional Geography</title>
   
   <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
   <script src='//api.tiles.mapbox.com/mapbox.js/v1.4.2/mapbox.js'></script>
@@ -16,9 +16,9 @@
 <body>
 <div id='map'></div>
 <script>
-L.mapbox.map('map', 'kwalker31.g9omf419')
-    .addControl(L.mapbox.geocoderControl('kwalker31.g9omf419'));
-	map.gridControl.options.follow = true;
+var map = L.mapbox.map('map', 'kwalker31.g9omf419');
+map.addControl(L.mapbox.geocoderControl('kwalker31.g9omf419'));
+map.gridControl.options.follow = true;
 </script>
 </body>
 </html>
