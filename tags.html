@@ -1,111 +1,129 @@
 <!DOCTYPE html>
 <html lang="en_us.utf-8 pelican">
 <head>
+    <meta charset="utf-8">
+    <title>Teaching with Interactive Data Visualization</title>
+    <meta name="description" content="">
+    <meta name="author" content="Kyle Walker">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <title>Teaching with Interactive Data Visualization</title>
-        <meta charset="utf-8" />
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="/theme/html5.js"></script>
+    <![endif]-->
 
-
-        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
-        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
-
-        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
-        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
-        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
-
-        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
-
-
-
-
-
+    <!-- Le styles -->
+    <link href="/theme/bootstrap.min.css" rel="stylesheet">
+    <link href="/theme/bootstrap.min.responsive.css" rel="stylesheet">
+    <link href="/theme/local.css" rel="stylesheet">
+    <link href="/theme/pygments.css" rel="stylesheet">
 
 </head>
 
-<body id="index" class="home">
+<body>
 
-
+<div class="navbar">
+    <div class="navbar-inner">
     <div class="container">
 
-        <div class="row">
+         <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+         </a>
 
-          <header id="banner" class="body">
-                  <h1><a href="">Teaching with Interactive Data Visualization <strong></strong></a></h1>
-          </header><!-- /#banner -->
+        <a class="brand" href="">Teaching with Interactive Data Visualization</a>
 
-            <div id="navigation" class="navbar row">
-              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
-             
-              <ul class="columns">
-                <li><a href="">Home</a></li>
-
-                <li><a href="/pages/about.html">About</a></li>
-
-              </ul>
-            </div>
-
-<ul>
-<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
-<li class="tag-4">
-	<a href="/tag/ggplot2.html">
-		<i class="icon-tag icon-large"></i>ggplot2
-	</a>
-</li>
-<li class="tag-1">
-	<a href="/tag/gis.html">
-		<i class="icon-tag icon-large"></i>GIS
-	</a>
-</li>
-<li class="tag-1">
-	<a href="/tag/urban.html">
-		<i class="icon-tag icon-large"></i>urban
-	</a>
-</li>
-<li class="tag-4">
-	<a href="/tag/r.html">
-		<i class="icon-tag icon-large"></i>R
-	</a>
-</li>
-</ul>
-
-       </div><!-- /.row -->
-    </div><!-- /.container -->
-
-
-       <div class="container.nopad bg">
-
-    
-        <footer id="credits" class="row">
-          <div class="seven columns left-center">
-
-                   <address id="about" class="vcard body">
-                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
-                    which takes great advantage of <a href="http://python.org">Python</a>.
-                    <br />
-                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
-                    </address>
-          </div>
-
-
-          <div class="seven columns">
-            <div class="row">
-              <ul class="socbtns">
-
-
-
-
-
-              </ul>
-            </div>
-          </div>
-        </footer>
-
+        <div class="nav-collapse">
+        <ul class="nav">
+            
+            <li><a href="/pages/about.html">About</a></li>
+        </ul>
+        </div>
+        
     </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="content">
+    <div class="row">
+
+        <div class="span9">
+<ul>
+    <li><a href="/tag/urban.html">urban</a></li>
+    <li><a href="/tag/r.html">R</a></li>
+    <li><a href="/tag/gis.html">GIS</a></li>
+    <li><a href="/tag/ggplot2.html">ggplot2</a></li>
+</ul>
+        </div>
+        
+        <div class="span3">
+
+            <div class="well" style="padding: 8px 0; background-color: #FBFBFB;">
+            <ul class="nav nav-list">
+                <li class="nav-header"> 
+                Site
+                </li>
+            
+                <li><a href="/">Archives</a>
+                <li><a href="/tags.html">Tags</a>
+                <li><a href="/" rel="alternate">Atom feed</a></li>
+            </ul>
+            </div>
 
 
-  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
-  <script src="/theme/js/libs/gumby.min.js"></script>
-  <script src="/theme/js/plugins.js"></script>
+            <div class="well" style="padding: 8px 0; background-color: #FBFBFB;">
+            <ul class="nav nav-list">
+                <li class="nav-header"> 
+                Categories
+                </li>
+                
+                <li><a href="/category/gis.html">GIS</a></li>
+                <li><a href="/category/r.html">R</a></li>
+                   
+            </ul>
+            </div>
 
+
+            <div class="well" style="padding: 8px 0; background-color: #FBFBFB;">
+            <ul class="nav nav-list">
+                <li class="nav-header"> 
+                Links
+                </li>
+            
+                <li><a href="http://getpelican.com/">Pelican</a></li>
+                <li><a href="http://python.org/">Python.org</a></li>
+                <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                <li><a href="#">You can modify those links in your config file</a></li>
+            </ul>
+            </div>
+
+
+            <div class="social">
+            <div class="well" style="padding: 8px 0; background-color: #FBFBFB;">
+            <ul class="nav nav-list">
+                <li class="nav-header"> 
+                Social
+                </li>
+           
+                <li><a href="https://twitter.com/kyle_e_walker">Twitter</a></li>
+                <li><a href="https://github.com/walkerke">Github</a></li>
+                <li><a href="http://www.linkedin.com/in/walkerke">LinkedIn</a></li>
+            </ul>
+            </div>
+            </div>
+
+        </div>  
+    </div>     </div> 
+<footer>
+<br />
+<p><a href="">Teaching with Interactive Data Visualization</a> &copy; Kyle Walker 2012</p>
+</footer>
+
+</div> <!-- /container -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-collapse.js"></script>
+ 
 </body>
 </html>

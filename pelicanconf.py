@@ -28,7 +28,7 @@ SOCIAL = (('Twitter', 'https://twitter.com/kyle_e_walker'),
 
 DEFAULT_PAGINATION = 10
 
-THEME = 'C:/Users/kylewalker/Documents/GitHub/pelican-themes/gum'
+THEME = 'C:/Users/kylewalker/Documents/GitHub/pelican-themes/tuxlite_tbs'
 
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
