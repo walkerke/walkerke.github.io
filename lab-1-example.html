@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lab 1 example - Teaching with Interactive Data Visualization</title>
+        <meta charset="utf-8" />
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="/theme/static/css/style.css" rel="stylesheet" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    </head>
+
+    <body id="index" class="archive">
+        <div class="container">
+            <div class="header">
+                <ul class="nav nav-pills pull-right">
+                    <li class=""><a href="">Home</a></li>
+                    <li><a href="/archives.html">Archives</a></li>
+                </ul>
+                <h3 class="text-muted"><a href="">Teaching with Interactive Data Visualization</a></h3>
+             </div>
+<section id="content" class="article content">
+  <header>
+    <h2 class="entry-title">
+      <a href="/lab-1-example.html" rel="bookmark"
+         title="Permalink to Lab 1 example">Lab 1 example</a></h2>
+ 
+  </header>
+  
+     
+  <div class="entry-content">
+    <h2>Introduction</h2>
+<p>Welcome back!  This lab is designed to give you a refresher on working with ArcGIS and performing common GIS operations that you learned in your introductory course.  You'll be completing a fairly standard project using GIS in urban and business analysis in this lab: mapping population distributions in Tarrant County.  Such information can be valuable in urban and business environments for many reasons.  City planners might need to know where certain population groups live within a region in order to tailor service provision to particular neighborhoods; business analysts will want to know the demographic makeup of cities to design marketing strategies or locate new franchises.  </p>
+<p>Your assignment, then, is fairly straightforward.  You are tasked with <strong>creating a map of the distribution of the Asian population in Collin County</strong>, using data from the 2010 Census.  As this assignment is intended as a review assignment, you won't be doing anything in this lab that you don't already know how to do from your introductory GIS course.  However, here's the catch: <strong>you won't have guided instructions for the lab assignment</strong>.  Instead, I'm going to give you a series of guidelines that I'd like you to consider while preparing your map.  </p>
+<hr />
+<h2>Data guidelines</h2>
+<p>Data acquisition and preparation will be an important part of this assignment.  Here are a few things to consider as you prepare to produce your visualization.  </p>
+<ol>
+<li>
+<p>What data sources have you chosen?  Recall that the Census makes geographic data available <a href="http://www.census.gov/cgi-bin/geo/shapefiles2013/main">here</a>, and you can access tabular data from <a href="http://factfinder2.census.gov/faces/nav/jsf/pages/index.xhtml">American FactFinder</a>.  However, recall that there are other options for finding demographic data, such as <a href="http://www.nhgis.org">NHGIS</a>.  </p>
+</li>
+<li>
+<p>What variables have you chosen?  How have you chosen to measure "Asian?"  </p>
+</li>
+<li>
+<p>What scale of analysis are you using to aggregate your data?  Recall that Collin County contains a variety of Census geographies, including Census tract, block group, ZCTA, etc.  As we know that your chosen scale can make a huge difference in your data visualization, this is a very important decision.  </p>
+</li>
+<li>
+<p>Be sure to take care to attend to the little things as well.  For example, are your variables of interest being imported in the right format (e.g. string vs. numeric)?  Are you choosing the correct key fields to merge your spatial and tabular data?  </p>
+</li>
+</ol>
+<hr />
+<h2>Visualization guidelines</h2>
+<p>Once you've cleaned and prepared your data for use in ArcMap, it is time to make decisions about how to best visualize the distribution of Asians in Collin County.  Consider the following questions as you create your map.   </p>
+<ol>
+<li>
+<p>Are your spatial data in a projection appropriate for North Texas?  If not, you should re-project your data to minimize visual distortion.  </p>
+</li>
+<li>
+<p>What type of map have you decided to produce?  There are multiple ways to visualize population data on a map, including but not limited to choropleth, graduated symbol, and dot-density maps.  Remember that it is important to prepare your data correctly depending on the type of map you've chosen; whereas choropleth maps are more appropriate for visualizing rates or percentages, graduated symbol and dot-density maps should be used for visualizing count data.  </p>
+</li>
+<li>
+<p>What design choices have you made?  Recall the tips you've learned about appropriate color choices for statistical mapping and how other "visual variables" (size, shape, texture, orientation) can show variation in your map.  Does your map use appropriate visual cues?  </p>
+</li>
+<li>
+<p>Is your map layout appropriate?  What map elements (e.g. title, scale bar, legend, north arrow, etc.) are necessary for this map, and which ones do you not really need?  Are your various elements appropriately arranged and sized?  </p>
+</li>
+</ol>
+<hr />
+<h2>For submission</h2>
+<p>To receive full credit for Lab 1, please submit the following documents via the dropbox basket in Learning Studio no later than <strong>Wednesday, January 29</strong>: </p>
+<ol>
+<li>
+<p>Your map</p>
+</li>
+<li>
+<p>A short document (around one page) that discusses your data and design decisions.  You should address in this document: </p>
+</li>
+</ol>
+<p>--Your data sources</p>
+<p>--Scale and variable selection</p>
+<p>--Your cartographic design decisions</p>
+<hr />
+<h2>Credits</h2>
+<p>This site was designed in <a href="http://www.rstudio.com">RStudio</a> with <a href="http://slidify.org/">Slidify</a> and styled with <a href="http://aozora.github.io/bootplus/">Bootplus</a>.  It owes heavily to the work of <a href="https://github.com/timelyportfolio">Timely Portfolio</a>.</p>
+  </div><!-- /.entry-content -->
+   <footer class="post-info text-muted">
+    Posted on <abbr class="published" title="2013-11-26T16:00:00">
+      Tue 26 November 2013
+    </abbr>
+    <address class="vcard author">
+      by <a class="url fn" href="/author/kyle-walker.html">Kyle Walker</a>
+    </address> in <a href="/category/gis.html">GIS</a> Tagged <a href="/tag/gis.html">GIS </a><a href="/tag/urban.html">urban </a>  </footer><!-- /.post-info -->
+</section>
+            <footer id="contentinfo" class="footer">
+                    <nav class="pull-right bottom-nav">
+                        <a href="/None">RSS</a>
+                    </nav>
+                    <address id="about" class="vcard body">
+                    &copy; <a href="">Teaching with Interactive Data Visualization</a> Proudly powered by <a href="http://getpelican.com/">Pelican</a>
+                    </address><!-- /#about -->
+            </footer><!-- /#contentinfo -->
+        </div><!-- container -->
+    </body>
+</html>
