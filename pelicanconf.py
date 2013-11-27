@@ -27,7 +27,7 @@ SOCIAL = (('You can add links in your config file', '#'),
 
 DEFAULT_PAGINATION = 10
 
-THEME = 'C:/Users/kylewalker/Documents/GitHub/pelican-themes/simple-bootstrap'
+THEME = 'C:/Users/kylewalker/Documents/GitHub/pelican-themes/gum'
 
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
