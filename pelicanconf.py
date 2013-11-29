@@ -10,6 +10,13 @@ TIMEZONE = 'US/Chicago'
 
 DEFAULT_LANG = u'en_US.UTF-8 pelican'
 
+ARTICLE_URL = '{date:%Y}/{date:%m}/{slug}/'
+ARTICLE_SAVE_AS = '{date:%Y}/{date:%m}/{slug}/index.html'
+AUTHOR_EMAIL = "kyle.walker@tcu.edu"
+
+PAGE_URL = '{slug}/'
+PAGE_SAVE_AS = '{slug}/index.html'
+
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
 CATEGORY_FEED_ATOM = None
