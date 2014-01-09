@@ -1,0 +1,260 @@
+body {
+    color: #333;
+}
+a {
+    text-decoration: none;
+    color: #1b98f8;
+}
+
+/* LAYOUT CSS */
+#layout {
+    padding-left:200px; /* "left col (nav + list)" width */
+    position: relative;
+}
+
+#nav, #list {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow: auto;
+}
+#nav {
+    margin-left:-260px; /* "left col (nav + list)" width */
+    width:260px;
+    background: rgb(28, 33, 48);
+    text-align: center;
+    padding: 1.36em 0;
+}
+
+#list {
+    margin-left: -250px;
+    width:250px;
+    border-right: 1px solid #ddd;
+}
+
+.footer {
+    margin-top: 30px;
+    font-size: 70%;
+    text-align: center;
+}
+
+/* Pagination */
+.pagination-wrapper {
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+}
+.pagination-left, .pagination-right {
+    position: absolute;
+    top: 0;
+}
+.pagination {
+    text-align: center;
+    position: relative;
+    width: 450px;
+    margin: 0 auto;
+    max-width: 100%;
+}
+.pagination-left {
+    left: 0;
+}
+.pagination-right {
+    right: 0;
+}
+
+/* Comments */
+.comments {
+    border-top: 1px solid #ddd;
+    margin-top: 30px;
+    padding-top: 30px;
+}
+
+/* Back to top */
+
+.go-top {
+    position: fixed;
+    bottom: 2em;
+    right: 2em;
+    text-decoration: none;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.3);
+    font-size: 12px;
+    padding: 1em;
+    display: none;
+}
+
+.go-top:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+
+/* Logo */
+.logo {
+    width: 128px;
+    height: 128px;
+    display: block;
+    margin-left: 95px;
+}
+
+/* Vertical Navigation Styles */
+#nav .pure-menu {
+    background: transparent;
+    border: none;
+    text-align: left;
+    padding-bottom: 25px;
+}
+    #nav .pure-menu a:hover,
+    #nav .pure-menu a:focus {
+        background: rgb(0, 140, 158);
+    }
+    #nav .pure-menu a {
+        color: #fff;
+        margin-left: 5em;
+    }
+    #nav .pure-menu-heading {
+        border-bottom: none;
+        margin-left: 3em;
+        font-size:150%;
+        color: rgb(0, 180, 204);
+    }
+
+    #nav .nav-menu-button {
+        display: none;
+    }
+
+    .cat-label-blue,
+    .cat-label-yellow {
+        width: 15px;
+        height: 15px;
+        display: inline-block;
+        margin-right: 0.5em;
+        border-radius: 3px;
+    }
+    .cat-label-blue {
+        background: #41ccb4;
+    }
+    .cat-label-yellow {
+        background: #40c365;
+    }
+
+.post-category {
+    margin: 0 0.1em;
+    padding: 0.3em 1em;
+    color: #fff;
+    background: #999;
+    font-size: 60%;
+}
+    .post-category-design {
+        background: #5aba59;
+    }
+
+/* Article Item Styles */
+.article-item {
+    padding: 0.9em 1em;
+    border-top: 1px solid #ddd;
+    border-left: 6px solid transparent;
+}
+    .author-avatar {
+        border-radius: 3px;
+        margin-right: 0.5em;
+    }
+    .article-title {
+        margin: 0;
+    }
+    .article-summary {
+        font-size: 80%;
+        margin: 0.4em 0;
+    }
+    .email-desc2 {
+        float: right;
+        font-size: 70%;
+        margin: 0.4em 0;
+    }
+
+.margin-blue {
+    border-left: 6px solid #00B4CC;
+}
+
+.margin-yellow {
+    border-left: 6px solid #40c365;
+}
+
+.h1-pad {
+    padding-left: 20px;
+}
+
+
+/* Article Content Styles */
+.article-content-header, .article-content-body, .article-content-footer {
+    padding: 1em 2em;
+}
+    .article-content-header {
+        border-bottom: 1px solid #ddd;
+    }
+        .article-content-title {
+            margin: 0.5em 0 0;
+        }
+        .article-content-subtitle {
+            font-size: 1em;
+            margin: 0;
+            font-weight: normal;
+        }
+            .article-content-subtitle span {
+                color: #999;
+            }
+
+@media (max-width: 867px) {
+
+    #list,
+    #main {
+        width: 100%;
+    }
+    #layout {
+        padding-left: -150px;
+    }
+    #list {
+        height: 33%;
+        border-right: 0;
+        border-bottom: 1px solid #ddd;
+    }
+    #main {
+        position: fixed;
+        top: 33%;
+        right: 0;
+        bottom: 0;
+        left: 150px;
+        overflow: auto;
+        width: auto; /* so that it's not 100% */
+    }
+}
+
+@media (max-width: 480px) {
+    #layout, #nav, #list, #main {
+        position: static;
+        margin: 0;
+        padding: 0;
+    }
+    #nav {
+        width: 100%;
+        height: 40px;
+        position: relative;
+    }
+    #nav .nav-menu-button {
+        display: block;
+        top: 0.5em;
+        right: 0.5em;
+        position: absolute;
+    }
+    #nav.active {
+        height: 80%;
+    }
+    .nav-inner {
+        display: none;
+    }
+    #nav.active .nav-inner {
+        display: block;
+    }
+    .author-avatar {
+        width: 40px;
+        height: 40px;
+    }
+}

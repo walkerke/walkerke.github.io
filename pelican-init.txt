@@ -1,3 +1,0 @@
-cd C:\Python27\ArcGIS10.2\Scripts
-
-pelican "C:/Users/kylewalker/Documents/GitHub/walkerke.github.io/content/" -s "C:\Users\kylewalker\Documents\GitHub\walkerke.github.io\pelicanconf.py"
