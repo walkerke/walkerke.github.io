@@ -57,8 +57,8 @@
 
     <div class='article'>
         <div class="content-title">
-            <a href="http://walkerke.github.io/2014/01/hispanic-pop-by-state/"><h1>Visualizing the U.S. Hispanic population by state</h1></a>
-Thu 09 January 2014
+            <a href="http://walkerke.github.io/2014/03/tfr-in-europe/"><h1>Visualizing fertility trends in Europe</h1></a>
+Thu 06 March 2014
 
 by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
  
@@ -67,102 +67,108 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
  
         </div>
         
-        <div><p>Welcome!  This is the first post of my effort to document my foray into developing interactive data visualizations for use in my teaching.  Hopefully these examples will be of use to some readers who are interested in creating their own visualizations.  </p>
-<p>I'll first provide a bit of background.  I'm a geography professor at Texas Christian University in Fort Worth, and started getting interested in data visualization when putting together materials for a course I taught in population geography last spring.  Visuals are essential for social science instructors; however, it is not always easy to find publicly available images that are both effective and suitable for what you want to teach (I imagine many of you, like me, have gone on many a failed Google image search).  So, I started looking into developing my own materials.  I happened upon the incredible <a href="http://d3js.org/">D3 JavaScript library</a> by Mike Bostock and the stunning graphics from the <a href="http://www.healthmetricsandevaluation.org/tools/data-visualizations">Institute for Health Metrics and Evaluation</a> and was immediately blown away.  Interactive examples like <a href="http://bl.ocks.org/mbostock/4062085">this population pyramid</a> can be very effective for conveying social science concepts.  </p>
-<p>As a relative newcomer to JavaScript, however, I looked into what other resources were available for creating these types of interactive visualizations, especially in languages I have more of a familiarity with (R and Python, specifically).  Thus far, I've been using the fantastic <a href="http://rcharts.io/">rCharts</a> R package by Ramnath Vaidyanathan, which provides an R wrapper for several JavaScript charting libraries, and the the <a href="http://cran.r-project.org/web/packages/googleVis/index.html">googleVis</a> package, which is an R interface for the Google Charts API, and among other things allows R users to create <a href="http://www.gapminder.org/">Hans Rosling-style motion charts.</a>.  I've also started looking into tools like <a href="https://plot.ly/">plotly</a>, which has both R and Python APIs, and hope to create my own D3 visualizations from scratch eventually.  </p>
-<p>When possible, my examples on this site will use open data/open source tools and will be available on GitHub, so that anyone interested can use and adapt these examples as they need.  </p>
-<hr />
-<p>My first example is a visualization of the composition of Hispanic populations by state in the U.S., for the ten states with the largest Hispanic populations in 2010.   In my introductory geography course, I'm going to be soon discussing shifts in the racial &amp; ethnic composition of the U.S.  Sometime between 2040 and 2050, non-Hispanic whites are projected to become a minority in the U.S., in large part due to continued growth of the Hispanic population.  However, I find that many discussions of this demographic shift in the media tend to homogenize the Hispanic population, which is not what I want to convey to my students; as such, I wanted to find a way to visualize its diversity.  I came across <a href="http://www.pewhispanic.org/2012/09/06/population-distribution-of-hispanic-origin-groups-by-county/">these interesting interactive maps from the Pew Research Center</a>, and downloaded the data they made available to see what I might do with it.  </p>
-<p>The data made available by the Pew Research Center are in Excel format.  There are many libraries for reading Excel data into R, but they often are not straightforward to use, so I first opened the file in Excel and saved it as a CSV for ease of use.  In their original form, the data are not in a great format for visualization in R; as such, I needed to do some munging, with help from Hadley Wickham's excellent packages.  </p>
-<div class="highlight"><pre><span class="c1"># First, download the Excel file from the Pew Research Center, and save it as a CSV in your working directory</span>
-
-library<span class="p">(</span>stringr<span class="p">)</span>
-library<span class="p">(</span>plyr<span class="p">)</span>
+        <div><p>In the classroom, interactive data visualizations can embed a wealth of information that can be interactively queried by the instructor depending on the course topics and students' questions.  The example I'll discuss below worked for me exactly in this way.  I'll show how to create an interactive chart using the World Bank's open data API; my example looks at fertility trends in European countries since 1960.  </p>
+<p><a href="http://data.worldbank.org/">The World Bank's Open Data catalog</a> is a tremendous resource for any instructor addressing global issues; the website itself has readily-available data and charts for view.  Additionally, the World Bank makes these datasets available to developers via their API, <a href="https://blogs.worldbank.org/opendata/accessing-world-bank-data-apis-python-r-ruby-stata">which can in turn be accessed through modules in Python, R, Ruby, and Stata</a>.    In R, the API is available through the <a href="https://github.com/vincentarelbundock/WDI">WDI</a> package by Vincent Arel-Bundock, which makes it very simple for users to quickly access formatted World Bank datasets.  With the <a href="https://github.com/ramnathv/rCharts">rCharts</a> package, R users can then create dynamic D3 visualizations using these data.  </p>
+<p>In my World Regional Geography course at TCU, I spent a class period discussing demographic shifts in Europe, with a focus on fertility declines and aging populations in various parts of the continent.  My goal was to create a visualization that would allow me to interactively explore how fertility has declined in different ways in in different regions, and then discuss with my students the reasons why we observe these variations.  To get started, I called the World Bank API in R with the WDI package to give me the total fertility rates (the number of children a woman in a population would be expected to have in her lifetime given current age-specific fertility rates) for selected European countries by year since 1960.  The code below shows how to do this: </p>
+<div class="highlight"><pre>library<span class="p">(</span>WDI<span class="p">)</span>
 library<span class="p">(</span>rCharts<span class="p">)</span>
-library<span class="p">(</span>reshape2<span class="p">)</span>
+library<span class="p">(</span>plyr<span class="p">)</span>
 
-dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&quot;all_counties_by_top_six_groups.csv&quot;</span><span class="p">)</span>
+countries <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;AL&quot;</span><span class="p">,</span> <span class="s">&quot;AT&quot;</span><span class="p">,</span> <span class="s">&quot;BE&quot;</span><span class="p">,</span> <span class="s">&quot;BA&quot;</span><span class="p">,</span> <span class="s">&quot;BG&quot;</span><span class="p">,</span> <span class="s">&quot;HR&quot;</span><span class="p">,</span> <span class="s">&quot;CZ&quot;</span><span class="p">,</span> <span class="s">&quot;DK&quot;</span><span class="p">,</span> <span class="s">&quot;FI&quot;</span><span class="p">,</span> <span class="s">&quot;FR&quot;</span><span class="p">,</span> <span class="s">&quot;DE&quot;</span><span class="p">,</span> <span class="s">&quot;GR&quot;</span><span class="p">,</span> 
+               <span class="s">&quot;HU&quot;</span><span class="p">,</span> <span class="s">&quot;IS&quot;</span><span class="p">,</span> <span class="s">&quot;IE&quot;</span><span class="p">,</span> <span class="s">&quot;IT&quot;</span><span class="p">,</span> <span class="s">&quot;NL&quot;</span><span class="p">,</span> <span class="s">&quot;NO&quot;</span><span class="p">,</span> <span class="s">&quot;PL&quot;</span><span class="p">,</span> <span class="s">&quot;PT&quot;</span><span class="p">,</span> <span class="s">&quot;RO&quot;</span><span class="p">,</span> <span class="s">&quot;RS&quot;</span><span class="p">,</span> <span class="s">&quot;SK&quot;</span><span class="p">,</span> <span class="s">&quot;SI&quot;</span><span class="p">,</span> 
+               <span class="s">&quot;ES&quot;</span><span class="p">,</span> <span class="s">&quot;SE&quot;</span><span class="p">,</span> <span class="s">&quot;CH&quot;</span><span class="p">,</span> <span class="s">&quot;GB&quot;</span><span class="p">)</span>
 
-keep <span class="o">&lt;-</span> seq<span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">25</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
-
-dat <span class="o">&lt;-</span> dat<span class="p">[,</span>keep<span class="p">]</span>
-
-nms <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&#39;Name&#39;</span><span class="p">,</span> <span class="s">&#39;Total.Hisp&#39;</span><span class="p">,</span> <span class="s">&#39;Mexican&#39;</span><span class="p">,</span> <span class="s">&#39;Puerto.Rican&#39;</span><span class="p">,</span> <span class="s">&#39;Cuban&#39;</span><span class="p">,</span> <span class="s">&#39;Salvadoran&#39;</span><span class="p">,</span> <span class="s">&#39;Dominican&#39;</span><span class="p">,</span> <span class="s">&#39;Guatemalan&#39;</span><span class="p">,</span> <span class="s">&#39;Other&#39;</span><span class="p">)</span>
-
-names<span class="p">(</span>dat<span class="p">)</span> <span class="o">&lt;-</span> nms
-
-dat <span class="o">&lt;-</span> dat<span class="p">[</span><span class="o">-</span>c<span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">),]</span>
+tfr <span class="o">&lt;-</span> WDI<span class="p">(</span>country <span class="o">=</span> countries<span class="p">,</span> indicator <span class="o">=</span> <span class="s">&quot;SP.DYN.TFRT.IN&quot;</span><span class="p">,</span> start <span class="o">=</span> <span class="m">1960</span><span class="p">,</span> end <span class="o">=</span> <span class="m">2011</span><span class="p">)</span>
 </pre></div>
 
 
-<p>The above code simply cleans up the data to shape it into a nicely formatted data frame, and subsets it to get the population counts that we need.  However, there are still some steps to take before the data can be visualized.  Given the original data format, R has read in all my numeric data as factors, which wouldn't let me make the kinds of manipulations I needed to do to aggregate the data by state.  Such aggregation also required some string manipulation, so that I could identify which counts correspond to each state (given that the geographic identifiers in the data are presented as 'County, State').  The code that follows cleans up the data even further and aggregates each numeric column by state.  </p>
-<div class="highlight"><pre>dat <span class="o">&lt;-</span> cbind<span class="p">(</span>dat<span class="p">,</span> ldply<span class="p">(</span>str_split<span class="p">(</span>dat<span class="o">$</span>Name<span class="p">,</span> <span class="s">&quot;, &quot;</span><span class="p">)))</span>
+<p>A couple notes about the above code.  The WDI package asks for a vector of ISO-2 country codes for which it will fetch data; you can get those from many places, such as <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">this Wikipedia page</a>.  The <code>WDI</code> function also requires the World Bank's code for your indicator of interest; you can use the <code>WDIsearch</code> function in R to look for indicator codes, or simply look them up on the World Bank's website.  I've selected the code for the total fertility rate (TFR), and asked the function to give me data from 1960 to 2011 (the last year that TFR data are available).   I now have an R data frame, <code>tfr</code>, that includes a time series of total fertility rates sinced 1960 for each country I asked for.  </p>
+<p>To visualize the data, I have selected the <a href="http://nvd3.org/">NVD3 library</a>, which is a D3 charting library that is available to R users through rCharts.  The code below will clean the data slightly for visualization, and call rCharts' <code>nPlot</code> function to create an interactive chart.  </p>
+<div class="highlight"><pre><span class="c1">#Clean up the data a bit</span>
+tfr <span class="o">&lt;-</span> rename<span class="p">(</span>tfr<span class="p">,</span> replace <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;SP.DYN.TFRT.IN&quot;</span> <span class="o">=</span> <span class="s">&quot;TFR&quot;</span><span class="p">))</span>
 
-names<span class="p">(</span>dat<span class="p">)</span> <span class="o">&lt;-</span> c<span class="p">(</span>nms<span class="p">,</span> <span class="s">&#39;County&#39;</span><span class="p">,</span> <span class="s">&#39;State&#39;</span><span class="p">)</span>
+tfr<span class="o">$</span>TFR <span class="o">&lt;-</span> round<span class="p">(</span>tfr<span class="o">$</span>TFR<span class="p">,</span> <span class="m">2</span><span class="p">)</span>
 
-convCols <span class="o">&lt;-</span> <span class="m">2</span><span class="o">:</span><span class="m">9</span>
+<span class="c1"># Create the chart</span>
+tfrPlot <span class="o">&lt;-</span> nPlot<span class="p">(</span>
+  TFR <span class="o">~</span> year<span class="p">,</span> 
+  data <span class="o">=</span> tfr<span class="p">,</span> 
+  group <span class="o">=</span> <span class="s">&quot;country&quot;</span><span class="p">,</span>
+  type <span class="o">=</span> <span class="s">&quot;lineChart&quot;</span><span class="p">)</span>
 
-dat<span class="p">[,</span>convCols<span class="p">]</span> <span class="o">&lt;-</span> apply<span class="p">(</span>dat<span class="p">[,</span>convCols<span class="p">],</span> <span class="m">2</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">)</span> as.numeric<span class="p">(</span>as.character<span class="p">(</span>gsub<span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> x<span class="p">))))</span>
+<span class="c1"># Add axis labels and format the tooltip</span>
+tfrPlot<span class="o">$</span>yAxis<span class="p">(</span>axisLabel <span class="o">=</span> <span class="s">&quot;Total fertility rate&quot;</span><span class="p">,</span> width <span class="o">=</span> <span class="m">62</span><span class="p">)</span>
 
-sums <span class="o">&lt;-</span> ddply<span class="p">(</span>dat<span class="p">,</span> .<span class="p">(</span>State<span class="p">),</span> numcolwise<span class="p">(</span>sum<span class="p">))</span>
+tfrPlot<span class="o">$</span>xAxis<span class="p">(</span>axisLabel <span class="o">=</span> <span class="s">&quot;Year&quot;</span><span class="p">)</span>
 
-sorteddf <span class="o">&lt;-</span> sums<span class="p">[</span>order<span class="p">(</span><span class="o">-</span>sums<span class="o">$</span>Total.Hisp<span class="p">),][</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">,]</span>
+tfrPlot<span class="o">$</span>chart<span class="p">(</span>tooltipContent <span class="o">=</span> <span class="s">&quot;#! function(key, x, y){</span>
+<span class="s">        return &#39;&lt;h3&gt;&#39; + key + &#39;&lt;/h3&gt;&#39; + </span>
+<span class="s">        &#39;&lt;p&gt;&#39; + y + &#39; in &#39; + x + &#39;&lt;/p&gt;&#39;</span>
+<span class="s">        } !#&quot;</span><span class="p">)</span>
 </pre></div>
 
 
-<p>I've now identified the 10 states with the largest Hispanic populations, and aggregated the different ancestry columns by state.  I now needed to decide how to visualize these data.  I elected to use the <a href="http://dimplejs.org/">dimple</a> D3 library, which is available through rCharts.  My hope was to create something like <a href="http://dimplejs.org/examples_viewer.html?id=bars_horizontal_stacked_100pct">this horizontal 100% chart</a>, which would allow direct comparison of the Hispanic population composition of these states.  Fortunately, rCharts makes this straightforward.  I first created a new data frame that held percentages instead of raw counts, reshaped it into a suitable format, and called rCharts' <code>dPlot</code> function to create the chart.  </p>
-<div class="highlight"><pre>newdf <span class="o">&lt;-</span> data.frame<span class="p">(</span>sorteddf<span class="o">$</span>State<span class="p">)</span>
-
-vals <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&#39;Mexican&#39;</span><span class="p">,</span> <span class="s">&#39;Puerto.Rican&#39;</span><span class="p">,</span> <span class="s">&#39;Cuban&#39;</span><span class="p">,</span> <span class="s">&#39;Salvadoran&#39;</span><span class="p">,</span> <span class="s">&#39;Dominican&#39;</span><span class="p">,</span> <span class="s">&#39;Guatemalan&#39;</span><span class="p">,</span> <span class="s">&#39;Other&#39;</span><span class="p">)</span>
-
-<span class="kr">for</span> <span class="p">(</span>v <span class="kr">in</span> vals<span class="p">)</span> <span class="p">{</span>
-  newdf<span class="p">[[</span>v<span class="p">]]</span> <span class="o">&lt;-</span> round<span class="p">(((</span>sorteddf<span class="p">[[</span>v<span class="p">]]</span> <span class="o">/</span> sorteddf<span class="o">$</span>Total.Hisp<span class="p">)</span> <span class="o">*</span> <span class="m">100</span><span class="p">),</span> <span class="m">1</span><span class="p">)</span>
-<span class="p">}</span>
-
-names<span class="p">(</span>newdf<span class="p">)</span> <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&#39;State&#39;</span><span class="p">,</span> vals<span class="p">)</span>
-
-df.melt <span class="o">&lt;-</span> melt<span class="p">(</span>newdf<span class="p">,</span> variable.name <span class="o">=</span> <span class="s">&#39;Ancestry&#39;</span><span class="p">,</span> value.name <span class="o">=</span> <span class="s">&#39;Share&#39;</span><span class="p">)</span>
-
-d1 <span class="o">&lt;-</span> dPlot<span class="p">(</span>
-  x <span class="o">=</span> <span class="s">&quot;Share&quot;</span><span class="p">,</span> 
-  y <span class="o">=</span> <span class="s">&quot;State&quot;</span><span class="p">,</span> 
-  groups <span class="o">=</span> <span class="s">&quot;Ancestry&quot;</span><span class="p">,</span> 
-  data <span class="o">=</span> df.melt<span class="p">,</span> 
-  type <span class="o">=</span> <span class="s">&#39;bar&#39;</span><span class="p">)</span>
-
-<span class="c1">#Here, set the chart options to tell rCharts how to format the visualization  </span>
-d1<span class="o">$</span>xAxis<span class="p">(</span>type <span class="o">=</span> <span class="s">&quot;addPctAxis&quot;</span><span class="p">)</span>
-d1<span class="o">$</span>yAxis<span class="p">(</span>type <span class="o">=</span> <span class="s">&quot;addCategoryAxis&quot;</span><span class="p">,</span> orderRule <span class="o">=</span> <span class="s">&quot;State&quot;</span><span class="p">)</span>
-
-d1<span class="o">$</span>legend<span class="p">(</span> x <span class="o">=</span> <span class="m">60</span><span class="p">,</span> y <span class="o">=</span> <span class="m">10</span><span class="p">,</span> width <span class="o">=</span> <span class="m">700</span><span class="p">,</span> height <span class="o">=</span> <span class="m">20</span><span class="p">,</span> horizontalAlign <span class="o">=</span> <span class="s">&quot;left&quot;</span><span class="p">,</span> orderRule <span class="o">=</span> <span class="s">&quot;Ancestry&quot;</span><span class="p">)</span>
-</pre></div>
-
-
-<p>Below, you can see the result: </p>
+<p>Typing <code>tfrPlot</code> in the console produces the graphic below:</p>
 <hr />
-<h2><iframe src="http://bl.ocks.org/walkerke/raw/8300770/" width="825" height="450" seamless></iframe></h2>
-<p>The plot has accomplished what I hoped - displaying the considerable diversity of the Hispanic population across different states in the U.S.  The key here to the chart is the interactivity; while I could have produced a static visualization just like this, each component of the chart provides a tooltip on hover that gives specific information about its content.  I now have a more interactive document that I can explore with my students.  </p>
-<p>As the chart reveals, Hispanics are generally of Mexican origin in several states, including my state of Texas, where 84% of Hispanics are of Mexican ancestry; this will be the frame of reference for my students.  However, I can show students how in other parts of the country, such as my old home of New York, 'Hispanic' means something very different, as individuals of Mexican heritage only make up 13% of the state's Hispanic population.  It is also interesting to see how the 'Other' category varies by state.  In some states (New York, New Jersey, New Mexico, Florida), this category is very large.  The <a href="http://www.pewhispanic.org/files/2012/06/The-10-Largest-Hispanic-Origin-Groups.pdf">Pew Center report provides some additional information on this</a>; for example, many Colombians, Hondurans, and Peruvians live in the Miami area, and Queens, NYC has a large Ecuadorian population.  In New Mexico, the data reflect the Spanish and Native American heritage of many Hispanics in the state.  </p>
-<p>There are still some improvements that could be made; for example, in some browsers, the y-axis title is partially hidden, which I need to look into further.  Also, in order to get the effects to work correctly, I had to modify the version of Dimple in the HTML to point to version 1.1.3 (rCharts is still on 1.1.1).  </p>
-<p><strong>To create this chart on your computer, follow these steps:</strong></p>
+<p><iframe src="http://dl.dropboxusercontent.com/s/atqfmcybgl1rk5n/tfrplot.html" width="825" height="450" seamless></iframe></p>
+<hr />
+<p>The chart shows an overall decline in fertility in Europe since 1960; however, beyond that, it is a mess of information.  You can get tooltips on hover that allow you to discern some things that are going on, but it is really difficult to make out any particular country.  This is where NVD3 and rCharts really shine, however.  The chart's legend is interactive; you can click the bubble next to each country's name to turn off and on its line.  Further, if you double-click a country, the chart will reveal the line for that country only.  In turn, the chart functions as an application that the user can modify as she or he wishes.  For example, I used this chart to explore differences between fertility levels in Scandinavia and Southern Europe with a few clicks, as seen in the example below:</p>
+<hr />
+<p><iframe src="http://dl.dropboxusercontent.com/s/ulb0fdqii1atycp/selected.html" width="825" height="450" seamless></iframe></p>
+<hr />
+<p>In class, we interactively explored comparisons between countries all over Europe, discussing the varying roles of social programs, cultural differences, economic well-being, etc. in influencing the type of gaps like those observed in the chart above.  </p>
+<p>Additionally, rCharts includes options for specifying the type of chart you want to show in advance.  For example, I discussed in class the specific case of Romania, which during the <a href="http://en.wikipedia.org/wiki/Nicolae_Ceausescu">Ceausescu era</a> pursued severe pro-natalist policies that influenced sharp fluctuations in the country's TFR, and had lasting negative impacts on the health of Romanian women.  The code below modifies the chart's options to show only Romania.  To do this, I created a vector of unique country codes in their sorted order in my <code>tfr</code> data frame, then created a boolean vector in which only the position representing Romania was set to false.  I can then pass this vector as a parameter in my chart's options, telling it to disable all lines except Romania.  </p>
+<div class="highlight"><pre>ids <span class="o">&lt;-</span> unique<span class="p">(</span>tfr<span class="o">$</span>iso2c<span class="p">)</span>
+
+rom <span class="o">&lt;-</span> as.logical<span class="p">(</span>ids <span class="o">!=</span> <span class="s">&#39;RO&#39;</span><span class="p">)</span>
+
+tfrPlot<span class="o">$</span>set<span class="p">(</span>disabled <span class="o">=</span> rom<span class="p">)</span>
+</pre></div>
+
+
+<p>Below, you can see the result. Note the huge jump in fertility between 1966 and 1967, which was in part the result of strong restrictions on abortion and contraception in the country.  Shortly thereafter, however, fertility rates fell once again; the slight bump in the 1980s was due to additional government influence in child-bearing, which in part included government monitoring of women to ensure that they were carrying pregnancies to term. Since the fall of the Ceausescu regime, the fertility rate plummeted to what is now one of the lowest in the world.  </p>
+<hr />
+<p><iframe src="http://dl.dropbox.com/s/1c3e3iixo1alfgn/romaniaplot.html" width="825" height="450" seamless></iframe></p>
+<hr />
+<p>For me, this example shows the power of interactive data visualization in the classroom.  Instead of a series of pre-made charts that I had chosen in advance of my lecture, my students were able to choose countries they were interested in looking at, allowing me to build a more interactive classroom experience.  </p>
+<p>I should mention as well that I display these charts in class using <a href="https://github.com/ramnathv/slidify">slidify</a>, which is an R package for creating HTML5 presentations from Markdown.  Its author, Ramnath Vaidyanathan, is also the author of rCharts; as such, slidify and rCharts play very nicely together.  I'll likely discuss my experiences with slidify in a future post, as I am using it now to produce all my lecture materials.  </p>
+<p><strong>To create the fertility chart on your computer, follow these steps:</strong></p>
 <ol>
-<li>Visit the <a href="http://www.pewhispanic.org/2012/09/06/population-distribution-of-hispanic-origin-groups-by-county/">Pew Research Center site</a>, download the Excel file they make available, and save it as a CSV in your working directory (don't change the name, just the type).  </li>
-<li>Be sure that you have the following R packages installed: <code>stringr</code>, <code>plyr</code>, <code>rCharts</code>, and <code>reshape2</code>.  <code>rCharts</code> is not yet on CRAN, so you'll need to install it from GitHub with the <code>devtools</code> package.  I use the <code>dev</code> branch of rCharts, which has the latest updates; you can install this with the command, <code>devtools::install_github('rCharts', 'ramnathv', ref='dev')</code>.  </li>
-<li>Run the following command: <code>source("https://raw.github.com/walkerke/teaching-with-datavis/master/hispanics-by-state.R")</code></li>
-<li>Type <code>d1</code> in your console, and you'll have your chart!</li>
+<li>Be sure that you have the following R packages installed: <strong>WDI</strong>, <strong>plyr</strong>, and <strong>rCharts</strong>.  rCharts is not yet on CRAN, so you'll need to install it from GitHub with the <strong>devtools</strong> package.  I use the <code>dev</code> branch of rCharts, which has the latest updates; you can install this with the command, <code>devtools::install_github('rCharts', 'ramnathv', ref='dev')</code>.  </li>
+<li>Run the following command: <code>source("https://raw.github.com/walkerke/teaching-with-datavis/master/tfr-in-europe.R")</code></li>
+<li>Type <code>tfrPlot</code> in the R console to create your chart!  Just a quick note: I have trouble showing NVD3 charts in the RStudio viewer, so you may need to open the chart in your web browser of choice to view it.  </li>
 </ol>
-<p>Alternatively, feel free to grab the code from GitHub and modify it as you wish.  </p>
-<p>I'd love to hear your feedback; you can send me an email at <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#107;&#121;&#108;&#101;&#46;&#119;&#97;&#108;&#107;&#101;&#114;&#64;&#116;&#99;&#117;&#46;&#101;&#100;&#117;">&#107;&#121;&#108;&#101;&#46;&#119;&#97;&#108;&#107;&#101;&#114;&#64;&#116;&#99;&#117;&#46;&#101;&#100;&#117;</a>, or connect with me on <a href="https://twitter.com/kyle_e_walker">Twitter</a>.  </p>
+<p>The code is available on GitHub; use it as you please (though I'd love to hear how you are adapting/modifying it if you do).    </p>
+<p>To contact me, email me at <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#107;&#121;&#108;&#101;&#46;&#119;&#97;&#108;&#107;&#101;&#114;&#64;&#116;&#99;&#117;&#46;&#101;&#100;&#117;">&#107;&#121;&#108;&#101;&#46;&#119;&#97;&#108;&#107;&#101;&#114;&#64;&#116;&#99;&#117;&#46;&#101;&#100;&#117;</a>, or connect with me on <a href="https://twitter.com/kyle_e_walker">Twitter</a>.  </p>
 <p><strong>Thanks to:</strong></p>
 <ul>
-<li><a href="http://www.pewhispanic.org/">The Pew Research Center's Hispanic Trends Project</a> for making their data publicly available;</li>
-<li><a href="https://twitter.com/ramnath_vaidya">Ramnath Vaidyanathan</a> and <a href="https://twitter.com/timelyportfolio">Timely Portfolio</a> for their efforts and tutorials on rCharts;</li>
-<li><a href="https://twitter.com/jkiernander">John Kiernander</a> for the DimpleJS library;</li>
-<li><a href="https://twitter.com/hadleywickham">Hadley Wickham</a> and the <a href="https://twitter.com/rstudioapp">RStudio team</a> for making R a much better place to work with data.  </li>
+<li><a href="http://data.worldbank.org/">The World Bank</a> for generously making their data publicly available;</li>
+<li><a href="https://twitter.com/ramnath_vaidya">Ramnath Vaidyanathan</a> and <a href="https://twitter.com/timelyportfolio">Timely Portfolio</a> for the amazing rCharts;</li>
+<li>Vincent Arel-Bundock for creating the WDI package;</li>
+<li>The developers of NVD3 and d3.js for their innovations in data visualization.  </li>
 </ul></div>
         <hr />
     </div>
 		
+
+ 
+        
+
+ 
+
+    <div class='article'>
+        <a href="http://walkerke.github.io/2014/01/hispanic-pop-by-state/"><h2>Visualizing the U.S. Hispanic population by state</h2></a>
+        <div class= "well small"> Thu 09 January 2014
+
+by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
+ 
+
+
+ </div>
+        <div class="summary"><p>Welcome!  This is the first post of my effort to document my foray into developing interactive data visualizations for use in my teaching.  Hopefully these examples will be of use to some readers who are interested in creating their own visualizations.  </p>
+<p>I'll first provide a bit of background.  I ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/01/hispanic-pop-by-state/">read more</a></div>
+    </div>	
+				
 <div class="pagination">
 <ul>
     <li class="prev disabled"><a href="#">&larr; Previous</a></li>
