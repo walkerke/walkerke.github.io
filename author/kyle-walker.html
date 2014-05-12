@@ -57,8 +57,8 @@
 
     <div class='article'>
         <div class="content-title">
-            <a href="http://walkerke.github.io/2014/03/tfr-in-europe/"><h1>Visualizing fertility trends in Europe</h1></a>
-Thu 06 March 2014
+            <a href="http://walkerke.github.io/2014/05/tourism-plotly/"><h1>Visualizing the economics of tourism in the Pacific with Plotly</h1></a>
+Mon 12 May 2014
 
 by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
  
@@ -67,89 +67,117 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
  
         </div>
         
-        <div><p>In the classroom, interactive data visualizations can embed a wealth of information that can be interactively queried by the instructor depending on the course topics and students' questions.  The example I'll discuss below worked for me exactly in this way.  I'll show how to create an interactive chart using the World Bank's open data API; my example looks at fertility trends in European countries since 1960.  </p>
-<p><a href="http://data.worldbank.org/">The World Bank's Open Data catalog</a> is a tremendous resource for any instructor addressing global issues; the website itself has readily-available data and charts for view.  Additionally, the World Bank makes these datasets available to developers via their API, <a href="https://blogs.worldbank.org/opendata/accessing-world-bank-data-apis-python-r-ruby-stata">which can in turn be accessed through modules in Python, R, Ruby, and Stata</a>.    In R, the API is available through the <a href="https://github.com/vincentarelbundock/WDI">WDI</a> package by Vincent Arel-Bundock, which makes it very simple for users to quickly access formatted World Bank datasets.  With the <a href="https://github.com/ramnathv/rCharts">rCharts</a> package, R users can then create dynamic D3 visualizations using these data.  </p>
-<p>In my World Regional Geography course at TCU, I spent a class period discussing demographic shifts in Europe, with a focus on fertility declines and aging populations in various parts of the continent.  My goal was to create a visualization that would allow me to interactively explore how fertility has declined in different ways in in different regions, and then discuss with my students the reasons why we observe these variations.  To get started, I called the World Bank API in R with the WDI package to give me the total fertility rates (the number of children a woman in a population would be expected to have in her lifetime given current age-specific fertility rates) for selected European countries by year since 1960.  The code below shows how to do this: </p>
-<div class="highlight"><pre>library<span class="p">(</span>WDI<span class="p">)</span>
-library<span class="p">(</span>rCharts<span class="p">)</span>
-library<span class="p">(</span>plyr<span class="p">)</span>
-
-countries <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;AL&quot;</span><span class="p">,</span> <span class="s">&quot;AT&quot;</span><span class="p">,</span> <span class="s">&quot;BE&quot;</span><span class="p">,</span> <span class="s">&quot;BA&quot;</span><span class="p">,</span> <span class="s">&quot;BG&quot;</span><span class="p">,</span> <span class="s">&quot;HR&quot;</span><span class="p">,</span> <span class="s">&quot;CZ&quot;</span><span class="p">,</span> <span class="s">&quot;DK&quot;</span><span class="p">,</span> <span class="s">&quot;FI&quot;</span><span class="p">,</span> <span class="s">&quot;FR&quot;</span><span class="p">,</span> <span class="s">&quot;DE&quot;</span><span class="p">,</span> <span class="s">&quot;GR&quot;</span><span class="p">,</span> 
-               <span class="s">&quot;HU&quot;</span><span class="p">,</span> <span class="s">&quot;IS&quot;</span><span class="p">,</span> <span class="s">&quot;IE&quot;</span><span class="p">,</span> <span class="s">&quot;IT&quot;</span><span class="p">,</span> <span class="s">&quot;NL&quot;</span><span class="p">,</span> <span class="s">&quot;NO&quot;</span><span class="p">,</span> <span class="s">&quot;PL&quot;</span><span class="p">,</span> <span class="s">&quot;PT&quot;</span><span class="p">,</span> <span class="s">&quot;RO&quot;</span><span class="p">,</span> <span class="s">&quot;RS&quot;</span><span class="p">,</span> <span class="s">&quot;SK&quot;</span><span class="p">,</span> <span class="s">&quot;SI&quot;</span><span class="p">,</span> 
-               <span class="s">&quot;ES&quot;</span><span class="p">,</span> <span class="s">&quot;SE&quot;</span><span class="p">,</span> <span class="s">&quot;CH&quot;</span><span class="p">,</span> <span class="s">&quot;GB&quot;</span><span class="p">)</span>
-
-tfr <span class="o">&lt;-</span> WDI<span class="p">(</span>country <span class="o">=</span> countries<span class="p">,</span> indicator <span class="o">=</span> <span class="s">&quot;SP.DYN.TFRT.IN&quot;</span><span class="p">,</span> start <span class="o">=</span> <span class="m">1960</span><span class="p">,</span> end <span class="o">=</span> <span class="m">2011</span><span class="p">)</span>
-</pre></div>
-
-
-<p>A couple notes about the above code.  The WDI package asks for a vector of ISO-2 country codes for which it will fetch data; you can get those from many places, such as <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">this Wikipedia page</a>.  The <code>WDI</code> function also requires the World Bank's code for your indicator of interest; you can use the <code>WDIsearch</code> function in R to look for indicator codes, or simply look them up on the World Bank's website.  I've selected the code for the total fertility rate (TFR), and asked the function to give me data from 1960 to 2011 (the last year that TFR data are available).   I now have an R data frame, <code>tfr</code>, that includes a time series of total fertility rates since 1960 for each country I asked for.  </p>
-<p>To visualize the data, I have selected the <a href="http://nvd3.org/">NVD3 library</a>, which is a D3 charting library that is available to R users through rCharts.  The code below will clean the data slightly for visualization, and call rCharts' <code>nPlot</code> function to create an interactive chart.  </p>
-<div class="highlight"><pre><span class="c1">#Clean up the data a bit</span>
-tfr <span class="o">&lt;-</span> rename<span class="p">(</span>tfr<span class="p">,</span> replace <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;SP.DYN.TFRT.IN&quot;</span> <span class="o">=</span> <span class="s">&quot;TFR&quot;</span><span class="p">))</span>
-
-tfr<span class="o">$</span>TFR <span class="o">&lt;-</span> round<span class="p">(</span>tfr<span class="o">$</span>TFR<span class="p">,</span> <span class="m">2</span><span class="p">)</span>
-
-<span class="c1"># Create the chart</span>
-tfrPlot <span class="o">&lt;-</span> nPlot<span class="p">(</span>
-  TFR <span class="o">~</span> year<span class="p">,</span> 
-  data <span class="o">=</span> tfr<span class="p">,</span> 
-  group <span class="o">=</span> <span class="s">&quot;country&quot;</span><span class="p">,</span>
-  type <span class="o">=</span> <span class="s">&quot;lineChart&quot;</span><span class="p">)</span>
-
-<span class="c1"># Add axis labels and format the tooltip</span>
-tfrPlot<span class="o">$</span>yAxis<span class="p">(</span>axisLabel <span class="o">=</span> <span class="s">&quot;Total fertility rate&quot;</span><span class="p">,</span> width <span class="o">=</span> <span class="m">62</span><span class="p">)</span>
-
-tfrPlot<span class="o">$</span>xAxis<span class="p">(</span>axisLabel <span class="o">=</span> <span class="s">&quot;Year&quot;</span><span class="p">)</span>
-
-tfrPlot<span class="o">$</span>chart<span class="p">(</span>tooltipContent <span class="o">=</span> <span class="s">&quot;#! function(key, x, y){</span>
-<span class="s">        return &#39;&lt;h3&gt;&#39; + key + &#39;&lt;/h3&gt;&#39; + </span>
-<span class="s">        &#39;&lt;p&gt;&#39; + y + &#39; in &#39; + x + &#39;&lt;/p&gt;&#39;</span>
-<span class="s">        } !#&quot;</span><span class="p">)</span>
-</pre></div>
-
-
-<p>Typing <code>tfrPlot</code> in the console produces the graphic below:</p>
+        <div><p>Over the last month or so, I've been working a lot with <a href="http://plot.ly">Plotly</a> to visualize data for my World Regional Geography course.  Plotly is a web-based service that allows for the creation of interactive, D3-based visualizations that can be easily shared.  Visualizations are deployed and hosted on Plotly's servers, so the service requires a connection to the internet to work.  One of the great things about Plotly is that it has APIs for popular data programming languages like <a href="http://plot.ly/r/">R</a>, <a href="http://plot.ly/python/">Python</a>, and <a href="http://plot.ly/julia/">Julia</a>.  I really got hooked on Plotly, however, when I learned about <code>ggplotly</code>, <a href="http://ropensci.org/blog/2014/04/17/plotly/">which allows you to convert <strong>ggplot2</strong> graphs in R to interactive Plotly charts with just a couple extra lines of code</a>.   I'm going to go over an example of how I used <code>ggplotly</code> to assist with a discussion of the economic significance of tourism in the Pacific.</p>
 <hr />
-<p><iframe src="http://dl.dropboxusercontent.com/s/atqfmcybgl1rk5n/tfrplot.html" width="825" height="450" seamless></iframe></p>
-<hr />
-<p>The chart shows an overall decline in fertility in Europe since 1960; however, beyond that, it is a mess of information.  You can get tooltips on hover that allow you to discern some things that are going on, but it is really difficult to make out any particular country.  This is where NVD3 and rCharts really shine, however.  The chart's legend is interactive; you can click the bubble next to each country's name to turn off and on its line.  Further, if you double-click a country, the chart will reveal the line for that country only.  In turn, the chart functions as an application that the user can modify as she or he wishes.  For example, I used this chart to explore differences between fertility levels in Scandinavia and Southern Europe with a few clicks, as seen in the example below:</p>
-<hr />
-<p><iframe src="http://dl.dropboxusercontent.com/s/ulb0fdqii1atycp/selected.html" width="825" height="450" seamless></iframe></p>
-<hr />
-<p>In class, we interactively explored comparisons between countries all over Europe, discussing the varying roles of social programs, cultural differences, economic well-being, etc. in influencing the type of gaps like those observed in the chart above.  </p>
-<p>Additionally, rCharts includes options for specifying the type of chart you want to show in advance.  For example, I discussed in class the specific case of Romania, which during the <a href="http://en.wikipedia.org/wiki/Nicolae_Ceausescu">Ceausescu era</a> pursued severe pro-natalist policies that influenced sharp fluctuations in the country's TFR, and had lasting negative impacts on the health of Romanian women.  The code below modifies the chart's options to show only Romania.  To do this, I created a vector of unique country codes in their sorted order in my <code>tfr</code> data frame, then created a boolean vector in which only the position representing Romania was set to false.  I can then pass this vector as a parameter in my chart's options, telling it to disable all lines except Romania.  </p>
-<div class="highlight"><pre>ids <span class="o">&lt;-</span> unique<span class="p">(</span>tfr<span class="o">$</span>iso2c<span class="p">)</span>
-
-rom <span class="o">&lt;-</span> as.logical<span class="p">(</span>ids <span class="o">!=</span> <span class="s">&#39;RO&#39;</span><span class="p">)</span>
-
-tfrPlot<span class="o">$</span>set<span class="p">(</span>disabled <span class="o">=</span> rom<span class="p">)</span>
-</pre></div>
-
-
-<p>Below, you can see the result. Note the huge jump in fertility between 1966 and 1967, which was in part the result of strong restrictions on abortion and contraception in the country.  Shortly thereafter, however, fertility rates fell once again; the slight bump in the 1980s was due to additional government influence in child-bearing, which in part included government monitoring of women to ensure that they were carrying pregnancies to term. Since the fall of the Ceausescu regime, the fertility rate plummeted to what is now one of the lowest in the world.  </p>
-<hr />
-<p><iframe src="http://dl.dropbox.com/s/1c3e3iixo1alfgn/romaniaplot.html" width="825" height="450" seamless></iframe></p>
-<hr />
-<p>For me, this example shows the power of interactive data visualization in the classroom.  Instead of a series of pre-made charts that I had chosen in advance of my lecture, my students were able to choose countries they were interested in looking at, allowing me to build a more interactive classroom experience.  </p>
-<p>I should mention as well that I display these charts in class using <a href="https://github.com/ramnathv/slidify">slidify</a>, which is an R package for creating HTML5 presentations from Markdown.  Its author, Ramnath Vaidyanathan, is also the author of rCharts; as such, slidify and rCharts play very nicely together.  I'll likely discuss my experiences with slidify in a future post, as I am using it now to produce all my lecture materials.  </p>
-<p><strong>To create the fertility chart on your computer, follow these steps:</strong></p>
+<p>In my final class of the semester, I focused on Oceania (defined as Australia, New Zealand, and Pacific Island nations).  In this class, I wanted to show students how small, relatively isolated countries in the Pacific can be acutely affected by larger global forces.  We focused on topics such as trash accumulation in the Pacific, sea level rise due to climate change, and the ways in which island countries are connected to the global economy.  As part of this, we discussed the role of tourism in Pacific Island economies.  To help illustrate this to my students, I sought out data on the tourist economies of these countries, which is freely available from the <a href="http://www.wttc.org/research/economic-data-search-tool/">World Travel &amp; Tourist Council's Economic Data Search Tool</a>.  To download the data, I followed these steps: </p>
 <ol>
-<li>Be sure that you have the following R packages installed: <strong>WDI</strong>, <strong>plyr</strong>, and <strong>rCharts</strong>.  rCharts is not yet on CRAN, so you'll need to install it from GitHub with the <strong>devtools</strong> package.  I use the <code>dev</code> branch of rCharts, which has the latest updates; you can install this with the command, <code>devtools::install_github('rCharts', 'ramnathv', ref='dev')</code>.  </li>
-<li>Run the following command: <code>source("https://raw.github.com/walkerke/teaching-with-datavis/master/tfr-in-europe.R")</code></li>
-<li>Type <code>tfrPlot</code> in the R console to create your chart!  Just a quick note: I have trouble showing NVD3 charts in the RStudio viewer, so you may need to open the chart in your web browser of choice to view it.  </li>
+<li>For Step 1 of the search tool, I clicked <strong>Countries &gt; Oceania</strong>, then selected Fiji, Kiribati, Other Oceania, Solomon Islands, Tonga, and Vanuatu.  </li>
+<li>For Step 2, I selected "Travel &amp; Tourism Total Contribution to GDP."  These figures include both tourism's direct contributions to GDP (e.g. GDP generated by hotels, airlines, etc.) and its indirect contributions to the economy; <a href="http://www.wttc.org/site_media/uploads/downloads/oceania2014.pdf">see this report for more details</a>.  </li>
+<li>For Step 3, I selected "% share" as my unit, as I was interested in the extent to which tourism figures in the overall constitution of these countries' economies.  </li>
+<li>I chose the entire date range from 1988 to 2024 (projected), and clicked <strong>Submit</strong>.  </li>
 </ol>
-<p>The code is available on GitHub; use it as you please (though I'd love to hear how you are adapting/modifying it if you do).    </p>
-<p>To contact me, email me at <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#107;&#121;&#108;&#101;&#46;&#119;&#97;&#108;&#107;&#101;&#114;&#64;&#116;&#99;&#117;&#46;&#101;&#100;&#117;">&#107;&#121;&#108;&#101;&#46;&#119;&#97;&#108;&#107;&#101;&#114;&#64;&#116;&#99;&#117;&#46;&#101;&#100;&#117;</a>, or connect with me on <a href="https://twitter.com/kyle_e_walker">Twitter</a>.  </p>
+<p>The data can then be downloaded as an Excel file.  However, the Excel file is formatted in a way that resembles the HTML on the web page, and as such is not in the "tidy" format that is required for visualization in ggplot2.  As such, I saved the file as a CSV (which is available from my GitHub repository) and imported the data into R for some cleaning.  </p>
+<hr />
+<p>The R code below shows one way to clean up data downloaded from the WTTC in this particular format (multiple countries, one variable).  I've written a function, <code>tidy_WTTC</code>, that should work for any dataset in this form available from the WTTC.  </p>
+<div class="highlight"><pre><span class="c1"># Load packages and data</span>
+
+library<span class="p">(</span>reshape2<span class="p">)</span>
+library<span class="p">(</span>ggplot2<span class="p">)</span>
+library<span class="p">(</span>plotly<span class="p">)</span>
+library<span class="p">(</span>zoo<span class="p">)</span>
+
+dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&#39;tourism.csv&#39;</span><span class="p">)</span>
+
+<span class="c1">## Define the &quot;tidy&quot; function and call it</span>
+
+tidy_WTTC <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
+
+  start <span class="o">&lt;-</span> df<span class="p">[</span><span class="m">7</span><span class="p">,</span> <span class="m">2</span><span class="p">]</span>
+  end <span class="o">&lt;-</span> df<span class="p">[</span><span class="m">7</span><span class="p">,</span> ncol<span class="p">(</span>df<span class="p">)]</span>
+
+  df <span class="o">&lt;-</span> df<span class="p">[</span><span class="m">8</span><span class="o">:</span>nrow<span class="p">(</span>df<span class="p">),</span> <span class="p">]</span>
+
+  nms <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;country&quot;</span><span class="p">,</span> paste0<span class="p">(</span><span class="s">&quot;y&quot;</span><span class="p">,</span> seq<span class="p">(</span>start<span class="p">,</span> end<span class="p">,</span> <span class="m">1</span><span class="p">)))</span>
+
+  names<span class="p">(</span>df<span class="p">)</span> <span class="o">&lt;-</span> nms
+
+  df <span class="o">&lt;-</span> na.locf<span class="p">(</span>df<span class="p">,</span> fromLast <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+
+  df <span class="o">&lt;-</span> df<span class="p">[</span>seq<span class="p">(</span><span class="m">1</span><span class="p">,</span> nrow<span class="p">(</span>df<span class="p">),</span> <span class="m">2</span><span class="p">),</span> <span class="p">]</span>
+
+  df.melt <span class="o">&lt;-</span> melt<span class="p">(</span>df<span class="p">,</span> id.vars <span class="o">=</span> <span class="s">&quot;country&quot;</span><span class="p">,</span> value.name<span class="o">=</span><span class="s">&quot;value&quot;</span><span class="p">,</span> variable.name <span class="o">=</span> <span class="s">&quot;year&quot;</span><span class="p">)</span>
+
+  df.melt<span class="o">$</span>year <span class="o">&lt;-</span> as.numeric<span class="p">(</span>gsub<span class="p">(</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> df.melt<span class="o">$</span>year<span class="p">))</span>
+
+  df.melt<span class="o">$</span>value <span class="o">&lt;-</span> as.numeric<span class="p">(</span>df.melt<span class="o">$</span>value<span class="p">)</span>
+
+  df.melt
+<span class="p">}</span>
+
+tidy_dat <span class="o">&lt;-</span> tidy_WTTC<span class="p">(</span>dat<span class="p">)</span>
+</pre></div>
+
+
+<p>A few notes about the above code.  To do anything with Plotly in R, it is necessary to use the <strong>plotly</strong> R package, <a href="https://github.com/ropensci/plotly">which is available from rOpenSci's repository on GitHub</a>.  As such, it must be installed first using the <strong>devtools</strong> package with the command <code>install_github("ropensci/plotly")</code>.  </p>
+<p>I'd also like to explain the function in brief.  I've set it up to handle data downloads from the WTTC, provided that a) you've chosen a group of countries and one variable, and b) you've saved the Excel download as a CSV.  Given the structure of the WTTC data, the function will detect the years you've chosen for your download and re-format the data accordingly.  Next, I use the <code>na.locf</code> function from the <strong>zoo</strong> package to resolve the fact that country names are on one row in the original data file, with corresponding values on the next row; this fills in NAs with their correct values.  I then remove the unnecessary rows, and then reshape and reformat the data for visualization with <strong>ggplot2</strong>.    </p>
+<p>The data are now ready for plotting with <strong>ggplot2</strong>, and can then be converted to an interactive Plotly chart.  The code below shows how to get this done.  </p>
+<div class="highlight"><pre><span class="c1">## Create the ggplot, initialize the plotly object, and convert the ggplot to plotly</span>
+
+t1 <span class="o">&lt;-</span> ggplot<span class="p">(</span>tidy_dat<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> year<span class="p">,</span> y <span class="o">=</span> value<span class="p">,</span> color <span class="o">=</span> country<span class="p">))</span> <span class="o">+</span> 
+  geom_line<span class="p">(</span>size <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">+</span> 
+  scale_color_brewer<span class="p">(</span>palette <span class="o">=</span> <span class="s">&quot;Set1&quot;</span><span class="p">)</span> <span class="o">+</span> 
+  labs<span class="p">(</span>list<span class="p">(</span>x <span class="o">=</span> <span class="s">&quot;Year&quot;</span><span class="p">,</span> 
+            y <span class="o">=</span> <span class="s">&quot;Total contribution of tourism to GDP (percent)&quot;</span><span class="p">,</span> 
+            title <span class="o">=</span> <span class="s">&quot;Total contribution of tourism to GDP (percent), select Pacific Island countries.  Data source: WTTC&quot;</span><span class="p">))</span>
+
+py <span class="o">&lt;-</span> plotly<span class="p">(</span><span class="s">&quot;YOUR USERNAME HERE&quot;</span><span class="p">,</span> <span class="s">&quot;YOUR API KEY HERE&quot;</span><span class="p">)</span>
+
+py<span class="o">$</span>ggplotly<span class="p">(</span>t1<span class="p">)</span>
+</pre></div>
+
+
+<p>The <strong>ggplot2</strong> code is fairly straightforward; I'm making a basic line chart with minimal customization.  After creating the ggplot, the last two lines of code are all that are necessary to create an interactive chart with Plotly.  You will need to sign up for a Plotly account and get an API key to get this to work; fill in your own username and password where instructed to initialize the Plotly interface object, which I've called <code>py</code>.  Finally, the <code>py$ggplotly(t1)</code> command converts the ggplot <code>t1</code> into an interactive chart, which should appear in your browser.  If everything has worked correctly, you'll get a chart that looks like this:  </p>
+<hr />
+<iframe src="http://plot.ly/~walkerke/52" width="850" height="600" seamless scrolling="no"></iframe>
+
+<hr />
+<p>I now have an interactive chart that contains a wealth of information about the tourist economies of select Pacific Island economies.  As the chart reveals, the economic significance of tourism figures differently from country to country in the Pacific.  In places like Vanuatu and Fiji, tourism is a large component of the local economy and is projected to increase in importance.  In contrast, tourism is less prominent in places like Tonga, which relies heavily on remittances from Tongans living abroad; this example is familiar to my students, <a href="http://www.star-telegram.com/2013/12/31/5453055/in-euless-tongans-usher-in-the.html">as there is a large Tongan community living in cities very near to TCU</a>.  </p>
+<p>By default, Plotly embeds several options for interacting with the chart.  The user can click and drag on the chart itself to zoom in to particular areas; with a time series chart, this can be useful if the user wants to highlight a particular period of time in the graph.  Additionally, tooltips appear on hover that give direct access to the data informing the chart.  More interactivity is also available from the icons in the upper-right-hand corner of the chart, allowing users to zoom, pan, and change the desired tooltip display (all data series, or one at a time).  </p>
+<p>Once the chart is published to your Plotly account, you can customize it even further using Plotly's web-based GUI.  In the above example, I moved the position of the legend manually using the GUI to maximize the space occupied by the data; you can also edit the chart's appearance, change the axis and chart titles, and add notes to the chart, among other options.  </p>
+<p>Using <code>ggplotly</code> in this way has become a major part of my workflow in preparing interactive materials for my teaching.  Here are a sampling of other charts I've prepared in this way:  </p>
+<ul>
+<li><a href="https://plot.ly/~walkerke/12">Total fertility rates in South Asia by country, 1960-2011</a></li>
+<li><a href="https://plot.ly/~walkerke/21">Past and future population of Japan (projected)</a></li>
+<li><a href="https://plot.ly/~walkerke/30">GDP by country since 1970, major world economies</a></li>
+</ul>
+<p>More examples can be found at <a href="https://plot.ly/~walkerke">my Plotly page</a>, and I'll be posting the code for these visualizations to GitHub.  While <code>ggplotly</code> has worked great for me so far, it is still very early in development and only supports a limited number of chart types from <strong>ggplot2</strong> (<a href="http://aarongonzales.net/plotly_examples.html">see this post for details</a>).  In turn, you'll need to use Plotly's APIs to create the unavailable chart types, which I have just started to work with.  This summer, I'm going to explore using Plotly as well using Python, <a href="http://nbviewer.ipython.org/github/plotly/python-user-guide/blob/master/s00_homepage/s00_homepage.ipynb">which has a well-developed API</a> and appears to work very well with the IPython Notebook.  </p>
+<p>As always, please contact me at <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#107;&#121;&#108;&#101;&#46;&#119;&#97;&#108;&#107;&#101;&#114;&#64;&#116;&#99;&#117;&#46;&#101;&#100;&#117;">&#107;&#121;&#108;&#101;&#46;&#119;&#97;&#108;&#107;&#101;&#114;&#64;&#116;&#99;&#117;&#46;&#101;&#100;&#117;</a> or get in touch with me on <a href="https://twitter.com/kyle_e_walker">Twitter</a> if you have any questions or feedback.  </p>
 <p><strong>Thanks to:</strong></p>
 <ul>
-<li><a href="http://data.worldbank.org/">The World Bank</a> for generously making their data publicly available;</li>
-<li><a href="https://twitter.com/ramnath_vaidya">Ramnath Vaidyanathan</a> and <a href="https://twitter.com/timelyportfolio">Timely Portfolio</a> for the amazing rCharts;</li>
-<li>Vincent Arel-Bundock for creating the WDI package;</li>
-<li>The developers of NVD3 and d3.js for their innovations in data visualization.  </li>
+<li><a href="https://twitter.com/plotlygraphs">The Plotly team</a> for their amazing work;</li>
+<li><a href="https://twitter.com/WTTC">The World Travel and Tourism Council</a> for generously making their data publicly available.  </li>
 </ul></div>
         <hr />
     </div>
 		
+
+ 
+        
+
+ 
+
+    <div class='article'>
+        <a href="http://walkerke.github.io/2014/03/tfr-in-europe/"><h2>Visualizing fertility trends in Europe</h2></a>
+        <div class= "well small"> Thu 06 March 2014
+
+by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
+ 
+
+
+ </div>
+        <div class="summary"><p>In the classroom, interactive data visualizations can embed a wealth of information that can be interactively queried by the instructor depending on the course topics and students' questions.  The example I'll discuss below worked for me exactly in this way.  I'll show how to create an interactive chart ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/03/tfr-in-europe/">read more</a></div>
+    </div>	
+				
 
  
         

@@ -50,17 +50,23 @@
     <div class="row">
 
         <div class="span9">
+        
+
+        
+
+
     <div class='article'>
         <div class="content-title">
-            <h1>Visualizing fertility trends in Europe</h1>
+            <a href="http://walkerke.github.io/2014/03/tfr-in-europe/"><h1>Visualizing fertility trends in Europe</h1></a>
 Thu 06 March 2014
 
 by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
  
 
 
+ 
         </div>
-	
+        
         <div><p>In the classroom, interactive data visualizations can embed a wealth of information that can be interactively queried by the instructor depending on the course topics and students' questions.  The example I'll discuss below worked for me exactly in this way.  I'll show how to create an interactive chart using the World Bank's open data API; my example looks at fertility trends in European countries since 1960.  </p>
 <p><a href="http://data.worldbank.org/">The World Bank's Open Data catalog</a> is a tremendous resource for any instructor addressing global issues; the website itself has readily-available data and charts for view.  Additionally, the World Bank makes these datasets available to developers via their API, <a href="https://blogs.worldbank.org/opendata/accessing-world-bank-data-apis-python-r-ruby-stata">which can in turn be accessed through modules in Python, R, Ruby, and Stata</a>.    In R, the API is available through the <a href="https://github.com/vincentarelbundock/WDI">WDI</a> package by Vincent Arel-Bundock, which makes it very simple for users to quickly access formatted World Bank datasets.  With the <a href="https://github.com/ramnathv/rCharts">rCharts</a> package, R users can then create dynamic D3 visualizations using these data.  </p>
 <p>In my World Regional Geography course at TCU, I spent a class period discussing demographic shifts in Europe, with a focus on fertility declines and aging populations in various parts of the continent.  My goal was to create a visualization that would allow me to interactively explore how fertility has declined in different ways in in different regions, and then discuss with my students the reasons why we observe these variations.  To get started, I called the World Bank API in R with the WDI package to give me the total fertility rates (the number of children a woman in a population would be expected to have in her lifetime given current age-specific fertility rates) for selected European countries by year since 1960.  The code below shows how to do this: </p>
@@ -141,11 +147,40 @@ tfrPlot<span class="o">$</span>set<span class="p">(</span>disabled <span class="
 <li>Vincent Arel-Bundock for creating the WDI package;</li>
 <li>The developers of NVD3 and d3.js for their innovations in data visualization.  </li>
 </ul></div>
-	
-        <hr>
-    	   
-        <h2>Comments</h2>
+        <hr />
     </div>
+		
+
+ 
+        
+
+ 
+
+    <div class='article'>
+        <a href="http://walkerke.github.io/2014/01/hispanic-pop-by-state/"><h2>Visualizing the U.S. Hispanic population by state</h2></a>
+        <div class= "well small"> Thu 09 January 2014
+
+by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
+ 
+
+
+ </div>
+        <div class="summary"><p>Welcome!  This is the first post of my effort to document my foray into developing interactive data visualizations for use in my teaching.  Hopefully these examples will be of use to some readers who are interested in creating their own visualizations.  </p>
+<p>I'll first provide a bit of background.  I ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/01/hispanic-pop-by-state/">read more</a></div>
+    </div>	
+				
+<div class="pagination">
+<ul>
+    <li class="prev disabled"><a href="#">&larr; Previous</a></li>
+
+    <li class="active"><a href="http://walkerke.github.io/tag/rcharts.html">1</a></li>
+
+    <li class="next disabled"><a href="#">&rarr; Next</a></li>
+
+</ul>
+</div>
+ 
+  
         </div>
         
         <div class="span3">
