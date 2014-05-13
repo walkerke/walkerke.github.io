@@ -104,11 +104,11 @@ tfrPlot<span class="o">$</span>chart<span class="p">(</span>tooltipContent <span
 
 <p>Typing <code>tfrPlot</code> in the console produces the graphic below:</p>
 <hr />
-<p><iframe src="http://dl.dropboxusercontent.com/s/atqfmcybgl1rk5n/tfrplot.html" width="825" height="450" seamless></iframe></p>
+<p><iframe src="http://dl.dropboxusercontent.com/s/atqfmcybgl1rk5n/tfrplot.html" width="825" height="450" seamless frameBorder = "0"></iframe></p>
 <hr />
 <p>The chart shows an overall decline in fertility in Europe since 1960; however, beyond that, it is a mess of information.  You can get tooltips on hover that allow you to discern some things that are going on, but it is really difficult to make out any particular country.  This is where NVD3 and rCharts really shine, however.  The chart's legend is interactive; you can click the bubble next to each country's name to turn off and on its line.  Further, if you double-click a country, the chart will reveal the line for that country only.  In turn, the chart functions as an application that the user can modify as she or he wishes.  For example, I used this chart to explore differences between fertility levels in Scandinavia and Southern Europe with a few clicks, as seen in the example below:</p>
 <hr />
-<p><iframe src="http://dl.dropboxusercontent.com/s/ulb0fdqii1atycp/selected.html" width="825" height="450" seamless></iframe></p>
+<p><iframe src="http://dl.dropboxusercontent.com/s/ulb0fdqii1atycp/selected.html" width="825" height="450" seamless frameBorder = "0"></iframe></p>
 <hr />
 <p>In class, we interactively explored comparisons between countries all over Europe, discussing the varying roles of social programs, cultural differences, economic well-being, etc. in influencing the type of gaps like those observed in the chart above.  </p>
 <p>Additionally, rCharts includes options for specifying the type of chart you want to show in advance.  For example, I discussed in class the specific case of Romania, which during the <a href="http://en.wikipedia.org/wiki/Nicolae_Ceausescu">Ceausescu era</a> pursued severe pro-natalist policies that influenced sharp fluctuations in the country's TFR, and had lasting negative impacts on the health of Romanian women.  The code below modifies the chart's options to show only Romania.  To do this, I created a vector of unique country codes in their sorted order in my <code>tfr</code> data frame, then created a boolean vector in which only the position representing Romania was set to false.  I can then pass this vector as a parameter in my chart's options, telling it to disable all lines except Romania.  </p>
@@ -122,7 +122,7 @@ tfrPlot<span class="o">$</span>set<span class="p">(</span>disabled <span class="
 
 <p>Below, you can see the result. Note the huge jump in fertility between 1966 and 1967, which was in part the result of strong restrictions on abortion and contraception in the country.  Shortly thereafter, however, fertility rates fell once again; the slight bump in the 1980s was due to additional government influence in child-bearing, which in part included government monitoring of women to ensure that they were carrying pregnancies to term. Since the fall of the Ceausescu regime, the fertility rate plummeted to what is now one of the lowest in the world.  </p>
 <hr />
-<p><iframe src="http://dl.dropbox.com/s/1c3e3iixo1alfgn/romaniaplot.html" width="825" height="450" seamless></iframe></p>
+<p><iframe src="http://dl.dropbox.com/s/1c3e3iixo1alfgn/romaniaplot.html" width="825" height="450" seamless frameBorder = "0"></iframe></p>
 <hr />
 <p>For me, this example shows the power of interactive data visualization in the classroom.  Instead of a series of pre-made charts that I had chosen in advance of my lecture, my students were able to choose countries they were interested in looking at, allowing me to build a more interactive classroom experience.  </p>
 <p>I should mention as well that I display these charts in class using <a href="https://github.com/ramnathv/slidify">slidify</a>, which is an R package for creating HTML5 presentations from Markdown.  Its author, Ramnath Vaidyanathan, is also the author of rCharts; as such, slidify and rCharts play very nicely together.  I'll likely discuss my experiences with slidify in a future post, as I am using it now to produce all my lecture materials.  </p>
