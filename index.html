@@ -57,8 +57,8 @@
 
     <div class='article'>
         <div class="content-title">
-            <a href="http://walkerke.github.io/2014/05/tourism-plotly/"><h1>Visualizing the economics of tourism in the Pacific with Plotly</h1></a>
-Mon 12 May 2014
+            <a href="http://walkerke.github.io/2014/06/rcharts-pyramids/"><h1>Interactive international population pyramids with R, rCharts</h1></a>
+Sat 07 June 2014
 
 by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
  
@@ -67,100 +67,102 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
  
         </div>
         
-        <div><p>Over the last month or so, I've been working a lot with <a href="http://plot.ly">Plotly</a> to visualize data for my World Regional Geography course.  Plotly is a web-based service that allows for the creation of interactive, D3-based visualizations that can be easily shared.  Visualizations are deployed and hosted on Plotly's servers, so the service requires a connection to the internet to work.  One of the great things about Plotly is that it has APIs for popular data programming languages like <a href="http://plot.ly/r/">R</a>, <a href="http://plot.ly/python/">Python</a>, and <a href="http://plot.ly/julia/">Julia</a>.  I really got hooked on Plotly, however, when I learned about <code>ggplotly</code>, <a href="http://ropensci.org/blog/2014/04/17/plotly/">which allows you to convert <strong>ggplot2</strong> graphs in R to interactive Plotly charts with just a couple extra lines of code</a>.   I'm going to go over an example of how I used <code>ggplotly</code> to assist with a discussion of the economic significance of tourism in the Pacific.</p>
+        <div><p>I find population pyramids to be very effective teaching tools.  In short, a population pyramid is a type of chart that shows the population size of different age cohorts on the X-axis, with gender usually displayed back-to-back on the Y-axis to create the shape of a "pyramid."  It is used to illustrate a snapshot of the age and sex structure of a population, and can serve as a tool that aids in discussion of many thematic issues such as population growth, aging, and gender imbalance.  The visually appealing structure of the population pyramid also makes it easy to compare the population structures of different countries, which is why I like to use pyramids in my classes.  This is exemplified by <a href="http://blogs.worldbank.org/futuredevelopment/end-population-pyramid">this post from the World Bank</a>, which shows how different "shapes" of the pyramid reflect different demographic contexts.  </p>
+<p>I was originally motivated to learn interactive visualization to produce interactive population pyramids.  My inspiration came from these examples from <a href="http://vis.stanford.edu/jheer/d3/pyramid/shift.html">Jeff Heer</a> and <a href="http://bl.ocks.org/mbostock/4062085">Mike Bostock</a>, which use data from the U.S. Census.  Since then, a number of other creative interactive population pyramid applications have gotten a lot of attention, such as <a href="http://populationpyramid.net/">this visualization from Martin De Wulf</a>, and <a href="http://www.nytimes.com/2014/05/13/upshot/a-changing-shape-in-americas-age-distribution.html?rref=upshot&amp;_r=1">this animated graphic from the Pew Research Center</a>, referenced in <em>The New York Times'</em> Upshot.  </p>
+<p>These are all great resources, but I wanted something both re-usable and customizable so that I could embed interactive pyramids for any country I needed in my slide decks for my World Regional Geography course.  To do this, I turned to the fantastic <a href="http://www.census.gov/population/international/data/idb/informationGateway.php">International Data Base from the US Census Bureau</a> for data, and the amazing <a href="http://rcharts.io">rCharts</a> to create the pyramids.  The Census Bureau's International Data Base contains a tremendous amount of information about basic demographic characteristics of the world's countries, and is easily downloaded; I've had students use it before to create their own population pyramids in Excel for class assignments.  However, as I wanted quick access to the data to in turn create interactive rCharts visualizations, I wrote a script, <code>rcharts_pyramids.R</code>, that includes functions to scrape the Data Base website and produce an interactive pyramid with R within seconds.  </p>
+<p>Below, I'll discuss how to use the script.  I'd like anyone to be able to use this, regardless of their background with R; as such, I'm going to go easy on the technical details.  I'll follow up with another more code-heavy post, and <a href="https://github.com/walkerke/teaching-with-datavis/blob/master/pyramids/rcharts_pyramids.R">the code is available on GitHub here</a>.  </p>
 <hr />
-<p>In my final class of the semester, I focused on Oceania (defined as Australia, New Zealand, and Pacific Island nations).  In this class, I wanted to show students how small, relatively isolated countries in the Pacific can be acutely affected by larger global forces.  We focused on topics such as trash accumulation in the Pacific, sea level rise due to climate change, and the ways in which island countries are connected to the global economy.  As part of this, we discussed the role of tourism in Pacific Island economies.  To help illustrate this to my students, I sought out data on the tourist economies of these countries, which is freely available from the <a href="http://www.wttc.org/research/economic-data-search-tool/">World Travel &amp; Tourism Council's Economic Data Search Tool</a>.  To download the data, I followed these steps: </p>
+<p>To get started, make sure you have the following R packages installed: <strong>XML</strong>, <strong>reshape2</strong>, <strong>rCharts</strong>, and <strong>plyr</strong>.  <strong>rCharts</strong> is not on CRAN, so you'll need to install it from GitHub with the <strong>devtools</strong> package.  This script requires the <code>dev</code> branch of <strong>rCharts</strong>.  If you are just getting started with R, install the packages with the code below.  </p>
+<div class="highlight"><pre>install.packages<span class="p">(</span>c<span class="p">(</span><span class="s">&#39;XML&#39;</span><span class="p">,</span> <span class="s">&#39;reshape2&#39;</span><span class="p">,</span> <span class="s">&#39;devtools&#39;</span><span class="p">,</span> <span class="s">&#39;plyr&#39;</span><span class="p">))</span>
+library<span class="p">(</span>devtools<span class="p">)</span>
+install_github<span class="p">(</span><span class="s">&#39;ramnathv/rCharts@dev&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Once these packages are installed, you are ready to get started.  If you are using <a href="http://www.rstudio.com/">RStudio</a> (which I strongly recommend), simply enter the following command into the R Console: </p>
+<div class="highlight"><pre>source<span class="p">(</span><span class="s">&#39;https://raw.githubusercontent.com/walkerke/teaching-with-datavis/master/pyramids/rcharts_pyramids.R&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>If you are not using RStudio, use <code>source_url</code> from the <strong>devtools</strong> packages instead of <code>source</code>.  Alternatively, you can get the script from GitHub yourself and load it.</p>
+<p>The script contains four functions: <code>getAgeTable</code>, <code>dPyramid</code>, <code>hPyramid</code>, and <code>nPyramid</code>.  <code>getAgeTable</code> is a helper function that uses the <strong>XML</strong> package to scrape data from the International Data Base and convert it into an R data frame.  I pull data from the category "Mid-year Population by Five Year Age Groups and Sex" to create the pyramids.  The other three functions are used to create population pyramids from the data with different JavaScript libraries available through <strong>rCharts</strong>.  Each function has three parameters:  </p>
 <ol>
-<li>For Step 1 of the search tool, I clicked <strong>Countries &gt; Oceania</strong>, then selected Fiji, Kiribati, Other Oceania, Solomon Islands, Tonga, and Vanuatu.  </li>
-<li>For Step 2, I selected "Travel &amp; Tourism Total Contribution to GDP."  These figures include both tourism's direct contributions to GDP (e.g. GDP generated by hotels, airlines, etc.) and its indirect contributions to the economy; <a href="http://www.wttc.org/site_media/uploads/downloads/oceania2014.pdf">see this report for more details</a>.  </li>
-<li>For Step 3, I selected "% share" as my unit, as I was interested in the extent to which tourism figures in the overall constitution of these countries' economies.  </li>
-<li>I chose the entire date range from 1988 to 2024 (projected), and clicked <strong>Submit</strong>.  </li>
+<li><code>country</code> (required): the FIPS 10-4 country code for your country of interest.  You can find the codes from <a href="http://en.wikipedia.org/wiki/List_of_FIPS_country_codes">this Wikipedia page</a>, or use the <a href="https://github.com/vincentarelbundock/countrycode"><strong>countrycode</strong> R package</a>.  </li>
+<li><code>year</code> (required): The year for which you want to make the pyramid.  The Data Base includes historical information going back to 1950, and projected counts up to 2050 <a href="http://www.census.gov/population/international/data/idb/informationGateway.php">see this link for the Census Bureau's projection methodology</a>.  Not all years are available for all countries, however.  </li>
+<li><code>colors</code> (optional): A vector of length 2 that contains the colors you want to use for your pyramid.  If you leave this argument blank, you'll get the default colors for your pyramid.  </li>
 </ol>
-<p>The data can then be downloaded as an Excel file.  However, the Excel file is formatted in a way that resembles the HTML on the web page, and as such is not in the "tidy" format that is required for visualization in ggplot2.  As such, I saved the file as a CSV (which is available from my GitHub repository) and imported the data into R for some cleaning.  </p>
+<p>Now, let's see how this works!  </p>
 <hr />
-<p>The R code below shows one way to clean up data downloaded from the WTTC in this particular format (multiple countries, one variable).  I've written a function, <code>tidy_WTTC</code>, that should work for any dataset in this form available from the WTTC.  </p>
-<div class="highlight"><pre><span class="c1"># Load packages and data</span>
-
-library<span class="p">(</span>reshape2<span class="p">)</span>
-library<span class="p">(</span>ggplot2<span class="p">)</span>
-library<span class="p">(</span>plotly<span class="p">)</span>
-library<span class="p">(</span>zoo<span class="p">)</span>
-
-dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&#39;tourism.csv&#39;</span><span class="p">)</span>
-
-<span class="c1">## Define the &quot;tidy&quot; function and call it</span>
-
-tidy_WTTC <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-
-  start <span class="o">&lt;-</span> df<span class="p">[</span><span class="m">7</span><span class="p">,</span> <span class="m">2</span><span class="p">]</span>
-  end <span class="o">&lt;-</span> df<span class="p">[</span><span class="m">7</span><span class="p">,</span> ncol<span class="p">(</span>df<span class="p">)]</span>
-
-  df <span class="o">&lt;-</span> df<span class="p">[</span><span class="m">8</span><span class="o">:</span>nrow<span class="p">(</span>df<span class="p">),</span> <span class="p">]</span>
-
-  nms <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;country&quot;</span><span class="p">,</span> paste0<span class="p">(</span><span class="s">&quot;y&quot;</span><span class="p">,</span> seq<span class="p">(</span>start<span class="p">,</span> end<span class="p">,</span> <span class="m">1</span><span class="p">)))</span>
-
-  names<span class="p">(</span>df<span class="p">)</span> <span class="o">&lt;-</span> nms
-
-  df <span class="o">&lt;-</span> na.locf<span class="p">(</span>df<span class="p">,</span> fromLast <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
-
-  df <span class="o">&lt;-</span> df<span class="p">[</span>seq<span class="p">(</span><span class="m">1</span><span class="p">,</span> nrow<span class="p">(</span>df<span class="p">),</span> <span class="m">2</span><span class="p">),</span> <span class="p">]</span>
-
-  df.melt <span class="o">&lt;-</span> melt<span class="p">(</span>df<span class="p">,</span> id.vars <span class="o">=</span> <span class="s">&quot;country&quot;</span><span class="p">,</span> value.name<span class="o">=</span><span class="s">&quot;value&quot;</span><span class="p">,</span> variable.name <span class="o">=</span> <span class="s">&quot;year&quot;</span><span class="p">)</span>
-
-  df.melt<span class="o">$</span>year <span class="o">&lt;-</span> as.numeric<span class="p">(</span>gsub<span class="p">(</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> df.melt<span class="o">$</span>year<span class="p">))</span>
-
-  df.melt<span class="o">$</span>value <span class="o">&lt;-</span> as.numeric<span class="p">(</span>df.melt<span class="o">$</span>value<span class="p">)</span>
-
-  df.melt
-<span class="p">}</span>
-
-tidy_dat <span class="o">&lt;-</span> tidy_WTTC<span class="p">(</span>dat<span class="p">)</span>
+<p>The first example I'll show you is <code>nPyramid</code>, which uses the <a href="http://nvd3.org/">NVD3.js library</a>, which is built on top of D3.  I'm going to create a population pyramid for Qatar in 2014.  I spend a fair amount of time talking about Qatar in my course, as it exemplifies many of the topics we cover such as economic inequality, energy and economic growth, and international labor migration.  In fact, <a href="http://www.pewsocialtrends.org/2013/12/17/migration-tables/">around three-quarters of Qatar's population is foreign-born</a>; further, <a href="http://espn.go.com/video/clip?id=11019010&amp;categoryid=2378529">the conditions endured by migrant laborers in Qatar are attracting international attention in the run-up to the 2022 World Cup</a>.  </p>
+<p>To create the visualization, simply type the following command into your R console: </p>
+<div class="highlight"><pre>nPyramid<span class="p">(</span><span class="s">&#39;QA&#39;</span><span class="p">,</span> <span class="m">2014</span><span class="p">,</span> colors <span class="o">=</span> c<span class="p">(</span><span class="s">&#39;darkred&#39;</span><span class="p">,</span> <span class="s">&#39;silver&#39;</span><span class="p">))</span>
 </pre></div>
 
 
-<p>A few notes about the above code.  To do anything with Plotly in R, it is necessary to use the <strong>plotly</strong> R package, <a href="https://github.com/ropensci/plotly">which is available from rOpenSci's repository on GitHub</a>.  As such, it must be installed first using the <strong>devtools</strong> package with the command <code>install_github("ropensci/plotly")</code>.  </p>
-<p>I'd also like to explain the function in brief.  I've set it up to handle data downloads from the WTTC, provided that a) you've chosen a group of countries and one variable, and b) you've saved the Excel download as a CSV.  Given the structure of the WTTC data, the function will detect the years you've chosen for your download and re-format the data accordingly.  Next, I use the <code>na.locf</code> function from the <strong>zoo</strong> package to resolve the fact that country names are on one row in the original data file, with corresponding values on the next row; this fills in NAs with their correct values.  I then remove the unnecessary rows, and then reshape and reformat the data for visualization with <strong>ggplot2</strong>.    </p>
-<p>The data are now ready for plotting with <strong>ggplot2</strong>, and can then be converted to an interactive Plotly chart.  The code below shows how to get this done.  </p>
-<div class="highlight"><pre><span class="c1">## Create the ggplot, initialize the plotly object, and convert the ggplot to plotly</span>
+<p>Which produces the chart below. I have trouble with NVD3 in the RStudio viewer, so you may need to open it in a web browser if you are using RStudio.  </p>
+<iframe src="http://walkerke.github.io/teaching-with-datavis/pyramids/qatar.html" width="850" height="400" seamless scrolling="no" frameBorder = "0"></iframe>
 
-t1 <span class="o">&lt;-</span> ggplot<span class="p">(</span>tidy_dat<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> year<span class="p">,</span> y <span class="o">=</span> value<span class="p">,</span> color <span class="o">=</span> country<span class="p">))</span> <span class="o">+</span> 
-  geom_line<span class="p">(</span>size <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">+</span> 
-  scale_color_brewer<span class="p">(</span>palette <span class="o">=</span> <span class="s">&quot;Set1&quot;</span><span class="p">)</span> <span class="o">+</span> 
-  labs<span class="p">(</span>list<span class="p">(</span>x <span class="o">=</span> <span class="s">&quot;Year&quot;</span><span class="p">,</span> 
-            y <span class="o">=</span> <span class="s">&quot;Total contribution of tourism to GDP (percent)&quot;</span><span class="p">,</span> 
-            title <span class="o">=</span> <span class="s">&quot;Total contribution of tourism to GDP (percent), select Pacific Island countries.  Data source: WTTC&quot;</span><span class="p">))</span>
-
-py <span class="o">&lt;-</span> plotly<span class="p">(</span><span class="s">&quot;YOUR USERNAME HERE&quot;</span><span class="p">,</span> <span class="s">&quot;YOUR API KEY HERE&quot;</span><span class="p">)</span>
-
-py<span class="o">$</span>ggplotly<span class="p">(</span>t1<span class="p">)</span>
+<p>The pyramid is striking for the dramatic gender imbalance in Qatar introduced by the influx of foreign laborers to the country.  Males aged 30-34 number nearly 300,000; this is over four times the number of females in that age category, who number just over 70,000.  Admittedly, population pyramids like this can be problematic for making gender comparisons (<a href="http://bl.ocks.org/mbostock/4062085">Mike Bostock argues as much here</a>), but this is allayed somewhat when using these pyramids interactively, as the visualizations produce a tooltip on hover that returns the precise population count for the age cohort, allowing for comparisons of the numbers.  </p>
+<hr />
+<p>The next example comes from <a href="http://www.highcharts.com/">Highcharts</a>, an interactive JavaScript charting library that includes many different examples and is very well-documented.  I'm going to use Highcharts here to create an interactive population pyramid for Japan in 2050 with the <code>hPyramid</code> function.  In class, we discussed the <a href="http://www.economist.com/news/asia/21603076-first-time-proper-debate-starting-about-immigration-incredible-shrinking-country?spc=scode&amp;spv=xm&amp;ah=9d7f7ab945510a56fa6d37c30b6f1709">challenges Japan is facing as its population ages</a>; this population pyramid provided important visual context.  To create the chart, use the code below: </p>
+<div class="highlight"><pre>hPyramid<span class="p">(</span><span class="s">&#39;JA&#39;</span><span class="p">,</span> <span class="m">2050</span><span class="p">,</span> colors <span class="o">=</span> c<span class="p">(</span><span class="s">&#39;blue&#39;</span><span class="p">,</span> <span class="s">&#39;red&#39;</span><span class="p">))</span>
 </pre></div>
 
 
-<p>The <strong>ggplot2</strong> code is fairly straightforward; I'm making a basic line chart with minimal customization.  After creating the ggplot, the last two lines of code are all that are necessary to create an interactive chart with Plotly.  You will need to sign up for a Plotly account and get an API key to get this to work; fill in your own username and password where instructed to initialize the Plotly interface object, which I've called <code>py</code>.  Finally, the <code>py$ggplotly(t1)</code> command converts the ggplot <code>t1</code> into an interactive chart, which should appear in your browser.  If everything has worked correctly, you'll get a chart that looks like the one below:  </p>
-<p>(If the iframe is not showing up properly, <a href="http://plot.ly/~walkerke/52">click here</a> to access the chart)</p>
+<iframe src="http://walkerke.github.io/teaching-with-datavis/pyramids/japan2050.html" width="850" height="400" seamless scrolling="no" frameBorder = "0"></iframe>
+
+<p>Japan's projected population structure in 2050 exemplifies an "inverted" population pyramid, with the oldest age cohorts comprising the largest proportions of the population, and the youngest the smallest.  There are many reasons why this is projected to happen in Japan, including high life expectancy, restrictive immigration policies, and declining marriage rates (contributing to low fertility levels).  In turn, Japan's shrinking workforce will have to provide for an increasingly large elderly population, which is illustrated in the chart.  As with the NVD3 pyramid, the chart gives a tooltip on mouseover that returns specific population figures.  One of the most striking features of the pyramid this reveals is the population of female centenarians (people aged 100+), which is projected to exceed 1 million by 2050 as per the Census Bureau.  </p>
 <hr />
-<iframe src="http://plot.ly/~walkerke/52" width="850" height="600" seamless scrolling="no" frameBorder = "0"></iframe>
+<p>The last example I'll show you is <code>dPyramid</code>, which uses the <a href="http://dimplejs.org/">DimpleJS</a> library, built on top of D3.  <code>dPyramid</code> works in much the same way as the other functions, but has the added bonus of being able to take advantage of Dimple's <code>storyboard</code> property, which facilitates the creation of temporal animations.  As such, <code>dPyramid</code> accepts a vector of years for the <code>year</code> parameter; if you choose multiple years instead of a single year, <code>dPyramid</code> will give you a population pyramid that changes over time.  Here's an example that shows the aging of Germany's population between 2000 and 2050.  If you are new to R, the <code>seq</code> function returns a sequence of numbers from argument 1 (in this case, the year 2000), to argument 2 (2050), in intervals of argument 3 (every 10 years).   </p>
+<div class="highlight"><pre>dPyramid<span class="p">(</span><span class="s">&#39;GM&#39;</span><span class="p">,</span> seq<span class="p">(</span><span class="m">2000</span><span class="p">,</span> <span class="m">2050</span><span class="p">,</span> <span class="m">10</span><span class="p">),</span> colors <span class="o">=</span> c<span class="p">(</span><span class="s">&#39;black&#39;</span><span class="p">,</span> <span class="s">&#39;red&#39;</span><span class="p">))</span>
+</pre></div>
+
+
+<iframe src="http://walkerke.github.io/teaching-with-datavis/pyramids/germany.html" width="850" height="425" seamless scrolling="no" frameBorder = "0"></iframe>
+
+<p>The animation does a compelling job of showing how Germany's population is projected to both age and shrink in the years ahead.  Animation can also be used to provide demographic context to key historical circumstances I teach about in class.  For example, I covered the devastation wrought by the <a href="http://www.aljazeera.com/indepth/features/2012/02/20122314155454169.html">Khmer Rouge</a> during the Cambodian genocide, and used the animated population pyramid below to illustrate the demographic impacts of the genocide. The chart covers 1974 to 1982, the time just before, during, and in the years following the Khmer Rouge.  </p>
+<div class="highlight"><pre>dPyramid<span class="p">(</span><span class="s">&#39;CB&#39;</span><span class="p">,</span> seq<span class="p">(</span><span class="m">1974</span><span class="p">,</span> <span class="m">1982</span><span class="p">,</span> <span class="m">1</span><span class="p">))</span>
+</pre></div>
+
+
+<iframe src="http://walkerke.github.io/teaching-with-datavis/pyramids/cambodia.html" width="850" height="425" seamless scrolling="no" frameBorder = "0"></iframe>
+
+<p>You can see how the bars shrink between 1975 and 1979, the years when Cambodia was ruled by the Khmer Rouge.  I could see the shock on some of my students' faces when I showed this to them - many of them were unfamiliar with the history of Cambodia and the Khmer Rouge.  The visualization shows an overall decline in population of around 900,000 between 1974 and 1979, which reflects official population numbers; this likely underestimates the scale of the atrocities in Cambodia (<a href="http://www.yale.edu/gsp/publications/KiernanRevised1.pdf">see the article linked here</a>), as the actual losses may have been twice that.  </p>
+<p>To save any of your pyramids as a standalone HTML document, just assign your pyramid to a variable and use rCharts' <code>save</code> option to save your chart, setting the <code>cdn</code> parameter to <code>TRUE</code>.  The code below provides an example of how to save the html file in your working directory.    </p>
+<div class="highlight"><pre>q1 <span class="o">&lt;-</span> nPyramid<span class="p">(</span><span class="s">&#39;QA&#39;</span><span class="p">,</span> <span class="m">2014</span><span class="p">,</span> colors <span class="o">=</span> c<span class="p">(</span><span class="s">&#39;darkred&#39;</span><span class="p">,</span> <span class="s">&#39;silver&#39;</span><span class="p">))</span>
+q1<span class="o">$</span>save<span class="p">(</span><span class="s">&#39;qatar.html&#39;</span><span class="p">,</span> cdn <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+</pre></div>
+
 
 <hr />
-<p>I now have an interactive chart that contains a wealth of information about the tourist economies of select Pacific Island countries.  As the chart reveals, the economic significance of tourism figures differently from country to country in the Pacific.  In places like Vanuatu and Fiji, tourism is a large component of the local economy and is projected to increase in importance.  In contrast, tourism is less prominent in places like Tonga, which relies heavily on remittances from Tongans living abroad; this example is familiar to my students, <a href="http://www.star-telegram.com/2013/12/31/5453055/in-euless-tongans-usher-in-the.html">as there is a large Tongan community living in cities very near to TCU</a>.  </p>
-<p>By default, Plotly embeds several options for interacting with the chart.  The user can click and drag on the chart itself to zoom in to particular areas; with a time series chart, this can be useful if the user wants to highlight a particular period of time in the graph.  Additionally, tooltips appear on hover that give direct access to the data informing the chart.  More interactivity is also available from the icons in the upper-right-hand corner of the chart, allowing users to zoom, pan, and change the desired tooltip display (all data series, or one at a time).  </p>
-<p>Once the chart is published to your Plotly account, you can customize it even further using Plotly's web-based GUI.  In the above example, I moved the position of the legend manually using the GUI to maximize the space occupied by the data; you can also edit the chart's appearance, change the axis and chart titles, and add notes to the chart, among other options.  </p>
-<p>Using <code>ggplotly</code> in this way has become a major part of my workflow in preparing interactive materials for my teaching.  Here are a sampling of other charts I've prepared in this way:  </p>
-<ul>
-<li><a href="https://plot.ly/~walkerke/12">Total fertility rates in South Asia by country, 1960-2011</a></li>
-<li><a href="https://plot.ly/~walkerke/21">Past and future population of Japan (projected)</a></li>
-<li><a href="https://plot.ly/~walkerke/30">GDP by country since 1970, major world economies</a></li>
-</ul>
-<p>More examples can be found at <a href="https://plot.ly/~walkerke">my Plotly page</a>, and I'll be posting the code for these visualizations to GitHub.  While <code>ggplotly</code> has worked great for me so far, it is still very early in development and only supports a limited number of chart types from <strong>ggplot2</strong> (<a href="http://aarongonzales.net/plotly_examples.html">see this post for details</a>).  In turn, you'll need to use Plotly's APIs to create the unavailable chart types, which I have just started to work with.  This summer, I'm going to explore using Plotly as well using Python, <a href="http://nbviewer.ipython.org/github/plotly/python-user-guide/blob/master/s00_homepage/s00_homepage.ipynb">which has a well-developed API</a> and appears to work very well with the IPython Notebook.  </p>
-<p>As always, please contact me at <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#107;&#121;&#108;&#101;&#46;&#119;&#97;&#108;&#107;&#101;&#114;&#64;&#116;&#99;&#117;&#46;&#101;&#100;&#117;">&#107;&#121;&#108;&#101;&#46;&#119;&#97;&#108;&#107;&#101;&#114;&#64;&#116;&#99;&#117;&#46;&#101;&#100;&#117;</a> or get in touch with me on <a href="https://twitter.com/kyle_e_walker">Twitter</a> if you have any questions or feedback.  </p>
+<p>I've learned a lot about rCharts as I've put these together; my next post will cover how these charts are created.  In the meantime, have a look at the <a href="https://github.com/walkerke/teaching-with-datavis/blob/master/pyramids/rcharts_pyramids.R">code on GitHub</a>; you are welcome to use and modify it as you please.  I'd love to hear your comments or feedback; you can contact me at <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#107;&#121;&#108;&#101;&#46;&#119;&#97;&#108;&#107;&#101;&#114;&#64;&#116;&#99;&#117;&#46;&#101;&#100;&#117;">&#107;&#121;&#108;&#101;&#46;&#119;&#97;&#108;&#107;&#101;&#114;&#64;&#116;&#99;&#117;&#46;&#101;&#100;&#117;</a> or get in touch with me on <a href="https://twitter.com/kyle_e_walker">Twitter</a>.    </p>
 <p><strong>Thanks to:</strong></p>
 <ul>
-<li><a href="https://twitter.com/plotlygraphs">The Plotly team</a> for their amazing work;</li>
-<li><a href="https://twitter.com/WTTC">The World Travel and Tourism Council</a> for generously making their data publicly available.  </li>
+<li><a href="https://twitter.com/ramnath_vaidya">Ramnath Vaidyanathan</a>, <a href="https://twitter.com/timelyportfolio">Timely Portfolio</a>, and <a href="https://twitter.com/jkiernander">John Kiernander</a> for their incredible contributions that make this all possible - and for helping me out with some Dimple formatting issues;</li>
+<li>The authors of the NVD3, D3, and Highcharts JavaScript libraries;</li>
+<li>The US Census Bureau for making the International Data Base such a valuable resource.   </li>
 </ul></div>
         <hr />
     </div>
 		
+
+ 
+        
+
+ 
+
+    <div class='article'>
+        <a href="http://walkerke.github.io/2014/05/tourism-plotly/"><h2>Visualizing the economics of tourism in the Pacific with Plotly</h2></a>
+        <div class= "well small"> Mon 12 May 2014
+
+by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
+ 
+
+
+ </div>
+        <div class="summary"><p>Over the last month or so, I've been working a lot with <a href="http://plot.ly">Plotly</a> to visualize data for my World Regional Geography course.  Plotly is a web-based service that allows for the creation of interactive, D3-based visualizations that can be easily shared.  Visualizations are deployed and hosted on Plotly's ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/05/tourism-plotly/">read more</a></div>
+    </div>	
+				
 
  
         
