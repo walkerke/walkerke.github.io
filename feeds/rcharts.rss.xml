@@ -16,7 +16,7 @@ install_github&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;If you are not using RStudio, use &lt;code&gt;source_url&lt;/code&gt; from the &lt;strong&gt;devtools&lt;/strong&gt; packages instead of &lt;code&gt;source&lt;/code&gt;.  Alternatively, you can get the script from GitHub yourself and load it.&lt;/p&gt;
+&lt;p&gt;If you are not using RStudio, use &lt;code&gt;source_url&lt;/code&gt; from the &lt;strong&gt;devtools&lt;/strong&gt; package instead of &lt;code&gt;source&lt;/code&gt;.  Alternatively, you can get the script from GitHub yourself and load it.&lt;/p&gt;
 &lt;p&gt;The script contains four functions: &lt;code&gt;getAgeTable&lt;/code&gt;, &lt;code&gt;dPyramid&lt;/code&gt;, &lt;code&gt;hPyramid&lt;/code&gt;, and &lt;code&gt;nPyramid&lt;/code&gt;.  &lt;code&gt;getAgeTable&lt;/code&gt; is a helper function that uses the &lt;strong&gt;XML&lt;/strong&gt; package to scrape data from the International Data Base and convert it into an R data frame.  I pull data from the category "Mid-year Population by Five Year Age Groups and Sex" to create the pyramids.  The other three functions are used to create population pyramids from the data with different JavaScript libraries available through &lt;strong&gt;rCharts&lt;/strong&gt;.  Each function has three parameters:  &lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;code&gt;country&lt;/code&gt; (required): the FIPS 10-4 country code for your country of interest.  You can find the codes from &lt;a href="http://en.wikipedia.org/wiki/List_of_FIPS_country_codes"&gt;this Wikipedia page&lt;/a&gt;, or use the &lt;a href="https://github.com/vincentarelbundock/countrycode"&gt;&lt;strong&gt;countrycode&lt;/strong&gt; R package&lt;/a&gt;.  &lt;/li&gt;

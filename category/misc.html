@@ -84,7 +84,7 @@ install_github<span class="p">(</span><span class="s">&#39;ramnathv/rCharts@dev&
 </pre></div>
 
 
-<p>If you are not using RStudio, use <code>source_url</code> from the <strong>devtools</strong> packages instead of <code>source</code>.  Alternatively, you can get the script from GitHub yourself and load it.</p>
+<p>If you are not using RStudio, use <code>source_url</code> from the <strong>devtools</strong> package instead of <code>source</code>.  Alternatively, you can get the script from GitHub yourself and load it.</p>
 <p>The script contains four functions: <code>getAgeTable</code>, <code>dPyramid</code>, <code>hPyramid</code>, and <code>nPyramid</code>.  <code>getAgeTable</code> is a helper function that uses the <strong>XML</strong> package to scrape data from the International Data Base and convert it into an R data frame.  I pull data from the category "Mid-year Population by Five Year Age Groups and Sex" to create the pyramids.  The other three functions are used to create population pyramids from the data with different JavaScript libraries available through <strong>rCharts</strong>.  Each function has three parameters:  </p>
 <ol>
 <li><code>country</code> (required): the FIPS 10-4 country code for your country of interest.  You can find the codes from <a href="http://en.wikipedia.org/wiki/List_of_FIPS_country_codes">this Wikipedia page</a>, or use the <a href="https://github.com/vincentarelbundock/countrycode"><strong>countrycode</strong> R package</a>.  </li>
