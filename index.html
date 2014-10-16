@@ -58,8 +58,8 @@
 
     <div class='article'>
         <div class="content-title">
-            <a href="http://walkerke.github.io/2014/08/un-projections/"><h1>Exploring the United Nations population projections with rCharts</h1></a>
-Tue 05 August 2014
+            <a href="http://walkerke.github.io/2014/10/russia-lex/"><h1>Life expectancy trends in the former USSR</h1></a>
+Thu 16 October 2014
 
 by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
  
@@ -68,101 +68,152 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
  
         </div>
         
-        <div><p>I recently came across <a href="http://dataremixed.com/2014/07/story-types-a-thought-starter/">this really interesting post</a> from <a href="https://twitter.com/DataRemixed">Ben Jones</a> that explores the history and future of world population change with Tableau.  I haven't used Tableau much, but I was impressed with the different ways in which Ben used the software to visualize various aspects of global population change.  More broadly, I can see multiple ways in which a visualization like this would be useful in teaching a course like World Regional Geography.  An instructor could ask students to answer a series of questions regarding global population change, using the visualizations as their evidence.  Students would then report back to the class about what they've learned from the visualizations, presenting different views to support their answers to the questions.  </p>
-<p>Reading this post motivated me to share a couple more basic visualizations that I've used in my teaching to support discussions of global population change.  These are some of the first charts I created with <a href="http://rcharts.io/">rCharts</a> when I first started working with the package late last year.  However, I've updated the code below to use the new Hadley Wickham package <a href="https://github.com/hadley/dplyr">dplyr</a>, which makes data munging in R so much easier.  Eventually, I would like to create a <a href="http://shiny.rstudio.com/">Shiny</a> application that is similar to what Ben created with Tableau, but instead using R and rCharts.  </p>
-<p>In the examples below, I use population projection data from <a href="http://esa.un.org/wpp/">the United Nations' World Population Prospects, 2012 Revision</a>.  I create the visualizations with <a href="http://nvd3.org/">NVD3</a>.  The first example is a stacked area chart that shows the changing regional distribution of the world's population between 1950 and 2100.  </p>
-<div class="highlight"><pre>library<span class="p">(</span>dplyr<span class="p">)</span>
+        <div><p>When covering Russia and the former constitutent republics of the USSR in World Regional Geography, a key part of my material addresses the issues that some of these countries have had in their transitions from centralized to market economies.  Some of these countries experienced dramatic demographic shifts after the dissolution of the USSR, including a noticeable decline in life expectancy.</p>
+<p>I'd been using some static Excel charts to illustrate life expectancy declines in Russia, Belarus, and Ukraine in previous courses.  However, I felt that an interactive solution would be preferable so that my students and I could explore the data in class over the course of our discussion.  I opted for <a href="http://www.highcharts.com/">Highcharts</a>, through R and <a href="http://rcharts.io">rCharts</a>, for the interactivity.  I then turned to <a href="http://shiny.rstudio.com/">Shiny</a> from <a href="http://www.rstudio.com/">RStudio</a> to put everything together.  </p>
+<p>Shiny is a framework that allows R users to turn analyses and visualizations into interactive applications.  Shiny can be run locally on your computer, or deployed to the web via the <a href="https://www.shinyapps.io/">ShinyApps.io</a> hosting service, which is currently free.  The beauty of Shiny is that it allows you to explore your data interactively with a friendly web-based user interface without writing any JavaScript, and it lets R users create and deploy apps to be shared with non-R users who may nonetheless be interested in exploring a dataset or visualization. <a href="http://shiny.rstudio.com/gallery/">You can see RStudio's gallery of examples here.</a></p>
+<p>To get started, I acquired data from <a href="http://www.mortality.org/">The Human Mortality Database</a>, (HMD) a project of UC Berkeley and the Max Planck Institute.  The HMD prefers that users not re-distribute the data, so if you'd like to reproduce this chart, you'll need to download the data yourself.  However, the service is free (with registration) and relatively simple to use.  The HMD provides mortality data for 37 countries, including Russia, Belarus, and Ukraine. From the HMD, I downloaded the 1-year life expectancy at birth tables for these countries, and saved them to my working directory as delimited text files, naming them accordingly.  Once I did this, I used the code below to process the data into a suitable format for visualization.  </p>
+<div class="highlight"><pre>library<span class="p">(</span>tidyr<span class="p">)</span>
+library<span class="p">(</span>dplyr<span class="p">)</span>
+
+russia <span class="o">&lt;-</span> read.table<span class="p">(</span><span class="s">&#39;russia.txt&#39;</span><span class="p">,</span> skip <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
+
+names<span class="p">(</span>russia<span class="p">)</span> <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">,</span> <span class="s">&quot;Female&quot;</span><span class="p">,</span> <span class="s">&quot;Male&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
+
+russia<span class="o">$</span>country <span class="o">&lt;-</span> <span class="s">&quot;Russia&quot;</span>
+
+ukraine <span class="o">&lt;-</span> read.table<span class="p">(</span><span class="s">&#39;ukraine.txt&#39;</span><span class="p">,</span> skip <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
+
+names<span class="p">(</span>ukraine<span class="p">)</span> <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">,</span> <span class="s">&quot;Female&quot;</span><span class="p">,</span> <span class="s">&quot;Male&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
+
+ukraine<span class="o">$</span>country <span class="o">&lt;-</span> <span class="s">&quot;Ukraine&quot;</span>
+
+belarus <span class="o">&lt;-</span> read.table<span class="p">(</span><span class="s">&#39;belarus.txt&#39;</span><span class="p">,</span> skip <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
+
+names<span class="p">(</span>belarus<span class="p">)</span> <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">,</span> <span class="s">&quot;Female&quot;</span><span class="p">,</span> <span class="s">&quot;Male&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
+
+belarus<span class="o">$</span>country <span class="o">&lt;-</span> <span class="s">&quot;Belarus&quot;</span>
+
+dat <span class="o">&lt;-</span> rbind<span class="p">(</span>russia<span class="p">,</span> ukraine<span class="p">,</span> belarus<span class="p">)</span>
+
+dlong <span class="o">&lt;-</span> dat <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="o">-</span>Total<span class="p">)</span> <span class="o">%&gt;%</span>
+  gather<span class="p">(</span>Gender<span class="p">,</span> lex<span class="p">,</span> Female<span class="o">:</span>Male<span class="p">)</span>
+
+write.csv<span class="p">(</span>dlong<span class="p">,</span> <span class="s">&#39;data.csv&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>In a nutshell, the above code reads in each of the three text files, identifies the country the data correspond to, then combines them.  It then uses functions from the <a href="http://cran.r-project.org/web/packages/dplyr/index.html">dplyr</a> and <a href="http://cran.r-project.org/web/packages/tidyr/index.html">tidyr</a> to convert the data to "tidy" (long) format, which is what I want for visualization.  I then saved the data as a CSV and moved it to a new folder where I would create my Shiny app.  </p>
+<p>A Shiny app requires two files to run: <strong>server.R</strong>, which specifies the data analysis/visualization to show, and <strong>ui.R</strong>, in which you prepare the user interface.  An optional third file (which I haven't used here), <strong>global.R</strong>, can be used to read in data or do any background data preparation that you want to make available to both the server and UI scripts.  I largely adapted my server and UI code from <a href="http://shiny.rstudio.com/tutorial/">RStudio's Shiny tutorials</a> and <a href="http://ramnathv.github.io/rChartsShiny/">Ramnath Vaidyanathan's tutorial on using rCharts with Shiny</a>, with some help from StackOverflow as well.  </p>
+<p>I prepared the UI first with the code below.  </p>
+<div class="highlight"><pre><span class="c1"># ui.R</span>
+
 library<span class="p">(</span>rCharts<span class="p">)</span>
-library<span class="p">(</span>RColorBrewer<span class="p">)</span>
 
-dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&quot;http://esa.un.org/wpp/ASCII-Data/ASCII_FILES/WPP2012_DB02_POPULATIONS_ANNUAL.csv&quot;</span><span class="p">)</span>
+dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&#39;data.csv&#39;</span><span class="p">)</span>
 
-<span class="c1">## Alternatively, download the file from the above link and save it in your working directory</span>
+<span class="c1"># Define UI </span>
+shinyUI<span class="p">(</span>fluidPage<span class="p">(</span>
 
-<span class="c1"># library(data.table)</span>
-<span class="c1"># dat &lt;- fread(&quot;WPP2012_DB02_POPULATIONS_ANNUAL.csv&quot;)</span>
+  <span class="c1"># Sidebar </span>
+  sidebarLayout<span class="p">(</span>
+    sidebarPanel<span class="p">(</span>
+      selectInput<span class="p">(</span>inputId <span class="o">=</span> <span class="s">&quot;country&quot;</span><span class="p">,</span> 
+                  label <span class="o">=</span> <span class="s">&quot;Select a country:&quot;</span><span class="p">,</span> 
+                  choices <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;Russia&quot;</span><span class="p">,</span> <span class="s">&quot;Belarus&quot;</span><span class="p">,</span> <span class="s">&quot;Ukraine&quot;</span><span class="p">),</span> 
+                  selected <span class="o">=</span> <span class="s">&quot;Russia&quot;</span><span class="p">),</span> 
+      sliderInput<span class="p">(</span><span class="s">&quot;range&quot;</span><span class="p">,</span>
+                  label <span class="o">=</span> <span class="s">&quot;Years to display:&quot;</span><span class="p">,</span>
+                  min <span class="o">=</span> <span class="m">1959</span><span class="p">,</span>
+                  max <span class="o">=</span> <span class="m">2010</span><span class="p">,</span>
+                  value <span class="o">=</span> c<span class="p">(</span><span class="m">1959</span><span class="p">,</span> <span class="m">2010</span><span class="p">),</span> 
+                  format <span class="o">=</span> <span class="s">&quot;0000&quot;</span><span class="p">),</span> 
+      helpText<span class="p">(</span><span class="s">&quot;Data reflect the life expectancy &quot;</span><span class="p">,</span> 
+                <span class="s">&quot;at birth from 1959 to 2010 &quot;</span><span class="p">,</span> 
+               <span class="s">&quot;for men and women in Russia, &quot;</span><span class="p">,</span> 
+                <span class="s">&quot;Belarus, and Ukraine.  Data are &quot;</span><span class="p">,</span> 
+               <span class="s">&quot;obtained from the Human Mortality &quot;</span><span class="p">,</span> 
+                <span class="s">&quot;Database, a project of &quot;</span><span class="p">,</span> 
+                <span class="s">&quot; the University of California, &quot;</span><span class="p">,</span> 
+                <span class="s">&quot;Berkeley (USA), and Max Planck &quot;</span><span class="p">,</span> 
+                <span class="s">&quot;Institute for Demographic Research &quot;</span><span class="p">,</span> 
+                <span class="s">&quot;(Germany). Data are available &quot;</span><span class="p">,</span> 
+                <span class="s">&quot;at www.mortality.org or www.humanmortality.de &quot;</span><span class="p">,</span> 
+               <span class="s">&quot;(downloaded on 14 Oct 2014).&quot;</span><span class="p">)</span>
+    <span class="p">),</span>
 
-regions <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;Africa&quot;</span><span class="p">,</span> <span class="s">&quot;Latin America and the Caribbean&quot;</span><span class="p">,</span> <span class="s">&quot;Northern America&quot;</span><span class="p">,</span> <span class="s">&quot;Europe&quot;</span><span class="p">,</span> <span class="s">&quot;Oceania&quot;</span><span class="p">,</span> <span class="s">&quot;Asia&quot;</span><span class="p">)</span>
-
-region_dat <span class="o">&lt;-</span> dat <span class="o">%&gt;%</span>
-  filter<span class="p">(</span>VarID <span class="o">==</span> <span class="m">2</span><span class="p">,</span> 
-         Location <span class="o">%in%</span> regions<span class="p">)</span> <span class="o">%&gt;%</span>
-  mutate<span class="p">(</span>billions <span class="o">=</span> PopTotal <span class="o">/</span> <span class="m">1000000</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  select<span class="p">(</span>Location<span class="p">,</span> Time<span class="p">,</span> billions<span class="p">)</span>
-
-<span class="c1"># Stacked area chart by region</span>
-
-c1 <span class="o">&lt;-</span> nPlot<span class="p">(</span>billions <span class="o">~</span> Time<span class="p">,</span> 
-            group <span class="o">=</span> <span class="s">&quot;Location&quot;</span><span class="p">,</span> 
-            data <span class="o">=</span> region_dat<span class="p">,</span> 
-            type <span class="o">=</span> <span class="s">&quot;stackedAreaChart&quot;</span><span class="p">)</span>
-
-c1<span class="o">$</span>chart<span class="p">(</span>color <span class="o">=</span> brewer.pal<span class="p">(</span><span class="m">6</span><span class="p">,</span> <span class="s">&quot;Set2&quot;</span><span class="p">))</span>
-c1<span class="o">$</span>yAxis<span class="p">(</span>tickFormat<span class="o">=</span> <span class="s">&quot;#!d3.format(&#39;,.1f&#39;)!#&quot;</span><span class="p">)</span>
-c1<span class="o">$</span>yAxis<span class="p">(</span>axisLabel <span class="o">=</span> <span class="s">&quot;Population (billions)&quot;</span><span class="p">,</span> width <span class="o">=</span> <span class="m">62</span><span class="p">)</span>
-c1<span class="o">$</span>xAxis<span class="p">(</span>axisLabel <span class="o">=</span> <span class="s">&quot;Year&quot;</span><span class="p">)</span>
-
-c1<span class="o">$</span>chart<span class="p">(</span>tooltipContent <span class="o">=</span> <span class="s">&quot;#! function(key, x, y){</span>
-<span class="s">        return &#39;&lt;h3&gt;&#39; + key + &#39;&lt;/h3&gt;&#39; + </span>
-<span class="s">        &#39;&lt;p&gt;&#39; + y + &#39; billion in &#39; + x + &#39;&lt;/p&gt;&#39;</span>
-<span class="s">        } !#&quot;</span><span class="p">)</span>
+    <span class="c1"># Show the plot </span>
+    mainPanel<span class="p">(</span>
+      showOutput<span class="p">(</span><span class="s">&quot;lexplot&quot;</span><span class="p">,</span> <span class="s">&quot;highcharts&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+  <span class="p">)</span>
+<span class="p">))</span>
 </pre></div>
 
 
-<p>The above code reads the data file directly into R from the UN's website; however this can be slow (about a couple minutes) so if you'd prefer, I'd advise downloading the CSV to your working directory and using <code>fread</code> from the <strong>data.table</strong> package to read it in (<a href="http://r.789695.n4.nabble.com/Odd-problem-using-fread-to-read-in-a-csv-file-no-data-just-headers-td4686302.html">there is an issue with using <code>fread</code> to read CSVs from websites on Windows</a>).  I then subset the data into a new data frame, <code>region_dat</code>, using <strong>dplyr</strong>.  If you are unfamiliar with dplyr, I highly recommend that you check it out; <a href="http://rpubs.com/walkerke/ipums_dplyr">I have written about other use cases for dplyr here</a>.  </p>
-<p>The remaining code creates the NVD3 chart with rCharts. Notice that when working with rCharts, you sometimes have to pass in JavaScript directly to modify the chart options, which is enclosed in <code>"#!...!#"</code>.  I do this when formatting the y-axis values as well as the content of the tooltip.  Notice that <code>key</code> refers to the group value, <code>y</code> is the y-axis value, and <code>x</code> is the x-axis value in the JavaScript function.  You can also pass in other values to the tooltip with NVD3; <a href="https://gist.github.com/walkerke/11002398">I show how in this GitHub gist</a>.  </p>
-<p>Typing <code>c1</code> in the console then produces the chart below: </p>
-<iframe src="http://walkerke.github.io/teaching-with-datavis/un-projections/regions.html" width="850" height="400" seamless scrolling="no" frameBorder = "0"></iframe>
+<p>In the <strong>ui.R</strong> script, I define the parameters of the Shiny user interface.  I'll have a drop-down menu to select the country of choice (Russia, Belarus, or Ukraine), as well as a time slider that allows the user to specify the years to show in the chart.  I then use the <code>showOutput</code> function from rCharts in the <code>mainPanel</code> call to tell Shiny to show my chart in the main area.  </p>
+<p>Next, I set up the server.  </p>
+<div class="highlight"><pre><span class="c1"># server.R</span>
 
-<p>I used this chart during the first week of my World Regional Geography class to discuss population change in global context.  The region that stands out, of course, is Africa, which is projected to almost-quadruple in population by the end of century.  If these projections pan out, Africa would have over 4 billion residents by 2100, and account for around 40 percent of the world's population.  The interactivity in the chart then allows for more detailed exploration of the data.  By clicking on the Europe data series, for example, the user can hide all of the other regions, and show how the continent's population is projected to peak in the next several years and then begin to decline.  These figures provided important context to many of the thematic topics specific to these regions I covered later in the class.  Additionally, the chart can be modified with a single click to a "Stream" or "Expanded" 100% view (try it!), for different views of the data. </p>
-<p>I also created another visualization to show UN projections for the world's population based on different projection scenarios.  The code and resultant chart are below.  </p>
-<div class="highlight"><pre>variants <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;Low&quot;</span><span class="p">,</span> <span class="s">&quot;Medium&quot;</span><span class="p">,</span> <span class="s">&quot;High&quot;</span><span class="p">,</span> <span class="s">&quot;Constant fertility&quot;</span><span class="p">)</span>
+library<span class="p">(</span>rCharts<span class="p">)</span>
 
-global_dat <span class="o">&lt;-</span> dat <span class="o">%&gt;%</span>
-  filter<span class="p">(</span>Location <span class="o">==</span> <span class="s">&quot;World&quot;</span><span class="p">,</span> 
-         Variant <span class="o">%in%</span> variants<span class="p">,</span>
-         Time <span class="o">&gt;=</span> <span class="m">2012</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  mutate<span class="p">(</span>varfactor <span class="o">=</span> factor<span class="p">(</span>Variant<span class="p">,</span>
-                            levels <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;Constant fertility&quot;</span><span class="p">,</span>
-                                       <span class="s">&quot;High&quot;</span><span class="p">,</span>
-                                       <span class="s">&quot;Medium&quot;</span><span class="p">,</span>
-                                       <span class="s">&quot;Low&quot;</span><span class="p">)),</span> 
-         billions <span class="o">=</span> PopTotal <span class="o">/</span> <span class="m">1000000</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  select<span class="p">(</span>varfactor<span class="p">,</span> Time<span class="p">,</span> billions<span class="p">)</span> <span class="o">%&gt;%</span>
-  arrange<span class="p">(</span>varfactor<span class="p">)</span>
+dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&#39;data.csv&#39;</span><span class="p">)</span>
 
-c2 <span class="o">&lt;-</span> nPlot<span class="p">(</span>billions <span class="o">~</span> Time<span class="p">,</span> 
-            group <span class="o">=</span> <span class="s">&quot;varfactor&quot;</span><span class="p">,</span> 
-            data <span class="o">=</span> global_dat<span class="p">,</span> 
-            type<span class="o">=</span><span class="s">&quot;lineChart&quot;</span><span class="p">)</span>
+options<span class="p">(</span>RCHART_WIDTH <span class="o">=</span> <span class="m">500</span><span class="p">)</span>
 
-c2<span class="o">$</span>chart<span class="p">(</span>color <span class="o">=</span> brewer.pal<span class="p">(</span><span class="m">4</span><span class="p">,</span> <span class="s">&quot;Set2&quot;</span><span class="p">))</span>
-c2<span class="o">$</span>yAxis<span class="p">(</span>tickFormat<span class="o">=</span> <span class="s">&quot;#!d3.format(&#39;,.1f&#39;)!#&quot;</span><span class="p">)</span>
-c2<span class="o">$</span>yAxis<span class="p">(</span>axisLabel <span class="o">=</span> <span class="s">&quot;Population (billions)&quot;</span><span class="p">,</span> width <span class="o">=</span> <span class="m">62</span><span class="p">)</span>
-c2<span class="o">$</span>xAxis<span class="p">(</span>axisLabel <span class="o">=</span> <span class="s">&quot;Year&quot;</span><span class="p">)</span>
+shinyServer<span class="p">(</span><span class="kr">function</span><span class="p">(</span>input<span class="p">,</span> output<span class="p">)</span> <span class="p">{</span>
+  output<span class="o">$</span>lexplot <span class="o">&lt;-</span> renderChart2<span class="p">({</span>
+    selected <span class="o">&lt;-</span> input<span class="o">$</span>country
+    country <span class="o">&lt;-</span> subset<span class="p">(</span>dat<span class="p">,</span> country <span class="o">==</span> selected <span class="o">&amp;</span> Year <span class="o">%in%</span> seq<span class="p">(</span>input<span class="o">$</span>range<span class="p">[</span><span class="m">1</span><span class="p">],</span> input<span class="o">$</span>range<span class="p">[</span><span class="m">2</span><span class="p">],</span> <span class="m">1</span><span class="p">))</span>
+    h1 <span class="o">&lt;-</span> hPlot<span class="p">(</span>
+      x <span class="o">=</span> <span class="s">&quot;Year&quot;</span><span class="p">,</span> 
+      y <span class="o">=</span> <span class="s">&quot;lex&quot;</span><span class="p">,</span> 
+      group <span class="o">=</span> <span class="s">&quot;Gender&quot;</span><span class="p">,</span> 
+      data <span class="o">=</span> country<span class="p">,</span> 
+      type <span class="o">=</span> <span class="s">&quot;line&quot;</span><span class="p">)</span>
 
-
-c2<span class="o">$</span>chart<span class="p">(</span>tooltipContent <span class="o">=</span> <span class="s">&quot;#! function(key, x, y){</span>
-<span class="s">        return &#39;&lt;h3&gt;&#39; + &#39;Variant: &#39; + key + &#39;&lt;/h3&gt;&#39; + </span>
-<span class="s">        &#39;&lt;p&gt;&#39; + y + &#39; billion in &#39; + x + &#39;&lt;/p&gt;&#39;</span>
-<span class="s">        } !#&quot;</span><span class="p">)</span>
-c2
+    h1<span class="o">$</span>colors<span class="p">(</span>c<span class="p">(</span><span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="s">&quot;blue&quot;</span><span class="p">))</span>
+    h1<span class="o">$</span>yAxis<span class="p">(</span>title <span class="o">=</span> list<span class="p">(</span>enabled <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span> text <span class="o">=</span> <span class="s">&#39;Life expectancy at birth&#39;</span><span class="p">))</span>
+    <span class="kr">return</span><span class="p">(</span>h1<span class="p">)</span>
+  <span class="p">})</span>
+<span class="p">})</span>
 </pre></div>
 
 
-<iframe src="http://walkerke.github.io/teaching-with-datavis/un-projections/global.html" width="850" height="400" seamless scrolling="no" frameBorder = "0"></iframe>
+<p>The key here to get this to work is to make sure that your <strong>server.R</strong> and <strong>ui.R</strong> scripts communicate correctly.  My UI takes an input that is dependent upon the country and years selected by the user, so I create a subsetted data frame, <code>country</code>, within the <code>renderChart2</code> function that will respond to that.  I then specify the parameters of the Highchart plot, and tell my <code>renderChart2</code> function to return that plot and assign it to the <code>lexplot</code> property of the output, which is what my user interface script will expect.  </p>
+<p>RStudio will know that you are creating a Shiny app (given the names of your scripts), so you can simply click the <strong>Run App</strong> button to run your app locally, and then deploy it to ShinyApps if you'd like.  Now, let's take a look at the result.  Use the drop-down menu to select a country, and the time slider to specify a range of years to display.   </p>
+<iframe src="https://walkerke.shinyapps.io/lex_former_ussr/" height="500" width="850" frameBorder = "0" scrolling = "no" seamless></iframe>
 
-<p>The chart shows wide disparities between the UN's projection scenarios.  If global fertility were to remain at 2012 levels, the world's population would be expected to reach nearly 28 billion by the end of the century!  However, any reasonable projection scenarios take into account global declines in fertility.  While the annual rate of world population growth has been declining for several decades, <a href="http://en.wikipedia.org/wiki/Demographic_momentum">demographic momentum</a> is projected to carry the world's population to close to 11 billion by 2100, according to the most commonly-cited Medium projection variant.  However, it is notable that if global fertility were to decline more than expected, the world's population could peak in size and then decline over the next century.  This is shown by the Low variant, which is calculated with a fertility rate half a child lower than the medium variant.  If you are interested in learning more about the UN's projections and methodology, <a href="http://esa.un.org/wpp/Documentation/pdf/WPP2012_HIGHLIGHTS.pdf">read their report here</a>. </p>
-<p>The UN population projection dataset contains a lot more information than just this, however.  Projections are included for every country, and other files are available with additional demographic information <a href="http://esa.un.org/wpp/ASCII-Data/DISK_NAVIGATION_ASCII.htm">at the UN's website</a>.  As such, there are many other ways to visualize these data; I envision a Shiny application in which the user could interactively select countries and compare projection scenarios. </p>
-<p>You are welcome to use these visualizations if you'd like, or feel free to <a href="https://github.com/walkerke/teaching-with-datavis/blob/master/un-projections/un-projections.R">get the code from GitHub</a> and build on this.  If you do, I'd love to hear about what you've created!</p>
+<p>I now have an interactive application that allows me, in class, to seamlessly switch between countries, change years, and explore the data interactively thanks to Highcharts' built-in interactivity.  I use the charts to point out key trends, both pre- and post- USSR.  In Russia, for example, we see that life expectancy declines through the mid-20th century, then peaks in the 1980s, <a href="http://www.rand.org/pubs/conf_proceedings/CF124/cf124.chap4.html">which is attributed to Mikhail Gorbachev's anti-alcohol campaign.</a>  Life expectancy then falls dramatically around the time that the USSR dissolved.  For example, male life expectancy in 1994 in Russia was a little over 57, around 7.5 years less than its peak in 1987.  <a href="http://www.ncbi.nlm.nih.gov/pubmed/9508159">Studies have attributed this to a variety of factors, including alcohol abuse, poor nutrition and health behaviors, and problems with the health care system.</a>  However, life expectancy improves in the late 2000s, <a href="http://www.demographic-research.org/volumes/vol28/32/28-32.pdf">in part due to declines in cardiovascular disease and homicides</a>.  </p>
+<p>In class, I first presented the chart (which displays very nicely in a <a href="http://ramnathv.github.io/slidify/">Slidify</a> presentation) and explored the data with my students.  I then showed my students the first segment from the documentary <a href="https://www.youtube.com/watch?v=J1OyIJtjdpo">Death of a Nation: Russia</a> by Marcel Theroux which explores some of the underlying issues behind these demographic changes in more depth.  We then used the video to collectively think about some reasons for the decline of life expectancy in Russia after the fall of the USSR.  The video paired very nicely with the interactive Shiny app; the charts provided key visual demographic context, and the video then put faces to the data.  </p>
+<p>The app is fully reproducible (just make sure you download the data from <a href="http://www.mortality.org">the Human Mortality Database</a> first) and you can find the code in its <a href="https://github.com/walkerke/teaching-with-datavis/tree/master/russia-lex">GitHub repository</a>.  The chart is also available in stand-alone form here: https://walkerke.shinyapps.io/lex_former_ussr/.   Feel free to use the app as you'd like, or modify the code as you wish to create your own apps!</p>
 <p><strong>Thanks to:</strong></p>
 <ul>
-<li>The UN Population Division for making all their data freely and publicly available;</li>
-<li>The developers of rCharts and dplyr</li>
+<li>The creators of the Human Mortality Database for making their data available; </li>
+<li>The <a href="http://http://www.rstudio.com/">RStudio</a> team for Shiny and all its associated training materials</li>
+<li>The developers of rCharts and Highcharts</li>
 </ul></div>
         <hr />
     </div>
 		
+
+ 
+        
+
+ 
+
+    <div class='article'>
+        <a href="http://walkerke.github.io/2014/08/un-projections/"><h2>Exploring the United Nations population projections with rCharts</h2></a>
+        <div class= "well small"> Tue 05 August 2014
+
+by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
+ 
+
+
+ </div>
+        <div class="summary"><p>I recently came across <a href="http://dataremixed.com/2014/07/story-types-a-thought-starter/">this really interesting post</a> from <a href="https://twitter.com/DataRemixed">Ben Jones</a> that explores the history and future of world population change with Tableau.  I haven't used Tableau much, but I was impressed with the different ways in which Ben used the software to visualize various aspects of global population ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/08/un-projections/">read more</a></div>
+    </div>	
+				
 
  
         
@@ -217,32 +268,14 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
         <div class="summary"><p>In the classroom, interactive data visualizations can embed a wealth of information that can be interactively queried by the instructor depending on the course topics and students' questions.  The example I'll discuss below worked for me exactly in this way.  I'll show how to create an interactive chart ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/03/tfr-in-europe/">read more</a></div>
     </div>	
 				
-
- 
-        
-
- 
-
-    <div class='article'>
-        <a href="http://walkerke.github.io/2014/01/hispanic-pop-by-state/"><h2>Visualizing the U.S. Hispanic population by state</h2></a>
-        <div class= "well small"> Thu 09 January 2014
-
-by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
- 
-
-
- </div>
-        <div class="summary"><p>Welcome!  This is the first post of my effort to document my foray into developing interactive data visualizations for use in my teaching.  Hopefully these examples will be of use to some readers who are interested in creating their own visualizations.  </p>
-<p>I'll first provide a bit of background.  I ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/01/hispanic-pop-by-state/">read more</a></div>
-    </div>	
-				
 <div class="pagination">
 <ul>
     <li class="prev disabled"><a href="#">&larr; Previous</a></li>
 
     <li class="active"><a href="http://walkerke.github.io/index.html">1</a></li>
+    <li class=""><a href="http://walkerke.github.io/index2.html">2</a></li>
 
-    <li class="next disabled"><a href="#">&rarr; Next</a></li>
+    <li class="next"><a href="http://walkerke.github.io/index2.html">Next &rarr;</a></li>
 
 </ul>
 </div>
@@ -258,7 +291,7 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
                 Site
                 </li>
             
-                <li><a href="http://walkerke.github.io/">Archives</a>
+                <li><a href="http://walkerke.github.io/archives.html">Archives</a>
                 <li><a href="http://walkerke.github.io/tags.html">Tags</a>
                 <li><a href="http://walkerke.github.io/" rel="alternate">Atom feed</a></li>
             </ul>
