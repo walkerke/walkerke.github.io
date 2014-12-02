@@ -58,8 +58,8 @@
 
     <div class='article'>
         <div class="content-title">
-            <a href="http://walkerke.github.io/2014/10/russia-lex/"><h1>Life expectancy trends in the former USSR</h1></a>
-Thu 16 October 2014
+            <a href="http://walkerke.github.io/2014/12/slidify/"><h1>Using Slidify to teach with interactive content</h1></a>
+Tue 02 December 2014
 
 by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
  
@@ -68,134 +68,69 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
  
         </div>
         
-        <div><p>When covering Russia and the former republics of the USSR in World Regional Geography, a key part of my material addresses the issues that some of these countries have had in their transitions from centralized to market economies.  Some of these countries experienced dramatic demographic shifts after the dissolution of the USSR, including a noticeable decline in life expectancy.</p>
-<p>I'd been using some static Excel charts to illustrate life expectancy declines in Russia, Belarus, and Ukraine in previous courses.  However, I felt that an interactive solution would be preferable so that my students and I could explore the data in class over the course of our discussion.  I opted for <a href="http://www.highcharts.com/">Highcharts</a>, through R and <a href="http://rcharts.io">rCharts</a>, for the interactivity.  I then turned to <a href="http://shiny.rstudio.com/">Shiny</a> from <a href="http://www.rstudio.com/">RStudio</a> to put everything together.  </p>
-<p>Shiny is a framework that allows R users to turn analyses and visualizations into interactive applications.  Shiny can be run locally on your computer, or deployed to the web via the <a href="https://www.shinyapps.io/">ShinyApps.io</a> hosting service, which is currently free.  The beauty of Shiny is that it allows you to explore your data interactively with a friendly web-based user interface without writing any JavaScript, and it lets R users create and deploy apps to be shared with non-R users who may nonetheless be interested in exploring a dataset or visualization. <a href="http://shiny.rstudio.com/gallery/">You can see RStudio's gallery of examples here.</a></p>
-<p>To get started, I acquired data from <a href="http://www.mortality.org/">The Human Mortality Database</a>, (HMD) a project of UC Berkeley and the Max Planck Institute.  The HMD prefers that users not re-distribute the data, so if you'd like to reproduce this chart, you'll need to download the data yourself.  However, the service is free (with registration) and relatively simple to use.  The HMD provides mortality data for 37 countries, including Russia, Belarus, and Ukraine. From the HMD, I downloaded the 1-year life expectancy at birth tables for these countries, and saved them to my working directory as delimited text files, naming them accordingly.  Once I did this, I used the code below to process the data into a suitable format for visualization.  </p>
-<div class="highlight"><pre>library<span class="p">(</span>tidyr<span class="p">)</span>
-library<span class="p">(</span>dplyr<span class="p">)</span>
+        <div><p>I frequently come across criticisms of PowerPoint as a presentation tool, which is interesting me given the ubiquity of its use across industries.  When I worked as a data analyst prior to coming to TCU, I frequently prepared PowerPoints using a company template for my boss's presentations or for talks of my own.  In academia, we have considerable freedom in how we can communicate information; however, PowerPoint is still widely used in the classroom and is everywhere at professional conferences.  </p>
+<p>The best-known criticisms of PowerPoint are from <a href="http://users.ha.uth.gr/tgd/pt0501/09/Tufte.pdf">Edward Tufte</a>; other notable examples include <a href="http://www.slate.com/articles/life/education/2014/03/powerpoint_in_higher_education_is_ruining_teaching.html">Rebecca Schuman's critique of slideshows in higher education</a>, and <a href="http://www.philanthropydaily.com/jeff-bezos-powerpoint-prohibition/">Jeff Bezos' banishing of PowerPoint presentations from Amazon</a>.  I personally don't believe that slideshows are <em>inherently</em> bad; however, they can exacerbate bad presentation habits.  For example, slideshows with lots of text can serve as crutches for under-prepared presenters, who end up simply reading large quantities of bulleted text from their slides.  In the classroom, students respond to these types of slides by scrambling to copy down every last word from the slide (even if the slides will be provided to them afterward) instead of listening closely to what the instructor is saying.  </p>
+<p>I try to avoid putting too much text (or any at all) on my lecture slides for this reason.  However, I am hesitant to get rid of slideshows entirely, as some have suggested.  My field, geography, is intensely visual; in turn, images and data visualizations are often necessary to contextualize geographical concepts for students.  For example, I can discuss the development of informal settlements in African and Asian megacities - but without photographs, this discussion would remain abstract, as few of my students have ever been to these places in person.  Similarly, it is one thing to tell students that there are disparities in life expectancy between European and African countries; <a href="http://tcugis.maps.arcgis.com/home/webmap/viewer.html?webmap=c9624225857a4f0089d19ac2bd727896">however, an interactive map (click the link for an example)</a> can provide a direct reference for students, and allows us to explore the data in class.  </p>
+<p>I find slideshows useful for organizing this visual content.  However, it took me some time to figure out the best way to present interactive web-based visualizations to students.  When I started experimenting with interactive visualization last year, I would include a link in my PowerPoint to where the visualization was located on the web; however, this was less than ideal, as it would often interrupt the flow of our discussion.  This led me to seek out a purely web-based solution for my slides.  I came across <a href="http://slidify.github.io">Slidify</a>, an R package by <a href="https://twitter.com/ramnath_vaidya">Ramnath Vaidyanathan</a>.  With Slidify, I can write all of my slides in <a href="http://www.rstudio.com/">RStudio</a> with <a href="http://rmarkdown.rstudio.com/">R Markdown</a>, and embed interactive content in my slides, like any other graphic.  I now use Slidify to produce all of my lecture slides, and all of my presentation slides when possible.  Some sample content from my class on Japan is below; click within the slideshow, then use the arrow keys to move through the slides.  Please note: this is best viewed on a desktop computer rather than a mobile device.  <a href="http://walkerke.github.io/teaching-with-datavis/japan-slidify/index.html#slide1">If you'd prefer to view the full-size slideshow, click here.</a></p>
+<hr />
+<iframe id="frame" src="http://walkerke.github.io/teaching-with-datavis/japan-slidify/index.html#slide1" height="750" width="975" frameBorder = "0" scrolling = "no"></iframe>
 
-russia <span class="o">&lt;-</span> read.table<span class="p">(</span><span class="s">&#39;russia.txt&#39;</span><span class="p">,</span> skip <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
+<hr />
+<p>In my opinion, embedding interactive content directly in the slide deck is a significant improvement over linking out to these graphics from a PowerPoint presentation, or having to navigate back and forth between a slideshow and a web browser.  For example, we spend a significant amount of time discussing aging and projected population decline in Japan.  I can show students how Japan's population is projected to decline by over 40 million by the end of the century with the interactive Plotly chart of population change over time, then put this in context with the population pyramid immediately afterward.  I then highlight using the pyramid's interactivity that Japan is projected to be home to 1.3 million people aged 100 and up in 2050, then go right back to the Plotly graph and use its interactivity to show that this would make centenarians over one percent of Japan's population.  I follow with an embedded YouTube video from <a href="http://www.journeyman.tv/">Journeyman Pictures</a> about demographic issues in Japan, and ask students to complete an in-class writeup in which they identify how the issues explored in the video help explain the demographic trends we've observed in the charts.  Rather than bouncing around from PowerPoint to YouTube to Plotly, I can do all of this in a much smoother way with Slidify.  </p>
+<p>Granted, HTML slides are not immune to the poor presentation behaviors that are often associated with PowerPoint; you can fill up these slides with lots of text as well if you so choose.  Additionally, a caveat is that internet access is required to leverage the full interactivity of this slide deck, which can be an issue in a professional setting.  For example, the last conference I attended did not have internet access; another presentation I gave a year ago had to be uploaded to a special presentation management system, and thus required PowerPoint.  However, I have been very pleased with Slidify thus far and will continue to use it in my teaching.  </p>
+<p>If you'd like to read onward, I've included some of the technical details of using interactive content in Slidify presentations below.  </p>
+<h3>Embedding interactive content in a Slidify presentation</h3>
+<p>Slidify allows users to produce HTML slides from Markdown for several different frameworks.  If you aren't familiar with Markdown, I encourage you to get acquainted with it; it allows you to convert a basic text formatting syntax to HTML, and is really useful.  <a href="http://daringfireball.net/projects/markdown/">You can read more about Markdown here.</a> My favorite frameworks are <a href="https://github.com/adamzap/landslide">Landslide</a> and <a href="http://lab.hakim.se/reveal-js/#/">Reveal.JS</a>.  The above presentation is created with Landslide, and uses some custom CSS I've specified for the styling. </p>
+<p>I'm not going to go into extensive detail on how to create a Slidify presentation; <a href="http://zevross.com/blog/2014/11/19/creating-elegant-html-presentations-that-feature-r-code/">instead, I'm going to refer you to Zev Ross's excellent tutorial, which is linked here</a> and goes over the ins-and-outs of setting up Slidify.  The R Markdown code that generated the slides <a href="https://github.com/walkerke/teaching-with-datavis/tree/master/japan-slidify">is also available in its GitHub repository.</a>  Instead, I'd like to discuss how to embed visuals in a Slidify presentation, such as static imagery, interactive visualizations, and video clips.  </p>
+<p>While Slidify allows you to avoid writing HTML/CSS/JavaScript for the most part, it is helpful to know a little bit of each to achieve its full functionality.  For me, Slidify has been a great way to learn about how webpages work.  Slide 3, which is a picture of Tokyo, is a picture I've found from a Google image search.  Standard Markdown syntax allows you to reference images; however, if you want more control over the size of your image, you'll want to turn to regular HTML.  The code for the slide is below: </p>
+<div class="highlight"><pre>## Tokyo
 
-names<span class="p">(</span>russia<span class="p">)</span> <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">,</span> <span class="s">&quot;Female&quot;</span><span class="p">,</span> <span class="s">&quot;Male&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
+&lt;img src=assets/img/tokyo.jpg style=&quot;width: 750px&quot;&gt;
 
-russia<span class="o">$</span>country <span class="o">&lt;-</span> <span class="s">&quot;Russia&quot;</span>
-
-ukraine <span class="o">&lt;-</span> read.table<span class="p">(</span><span class="s">&#39;ukraine.txt&#39;</span><span class="p">,</span> skip <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
-
-names<span class="p">(</span>ukraine<span class="p">)</span> <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">,</span> <span class="s">&quot;Female&quot;</span><span class="p">,</span> <span class="s">&quot;Male&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
-
-ukraine<span class="o">$</span>country <span class="o">&lt;-</span> <span class="s">&quot;Ukraine&quot;</span>
-
-belarus <span class="o">&lt;-</span> read.table<span class="p">(</span><span class="s">&#39;belarus.txt&#39;</span><span class="p">,</span> skip <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
-
-names<span class="p">(</span>belarus<span class="p">)</span> <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">,</span> <span class="s">&quot;Female&quot;</span><span class="p">,</span> <span class="s">&quot;Male&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
-
-belarus<span class="o">$</span>country <span class="o">&lt;-</span> <span class="s">&quot;Belarus&quot;</span>
-
-dat <span class="o">&lt;-</span> rbind<span class="p">(</span>russia<span class="p">,</span> ukraine<span class="p">,</span> belarus<span class="p">)</span>
-
-dlong <span class="o">&lt;-</span> dat <span class="o">%&gt;%</span>
-  select<span class="p">(</span><span class="o">-</span>Total<span class="p">)</span> <span class="o">%&gt;%</span>
-  gather<span class="p">(</span>Gender<span class="p">,</span> lex<span class="p">,</span> Female<span class="o">:</span>Male<span class="p">)</span>
-
-write.csv<span class="p">(</span>dlong<span class="p">,</span> <span class="s">&#39;data.csv&#39;</span><span class="p">)</span>
+&lt;span class=&quot;footnote&quot;&gt;Source: [maxisciences.com](http://img1.mxstatic.com/wallpapers/313ec7a690d40c8381ddff3cbf781e16_large.jpeg)&lt;/span&gt;
 </pre></div>
 
 
-<p>In a nutshell, the above code reads in each of the three text files, identifies the country the data correspond to, then combines them.  It then uses functions from the <a href="http://cran.r-project.org/web/packages/dplyr/index.html">dplyr</a> and <a href="http://cran.r-project.org/web/packages/tidyr/index.html">tidyr</a> packages to convert the data to "tidy" (long) format, which is what I want for visualization.  I then saved the data as a CSV and moved it to a new folder where I would create my Shiny app.  </p>
-<p>A Shiny app requires two files to run: <strong>server.R</strong>, which specifies the data analysis/visualization to show, and <strong>ui.R</strong>, in which you prepare the user interface.  An optional third file (which I haven't used here), <strong>global.R</strong>, can be used to read in data or do any background data preparation that you want to make available to both the server and UI scripts.  I largely adapted my server and UI code from <a href="http://shiny.rstudio.com/tutorial/">RStudio's Shiny tutorials</a> and <a href="http://ramnathv.github.io/rChartsShiny/">Ramnath Vaidyanathan's tutorial on using rCharts with Shiny</a>, with some help from StackOverflow as well.  </p>
-<p>I prepared the UI first with the code below.  </p>
-<div class="highlight"><pre><span class="c1"># ui.R</span>
+<p>I've chosen to save the image in my <code>assets/img</code> folder that is generated by Slidify; you could also reference it directly from the web.  To cite the image source in Slidify, you also can use HTML; put your text inside of <code>&lt;span&gt;&lt;/span&gt;</code> tags with the class <code>footnote</code>.  However, I can use Markdown syntax within the HTML tags to reference a hyperlink, as I've done above.  In Markdown, links can be specified with brackets and parentheses like this: <code>[Name of link here](website of link)</code></p>
+<p>The slides that follow include embedded interactive content.  Slide 4 shows a <a href="http://en.wikipedia.org/wiki/Treemapping">tree map</a> of Japan's exports by type from the excellent <a href="http://atlas.media.mit.edu/">Observatory of Economic Complexity</a>.  Slides 5 and 6 contain embedded charts that I've created; one is a <a href="http://plot.ly">Plotly</a> chart that shows past and projected future population change in Japan <a href="http://walkerke.github.io/2014/05/tourism-plotly/">(see how to make charts like these here)</a>, and the other is an interactive population pyramid for Japan's projected population structure in 2050 <a href="http://walkerke.github.io/2014/06/rcharts-pyramids/">(read more on how to create these here)</a>.  In each instance, these interactive graphics are embedded in my slideshow with HTML <code>&lt;iframe&gt;&lt;/iframe&gt;</code> tags.  An example of what this looks like for the Plotly chart is below.  </p>
+<div class="highlight"><pre>## Demography of Japan
 
-library<span class="p">(</span>rCharts<span class="p">)</span>
+&lt;iframe src=&quot;http://plot.ly/~walkerke/57&quot; width=&quot;800&quot; height=&quot;500&quot; scrolling=&quot;no&quot; frameBorder=&quot;0&quot;&gt;&lt;/iframe&gt;
 
-dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&#39;data.csv&#39;</span><span class="p">)</span>
-
-<span class="c1"># Define UI </span>
-shinyUI<span class="p">(</span>fluidPage<span class="p">(</span>
-
-  <span class="c1"># Sidebar </span>
-  sidebarLayout<span class="p">(</span>
-    sidebarPanel<span class="p">(</span>
-      selectInput<span class="p">(</span>inputId <span class="o">=</span> <span class="s">&quot;country&quot;</span><span class="p">,</span> 
-                  label <span class="o">=</span> <span class="s">&quot;Select a country:&quot;</span><span class="p">,</span> 
-                  choices <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;Russia&quot;</span><span class="p">,</span> <span class="s">&quot;Belarus&quot;</span><span class="p">,</span> <span class="s">&quot;Ukraine&quot;</span><span class="p">),</span> 
-                  selected <span class="o">=</span> <span class="s">&quot;Russia&quot;</span><span class="p">),</span> 
-      sliderInput<span class="p">(</span><span class="s">&quot;range&quot;</span><span class="p">,</span>
-                  label <span class="o">=</span> <span class="s">&quot;Years to display:&quot;</span><span class="p">,</span>
-                  min <span class="o">=</span> <span class="m">1959</span><span class="p">,</span>
-                  max <span class="o">=</span> <span class="m">2010</span><span class="p">,</span>
-                  value <span class="o">=</span> c<span class="p">(</span><span class="m">1959</span><span class="p">,</span> <span class="m">2010</span><span class="p">),</span> 
-                  format <span class="o">=</span> <span class="s">&quot;0000&quot;</span><span class="p">),</span> 
-      helpText<span class="p">(</span><span class="s">&quot;Data reflect the life expectancy &quot;</span><span class="p">,</span> 
-                <span class="s">&quot;at birth from 1959 to 2010 &quot;</span><span class="p">,</span> 
-               <span class="s">&quot;for men and women in Russia, &quot;</span><span class="p">,</span> 
-                <span class="s">&quot;Belarus, and Ukraine.  Data are &quot;</span><span class="p">,</span> 
-               <span class="s">&quot;obtained from the Human Mortality &quot;</span><span class="p">,</span> 
-                <span class="s">&quot;Database, a project of &quot;</span><span class="p">,</span> 
-                <span class="s">&quot; the University of California, &quot;</span><span class="p">,</span> 
-                <span class="s">&quot;Berkeley (USA), and Max Planck &quot;</span><span class="p">,</span> 
-                <span class="s">&quot;Institute for Demographic Research &quot;</span><span class="p">,</span> 
-                <span class="s">&quot;(Germany). Data are available &quot;</span><span class="p">,</span> 
-                <span class="s">&quot;at www.mortality.org or www.humanmortality.de &quot;</span><span class="p">,</span> 
-               <span class="s">&quot;(downloaded on 14 Oct 2014).&quot;</span><span class="p">)</span>
-    <span class="p">),</span>
-
-    <span class="c1"># Show the plot </span>
-    mainPanel<span class="p">(</span>
-      showOutput<span class="p">(</span><span class="s">&quot;lexplot&quot;</span><span class="p">,</span> <span class="s">&quot;highcharts&quot;</span><span class="p">)</span>
-    <span class="p">)</span>
-  <span class="p">)</span>
-<span class="p">))</span>
+&lt;span class=&quot;footnote&quot;&gt;Data source: United Nations&lt;/span&gt;
 </pre></div>
 
 
-<p>In the <strong>ui.R</strong> script, I define the parameters of the Shiny user interface.  I'll have a drop-down menu to select the country of choice (Russia, Belarus, or Ukraine), as well as a time slider that allows the user to specify the years to show in the chart.  I then use the <code>showOutput</code> function from rCharts in the <code>mainPanel</code> call to tell Shiny to show my chart in the main area.  </p>
-<p>Next, I set up the server.  </p>
-<div class="highlight"><pre><span class="c1"># server.R</span>
-
-library<span class="p">(</span>rCharts<span class="p">)</span>
-
-dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&#39;data.csv&#39;</span><span class="p">)</span>
-
-options<span class="p">(</span>RCHART_WIDTH <span class="o">=</span> <span class="m">500</span><span class="p">)</span>
-
-shinyServer<span class="p">(</span><span class="kr">function</span><span class="p">(</span>input<span class="p">,</span> output<span class="p">)</span> <span class="p">{</span>
-  output<span class="o">$</span>lexplot <span class="o">&lt;-</span> renderChart2<span class="p">({</span>
-    selected <span class="o">&lt;-</span> input<span class="o">$</span>country
-    country <span class="o">&lt;-</span> subset<span class="p">(</span>dat<span class="p">,</span> country <span class="o">==</span> selected <span class="o">&amp;</span> Year <span class="o">%in%</span> seq<span class="p">(</span>input<span class="o">$</span>range<span class="p">[</span><span class="m">1</span><span class="p">],</span> input<span class="o">$</span>range<span class="p">[</span><span class="m">2</span><span class="p">],</span> <span class="m">1</span><span class="p">))</span>
-    h1 <span class="o">&lt;-</span> hPlot<span class="p">(</span>
-      x <span class="o">=</span> <span class="s">&quot;Year&quot;</span><span class="p">,</span> 
-      y <span class="o">=</span> <span class="s">&quot;lex&quot;</span><span class="p">,</span> 
-      group <span class="o">=</span> <span class="s">&quot;Gender&quot;</span><span class="p">,</span> 
-      data <span class="o">=</span> country<span class="p">,</span> 
-      type <span class="o">=</span> <span class="s">&quot;line&quot;</span><span class="p">)</span>
-
-    h1<span class="o">$</span>colors<span class="p">(</span>c<span class="p">(</span><span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="s">&quot;blue&quot;</span><span class="p">))</span>
-    h1<span class="o">$</span>yAxis<span class="p">(</span>title <span class="o">=</span> list<span class="p">(</span>enabled <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span> text <span class="o">=</span> <span class="s">&#39;Life expectancy at birth&#39;</span><span class="p">))</span>
-    <span class="kr">return</span><span class="p">(</span>h1<span class="p">)</span>
-  <span class="p">})</span>
-<span class="p">})</span>
-</pre></div>
-
-
-<p>The key here to get this to work is to make sure that your <strong>server.R</strong> and <strong>ui.R</strong> scripts communicate correctly.  My UI takes an input that is dependent upon the country and years selected by the user, so I create a subsetted data frame, <code>country</code>, within the <code>renderChart2</code> function that will respond to that.  I then specify the parameters of the Highchart plot, and tell my <code>renderChart2</code> function to return that plot and assign it to the <code>lexplot</code> property of the output, which is what my user interface script will expect.  </p>
-<p>RStudio will know that you are creating a Shiny app (given the names of your scripts), so you can simply click the <strong>Run App</strong> button to run your app locally, and then deploy it to ShinyApps if you'd like.  Now, let's take a look at the result.  Use the drop-down menu to select a country, and the time slider to specify a range of years to display.   </p>
-<iframe src="https://walkerke.shinyapps.io/lex_former_ussr/" height="500" width="850" frameBorder = "0" scrolling = "no" seamless></iframe>
-
-<p>I now have an application that allows me to seamlessly switch between countries, change years, and explore the data thanks to Highcharts' built-in interactivity.  The charts reveal key trends in life expectancy both pre- and post- USSR.  In Russia, for example, we see that life expectancy declines through the mid-20th century, then peaks in the 1980s, <a href="http://www.rand.org/pubs/conf_proceedings/CF124/cf124.chap4.html">which is attributed to Mikhail Gorbachev's anti-alcohol campaign.</a>  Life expectancy then falls dramatically around the time that the USSR dissolved.  For example, male life expectancy in 1994 in Russia was a little over 57, around 7.5 years less than its peak in 1987.  <a href="http://www.ncbi.nlm.nih.gov/pubmed/9508159">Studies have attributed this to a variety of factors, including alcohol abuse, poor nutrition and health behaviors, and problems with the health care system.</a>  However, life expectancy improves in the late 2000s, <a href="http://www.demographic-research.org/volumes/vol28/32/28-32.pdf">in part due to declines in cardiovascular disease and homicides</a>.  </p>
-<p>In class, I first presented the chart (which displays very nicely in a <a href="http://ramnathv.github.io/slidify/">Slidify</a> presentation) and explored the data with my students.  I then showed my students the first segment from the documentary <a href="https://www.youtube.com/watch?v=J1OyIJtjdpo">Death of a Nation: Russia</a> by Marcel Theroux which explores some of the underlying issues behind these demographic changes in more depth.  We then used the video to collectively think about some reasons for the decline of life expectancy in Russia after the fall of the USSR.  The video paired very nicely with the interactive Shiny app; the charts provided key visual demographic context, and the video then put faces to the data.  </p>
-<p>The app is fully reproducible (just make sure you download the data from <a href="http://www.mortality.org">the Human Mortality Database</a> first) and you can find the code in its <a href="https://github.com/walkerke/teaching-with-datavis/tree/master/russia-lex">GitHub repository</a>.  The chart is also available in stand-alone form here: <a href="https://walkerke.shinyapps.io/lex_former_ussr/">https://walkerke.shinyapps.io/lex_former_ussr/</a>.   Feel free to use the app as you'd like, or modify the code as you wish to create your own apps!</p>
+<p>Both Plotly and the Observatory of Economic Complexity provide the HTML code for you to embed their hosted visualizations in your web page.   Other visualizations you've created yourself, like the population pyramid, will need to be hosted somewhere if they are not produced with a service like Plotly; <a href="https://pages.github.com/">GitHub Pages</a> is an excellent free option.  </p>
+<p>The last slide is an embedded clip from YouTube.  I'm a big advocate of showing short video clips in class to contextualize course content; embedding those clips within the slideshow allows for a smoother transition between class discussion and the video.  YouTube, and many other online video services, will provide you with the embed codes for the video.  </p>
+<p>The full R Markdown that generates the sample slideshow <a href="https://raw.githubusercontent.com/walkerke/teaching-with-datavis/master/japan-slidify/index.Rmd">is available from this link</a>.  </p>
 <p><strong>Thanks to:</strong></p>
 <ul>
-<li>The creators of the Human Mortality Database for making their data freely available </li>
-<li>The <a href="http://http://www.rstudio.com/">RStudio</a> team for Shiny and all its associated training materials</li>
-<li>The developers of rCharts and Highcharts</li>
+<li>Ramnath Vaidyanathan for authoring the Slidify and rCharts packages;</li>
+<li>Adam Zapletal, the creator of the Landslide presentation framework;</li>
+<li>Alexander Simoes (author of the Observatory of Economic Complexity), the Plotly team, and Journeyman Pictures.</li>
 </ul></div>
         <hr />
     </div>
 		
+
+ 
+        
+
+ 
+
+    <div class='article'>
+        <a href="http://walkerke.github.io/2014/10/russia-lex/"><h2>Life expectancy trends in the former USSR</h2></a>
+        <div class= "well small"> Thu 16 October 2014
+
+by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
+ 
+
+
+ </div>
+        <div class="summary"><p>When covering Russia and the former republics of the USSR in World Regional Geography, a key part of my material addresses the issues that some of these countries have had in their transitions from centralized to market economies.  Some of these countries experienced dramatic demographic shifts after the dissolution of ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/10/russia-lex/">read more</a></div>
+    </div>	
+				
 
  
         
@@ -251,24 +186,6 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
         <div class="summary"><p>Over the last month or so, I've been working a lot with <a href="http://plot.ly">Plotly</a> to visualize data for my World Regional Geography course.  Plotly is a web-based service that allows for the creation of interactive, D3-based visualizations that can be easily shared.  Visualizations are deployed and hosted on Plotly's ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/05/tourism-plotly/">read more</a></div>
     </div>	
 				
-
- 
-        
-
- 
-
-    <div class='article'>
-        <a href="http://walkerke.github.io/2014/03/tfr-in-europe/"><h2>Visualizing fertility trends in Europe</h2></a>
-        <div class= "well small"> Thu 06 March 2014
-
-by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
- 
-
-
- </div>
-        <div class="summary"><p>In the classroom, interactive data visualizations can embed a wealth of information that can be interactively queried by the instructor depending on the course topics and students' questions.  The example I'll discuss below worked for me exactly in this way.  I'll show how to create an interactive chart ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/03/tfr-in-europe/">read more</a></div>
-    </div>	
-				
 <div class="pagination">
 <ul>
     <li class="prev disabled"><a href="#">&larr; Previous</a></li>
@@ -305,7 +222,10 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
                 Categories
                 </li>
                 
-                <li><a href="http://walkerke.github.io/category/misc.html">misc</a></li>
+                <li><a href="http://walkerke.github.io/category/plotly.html">Plotly</a></li>
+                <li><a href="http://walkerke.github.io/category/presentations.html">Presentations</a></li>
+                <li><a href="http://walkerke.github.io/category/rcharts.html">rCharts</a></li>
+                <li><a href="http://walkerke.github.io/category/shiny.html">Shiny</a></li>
                    
             </ul>
             </div>
