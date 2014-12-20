@@ -43,7 +43,7 @@ xtdata&lt;span class="o"&gt;$&lt;/span&gt;date &lt;span class="o"&gt;&amp;lt;-&l
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;The WDI package returns data in "tidy" format, in which rows represent country-years.  I've reshaped my data frame to "wide" format, so that columns represent countries, and then I converted the data frame to an &lt;code&gt;xts&lt;/code&gt; object for plotting with dygraphs.  &lt;/p&gt;
+&lt;p&gt;The WDI package returns data in "tidy" format, in which rows represent country-years.  I've reshaped my data frame to "wide" format, so that columns represent countries, and then I converted the data frame to an &lt;code&gt;xts&lt;/code&gt; object for plotting with dygraphs.  Now, I can create the plot: &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;dygraph&lt;span class="p"&gt;(&lt;/span&gt;xtdata&lt;span class="p"&gt;,&lt;/span&gt; main &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Export volume index, 1980-2013 (2000 = 100)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%&amp;gt;%&lt;/span&gt;
   dyHighlight&lt;span class="p"&gt;(&lt;/span&gt;highlightSeriesOpts &lt;span class="o"&gt;=&lt;/span&gt; list&lt;span class="p"&gt;(&lt;/span&gt;strokeWidth &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;%&amp;gt;%&lt;/span&gt;
   dyOptions&lt;span class="p"&gt;(&lt;/span&gt;colors &lt;span class="o"&gt;=&lt;/span&gt; c&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;red&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;navy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;

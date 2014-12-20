@@ -107,7 +107,7 @@ xtdata<span class="o">$</span>date <span class="o">&lt;-</span> <span class="kc"
 </pre></div>
 
 
-<p>The WDI package returns data in "tidy" format, in which rows represent country-years.  I've reshaped my data frame to "wide" format, so that columns represent countries, and then I converted the data frame to an <code>xts</code> object for plotting with dygraphs.  </p>
+<p>The WDI package returns data in "tidy" format, in which rows represent country-years.  I've reshaped my data frame to "wide" format, so that columns represent countries, and then I converted the data frame to an <code>xts</code> object for plotting with dygraphs.  Now, I can create the plot: </p>
 <div class="highlight"><pre>dygraph<span class="p">(</span>xtdata<span class="p">,</span> main <span class="o">=</span> <span class="s">&quot;Export volume index, 1980-2013 (2000 = 100)&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   dyHighlight<span class="p">(</span>highlightSeriesOpts <span class="o">=</span> list<span class="p">(</span>strokeWidth <span class="o">=</span> <span class="m">3</span><span class="p">))</span> <span class="o">%&gt;%</span>
   dyOptions<span class="p">(</span>colors <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="s">&quot;navy&quot;</span><span class="p">))</span>
