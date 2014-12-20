@@ -58,8 +58,8 @@
 
     <div class='article'>
         <div class="content-title">
-            <a href="http://walkerke.github.io/2014/12/slidify/"><h1>Using Slidify to teach with interactive content</h1></a>
-Tue 02 December 2014
+            <a href="http://walkerke.github.io/2014/12/dygraphs/"><h1>Charting time series data with dygraphs in R and Python</h1></a>
+Sat 20 December 2014
 
 by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
  
@@ -68,51 +68,118 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
  
         </div>
         
-        <div><p>I frequently come across criticisms of PowerPoint as a presentation tool, which is interesting to me given the ubiquity of its use across industries.  When I worked as a data analyst prior to coming to TCU, I frequently prepared PowerPoints using a company template for my boss's presentations or for talks of my own.  In academia, we have considerable freedom in how we can communicate information; however, PowerPoint is still widely used in the classroom and is everywhere at professional conferences.  </p>
-<p>The best-known criticisms of PowerPoint are from <a href="http://users.ha.uth.gr/tgd/pt0501/09/Tufte.pdf">Edward Tufte</a>; other notable examples include <a href="http://www.slate.com/articles/life/education/2014/03/powerpoint_in_higher_education_is_ruining_teaching.html">Rebecca Schuman's critique of slideshows in higher education</a>, and <a href="http://www.philanthropydaily.com/jeff-bezos-powerpoint-prohibition/">Jeff Bezos' banishing of PowerPoint presentations from Amazon</a>.  I personally don't believe that slideshows are <em>inherently</em> bad; however, they can exacerbate bad presentation habits.  For example, slideshows with lots of text can serve as crutches for under-prepared presenters, who end up simply reading large quantities of bulleted text from their slides.  In the classroom, students respond to these types of slides by scrambling to copy down every last word from the slide (even if the slides will be provided to them afterward) instead of listening closely to what the instructor is saying.  </p>
-<p>I try to avoid putting too much text (or any at all) on my lecture slides for this reason.  However, I am hesitant to get rid of slideshows entirely, as some have suggested.  My field, geography, is intensely visual; in turn, images and data visualizations are often necessary to contextualize geographical concepts for students.  For example, I can discuss the development of informal settlements in African and Asian megacities - but without photographs, this discussion would remain abstract, as few of my students have ever been to these places in person.  Similarly, it is one thing to tell students that there are disparities in life expectancy between European and African countries; <a href="http://tcugis.maps.arcgis.com/home/webmap/viewer.html?webmap=c9624225857a4f0089d19ac2bd727896">however, an interactive map (click the link for an example)</a> can provide a direct reference for students, and allows us to explore the data in class.  </p>
-<p>I find slideshows useful for organizing this visual content.  However, it took me some time to figure out the best way to present interactive web-based visualizations to students.  When I started experimenting with interactive visualization last year, I would include a link in my PowerPoint to where the visualization was located on the web; however, this was less than ideal, as it would often interrupt the flow of our discussion.  This led me to seek out a purely web-based solution for my slides.  I came across <a href="http://slidify.github.io">Slidify</a>, an R package by <a href="https://twitter.com/ramnath_vaidya">Ramnath Vaidyanathan</a>.  With Slidify, I can write all of my slides in <a href="http://www.rstudio.com/">RStudio</a> with <a href="http://rmarkdown.rstudio.com/">R Markdown</a>, and embed interactive content in my slides, like any other graphic.  I now use Slidify to produce all of my lecture slides, and all of my presentation slides when possible.  Some sample content from my class on Japan is below; click within the slideshow, then use the arrow keys to move through the slides.  Please note: this is best viewed on a desktop computer rather than a mobile device.  <a href="http://walkerke.github.io/teaching-with-datavis/japan-slidify/index.html#slide1">If you'd prefer to view the full-size slideshow, click here.</a></p>
-<hr />
-<iframe id="frame" src="http://walkerke.github.io/teaching-with-datavis/japan-slidify/index.html#slide1" height="750" width="975" frameBorder = "0" scrolling = "no"></iframe>
+        <div><p>This past week, the good people at <a href="http://www.rstudio.com">RStudio</a> advertised over Twitter the release of <a href="http://www.htmlwidgets.org/index.html">htmlwidgets for R</a>, a project in collaboration with <a href="http://rcharts.io">rCharts</a> wizards <a href="https://twitter.com/ramnath_vaidya">Ramnath Vaidyanathan</a> and <a href="https://twitter.com/timelyportfolio">Kenton Russell</a>. The packages showcased are incredible; I was particularly intrigued by the <a href="http://rstudio.github.io/dygraphs/">dygraphs</a> package, which creates interactive time-series charts.  </p>
+<p>Aside from maps, time series line charts are the most common chart type I use in my teaching, as I often discuss how characteristics of places evolve over time.  As such, I took dygraphs for a spin to create charts relevant to a couple topics I address in World Regional Geography.  </p>
+<p>The first chart shows quarterly unemployment rates in Egypt over the past decade.  I obtained the data from <a href="https://www.quandl.com">Quandl</a>, a massive repository of publicly-available datasets, by connecting to their API.  Quandl aims to be as user-friendly as possible; as such, <a href="https://www.quandl.com/ILOSTAT/UNE_DEAP_RT_SEX_T_Q_EGY-Unemployment-Rate-Quarterly-Egypt">on the page for the dataset you want</a>, you can get the command to access the data in R (or any number of other languages/formats) with a single click.  Additionally, you can specify the format for the data from Quandl; dygraphs in R accepts data in <code>xts</code> format, which Quandl can return for me.  </p>
+<p>Once I have the data, I can create the plot.    </p>
+<div class="highlight"><pre>library<span class="p">(</span>dygraphs<span class="p">)</span>
+library<span class="p">(</span>Quandl<span class="p">)</span>
 
-<hr />
-<p>In my opinion, embedding interactive content directly in the slide deck is a significant improvement over linking out to these graphics from a PowerPoint presentation, or having to navigate back and forth between a slideshow and a web browser.  For example, we spend a significant amount of time discussing aging and projected population decline in Japan.  I can show students how Japan's population is projected to decline by over 40 million by the end of the century with the interactive Plotly chart of population change over time, then put this in context with the population pyramid immediately afterward.  I then highlight using the pyramid's interactivity that Japan is projected to be home to 1.3 million people aged 100 and up in 2050, then go right back to the Plotly graph and use its interactivity to show that this would make centenarians over one percent of Japan's population.  I follow with an embedded YouTube video from <a href="http://www.journeyman.tv/">Journeyman Pictures</a> about demographic issues in Japan, and ask students to complete an in-class writeup in which they identify how the issues explored in the video help explain the demographic trends we've observed in the charts.  Rather than bouncing around from PowerPoint to YouTube to Plotly, I can do all of this in a much smoother way with Slidify.  </p>
-<p>Granted, HTML slides are not immune to the poor presentation behaviors that are often associated with PowerPoint; you can fill up these slides with lots of text as well if you so choose.  Additionally, a caveat is that internet access is required to leverage the full interactivity of this slide deck, which can be an issue in a professional setting.  For example, the last conference I attended did not have internet access; another presentation I gave a year ago had to be uploaded to a special presentation management system, and thus required PowerPoint.  However, I have been very pleased with Slidify thus far and will continue to use it in my teaching.  </p>
-<p>If you'd like to read onward, I've included some of the technical details of using interactive content in Slidify presentations below.  </p>
-<h3>Embedding interactive content in a Slidify presentation</h3>
-<p>Slidify allows users to produce HTML slides from Markdown for several different frameworks.  If you aren't familiar with Markdown, I encourage you to get acquainted with it; it allows you to convert a basic text formatting syntax to HTML, and is really useful.  <a href="http://daringfireball.net/projects/markdown/">You can read more about Markdown here.</a> My favorite frameworks are <a href="https://github.com/adamzap/landslide">Landslide</a> and <a href="http://lab.hakim.se/reveal-js/#/">Reveal.JS</a>.  The above presentation is created with Landslide, and uses some custom CSS I've specified for the styling. </p>
-<p>I'm not going to go into extensive detail on how to create a Slidify presentation; <a href="http://zevross.com/blog/2014/11/19/creating-elegant-html-presentations-that-feature-r-code/">instead, I'm going to refer you to Zev Ross's excellent tutorial, which is linked here</a> and goes over the ins-and-outs of setting up Slidify.  The R Markdown code that generated the slides <a href="https://github.com/walkerke/teaching-with-datavis/tree/master/japan-slidify">is also available in its GitHub repository.</a>  Instead, I'd like to discuss how to embed visuals in a Slidify presentation, such as static imagery, interactive visualizations, and video clips.  </p>
-<p>While Slidify allows you to avoid writing HTML/CSS/JavaScript for the most part, it is helpful to know a little bit of each to achieve its full functionality.  For me, Slidify has been a great way to learn about how webpages work.  Slide 3, which is a picture of Tokyo, is a picture I've found from a Google image search.  Standard Markdown syntax allows you to reference images; however, if you want more control over the size of your image, you'll want to turn to regular HTML.  The code for the slide is below: </p>
-<div class="highlight"><pre>## Tokyo
 
-&lt;img src=assets/img/tokyo.jpg style=&quot;width: 750px&quot;&gt;
+egypt <span class="o">&lt;-</span> Quandl<span class="p">(</span><span class="s">&quot;ILOSTAT/UNE_DEAP_RT_SEX_T_Q_EGY&quot;</span><span class="p">,</span> type <span class="o">=</span> <span class="s">&quot;xts&quot;</span><span class="p">)</span>
 
-&lt;span class=&quot;footnote&quot;&gt;Source: [maxisciences.com](http://img1.mxstatic.com/wallpapers/313ec7a690d40c8381ddff3cbf781e16_large.jpeg)&lt;/span&gt;
+dygraph<span class="p">(</span>egypt<span class="p">,</span> main <span class="o">=</span> <span class="s">&quot;Quarterly unemployment in Egypt, 2003-2013&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  dySeries<span class="p">(</span><span class="s">&quot;V1&quot;</span><span class="p">,</span> label <span class="o">=</span> <span class="s">&quot;Unemployment (%)&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  dyRangeSelector<span class="p">(</span>strokeColor <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> fillColor <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  dyOptions<span class="p">(</span>colors <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;darkred&quot;</span><span class="p">,</span> <span class="s">&quot;darkred&quot;</span><span class="p">))</span> 
 </pre></div>
 
 
-<p>I've chosen to save the image in my <code>assets/img</code> folder that is generated by Slidify; you could also reference it directly from the web.  To cite the image source in Slidify, you also can use HTML; put your text inside of <code>&lt;span&gt;&lt;/span&gt;</code> tags with the class <code>footnote</code>.  However, I can use Markdown syntax within the HTML tags to reference a hyperlink, as I've done above.  In Markdown, links can be specified with brackets and parentheses like this: <code>[Name of link here](website of link)</code></p>
-<p>The slides that follow include embedded interactive content.  Slide 4 shows a <a href="http://en.wikipedia.org/wiki/Treemapping">tree map</a> of Japan's exports by type from the excellent <a href="http://atlas.media.mit.edu/">Observatory of Economic Complexity</a>.  Slides 5 and 6 contain embedded charts that I've created; one is a <a href="http://plot.ly">Plotly</a> chart that shows past and projected future population change in Japan <a href="http://walkerke.github.io/2014/05/tourism-plotly/">(see how to make charts like these here)</a>, and the other is an interactive population pyramid for Japan's projected population structure in 2050 <a href="http://walkerke.github.io/2014/06/rcharts-pyramids/">(read more on how to create these here)</a>.  In each instance, these interactive graphics are embedded in my slideshow with HTML <code>&lt;iframe&gt;&lt;/iframe&gt;</code> tags.  An example of what this looks like for the Plotly chart is below.  </p>
-<div class="highlight"><pre>## Demography of Japan
+<iframe id="frame" src="http://walkerke.github.io/teaching-with-datavis/dygraphs/egypt.html" height="500" width="800" frameBorder = "0" scrolling = "no"></iframe>
 
-&lt;iframe src=&quot;http://plot.ly/~walkerke/57&quot; width=&quot;800&quot; height=&quot;500&quot; scrolling=&quot;no&quot; frameBorder=&quot;0&quot;&gt;&lt;/iframe&gt;
+<p>The dygraphs package supports piping with the <code>%&gt;%</code> operator from the <strong>magrittr</strong> package, which organizes the code nicely.  I've changed the label in the legend and the colors, though I did notice that I had to supply a length-2 vector of colors to get the line's color to change, even though I only had one line.  I've also created a range selector at the bottom of the plot.  The chart itself has excellent interactivity; click and drag on the plot to zoom in to a specific section, and double-click to return to the original view.  In class, I can use this chart to show the major spike in unemployment after the fall of the Mubarak regime in early 2011. Unemployment, especially among youth, remains a critical issue in Egypt; <a href="http://data.worldbank.org/indicator/SL.UEM.1524.ZS">the World Bank estimates that 38.9 percent of Egyptians aged 15-24 were unemployed in 2013</a>.  </p>
+<p>The World Bank API is also an excellent resource for demographic and economic data; <a href="http://walkerke.github.io/2014/03/tfr-in-europe/">I've written about using it here</a>.  Quandl also provides access to World Bank data, but I'll include an example below that involves connecting directly to the World Bank's API to show how to get data from a different format into dygraphs.  </p>
+<p>The <strong>WDI</strong> package allows R users to connect directly to the World Bank's API and download data for selected countries, indicators, and years from the World Bank's <a href="http://data.worldbank.org/">Open Data Catalog</a>.  The code below fetches <a href="http://data.worldbank.org/indicator/TX.QTY.MRCH.XD.WD">export volume index data</a>, which shows how the relative size of countries' export economies have changed over time.  I discuss this in class heavily in the context of China, so I'll get data to compare China and the United States.  </p>
+<div class="highlight"><pre>library<span class="p">(</span>WDI<span class="p">)</span>
+library<span class="p">(</span>tidyr<span class="p">)</span>
+library<span class="p">(</span>xts<span class="p">)</span>
+library<span class="p">(</span>dplyr<span class="p">)</span>
 
-&lt;span class=&quot;footnote&quot;&gt;Data source: United Nations&lt;/span&gt;
+df <span class="o">&lt;-</span> WDI<span class="p">(</span>country <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;CN&quot;</span><span class="p">,</span> <span class="s">&quot;US&quot;</span><span class="p">),</span> indicator <span class="o">=</span> <span class="s">&quot;TX.QTY.MRCH.XD.WD&quot;</span><span class="p">,</span> start <span class="o">=</span> <span class="m">1980</span><span class="p">,</span> end <span class="o">=</span> <span class="m">2013</span><span class="p">,</span> extra <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+
+df<span class="o">$</span>exports <span class="o">&lt;-</span> df<span class="o">$</span>TX.QTY.MRCH.XD.WD
+
+df1 <span class="o">&lt;-</span> df <span class="o">%&gt;%</span>
+  select<span class="p">(</span>country<span class="p">,</span> year<span class="p">,</span> exports<span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>country <span class="o">=</span> gsub<span class="p">(</span><span class="s">&quot;United States&quot;</span><span class="p">,</span> <span class="s">&quot;USA&quot;</span><span class="p">,</span> df<span class="o">$</span>country<span class="p">))</span> <span class="o">%&gt;%</span>
+  spread<span class="p">(</span>key <span class="o">=</span> country<span class="p">,</span> value <span class="o">=</span> exports<span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>date <span class="o">=</span> as.Date<span class="p">(</span>as.character<span class="p">(</span>year<span class="p">),</span> format <span class="o">=</span> <span class="s">&quot;%Y&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="o">-</span>year<span class="p">)</span> 
+
+xtdata <span class="o">&lt;-</span> xts<span class="p">(</span>df1<span class="p">,</span> order.by <span class="o">=</span> df1<span class="o">$</span>date<span class="p">)</span> 
+
+xtdata<span class="o">$</span>date <span class="o">&lt;-</span> <span class="kc">NULL</span>
 </pre></div>
 
 
-<p>Both Plotly and the Observatory of Economic Complexity provide the HTML code for you to embed their hosted visualizations in your web page.   Other visualizations you've created yourself, like the population pyramid, will need to be hosted somewhere if they are not produced with a service like Plotly; <a href="https://pages.github.com/">GitHub Pages</a> is an excellent free option.  </p>
-<p>The last slide is an embedded clip from YouTube.  I'm a big advocate of showing short video clips in class to contextualize course content; embedding those clips within the slideshow allows for a smoother transition between class discussion and the video.  YouTube, and many other online video services, will provide you with the embed codes for the video.  </p>
-<p>The full R Markdown that generates the sample slideshow <a href="https://raw.githubusercontent.com/walkerke/teaching-with-datavis/master/japan-slidify/index.Rmd">is available from this link</a>.  </p>
-<p><strong>Thanks to:</strong></p>
-<ul>
-<li>Ramnath Vaidyanathan for authoring the Slidify and rCharts packages;</li>
-<li>Adam Zapletal, the creator of the Landslide presentation framework;</li>
-<li>Alexander Simoes (author of the Observatory of Economic Complexity), the Plotly team, and Journeyman Pictures.</li>
-</ul></div>
+<p>The WDI package returns data in "tidy" format, in which rows represent country-years.  I've reshaped my data frame to "wide" format, so that columns represent countries, and then I converted the data frame to an <code>xts</code> object for plotting with dygraphs.  </p>
+<div class="highlight"><pre>dygraph<span class="p">(</span>xtdata<span class="p">,</span> main <span class="o">=</span> <span class="s">&quot;Export volume index, 1980-2013 (2000 = 100)&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  dyHighlight<span class="p">(</span>highlightSeriesOpts <span class="o">=</span> list<span class="p">(</span>strokeWidth <span class="o">=</span> <span class="m">3</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  dyOptions<span class="p">(</span>colors <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="s">&quot;navy&quot;</span><span class="p">))</span>
+</pre></div>
+
+
+<iframe id="frame" src="http://walkerke.github.io/teaching-with-datavis/dygraphs/exports.html" height="500" width="800" frameBorder = "0" scrolling = "no"></iframe>
+
+<p>I've configured this plot so that a data series is highlighted if hovered over by the user's cursor.  The chart is designed to show one perspective on the massive growth of China's export economy in recent years; its index is over 700 in 2013, which means that China's export volume in this year is over seven times what it was in 2000.  By contrast, export volume in the United States only increased about 50 percent during the same period.  </p>
+<p>Dygraphs can also be produced in my other language of choice, Python, using the <a href="https://github.com/DayStarEngineering/PyDyGraphs">PyDyGraphs module, available from GitHub.</a>  The module allows you to create interactive dygraphs charts in your IPython Notebook session.  This module is also very user-friendly; download the <code>pydygraphs.py</code> module from GitHub and run the code below in your IPython Notebook to produce a plot of aging over time in Italy, Spain, and the Netherlands.  This module is not as mature as the R package, however; I was unable to display the plot in <a href="http://nbviewer.ipython.org/gist/walkerke/7d055b109a3f4b790127">nbviewer</a>, although admittedly my knowledge of the Notebook's architecture is limited.  </p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">wbdata</span> <span class="kn">as</span> <span class="nn">wb</span>
+<span class="kn">import</span> <span class="nn">pydygraphs</span>
+
+<span class="c">## First, fetch the data from the World Bank API</span>
+
+<span class="n">over65ind</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;SP.POP.65UP.TO.ZS&quot;</span><span class="p">:</span> <span class="s">&quot;pctover65&quot;</span><span class="p">}</span>
+
+<span class="n">countries</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;IT&quot;</span><span class="p">,</span> <span class="s">&quot;NL&quot;</span><span class="p">,</span> <span class="s">&quot;ES&quot;</span><span class="p">]</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">get_dataframe</span><span class="p">(</span><span class="n">over65ind</span><span class="p">,</span> <span class="n">country</span> <span class="o">=</span> <span class="n">countries</span><span class="p">,</span> <span class="n">data_date</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1960</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2012</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="c">## Now, reshape to wide format</span>
+
+<span class="n">wide</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">df_all</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="s">&#39;pctover65&#39;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="s">&#39;date&#39;</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="s">&#39;country&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="n">wide</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wide</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+<span class="c">## Finally, create the interactive plot!</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">pydygraphs</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+
+<span class="n">xaxis</span> <span class="o">=</span> <span class="s">&#39;date&#39;</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">plotDataFrame</span><span class="p">(</span><span class="n">wide</span><span class="p">,</span> <span class="n">xaxis</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&quot;Percent of population over age 65&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;Percent over 65&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+
+<p>Thanks are due, as always, to the RStudio team, Ramnath, and Kenton for their amazing work!</p></div>
         <hr />
     </div>
 		
+
+ 
+        
+
+ 
+
+    <div class='article'>
+        <a href="http://walkerke.github.io/2014/12/slidify/"><h2>Using Slidify to teach with interactive content</h2></a>
+        <div class= "well small"> Tue 02 December 2014
+
+by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
+ 
+
+
+ </div>
+        <div class="summary"><p>I frequently come across criticisms of PowerPoint as a presentation tool, which is interesting to me given the ubiquity of its use across industries.  When I worked as a data analyst prior to coming to TCU, I frequently prepared PowerPoints using a company template for my boss's presentations or ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/12/slidify/">read more</a></div>
+    </div>	
+				
 
  
         
@@ -168,24 +235,6 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
         <div class="summary"><p>I find population pyramids to be very effective teaching tools.  In short, a population pyramid is a type of chart that shows the population size of different age cohorts on the x-axis, with gender usually displayed back-to-back to create the shape of a "pyramid."  It is used to illustrate a ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/06/rcharts-pyramids/">read more</a></div>
     </div>	
 				
-
- 
-        
-
- 
-
-    <div class='article'>
-        <a href="http://walkerke.github.io/2014/05/tourism-plotly/"><h2>Visualizing the economics of tourism in the Pacific with Plotly</h2></a>
-        <div class= "well small"> Mon 12 May 2014
-
-by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
- 
-
-
- </div>
-        <div class="summary"><p>Over the last month or so, I've been working a lot with <a href="http://plot.ly">Plotly</a> to visualize data for my World Regional Geography course.  Plotly is a web-based service that allows for the creation of interactive, D3-based visualizations that can be easily shared.  Visualizations are deployed and hosted on Plotly's ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/05/tourism-plotly/">read more</a></div>
-    </div>	
-				
 <div class="pagination">
 <ul>
     <li class="prev disabled"><a href="#">&larr; Previous</a></li>
@@ -222,6 +271,7 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
                 Categories
                 </li>
                 
+                <li><a href="http://walkerke.github.io/category/misc.html">misc</a></li>
                 <li><a href="http://walkerke.github.io/category/plotly.html">Plotly</a></li>
                 <li><a href="http://walkerke.github.io/category/presentations.html">Presentations</a></li>
                 <li><a href="http://walkerke.github.io/category/rcharts.html">rCharts</a></li>
@@ -240,7 +290,6 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
                 <li><a href="http://personal.tcu.edu/kylewalker">Professional website</a></li>
                 <li><a href="http://his.tcu.edu/">TCU Dept. of History & Geography</a></li>
                 <li><a href="http://www.tcu.edu">TCU</a></li>
-                <li><a href="http://www.r-bloggers.com/">R-bloggers</a></li>
             </ul>
             </div>
 

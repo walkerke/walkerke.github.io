@@ -58,8 +58,8 @@
 
     <div class='article'>
         <div class="content-title">
-            <a href="http://walkerke.github.io/2014/10/russia-lex/"><h1>Life expectancy trends in the former USSR</h1></a>
-Thu 16 October 2014
+            <a href="http://walkerke.github.io/2014/12/dygraphs/"><h1>Charting time series data with dygraphs in R and Python</h1></a>
+Sat 20 December 2014
 
 by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
  
@@ -68,215 +68,107 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
  
         </div>
         
-        <div><p>When covering Russia and the former republics of the USSR in World Regional Geography, a key part of my material addresses the issues that some of these countries have had in their transitions from centralized to market economies.  Some of these countries experienced dramatic demographic shifts after the dissolution of the USSR, including a noticeable decline in life expectancy.</p>
-<p>I'd been using some static Excel charts to illustrate life expectancy declines in Russia, Belarus, and Ukraine in previous courses.  However, I felt that an interactive solution would be preferable so that my students and I could explore the data in class over the course of our discussion.  I opted for <a href="http://www.highcharts.com/">Highcharts</a>, through R and <a href="http://rcharts.io">rCharts</a>, for the interactivity.  I then turned to <a href="http://shiny.rstudio.com/">Shiny</a> from <a href="http://www.rstudio.com/">RStudio</a> to put everything together.  </p>
-<p>Shiny is a framework that allows R users to turn analyses and visualizations into interactive applications.  Shiny can be run locally on your computer, or deployed to the web via the <a href="https://www.shinyapps.io/">ShinyApps.io</a> hosting service, which is currently free.  The beauty of Shiny is that it allows you to explore your data interactively with a friendly web-based user interface without writing any JavaScript, and it lets R users create and deploy apps to be shared with non-R users who may nonetheless be interested in exploring a dataset or visualization. <a href="http://shiny.rstudio.com/gallery/">You can see RStudio's gallery of examples here.</a></p>
-<p>To get started, I acquired data from <a href="http://www.mortality.org/">The Human Mortality Database</a>, (HMD) a project of UC Berkeley and the Max Planck Institute.  The HMD prefers that users not re-distribute the data, so if you'd like to reproduce this chart, you'll need to download the data yourself.  However, the service is free (with registration) and relatively simple to use.  The HMD provides mortality data for 37 countries, including Russia, Belarus, and Ukraine. From the HMD, I downloaded the 1-year life expectancy at birth tables for these countries, and saved them to my working directory as delimited text files, naming them accordingly.  Once I did this, I used the code below to process the data into a suitable format for visualization.  </p>
-<div class="highlight"><pre>library<span class="p">(</span>tidyr<span class="p">)</span>
+        <div><p>This past week, the good people at <a href="http://www.rstudio.com">RStudio</a> advertised over Twitter the release of <a href="http://www.htmlwidgets.org/index.html">htmlwidgets for R</a>, a project in collaboration with <a href="http://rcharts.io">rCharts</a> wizards <a href="https://twitter.com/ramnath_vaidya">Ramnath Vaidyanathan</a> and <a href="https://twitter.com/timelyportfolio">Kenton Russell</a>. The packages showcased are incredible; I was particularly intrigued by the <a href="http://rstudio.github.io/dygraphs/">dygraphs</a> package, which creates interactive time-series charts.  </p>
+<p>Aside from maps, time series line charts are the most common chart type I use in my teaching, as I often discuss how characteristics of places evolve over time.  As such, I took dygraphs for a spin to create charts relevant to a couple topics I address in World Regional Geography.  </p>
+<p>The first chart shows quarterly unemployment rates in Egypt over the past decade.  I obtained the data from <a href="https://www.quandl.com">Quandl</a>, a massive repository of publicly-available datasets, by connecting to their API.  Quandl aims to be as user-friendly as possible; as such, <a href="https://www.quandl.com/ILOSTAT/UNE_DEAP_RT_SEX_T_Q_EGY-Unemployment-Rate-Quarterly-Egypt">on the page for the dataset you want</a>, you can get the command to access the data in R (or any number of other languages/formats) with a single click.  Additionally, you can specify the format for the data from Quandl; dygraphs in R accepts data in <code>xts</code> format, which Quandl can return for me.  </p>
+<p>Once I have the data, I can create the plot.    </p>
+<div class="highlight"><pre>library<span class="p">(</span>dygraphs<span class="p">)</span>
+library<span class="p">(</span>Quandl<span class="p">)</span>
+
+
+egypt <span class="o">&lt;-</span> Quandl<span class="p">(</span><span class="s">&quot;ILOSTAT/UNE_DEAP_RT_SEX_T_Q_EGY&quot;</span><span class="p">,</span> type <span class="o">=</span> <span class="s">&quot;xts&quot;</span><span class="p">)</span>
+
+dygraph<span class="p">(</span>egypt<span class="p">,</span> main <span class="o">=</span> <span class="s">&quot;Quarterly unemployment in Egypt, 2003-2013&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  dySeries<span class="p">(</span><span class="s">&quot;V1&quot;</span><span class="p">,</span> label <span class="o">=</span> <span class="s">&quot;Unemployment (%)&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  dyRangeSelector<span class="p">(</span>strokeColor <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> fillColor <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  dyOptions<span class="p">(</span>colors <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;darkred&quot;</span><span class="p">,</span> <span class="s">&quot;darkred&quot;</span><span class="p">))</span> 
+</pre></div>
+
+
+<iframe id="frame" src="http://walkerke.github.io/teaching-with-datavis/dygraphs/egypt.html" height="500" width="800" frameBorder = "0" scrolling = "no"></iframe>
+
+<p>The dygraphs package supports piping with the <code>%&gt;%</code> operator from the <strong>magrittr</strong> package, which organizes the code nicely.  I've changed the label in the legend and the colors, though I did notice that I had to supply a length-2 vector of colors to get the line's color to change, even though I only had one line.  I've also created a range selector at the bottom of the plot.  The chart itself has excellent interactivity; click and drag on the plot to zoom in to a specific section, and double-click to return to the original view.  In class, I can use this chart to show the major spike in unemployment after the fall of the Mubarak regime in early 2011. Unemployment, especially among youth, remains a critical issue in Egypt; <a href="http://data.worldbank.org/indicator/SL.UEM.1524.ZS">the World Bank estimates that 38.9 percent of Egyptians aged 15-24 were unemployed in 2013</a>.  </p>
+<p>The World Bank API is also an excellent resource for demographic and economic data; <a href="http://walkerke.github.io/2014/03/tfr-in-europe/">I've written about using it here</a>.  Quandl also provides access to World Bank data, but I'll include an example below that involves connecting directly to the World Bank's API to show how to get data from a different format into dygraphs.  </p>
+<p>The <strong>WDI</strong> package allows R users to connect directly to the World Bank's API and download data for selected countries, indicators, and years from the World Bank's <a href="http://data.worldbank.org/">Open Data Catalog</a>.  The code below fetches <a href="http://data.worldbank.org/indicator/TX.QTY.MRCH.XD.WD">export volume index data</a>, which shows how the relative size of countries' export economies have changed over time.  I discuss this in class heavily in the context of China, so I'll get data to compare China and the United States.  </p>
+<div class="highlight"><pre>library<span class="p">(</span>WDI<span class="p">)</span>
+library<span class="p">(</span>tidyr<span class="p">)</span>
+library<span class="p">(</span>xts<span class="p">)</span>
 library<span class="p">(</span>dplyr<span class="p">)</span>
 
-russia <span class="o">&lt;-</span> read.table<span class="p">(</span><span class="s">&#39;russia.txt&#39;</span><span class="p">,</span> skip <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
+df <span class="o">&lt;-</span> WDI<span class="p">(</span>country <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;CN&quot;</span><span class="p">,</span> <span class="s">&quot;US&quot;</span><span class="p">),</span> indicator <span class="o">=</span> <span class="s">&quot;TX.QTY.MRCH.XD.WD&quot;</span><span class="p">,</span> start <span class="o">=</span> <span class="m">1980</span><span class="p">,</span> end <span class="o">=</span> <span class="m">2013</span><span class="p">,</span> extra <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
 
-names<span class="p">(</span>russia<span class="p">)</span> <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">,</span> <span class="s">&quot;Female&quot;</span><span class="p">,</span> <span class="s">&quot;Male&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
+df<span class="o">$</span>exports <span class="o">&lt;-</span> df<span class="o">$</span>TX.QTY.MRCH.XD.WD
 
-russia<span class="o">$</span>country <span class="o">&lt;-</span> <span class="s">&quot;Russia&quot;</span>
+df1 <span class="o">&lt;-</span> df <span class="o">%&gt;%</span>
+  select<span class="p">(</span>country<span class="p">,</span> year<span class="p">,</span> exports<span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>country <span class="o">=</span> gsub<span class="p">(</span><span class="s">&quot;United States&quot;</span><span class="p">,</span> <span class="s">&quot;USA&quot;</span><span class="p">,</span> df<span class="o">$</span>country<span class="p">))</span> <span class="o">%&gt;%</span>
+  spread<span class="p">(</span>key <span class="o">=</span> country<span class="p">,</span> value <span class="o">=</span> exports<span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>date <span class="o">=</span> as.Date<span class="p">(</span>as.character<span class="p">(</span>year<span class="p">),</span> format <span class="o">=</span> <span class="s">&quot;%Y&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="o">-</span>year<span class="p">)</span> 
 
-ukraine <span class="o">&lt;-</span> read.table<span class="p">(</span><span class="s">&#39;ukraine.txt&#39;</span><span class="p">,</span> skip <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
+xtdata <span class="o">&lt;-</span> xts<span class="p">(</span>df1<span class="p">,</span> order.by <span class="o">=</span> df1<span class="o">$</span>date<span class="p">)</span> 
 
-names<span class="p">(</span>ukraine<span class="p">)</span> <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">,</span> <span class="s">&quot;Female&quot;</span><span class="p">,</span> <span class="s">&quot;Male&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
-
-ukraine<span class="o">$</span>country <span class="o">&lt;-</span> <span class="s">&quot;Ukraine&quot;</span>
-
-belarus <span class="o">&lt;-</span> read.table<span class="p">(</span><span class="s">&#39;belarus.txt&#39;</span><span class="p">,</span> skip <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
-
-names<span class="p">(</span>belarus<span class="p">)</span> <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">,</span> <span class="s">&quot;Female&quot;</span><span class="p">,</span> <span class="s">&quot;Male&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
-
-belarus<span class="o">$</span>country <span class="o">&lt;-</span> <span class="s">&quot;Belarus&quot;</span>
-
-dat <span class="o">&lt;-</span> rbind<span class="p">(</span>russia<span class="p">,</span> ukraine<span class="p">,</span> belarus<span class="p">)</span>
-
-dlong <span class="o">&lt;-</span> dat <span class="o">%&gt;%</span>
-  select<span class="p">(</span><span class="o">-</span>Total<span class="p">)</span> <span class="o">%&gt;%</span>
-  gather<span class="p">(</span>Gender<span class="p">,</span> lex<span class="p">,</span> Female<span class="o">:</span>Male<span class="p">)</span>
-
-write.csv<span class="p">(</span>dlong<span class="p">,</span> <span class="s">&#39;data.csv&#39;</span><span class="p">)</span>
+xtdata<span class="o">$</span>date <span class="o">&lt;-</span> <span class="kc">NULL</span>
 </pre></div>
 
 
-<p>In a nutshell, the above code reads in each of the three text files, identifies the country the data correspond to, then combines them.  It then uses functions from the <a href="http://cran.r-project.org/web/packages/dplyr/index.html">dplyr</a> and <a href="http://cran.r-project.org/web/packages/tidyr/index.html">tidyr</a> packages to convert the data to "tidy" (long) format, which is what I want for visualization.  I then saved the data as a CSV and moved it to a new folder where I would create my Shiny app.  </p>
-<p>A Shiny app requires two files to run: <strong>server.R</strong>, which specifies the data analysis/visualization to show, and <strong>ui.R</strong>, in which you prepare the user interface.  An optional third file (which I haven't used here), <strong>global.R</strong>, can be used to read in data or do any background data preparation that you want to make available to both the server and UI scripts.  I largely adapted my server and UI code from <a href="http://shiny.rstudio.com/tutorial/">RStudio's Shiny tutorials</a> and <a href="http://ramnathv.github.io/rChartsShiny/">Ramnath Vaidyanathan's tutorial on using rCharts with Shiny</a>, with some help from StackOverflow as well.  </p>
-<p>I prepared the UI first with the code below.  </p>
-<div class="highlight"><pre><span class="c1"># ui.R</span>
-
-library<span class="p">(</span>rCharts<span class="p">)</span>
-
-dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&#39;data.csv&#39;</span><span class="p">)</span>
-
-<span class="c1"># Define UI </span>
-shinyUI<span class="p">(</span>fluidPage<span class="p">(</span>
-
-  <span class="c1"># Sidebar </span>
-  sidebarLayout<span class="p">(</span>
-    sidebarPanel<span class="p">(</span>
-      selectInput<span class="p">(</span>inputId <span class="o">=</span> <span class="s">&quot;country&quot;</span><span class="p">,</span> 
-                  label <span class="o">=</span> <span class="s">&quot;Select a country:&quot;</span><span class="p">,</span> 
-                  choices <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;Russia&quot;</span><span class="p">,</span> <span class="s">&quot;Belarus&quot;</span><span class="p">,</span> <span class="s">&quot;Ukraine&quot;</span><span class="p">),</span> 
-                  selected <span class="o">=</span> <span class="s">&quot;Russia&quot;</span><span class="p">),</span> 
-      sliderInput<span class="p">(</span><span class="s">&quot;range&quot;</span><span class="p">,</span>
-                  label <span class="o">=</span> <span class="s">&quot;Years to display:&quot;</span><span class="p">,</span>
-                  min <span class="o">=</span> <span class="m">1959</span><span class="p">,</span>
-                  max <span class="o">=</span> <span class="m">2010</span><span class="p">,</span>
-                  value <span class="o">=</span> c<span class="p">(</span><span class="m">1959</span><span class="p">,</span> <span class="m">2010</span><span class="p">),</span> 
-                  format <span class="o">=</span> <span class="s">&quot;0000&quot;</span><span class="p">),</span> 
-      helpText<span class="p">(</span><span class="s">&quot;Data reflect the life expectancy &quot;</span><span class="p">,</span> 
-                <span class="s">&quot;at birth from 1959 to 2010 &quot;</span><span class="p">,</span> 
-               <span class="s">&quot;for men and women in Russia, &quot;</span><span class="p">,</span> 
-                <span class="s">&quot;Belarus, and Ukraine.  Data are &quot;</span><span class="p">,</span> 
-               <span class="s">&quot;obtained from the Human Mortality &quot;</span><span class="p">,</span> 
-                <span class="s">&quot;Database, a project of &quot;</span><span class="p">,</span> 
-                <span class="s">&quot; the University of California, &quot;</span><span class="p">,</span> 
-                <span class="s">&quot;Berkeley (USA), and Max Planck &quot;</span><span class="p">,</span> 
-                <span class="s">&quot;Institute for Demographic Research &quot;</span><span class="p">,</span> 
-                <span class="s">&quot;(Germany). Data are available &quot;</span><span class="p">,</span> 
-                <span class="s">&quot;at www.mortality.org or www.humanmortality.de &quot;</span><span class="p">,</span> 
-               <span class="s">&quot;(downloaded on 14 Oct 2014).&quot;</span><span class="p">)</span>
-    <span class="p">),</span>
-
-    <span class="c1"># Show the plot </span>
-    mainPanel<span class="p">(</span>
-      showOutput<span class="p">(</span><span class="s">&quot;lexplot&quot;</span><span class="p">,</span> <span class="s">&quot;highcharts&quot;</span><span class="p">)</span>
-    <span class="p">)</span>
-  <span class="p">)</span>
-<span class="p">))</span>
+<p>The WDI package returns data in "tidy" format, in which rows represent country-years.  I've reshaped my data frame to "wide" format, so that columns represent countries, and then I converted the data frame to an <code>xts</code> object for plotting with dygraphs.  </p>
+<div class="highlight"><pre>dygraph<span class="p">(</span>xtdata<span class="p">,</span> main <span class="o">=</span> <span class="s">&quot;Export volume index, 1980-2013 (2000 = 100)&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  dyHighlight<span class="p">(</span>highlightSeriesOpts <span class="o">=</span> list<span class="p">(</span>strokeWidth <span class="o">=</span> <span class="m">3</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  dyOptions<span class="p">(</span>colors <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="s">&quot;navy&quot;</span><span class="p">))</span>
 </pre></div>
 
 
-<p>In the <strong>ui.R</strong> script, I define the parameters of the Shiny user interface.  I'll have a drop-down menu to select the country of choice (Russia, Belarus, or Ukraine), as well as a time slider that allows the user to specify the years to show in the chart.  I then use the <code>showOutput</code> function from rCharts in the <code>mainPanel</code> call to tell Shiny to show my chart in the main area.  </p>
-<p>Next, I set up the server.  </p>
-<div class="highlight"><pre><span class="c1"># server.R</span>
+<iframe id="frame" src="http://walkerke.github.io/teaching-with-datavis/dygraphs/exports.html" height="500" width="800" frameBorder = "0" scrolling = "no"></iframe>
 
-library<span class="p">(</span>rCharts<span class="p">)</span>
+<p>I've configured this plot so that a data series is highlighted if hovered over by the user's cursor.  The chart is designed to show one perspective on the massive growth of China's export economy in recent years; its index is over 700 in 2013, which means that China's export volume in this year is over seven times what it was in 2000.  By contrast, export volume in the United States only increased about 50 percent during the same period.  </p>
+<p>Dygraphs can also be produced in my other language of choice, Python, using the <a href="https://github.com/DayStarEngineering/PyDyGraphs">PyDyGraphs module, available from GitHub.</a>  The module allows you to create interactive dygraphs charts in your IPython Notebook session.  This module is also very user-friendly; download the <code>pydygraphs.py</code> module from GitHub and run the code below in your IPython Notebook to produce a plot of aging over time in Italy, Spain, and the Netherlands.  This module is not as mature as the R package, however; I was unable to display the plot in <a href="http://nbviewer.ipython.org/gist/walkerke/7d055b109a3f4b790127">nbviewer</a>, although admittedly my knowledge of the Notebook's architecture is limited.  </p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">wbdata</span> <span class="kn">as</span> <span class="nn">wb</span>
+<span class="kn">import</span> <span class="nn">pydygraphs</span>
 
-dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&#39;data.csv&#39;</span><span class="p">)</span>
+<span class="c">## First, fetch the data from the World Bank API</span>
 
-options<span class="p">(</span>RCHART_WIDTH <span class="o">=</span> <span class="m">500</span><span class="p">)</span>
+<span class="n">over65ind</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;SP.POP.65UP.TO.ZS&quot;</span><span class="p">:</span> <span class="s">&quot;pctover65&quot;</span><span class="p">}</span>
 
-shinyServer<span class="p">(</span><span class="kr">function</span><span class="p">(</span>input<span class="p">,</span> output<span class="p">)</span> <span class="p">{</span>
-  output<span class="o">$</span>lexplot <span class="o">&lt;-</span> renderChart2<span class="p">({</span>
-    selected <span class="o">&lt;-</span> input<span class="o">$</span>country
-    country <span class="o">&lt;-</span> subset<span class="p">(</span>dat<span class="p">,</span> country <span class="o">==</span> selected <span class="o">&amp;</span> Year <span class="o">%in%</span> seq<span class="p">(</span>input<span class="o">$</span>range<span class="p">[</span><span class="m">1</span><span class="p">],</span> input<span class="o">$</span>range<span class="p">[</span><span class="m">2</span><span class="p">],</span> <span class="m">1</span><span class="p">))</span>
-    h1 <span class="o">&lt;-</span> hPlot<span class="p">(</span>
-      x <span class="o">=</span> <span class="s">&quot;Year&quot;</span><span class="p">,</span> 
-      y <span class="o">=</span> <span class="s">&quot;lex&quot;</span><span class="p">,</span> 
-      group <span class="o">=</span> <span class="s">&quot;Gender&quot;</span><span class="p">,</span> 
-      data <span class="o">=</span> country<span class="p">,</span> 
-      type <span class="o">=</span> <span class="s">&quot;line&quot;</span><span class="p">)</span>
+<span class="n">countries</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;IT&quot;</span><span class="p">,</span> <span class="s">&quot;NL&quot;</span><span class="p">,</span> <span class="s">&quot;ES&quot;</span><span class="p">]</span>
 
-    h1<span class="o">$</span>colors<span class="p">(</span>c<span class="p">(</span><span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="s">&quot;blue&quot;</span><span class="p">))</span>
-    h1<span class="o">$</span>yAxis<span class="p">(</span>title <span class="o">=</span> list<span class="p">(</span>enabled <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span> text <span class="o">=</span> <span class="s">&#39;Life expectancy at birth&#39;</span><span class="p">))</span>
-    <span class="kr">return</span><span class="p">(</span>h1<span class="p">)</span>
-  <span class="p">})</span>
-<span class="p">})</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">get_dataframe</span><span class="p">(</span><span class="n">over65ind</span><span class="p">,</span> <span class="n">country</span> <span class="o">=</span> <span class="n">countries</span><span class="p">,</span> <span class="n">data_date</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1960</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2012</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="c">## Now, reshape to wide format</span>
+
+<span class="n">wide</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">df_all</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="s">&#39;pctover65&#39;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="s">&#39;date&#39;</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="s">&#39;country&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="n">wide</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wide</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+<span class="c">## Finally, create the interactive plot!</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">pydygraphs</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+
+<span class="n">xaxis</span> <span class="o">=</span> <span class="s">&#39;date&#39;</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">plotDataFrame</span><span class="p">(</span><span class="n">wide</span><span class="p">,</span> <span class="n">xaxis</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&quot;Percent of population over age 65&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;Percent over 65&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
 
-<p>The key here to get this to work is to make sure that your <strong>server.R</strong> and <strong>ui.R</strong> scripts communicate correctly.  My UI takes an input that is dependent upon the country and years selected by the user, so I create a subsetted data frame, <code>country</code>, within the <code>renderChart2</code> function that will respond to that.  I then specify the parameters of the Highchart plot, and tell my <code>renderChart2</code> function to return that plot and assign it to the <code>lexplot</code> property of the output, which is what my user interface script will expect.  </p>
-<p>RStudio will know that you are creating a Shiny app (given the names of your scripts), so you can simply click the <strong>Run App</strong> button to run your app locally, and then deploy it to ShinyApps if you'd like.  Now, let's take a look at the result.  Use the drop-down menu to select a country, and the time slider to specify a range of years to display.   </p>
-<iframe src="https://walkerke.shinyapps.io/lex_former_ussr/" height="500" width="850" frameBorder = "0" scrolling = "no" seamless></iframe>
-
-<p>I now have an application that allows me to seamlessly switch between countries, change years, and explore the data thanks to Highcharts' built-in interactivity.  The charts reveal key trends in life expectancy both pre- and post- USSR.  In Russia, for example, we see that life expectancy declines through the mid-20th century, then peaks in the 1980s, <a href="http://www.rand.org/pubs/conf_proceedings/CF124/cf124.chap4.html">which is attributed to Mikhail Gorbachev's anti-alcohol campaign.</a>  Life expectancy then falls dramatically around the time that the USSR dissolved.  For example, male life expectancy in 1994 in Russia was a little over 57, around 7.5 years less than its peak in 1987.  <a href="http://www.ncbi.nlm.nih.gov/pubmed/9508159">Studies have attributed this to a variety of factors, including alcohol abuse, poor nutrition and health behaviors, and problems with the health care system.</a>  However, life expectancy improves in the late 2000s, <a href="http://www.demographic-research.org/volumes/vol28/32/28-32.pdf">in part due to declines in cardiovascular disease and homicides</a>.  </p>
-<p>In class, I first presented the chart (which displays very nicely in a <a href="http://ramnathv.github.io/slidify/">Slidify</a> presentation) and explored the data with my students.  I then showed my students the first segment from the documentary <a href="https://www.youtube.com/watch?v=J1OyIJtjdpo">Death of a Nation: Russia</a> by Marcel Theroux which explores some of the underlying issues behind these demographic changes in more depth.  We then used the video to collectively think about some reasons for the decline of life expectancy in Russia after the fall of the USSR.  The video paired very nicely with the interactive Shiny app; the charts provided key visual demographic context, and the video then put faces to the data.  </p>
-<p>The app is fully reproducible (just make sure you download the data from <a href="http://www.mortality.org">the Human Mortality Database</a> first) and you can find the code in its <a href="https://github.com/walkerke/teaching-with-datavis/tree/master/russia-lex">GitHub repository</a>.  The chart is also available in stand-alone form here: <a href="https://walkerke.shinyapps.io/lex_former_ussr/">https://walkerke.shinyapps.io/lex_former_ussr/</a>.   Feel free to use the app as you'd like, or modify the code as you wish to create your own apps!</p>
-<p><strong>Thanks to:</strong></p>
-<ul>
-<li>The creators of the Human Mortality Database for making their data freely available </li>
-<li>The <a href="http://http://www.rstudio.com/">RStudio</a> team for Shiny and all its associated training materials</li>
-<li>The developers of rCharts and Highcharts</li>
-</ul></div>
+<p>Thanks are due, as always, to the RStudio team, Ramnath, and Kenton for their amazing work!</p></div>
         <hr />
     </div>
 		
-
- 
-        
-
- 
-
-    <div class='article'>
-        <a href="http://walkerke.github.io/2014/08/un-projections/"><h2>Exploring the United Nations population projections with rCharts</h2></a>
-        <div class= "well small"> Tue 05 August 2014
-
-by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
- 
-
-
- </div>
-        <div class="summary"><p><strong>Please note: some NVD3 charts are performing very slowly in the latest version of Google Chrome at the moment; <a href="https://github.com/novus/nvd3/issues/702">see this GitHub issue.</a>  As such, this post is best viewed in other browsers.</strong></p>
-<p>I recently came across <a href="http://dataremixed.com/2014/07/story-types-a-thought-starter/">this really interesting post</a> from <a href="https://twitter.com/DataRemixed">Ben Jones</a> that explores the history and future ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/08/un-projections/">read more</a></div>
-    </div>	
-				
-
- 
-        
-
- 
-
-    <div class='article'>
-        <a href="http://walkerke.github.io/2014/06/rcharts-pyramids/"><h2>Interactive international population pyramids with R, rCharts</h2></a>
-        <div class= "well small"> Sat 07 June 2014
-
-by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
- 
-
-
- </div>
-        <div class="summary"><p>I find population pyramids to be very effective teaching tools.  In short, a population pyramid is a type of chart that shows the population size of different age cohorts on the x-axis, with gender usually displayed back-to-back to create the shape of a "pyramid."  It is used to illustrate a ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/06/rcharts-pyramids/">read more</a></div>
-    </div>	
-				
-
- 
-        
-
- 
-
-    <div class='article'>
-        <a href="http://walkerke.github.io/2014/05/tourism-plotly/"><h2>Visualizing the economics of tourism in the Pacific with Plotly</h2></a>
-        <div class= "well small"> Mon 12 May 2014
-
-by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
- 
-
-
- </div>
-        <div class="summary"><p>Over the last month or so, I've been working a lot with <a href="http://plot.ly">Plotly</a> to visualize data for my World Regional Geography course.  Plotly is a web-based service that allows for the creation of interactive, D3-based visualizations that can be easily shared.  Visualizations are deployed and hosted on Plotly's ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/05/tourism-plotly/">read more</a></div>
-    </div>	
-				
-
- 
-        
-
- 
-
-    <div class='article'>
-        <a href="http://walkerke.github.io/2014/03/tfr-in-europe/"><h2>Visualizing fertility trends in Europe</h2></a>
-        <div class= "well small"> Thu 06 March 2014
-
-by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
- 
-
-
- </div>
-        <div class="summary"><p>In the classroom, interactive data visualizations can embed a wealth of information that can be interactively queried by the instructor depending on the course topics and students' questions.  The example I'll discuss below worked for me exactly in this way.  I'll show how to create an interactive chart ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/03/tfr-in-europe/">read more</a></div>
-    </div>	
-				
 <div class="pagination">
 <ul>
     <li class="prev disabled"><a href="#">&larr; Previous</a></li>
 
     <li class="active"><a href="http://walkerke.github.io/category/misc.html">1</a></li>
-    <li class=""><a href="http://walkerke.github.io/category/misc2.html">2</a></li>
 
-    <li class="next"><a href="http://walkerke.github.io/category/misc2.html">Next &rarr;</a></li>
+    <li class="next disabled"><a href="#">&rarr; Next</a></li>
 
 </ul>
 </div>
@@ -306,6 +198,10 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
                 </li>
                 
                 <li><a href="http://walkerke.github.io/category/misc.html">misc</a></li>
+                <li><a href="http://walkerke.github.io/category/plotly.html">Plotly</a></li>
+                <li><a href="http://walkerke.github.io/category/presentations.html">Presentations</a></li>
+                <li><a href="http://walkerke.github.io/category/rcharts.html">rCharts</a></li>
+                <li><a href="http://walkerke.github.io/category/shiny.html">Shiny</a></li>
                    
             </ul>
             </div>
@@ -320,7 +216,6 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
                 <li><a href="http://personal.tcu.edu/kylewalker">Professional website</a></li>
                 <li><a href="http://his.tcu.edu/">TCU Dept. of History & Geography</a></li>
                 <li><a href="http://www.tcu.edu">TCU</a></li>
-                <li><a href="http://www.r-bloggers.com/">R-bloggers</a></li>
             </ul>
             </div>
 
