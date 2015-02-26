@@ -58,8 +58,8 @@
 
     <div class='article'>
         <div class="content-title">
-            <a href="http://walkerke.github.io/2014/12/dygraphs/"><h1>Charting time series data with dygraphs in R and Python</h1></a>
-Sat 20 December 2014
+            <a href="http://walkerke.github.io/2015/02/religion/"><h1>Mapping religious adherence in the US with CartoDB and value-by-alpha</h1></a>
+Thu 26 February 2015
 
 by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
  
@@ -68,100 +68,89 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
  
         </div>
         
-        <div><p>This past week, the good people at <a href="http://www.rstudio.com">RStudio</a> advertised over Twitter the release of <a href="http://www.htmlwidgets.org/index.html">htmlwidgets for R</a>, a project in collaboration with <a href="http://rcharts.io">rCharts</a> wizards <a href="https://twitter.com/ramnath_vaidya">Ramnath Vaidyanathan</a> and <a href="https://twitter.com/timelyportfolio">Kenton Russell</a>. The packages showcased are incredible; I was particularly intrigued by the <a href="http://rstudio.github.io/dygraphs/">dygraphs</a> package, which creates interactive time-series charts.  </p>
-<p>Aside from maps, time series line charts are the most common chart type I use in my teaching, as I often discuss how characteristics of places evolve over time.  As such, I took dygraphs for a spin to create charts relevant to a couple topics I address in World Regional Geography.  </p>
-<p>The first chart shows quarterly unemployment rates in Egypt over the past decade.  I obtained the data from <a href="https://www.quandl.com">Quandl</a>, a massive repository of publicly-available datasets, by connecting to their API.  Quandl aims to be as user-friendly as possible; as such, <a href="https://www.quandl.com/ILOSTAT/UNE_DEAP_RT_SEX_T_Q_EGY-Unemployment-Rate-Quarterly-Egypt">on the page for the dataset you want</a>, you can get the command to access the data in R (or any number of other languages/formats) with a single click.  Additionally, you can specify the format for the data from Quandl; dygraphs in R accepts data in <code>xts</code> format, which Quandl can return for me.  </p>
-<p>Once I have the data, I can create the plot.    </p>
-<div class="highlight"><pre>library<span class="p">(</span>dygraphs<span class="p">)</span>
-library<span class="p">(</span>Quandl<span class="p">)</span>
+        <div><p>Before coming to TCU, I worked as a data analyst for the <a href="https://www.cpg.org/">Church Pension Group</a>, which manages the retirement funds and provides other financial services for the Episcopal Church.  I was part of a small research group that completed both internal and public-facing studies using the company's data.  <a href="https://www.cpg.org/global/research/reports-statistics/">You can take a look at some of the studies I worked on here</a>.  While I was at CPG, I developed an interest in the sociology of religion, as changing rates of religious adherence were of critical importance to CPG's work, as they impact the overall viability of parishes (and in turn the fiscal health of the Church).  During this time, data for the <a href="http://www.rcms2010.org/">2010 US Religion Census (or Religious Congregations and Membership Study, abbreviated as RCMS)</a> started to become available.  As the US Census does not ask questions about religion, researchers interested in studying religion must turn to other data sources like these.  </p>
+<p>I never had the opportunity to really dig into this dataset while at CPG, as I left for my current position at TCU shortly afterward.  However, as I teach about the geography of religious adherence (defined here as the proportion of the population actively practicing a religion) in my World Regional Geography course, I took the opportunity to dive back into the data.  I was inspired by <a href="http://www.glenmary.org/rcms2010/">this map from the Glenmary Research Center</a> which maps the top religious family by county in the United States.  This map is excellent, but I wanted an interactive version that I could explore with my students in class (and that they could explore outside of class).  However, I did really like the cartographic technique they used to present the data.  Their approach is similar to the <strong>value-by-alpha</strong> approach, which is a method for bivariate mapping.  In this instance, the top religious group in each county is assigned a color; then, the intensity of the color is related to the adherence percentage for that group.  This makes sense; if two counties have Catholic as their top group, but one has an adherence of 75 percent as opposed to 20 percent for the other, they should not be represented that way.  </p>
+<p>Value-by-alpha works in a similar way in that the color of a feature represents one attribute (often a nominal attribute, mapped with a qualitative color scheme), and the opacity of that feature represents another (a quantitative attribute).  My inspiration for the technique comes from <a href="https://twitter.com/awoodruff">Andy Woodruff's</a> fine work on the topic: you can read about Andy's work <a href="http://andywoodruff.com/blog/how-to-make-a-value-by-alpha-map/">here</a>, <a href="http://andywoodruff.com/blog/value-by-alpha-maps/">here</a>, and <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3173776/">here</a>.  </p>
+<p>I chose to implement value-by-alpha using <a href="http://cartodb.com/">CartoDB</a>, a phenomenal web-based platform for creating interactive maps.  CartoDB's functionality ranges from the creation of simple maps with a user-friendly web UI to actual GIS functionality using its PostGIS backend with spatial SQL.  Here is the map I created; below, I'll explain how I did it!  Use the arrows button in the upper left to pop the map out to full screen.  </p>
+<iframe width='100%' height='600' frameborder='0' src='http://kwalkertcu.cartodb.com/viz/dfe2d3b2-a0da-11e4-a315-0e4fddd5de28/embed_map' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
 
+<p>The map shows the top religious adherence group by county, with some key differences from the Glenmary map; I classified the data as Catholic, Evangelical Protestant, Latter-Day Saints (Mormon), Mainline Protestant, and Black Protestant.  No other major category was the top group in the lower 48 states plus DC.  I used R to process the data; I won't go into detail about that here, but you can <a href="https://github.com/walkerke/teaching-with-datavis/blob/master/religion/religion2.R">view the code in my GitHub repository</a>.  The whole process can be reproduced by <a href="https://github.com/walkerke/teaching-with-datavis/tree/master/religion">cloning the repo</a>, running the script, and zipping up the new shapefile <code>cty_religion</code> for uploading to CartoDB. </p>
+<p>Uploading your data to CartoDB is straightforward: once your data are in the right format (in this instance, in the form of a zipped shapefile), just sign in and drag and drop!  Once your data have loaded, CartoDB includes a number of "wizards" you can use to style your data in a very user-friendly way.  For more complex visualizations, however, you can use <a href="https://www.mapbox.com/tilemill/docs/manual/carto/">CartoCSS</a>.  CartoCSS, which is also used by MapBox Studio (another new favorite of mine), is a CSS-like syntax for styling map data.  It also makes bivariate visualizations like value-by-alpha maps possible.  To style the map, I grabbed some colors from <a href="http://colorbrewer2.org/">ColorBrewer</a> and used the following syntax: </p>
+<div class="highlight"><pre><span class="nf">#cty_religion</span> <span class="p">{</span>
+   <span class="n">line</span><span class="o">-</span><span class="k">color</span><span class="o">:</span> <span class="m">#FFF</span><span class="p">;</span>
+   <span class="n">line</span><span class="o">-</span><span class="k">width</span><span class="o">:</span> <span class="m">1</span><span class="p">;</span>
+   <span class="n">line</span><span class="o">-</span><span class="k">opacity</span><span class="o">:</span> <span class="m">1</span><span class="p">;</span>
+<span class="p">}</span>
 
-egypt <span class="o">&lt;-</span> Quandl<span class="p">(</span><span class="s">&quot;ILOSTAT/UNE_DEAP_RT_SEX_T_Q_EGY&quot;</span><span class="p">,</span> type <span class="o">=</span> <span class="s">&quot;xts&quot;</span><span class="p">)</span>
+<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">religion</span><span class="o">=</span><span class="s2">&quot;Evangelical&quot;</span><span class="o">]</span> <span class="p">{</span>
+   <span class="n">polygon</span><span class="o">-</span><span class="n">fill</span><span class="o">:</span> <span class="m">#e41a1c</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">religion</span><span class="o">=</span><span class="s2">&quot;Catholic&quot;</span><span class="o">]</span> <span class="p">{</span>
+   <span class="n">polygon</span><span class="o">-</span><span class="n">fill</span><span class="o">:</span> <span class="m">#377eb8</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">religion</span><span class="o">=</span><span class="s2">&quot;Mainline&quot;</span><span class="o">]</span> <span class="p">{</span>
+   <span class="n">polygon</span><span class="o">-</span><span class="n">fill</span><span class="o">:</span> <span class="m">#4daf4a</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">religion</span><span class="o">=</span><span class="s2">&quot;LDS&quot;</span><span class="o">]</span> <span class="p">{</span>
+   <span class="n">polygon</span><span class="o">-</span><span class="n">fill</span><span class="o">:</span> <span class="m">#984ea3</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">religion</span><span class="o">=</span><span class="s2">&quot;African-American&quot;</span><span class="o">]</span> <span class="p">{</span>
+   <span class="n">polygon</span><span class="o">-</span><span class="n">fill</span><span class="o">:</span> <span class="m">#ff7f00</span><span class="p">;</span>
+<span class="p">}</span>
 
-dygraph<span class="p">(</span>egypt<span class="p">,</span> main <span class="o">=</span> <span class="s">&quot;Quarterly unemployment in Egypt, 2003-2013&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  dySeries<span class="p">(</span><span class="s">&quot;V1&quot;</span><span class="p">,</span> label <span class="o">=</span> <span class="s">&quot;Unemployment (%)&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  dyRangeSelector<span class="p">(</span>strokeColor <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> fillColor <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  dyOptions<span class="p">(</span>colors <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;darkred&quot;</span><span class="p">,</span> <span class="s">&quot;darkred&quot;</span><span class="p">))</span> 
+<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">percent</span> <span class="o">&gt;=</span> <span class="nt">0</span><span class="o">]</span> <span class="p">{</span>
+  <span class="n">polygon</span><span class="o">-</span><span class="k">opacity</span><span class="o">:</span> <span class="m">0</span><span class="o">.</span><span class="m">2</span><span class="p">;</span> 
+<span class="p">}</span>
+<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">percent</span> <span class="o">&gt;=</span> <span class="nt">20</span><span class="o">]</span> <span class="p">{</span>
+  <span class="n">polygon</span><span class="o">-</span><span class="k">opacity</span><span class="o">:</span> <span class="m">0</span><span class="o">.</span><span class="m">4</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">percent</span> <span class="o">&gt;=</span> <span class="nt">30</span><span class="o">]</span> <span class="p">{</span>
+  <span class="n">polygon</span><span class="o">-</span><span class="k">opacity</span><span class="o">:</span> <span class="m">0</span><span class="o">.</span><span class="m">6</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">percent</span> <span class="o">&gt;=</span> <span class="nt">40</span><span class="o">]</span> <span class="p">{</span>
+  <span class="n">polygon</span><span class="o">-</span><span class="k">opacity</span><span class="o">:</span> <span class="m">0</span><span class="o">.</span><span class="m">8</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 
 
-<iframe id="frame" src="http://walkerke.github.io/teaching-with-datavis/dygraphs/egypt.html" height="500" width="800" frameBorder = "0" scrolling = "no"></iframe>
-
-<p>The dygraphs package supports piping with the <code>%&gt;%</code> operator from the <strong>magrittr</strong> package, which organizes the code nicely.  I've changed the label in the legend and the colors, though I did notice that I had to supply a length-2 vector of colors to get the line's color to change, even though I only had one line.  I've also created a range selector at the bottom of the plot.  The chart itself has excellent interactivity; click and drag on the plot to zoom in to a specific section, and double-click to return to the original view.  In class, I can use this chart to show the major spike in unemployment after the fall of the Mubarak regime in early 2011. Unemployment, especially among youth, remains a critical issue in Egypt; <a href="http://data.worldbank.org/indicator/SL.UEM.1524.ZS">the World Bank estimates that 38.9 percent of Egyptians aged 15-24 were unemployed in 2013</a>.  </p>
-<p>The World Bank API is also an excellent resource for demographic and economic data; <a href="http://walkerke.github.io/2014/03/tfr-in-europe/">I've written about using it here</a>.  Quandl also provides access to World Bank data, but I'll include an example below that involves connecting directly to the World Bank's API to show how to get data from a different format into dygraphs.  </p>
-<p>The <strong>WDI</strong> package allows R users to connect directly to the World Bank's API and download data for selected countries, indicators, and years from the World Bank's <a href="http://data.worldbank.org/">Open Data Catalog</a>.  The code below fetches <a href="http://data.worldbank.org/indicator/TX.QTY.MRCH.XD.WD">export volume index data</a>, which shows how the relative size of countries' export economies have changed over time.  I discuss this in class heavily in the context of China, so I'll get data to compare China and the United States.  </p>
-<div class="highlight"><pre>library<span class="p">(</span>WDI<span class="p">)</span>
-library<span class="p">(</span>tidyr<span class="p">)</span>
-library<span class="p">(</span>xts<span class="p">)</span>
-library<span class="p">(</span>dplyr<span class="p">)</span>
-
-df <span class="o">&lt;-</span> WDI<span class="p">(</span>country <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;CN&quot;</span><span class="p">,</span> <span class="s">&quot;US&quot;</span><span class="p">),</span> indicator <span class="o">=</span> <span class="s">&quot;TX.QTY.MRCH.XD.WD&quot;</span><span class="p">,</span> start <span class="o">=</span> <span class="m">1980</span><span class="p">,</span> end <span class="o">=</span> <span class="m">2013</span><span class="p">,</span> extra <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
-
-df<span class="o">$</span>exports <span class="o">&lt;-</span> df<span class="o">$</span>TX.QTY.MRCH.XD.WD
-
-df1 <span class="o">&lt;-</span> df <span class="o">%&gt;%</span>
-  select<span class="p">(</span>country<span class="p">,</span> year<span class="p">,</span> exports<span class="p">)</span> <span class="o">%&gt;%</span>
-  mutate<span class="p">(</span>country <span class="o">=</span> gsub<span class="p">(</span><span class="s">&quot;United States&quot;</span><span class="p">,</span> <span class="s">&quot;USA&quot;</span><span class="p">,</span> df<span class="o">$</span>country<span class="p">))</span> <span class="o">%&gt;%</span>
-  spread<span class="p">(</span>key <span class="o">=</span> country<span class="p">,</span> value <span class="o">=</span> exports<span class="p">)</span> <span class="o">%&gt;%</span>
-  mutate<span class="p">(</span>date <span class="o">=</span> as.Date<span class="p">(</span>as.character<span class="p">(</span>year<span class="p">),</span> format <span class="o">=</span> <span class="s">&quot;%Y&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  select<span class="p">(</span><span class="o">-</span>year<span class="p">)</span> 
-
-xtdata <span class="o">&lt;-</span> xts<span class="p">(</span>df1<span class="p">,</span> order.by <span class="o">=</span> df1<span class="o">$</span>date<span class="p">)</span> 
-
-xtdata<span class="o">$</span>date <span class="o">&lt;-</span> <span class="kc">NULL</span>
-</pre></div>
-
-
-<p>The WDI package returns data in "tidy" format, in which rows represent country-years.  I've reshaped my data frame to "wide" format, so that columns represent countries, and then I converted the data frame to an <code>xts</code> object for plotting with dygraphs.  Now, I can create the plot: </p>
-<div class="highlight"><pre>dygraph<span class="p">(</span>xtdata<span class="p">,</span> main <span class="o">=</span> <span class="s">&quot;Export volume index, 1980-2013 (2000 = 100)&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  dyHighlight<span class="p">(</span>highlightSeriesOpts <span class="o">=</span> list<span class="p">(</span>strokeWidth <span class="o">=</span> <span class="m">3</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  dyOptions<span class="p">(</span>colors <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="s">&quot;navy&quot;</span><span class="p">))</span>
-</pre></div>
-
-
-<iframe id="frame" src="http://walkerke.github.io/teaching-with-datavis/dygraphs/exports.html" height="500" width="800" frameBorder = "0" scrolling = "no"></iframe>
-
-<p>I've configured this plot so that a data series is highlighted if hovered over by the user's cursor.  The chart is designed to show one perspective on the massive growth of China's export economy in recent years; its index is over 700 in 2013, which means that China's export volume in this year is over seven times what it was in 2000.  By contrast, export volume in the United States only increased about 50 percent during the same period.  </p>
-<p>Dygraphs can also be produced in my other language of choice, Python, using the <a href="https://github.com/DayStarEngineering/PyDyGraphs">PyDyGraphs module, available from GitHub.</a>  The module allows you to create interactive dygraphs charts in your IPython Notebook session.  This module is also very user-friendly; download the <code>pydygraphs.py</code> module from GitHub and run the code below in your IPython Notebook to produce a plot of aging over time in Italy, Spain, and the Netherlands.  This module is not as mature as the R package, however; I was unable to display the plot in <a href="http://nbviewer.ipython.org/gist/walkerke/7d055b109a3f4b790127">nbviewer</a>, although admittedly my knowledge of the Notebook's architecture is limited.  </p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">wbdata</span> <span class="kn">as</span> <span class="nn">wb</span>
-<span class="kn">import</span> <span class="nn">pydygraphs</span>
-
-<span class="c">## First, fetch the data from the World Bank API</span>
-
-<span class="n">over65ind</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;SP.POP.65UP.TO.ZS&quot;</span><span class="p">:</span> <span class="s">&quot;pctover65&quot;</span><span class="p">}</span>
-
-<span class="n">countries</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;IT&quot;</span><span class="p">,</span> <span class="s">&quot;NL&quot;</span><span class="p">,</span> <span class="s">&quot;ES&quot;</span><span class="p">]</span>
-
-<span class="n">df</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">get_dataframe</span><span class="p">(</span><span class="n">over65ind</span><span class="p">,</span> <span class="n">country</span> <span class="o">=</span> <span class="n">countries</span><span class="p">,</span> <span class="n">data_date</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1960</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2012</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
-
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-
-<span class="c">## Now, reshape to wide format</span>
-
-<span class="n">wide</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="s">&#39;pctover65&#39;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="s">&#39;date&#39;</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="s">&#39;country&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-
-<span class="n">wide</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wide</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-
-<span class="c">## Finally, create the interactive plot!</span>
-
-<span class="n">fig</span> <span class="o">=</span> <span class="n">pydygraphs</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-
-<span class="n">xaxis</span> <span class="o">=</span> <span class="s">&#39;date&#39;</span>
-
-<span class="n">fig</span><span class="o">.</span><span class="n">plotDataFrame</span><span class="p">(</span><span class="n">wide</span><span class="p">,</span> <span class="n">xaxis</span><span class="p">)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&quot;Percent of population over age 65&quot;</span><span class="p">)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;Percent over 65&quot;</span><span class="p">)</span>
-
-<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-
-
-<p>Thanks are due, as always, to the RStudio team, Ramnath, and Kenton for their amazing work!</p></div>
+<p>The <code>polygon-fill</code> method is used to style my data by religious category with colors; the <code>polygon-opacity</code> method then adjusts the opacity of the features, which then blend with the light-gray CartoDB basemap.  I used, roughly, a quantile classification scheme with four bins (with some slight rounding to 20, 30, and 40) for this.  The map, I feel, shows clear trends in religious adherence in the US.  The South is the Evangelical center of the country; Catholicism is more prevalent along the US/Mexico border and in the Northeast, Utah is a Mormon stronghold, and Mainline Protestantism predominates in the Upper Midwest.   The value-by-alpha approach also gives the viewer a sense of the relative religiosity of different places; whereas Utah and the Southeast appear to have much stronger adherence to their top religious groups, the opacity of features in the Northwest suggests lower religiosity there (or at least no group that is significant numbers-wise).  </p>
+<p>There is a lot more I'd like to do with this map; here are some ideas: </p>
+<ul>
+<li>I've restricted this to the lower 48 states plus DC; Alaska and Hawaii should be added.  </li>
+<li>I'd like a better legend that shows variation in opacity as well as hue; I experimented with this a little but couldn't quite get anything satisfactory working.  </li>
+<li>It would be great to have an interactive chart appear upon clicking each county that shows the overall distribution of each group; this is beyond my current CartoDB.js skills but something to consider for a future iteration.  </li>
+</ul>
+<p>If you have any comments or questions, please let me know!</p>
+<p><strong>Thanks to:</strong></p>
+<ul>
+<li>Andy Woodruff and others for resources on the value-by-alpha technique</li>
+<li>CartoDB</li>
+<li>The <a href="http://www.thearda.com/">Association of Religion Data Archives</a> for providing free access to the RCMS data</li>
+<li><a href="http://www.nhgis.org">NHGIS</a> at the University of Minnesota for the spatial data</li>
+<li>The Glenmary Research Center for inspiring this map</li>
+</ul></div>
         <hr />
     </div>
 		
+
+ 
+        
+
+ 
+
+    <div class='article'>
+        <a href="http://walkerke.github.io/2014/12/dygraphs/"><h2>Charting time series data with dygraphs in R and Python</h2></a>
+        <div class= "well small"> Sat 20 December 2014
+
+by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
+ 
+
+
+ </div>
+        <div class="summary"><p>This past week, the good people at <a href="http://www.rstudio.com">RStudio</a> advertised over Twitter the release of <a href="http://www.htmlwidgets.org/index.html">htmlwidgets for R</a>, a project in collaboration with <a href="http://rcharts.io">rCharts</a> wizards <a href="https://twitter.com/ramnath_vaidya">Ramnath Vaidyanathan</a> and <a href="https://twitter.com/timelyportfolio">Kenton Russell</a>. The packages showcased are incredible; I was particularly intrigued by the <a href="http://rstudio.github.io/dygraphs/">dygraphs</a> package, which creates interactive time-series charts.  </p>
+<p>Aside from maps ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/12/dygraphs/">read more</a></div>
+    </div>	
+				
 
  
         
@@ -217,24 +206,6 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
 <p>I recently came across <a href="http://dataremixed.com/2014/07/story-types-a-thought-starter/">this really interesting post</a> from <a href="https://twitter.com/DataRemixed">Ben Jones</a> that explores the history and future ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/08/un-projections/">read more</a></div>
     </div>	
 				
-
- 
-        
-
- 
-
-    <div class='article'>
-        <a href="http://walkerke.github.io/2014/06/rcharts-pyramids/"><h2>Interactive international population pyramids with R, rCharts</h2></a>
-        <div class= "well small"> Sat 07 June 2014
-
-by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
- 
-
-
- </div>
-        <div class="summary"><p>I find population pyramids to be very effective teaching tools.  In short, a population pyramid is a type of chart that shows the population size of different age cohorts on the x-axis, with gender usually displayed back-to-back to create the shape of a "pyramid."  It is used to illustrate a ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/06/rcharts-pyramids/">read more</a></div>
-    </div>	
-				
 <div class="pagination">
 <ul>
     <li class="prev disabled"><a href="#">&larr; Previous</a></li>
@@ -272,6 +243,7 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
                 </li>
                 
                 <li><a href="http://walkerke.github.io/category/charts.html">Charts</a></li>
+                <li><a href="http://walkerke.github.io/category/maps.html">Maps</a></li>
                 <li><a href="http://walkerke.github.io/category/presentations.html">Presentations</a></li>
                    
             </ul>
