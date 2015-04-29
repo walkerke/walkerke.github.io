@@ -58,8 +58,8 @@
 
     <div class='article'>
         <div class="content-title">
-            <a href="http://walkerke.github.io/2015/02/religion/"><h1>Mapping religious adherence in the US with CartoDB</h1></a>
-Thu 26 February 2015
+            <a href="http://walkerke.github.io/2015/04/map-or-chart/"><h1>Should you visualize data with a map or a chart?  Thoughts from teaching introductory geography</h1></a>
+Wed 29 April 2015
 
 by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
  
@@ -68,73 +68,54 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
  
         </div>
         
-        <div><p><strong>Update 2/26: changes made after conversations with Steven Romalewski on Twitter.  For the previous version of the post, check my GitHub version history.</strong></p>
-<p>Before coming to TCU, I worked as a data analyst for the <a href="https://www.cpg.org/">Church Pension Group</a>, which manages the retirement funds and provides other financial services for the Episcopal Church.  I was part of a small research group that completed both internal and public-facing studies using the company's data.  <a href="https://www.cpg.org/global/research/reports-statistics/">You can take a look at some of the studies I worked on here</a>.  While I was at CPG, I developed an interest in the sociology of religion, as changing rates of religious adherence were of critical importance to CPG's work, as they impact the overall viability of parishes (and in turn the fiscal health of the Church).  During this time, data for the <a href="http://www.rcms2010.org/">2010 US Religion Census (or Religious Congregations and Membership Study, abbreviated as RCMS)</a> started to become available.  As the US Census does not ask questions about religion, researchers interested in studying religion must turn to other data sources like these.  </p>
-<p>I never had the opportunity to really dig into this dataset while at CPG, as I left for my current position at TCU shortly afterward.  However, as I teach about the geography of religious adherence (defined here as the proportion of the population actively practicing a religion) in my World Regional Geography course, I took the opportunity to dive back into the data.  I was inspired by <a href="http://www.glenmary.org/rcms2010/">this map from the Glenmary Research Center</a> which maps the top religious family by county in the United States.  This map is excellent, but I wanted an interactive version that I could explore with my students in class (and that they could explore outside of class).  However, I did really like the bivariate cartographic technique they used to present the data (<a href="http://www.joshuastevens.net/cartography/make-a-bivariate-choropleth-map/">see this post from Joshua Stevens for a great overview of bivariate mapping</a>).  In this instance, the top religious group in each county is assigned a color; then, the intensity of the color is related to the adherence percentage for that group.  This makes sense; if two counties have Catholic as their top group, but one has an adherence of 75 percent as opposed to 20 percent for the other, they should not be represented the same way.  </p>
-<p>There are many other examples of this type of cartographic approach.  Some excellent examples have come from <a href="https://twitter.com/SR_spatial">Steven Romalewski</a> and CUNY's Center for Urban Research, where they have mapped <a href="http://www.urbanresearchmaps.org/comparinator/pluralitymap.htm">demographic change</a> and <a href="http://www.electionatlas.nyc/maps.html#!interactive">election results</a>.  I use the demographic map in my teaching every semester to discuss issues of gentrification and demographic inversion in metropolitan areas.  In the CUNY maps, the qualitative color of a feature represents the most prevalent group (e.g. race) and then the intensity of the hue represents its relative value (the percentage represented by that racial group).  </p>
-<p>A related approach is <strong>value-by-alpha</strong>, which works in a similar way in that the color of a feature represents one attribute, and its opacity represents an equalizing attribute, like total population.  You can read more about <a href="https://twitter.com/awoodruff">Andy Woodruff's</a> fine work on the topic <a href="http://andywoodruff.com/blog/how-to-make-a-value-by-alpha-map/">here</a>, <a href="http://andywoodruff.com/blog/value-by-alpha-maps/">here</a>, and <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3173776/">here</a>.  </p>
-<p>I borrow from these approaches to map religious adherence by county using <a href="http://cartodb.com/">CartoDB</a>, a phenomenal web-based platform for creating interactive maps.  CartoDB's functionality ranges from the creation of simple maps with a user-friendly web UI to actual GIS functionality using its PostGIS backend with spatial SQL.  Here is the map I created; below, I'll explain how I did it!  Use the arrows button in the upper left to pop the map out to full screen; <a href="http://kwalkertcu.cartodb.com/viz/dfe2d3b2-a0da-11e4-a315-0e4fddd5de28/embed_map">click here if you'd like a direct link to the map.</a>  </p>
-<iframe width='100%' height='600' frameborder='0' src='http://kwalkertcu.cartodb.com/viz/dfe2d3b2-a0da-11e4-a315-0e4fddd5de28/embed_map' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
-
-<p>The map shows the top religious adherence group by county, with some key differences from the Glenmary map; I classified the data as Catholic, Evangelical Protestant, Latter-Day Saints (Mormon), Mainline Protestant, and Black Protestant.  No other major category was the top group in the lower 48 states plus DC.  I used R to process the data; I won't go into detail about that here, but you can <a href="https://github.com/walkerke/teaching-with-datavis/blob/master/religion/religion2.R">view the code in my GitHub repository</a>.  The whole process can be reproduced by <a href="https://github.com/walkerke/teaching-with-datavis/tree/master/religion">cloning the repo</a>, running the script, and zipping up the new shapefile <code>cty_religion</code> for uploading to CartoDB. </p>
-<p>Uploading your data to CartoDB is straightforward: once your data are in the right format (in this instance, in the form of a zipped shapefile), just sign in and drag and drop!  Once your data have loaded, CartoDB includes a number of "wizards" you can use to style your data in a very user-friendly way.  For more complex visualizations, however, you can use <a href="https://www.mapbox.com/tilemill/docs/manual/carto/">CartoCSS</a>.  CartoCSS, which is also used by MapBox Studio (another new favorite of mine), is a CSS-like syntax for styling map data.  It also makes bivariate visualizations possible.  To style the map, I grabbed some colors from <a href="http://colorbrewer2.org/">ColorBrewer</a> and used the following syntax: </p>
-<div class="highlight"><pre><span class="nf">#cty_religion</span> <span class="p">{</span>
-   <span class="n">line</span><span class="o">-</span><span class="k">color</span><span class="o">:</span> <span class="m">#FFF</span><span class="p">;</span>
-   <span class="n">line</span><span class="o">-</span><span class="k">width</span><span class="o">:</span> <span class="m">1</span><span class="p">;</span>
-   <span class="n">line</span><span class="o">-</span><span class="k">opacity</span><span class="o">:</span> <span class="m">1</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">religion</span><span class="o">=</span><span class="s2">&quot;Evangelical&quot;</span><span class="o">]</span> <span class="p">{</span>
-   <span class="n">polygon</span><span class="o">-</span><span class="n">fill</span><span class="o">:</span> <span class="m">#e41a1c</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">religion</span><span class="o">=</span><span class="s2">&quot;Catholic&quot;</span><span class="o">]</span> <span class="p">{</span>
-   <span class="n">polygon</span><span class="o">-</span><span class="n">fill</span><span class="o">:</span> <span class="m">#377eb8</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">religion</span><span class="o">=</span><span class="s2">&quot;Mainline&quot;</span><span class="o">]</span> <span class="p">{</span>
-   <span class="n">polygon</span><span class="o">-</span><span class="n">fill</span><span class="o">:</span> <span class="m">#4daf4a</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">religion</span><span class="o">=</span><span class="s2">&quot;LDS&quot;</span><span class="o">]</span> <span class="p">{</span>
-   <span class="n">polygon</span><span class="o">-</span><span class="n">fill</span><span class="o">:</span> <span class="m">#984ea3</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">religion</span><span class="o">=</span><span class="s2">&quot;African-American&quot;</span><span class="o">]</span> <span class="p">{</span>
-   <span class="n">polygon</span><span class="o">-</span><span class="n">fill</span><span class="o">:</span> <span class="m">#ff7f00</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">percent</span> <span class="o">&gt;=</span> <span class="nt">0</span><span class="o">]</span> <span class="p">{</span>
-  <span class="n">polygon</span><span class="o">-</span><span class="k">opacity</span><span class="o">:</span> <span class="m">0</span><span class="o">.</span><span class="m">2</span><span class="p">;</span> 
-<span class="p">}</span>
-<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">percent</span> <span class="o">&gt;=</span> <span class="nt">20</span><span class="o">]</span> <span class="p">{</span>
-  <span class="n">polygon</span><span class="o">-</span><span class="k">opacity</span><span class="o">:</span> <span class="m">0</span><span class="o">.</span><span class="m">4</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">percent</span> <span class="o">&gt;=</span> <span class="nt">30</span><span class="o">]</span> <span class="p">{</span>
-  <span class="n">polygon</span><span class="o">-</span><span class="k">opacity</span><span class="o">:</span> <span class="m">0</span><span class="o">.</span><span class="m">6</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="nf">#cty_religion</span><span class="o">[</span><span class="nt">percent</span> <span class="o">&gt;=</span> <span class="nt">40</span><span class="o">]</span> <span class="p">{</span>
-  <span class="n">polygon</span><span class="o">-</span><span class="k">opacity</span><span class="o">:</span> <span class="m">0</span><span class="o">.</span><span class="m">8</span><span class="p">;</span>
-<span class="p">}</span>
+        <div><p>While studying geography for many years as an undergraduate and graduate student, my main connection to the world of data visualization was through the worlds of cartography and Geographic Information Systems (GIS).  I learned about basic principles of data visualization in my geography courses, but it was always through the lens of mapmaking.  As such, when considering how to visualize a dataset, I have always turned to mapping first.  Unfortunately, this has led me over the course of my career to make several maps that in retrospect would have worked better as charts.  </p>
+<p>Several top names in the visualization community that I follow have recently given attention to this "map vs. chart" debate.  <a href="https://twitter.com/briantimoney">Brian Timoney</a> <a href="http://mapbrief.com/2014/11/13/the-elegant-effective-election-data-visualization-that-is-thankfully-not-a-map/">writes here on when "the best map is no map"</a>; <a href="https://twitter.com/jschwabish">Jon Schwabish</a> and <a href="https://twitter.com/BenChartoff">Ben Chartoff</a> <a href="http://policyviz.com/talking-maps-with-ben-chartoff/">had an interesting discussion on this topic available by podcast</a>; and I recently noticed <a href="https://twitter.com/arnicas/status/592008102947495936">this dot plot by</a> <a href="https://twitter.com/arnicas">Lynn Cherny</a> which is a remake of a <a href="https://twitter.com/_cingraham">Christopher Ingraham</a> <a href="http://www.washingtonpost.com/blogs/wonkblog/wp/2015/04/24/where-americans-drink-the-hardest/">map from the <em>Washington Post</em></a>.  All of these accounts suggest that in many instances, a map is not the best visualization choice - or at the very least, it is important to consider other options.  </p>
+<p>As a geographer, most datasets I work with in my teaching and research can be mapped.  I generally follow a couple rules of thumb when deciding whether to map my data: </p>
+<ul>
+<li>Is there a clear geographic pattern that I want to highlight in my dataset?  </li>
+<li>Do I have enough data to highlight that geographic pattern effectively?  </li>
+</ul>
+<p>If the answer is no on either account, I generally go with a chart instead of a map.  However, the answers to these questions are not always so clear in practice, which came up as I was preparing materials to teach my introductory geography students about income inequality in sub-Saharan Africa.  I wanted to show students country-level variations in the <a href="http://en.wikipedia.org/wiki/Gini_coefficient">Gini Index</a>, which is a common statistic used to measure income inequality.  Higher Gini values are reflective of more income inequality within a society.  I used <a href="http://data.worldbank.org/indicator/SI.POV.GINI">data from the World Bank</a> to accomplish this.  If you are an RStudio user, this workflow is fully reproducible by issuing the following command at the R console: </p>
+<div class="highlight"><pre><span class="kn">source</span><span class="p">(</span><span class="s">&quot;https://raw.githubusercontent.com/walkerke/teaching-with-datavis/master/map-or-chart/gini.R&quot;</span><span class="p">)</span>
 </pre></div>
 
 
-<p>The <code>polygon-fill</code> method is used to style my data by religious category with colors; the <code>polygon-opacity</code> method then adjusts the opacity of the features, which then blend with the light-gray CartoDB basemap to show relative intensity.  I used, roughly, a quantile classification scheme with four bins (with some slight rounding to 20, 30, and 40) for this.  The map, I feel, shows clear trends in religious adherence in the US.  The South is the Evangelical center of the country; Catholicism is more prevalent along the US/Mexico border and in the Northeast, Utah is a Mormon stronghold, and Mainline Protestantism predominates in the Upper Midwest.   The bivariate approach also gives the viewer a sense of the relative religiosity of different places; whereas Utah and the Southeast appear to have much stronger adherence to their top religious groups, the opacity of features in the Northwest suggests lower religiosity there (or at least no group that is significant numbers-wise).  </p>
-<p>There is a lot more I'd like to do with this map; here are some ideas: </p>
-<ul>
-<li>I've restricted this to the lower 48 states plus DC; Alaska and Hawaii should be added.  </li>
-<li>I'd like a better legend that shows variation in intensity as well as hue; I experimented with this a little but couldn't quite get anything satisfactory working.  </li>
-<li>It would be great to have an interactive chart appear upon clicking each county that shows the overall distribution of each group; this is beyond my current CartoDB.js skills but something to consider for a future iteration.  </li>
-</ul>
-<p>If you have any comments or questions, please let me know!</p>
-<p><strong>Thanks to:</strong></p>
-<ul>
-<li>Steven Romalewski and the CUNY Center for Urban Research for their innovative approaches to bivariate mapping</li>
-<li>Andy Woodruff and others for resources on the value-by-alpha technique</li>
-<li>CartoDB</li>
-<li>The <a href="http://www.thearda.com/">Association of Religion Data Archives</a> for providing free access to the RCMS data</li>
-<li><a href="http://www.nhgis.org">NHGIS</a> at the University of Minnesota for the spatial data</li>
-<li>The Glenmary Research Center for inspiring this map</li>
-</ul></div>
+<p>You can also <a href="https://github.com/walkerke/teaching-with-datavis/blob/master/map-or-chart/gini.R">click here to view the source code directly</a>. Please note that there are several packages needed to run the script, and that I am using a development branch of the <strong>leaflet</strong> package to create the legend on the map, installable with <code>devtools::install_github('rstudio/leaflet@feature/color-legend')</code>.  I include a few hacks to get the legend looking the way I want, and as this is using a development branch of the package, the API is likely to change.  </p>
+<p>I'll start with an interactive Leaflet choropleth map.  Click a country to retrieve its most recent Gini index estimate, its overall rank, and the year the estimate was made.  If you have sourced the R script, type <code>gini_map</code> in your R console to create the map yourself.  Also, you can <a href="http://walkerke.github.io/teaching-with-datavis/map-or-chart/gini.html">click here for a full-screen version</a>.  </p>
+<iframe src="http://walkerke.github.io/teaching-with-datavis/map-or-chart/gini.html" scrolling = "no" frameBorder = "0" height = "500" width = "800"></iframe>
+
+<p>In several ways, the map serves its purpose.  The context of my discussion was income inequality in southern sub-Saharan Africa; the map highlights the high levels of inequality in these countries, and I can zoom/pan around and click the countries to interactively explore country values and ranks.  </p>
+<p>However, there are several issues with this map.  First, while the Mercator projection used by most web maps is fine for many purposes, <a href="https://www.youtube.com/watch?v=eLqC3FNNOaI">it is not good for showing the entire world</a> due to the areal distortion of countries, and especially bad when that map is a choropleth.  An alternative would be to use a different mapping library like D3, <a href="http://bl.ocks.org/mbostock/3682676">which can handle better projections for the world</a>; however, other issues remain.  For one, there is a fair amount of missing data, which is especially problematic for large countries on the map like Libya and Saudi Arabia, as it skews the interpretation of geographic patterns.  Also, the data themselves don't easily lend themselves to country-level comparisons on a map in which the area of countries is emphasized.  For example: what is the most unequal country in the world, according to the World Bank's Gini index estimate?  The answer is the <a href="http://en.wikipedia.org/wiki/Seychelles">Seychelles</a>, a small archipelago in the Indian Ocean that is invisible at the default zoom level of the map.  To see the Seychelles, the user has to zoom way in... </p>
+<p><img src=http://walkerke.github.io/teaching-with-datavis/map-or-chart/seychelles.PNG></p>
+<p>...which then makes every other country impossible to see.  </p>
+<p>For these reasons, I sought an alternative way to visualize the data.  One very popular chart type in the visualization community right now is the Cleveland-style dot plot.  My favorite implementation of the dot plot comes from <a href="https://twitter.com/evergreendata">Stephanie Evergreen</a> <a href="http://stephanieevergreen.com/easy-dot-plots-in-excel/">(see her Excel tutorial here)</a>.  I used <strong>ggplot2</strong> to create an "Evergreen-style" dot plot with the Gini index data, which is found below.  If you have sourced my R script, type <code>gini_chart</code> in your R console to reproduce the chart.  Click the chart if you'd like a larger version.    </p>
+<p><a href="http://walkerke.github.io/teaching-with-datavis/map-or-chart/gini_coef.png"><img src=http://walkerke.github.io/teaching-with-datavis/map-or-chart/gini_coef.png style="width: 800px"></a></p>
+<p>This chart solves a lot of the problems with the map.  It only includes the countries with the 20 highest Gini indices, which is what I was focusing on anyway; all countries are represented with the same symbol, which allows for better comparisons between countries of different sizes; geography is still represented by the color of the dots; and the relative values are much clearer in relationship to one another.  </p>
+<p>However, it is crucial to consider the context in which I am presenting this chart.  If I was sharing the data with a highly geographically-literate community (e.g. in a policy discussion), the chart is probably the way to go.  But what about an introductory-level university geography course?  I can't reasonably assume that my students have heard of all of these countries, especially the smaller ones, much less be able to situate them geographically.  In turn, I need to provide them with a spatial reference, which takes me back to... you guessed it, the map.  In spite of its faults, the Leaflet choropleth slippy map can make the data relatable, as its template (the world map) is familiar, the tile layer provides a nice reference, and the interface is friendly given everyone's use of Google Maps.  In class, I opted for a compromise, and used both the map and the chart.  I first showed the map to discuss general patterns and explore the data, and then showed the chart once I had appropriately introduced the geographical context. </p>
+<p>More broadly, I do think these discussions about the appropriateness of mapping for visualizing spatial datasets are important, and ought to be a central component of geography/GIS education.  To that end, <a href="http://personal.tcu.edu/kylewalker/preview.html">I'm teaching a new geography course at TCU in the fall that focuses on general data and visualization skills</a>, and is intended to serve as a complement to our GIS courses.  We'll be spending our fair share of time considering this map vs. chart issue in the course.  </p>
+<p>If you have any questions or feedback, I'd love to hear from you!  I'm on Twitter at <a href="https://twitter.com/kyle_e_walker">@kyle_e_walker</a>.  </p></div>
         <hr />
     </div>
 		
+
+ 
+        
+
+ 
+
+    <div class='article'>
+        <a href="http://walkerke.github.io/2015/02/religion/"><h2>Mapping religious adherence in the US with CartoDB</h2></a>
+        <div class= "well small"> Thu 26 February 2015
+
+by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
+ 
+
+
+ </div>
+        <div class="summary"><p><strong>Update 2/26: changes made after conversations with Steven Romalewski on Twitter.  For the previous version of the post, check my GitHub version history.</strong></p>
+<p>Before coming to TCU, I worked as a data analyst for the <a href="https://www.cpg.org/">Church Pension Group</a>, which manages the retirement funds and provides other financial services for ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2015/02/religion/">read more</a></div>
+    </div>	
+				
 
  
         
@@ -188,25 +169,6 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
 
  </div>
         <div class="summary"><p>When covering Russia and the former republics of the USSR in World Regional Geography, a key part of my material addresses the issues that some of these countries have had in their transitions from centralized to market economies.  Some of these countries experienced dramatic demographic shifts after the dissolution of ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/10/russia-lex/">read more</a></div>
-    </div>	
-				
-
- 
-        
-
- 
-
-    <div class='article'>
-        <a href="http://walkerke.github.io/2014/08/un-projections/"><h2>Exploring the United Nations population projections with rCharts</h2></a>
-        <div class= "well small"> Tue 05 August 2014
-
-by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
- 
-
-
- </div>
-        <div class="summary"><p><strong>Please note: some NVD3 charts are performing very slowly in the latest version of Google Chrome at the moment; <a href="https://github.com/novus/nvd3/issues/702">see this GitHub issue.</a>  As such, this post is best viewed in other browsers.</strong></p>
-<p>I recently came across <a href="http://dataremixed.com/2014/07/story-types-a-thought-starter/">this really interesting post</a> from <a href="https://twitter.com/DataRemixed">Ben Jones</a> that explores the history and future ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/08/un-projections/">read more</a></div>
     </div>	
 				
 <div class="pagination">
