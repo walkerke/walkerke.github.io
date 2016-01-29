@@ -63,7 +63,15 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
 <a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="kyle_e_walker">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
         </div>
 	
-        <div><p>It's been a while since I last posted here - but I've been working on a new R package that I'm quite excited about, and I thought this would be the right place to post.  My new package, <strong>idbr</strong>, is an R interface to the <a href="http://www.census.gov/data/developers/data-sets/international-database.html">United States Census Bureau's International Data Base API</a>.  The IDB includes a host of international demographic indicators - including historical data and projections to 2050.  I use IDB data all of the time for my teaching - and <strong>idbr</strong> makes the process of getting the data much easier!  While this product uses the Census Bureau Data API, it is not endorsed or certified by the Census Bureau.  </p>
+        <div><style>
+@media only screen and (max-width: 600px) {
+    .content iframe {
+        display: none;
+    }
+}
+</style>
+
+<p>It's been a while since I last posted here - but I've been working on a new R package that I'm quite excited about, and I thought this would be the right place to post.  My new package, <strong>idbr</strong>, is an R interface to the <a href="http://www.census.gov/data/developers/data-sets/international-database.html">United States Census Bureau's International Data Base API</a>.  The IDB includes a host of international demographic indicators - including historical data and projections to 2050.  I use IDB data all of the time for my teaching - and <strong>idbr</strong> makes the process of getting the data much easier!  While this product uses the Census Bureau Data API, it is not endorsed or certified by the Census Bureau.  </p>
 <p>I plan to submit to CRAN soon once I've finished writing all of the documentation.  For now, install from GitHub with the following command: </p>
 <div class="highlight"><pre>devtools<span class="o">::</span>install_github<span class="p">(</span><span class="s">&#39;walkerke/idbr&#39;</span><span class="p">)</span>
 </pre></div>
@@ -77,7 +85,8 @@ idb_api_key<span class="p">(</span><span class="s">&#39;Your API key goes here&#
 
 
 <p>There are two main functions in the <strong>idbr</strong> package.  <code>idb1</code> fetches population data by one-year age bands for one or more countries in one or more years, optionally by age ranges or by sex.  <code>idb5</code> has a lot more indicators available, including total fertility rate, life expectancy, and population by five-year age ranges.  To view all of the variables available in the <code>idb</code> function, call <code>idb_variables()</code>.  Groups of similar variables, termed <strong>concepts</strong>, can be fetched at once; see the available concepts with <code>idb_concepts()</code>.  </p>
-<p>Below are some examples of how to use the package with Plotly's fantastic new R client.  Browse the code for <strong>idbr</strong> at <a href="https://github.com/walkerke/idbr">https://github.com/walkerke/idbr</a>, and please let me know if you have any feedback!</p>
+<p>Below are some examples of how to use the package with Plotly's fantastic new R client.  Browse the code for <strong>idbr</strong> at <a href="https://github.com/walkerke/idbr">https://github.com/walkerke/idbr</a>, and please let me know if you have any feedback!  </p>
+<p><strong>Please note</strong>: the embedded visualizations are crashing my browser on my mobile device, so I've set it so they won't show up on phones.  To view the graphics, take a look at the post on your computer.  </p>
 <p><strong>World map of infant mortality rates by country for 2016:</strong></p>
 <div class="highlight"><pre><span class="kn">library</span><span class="p">(</span>plotly<span class="p">)</span>
 <span class="kn">library</span><span class="p">(</span>viridis<span class="p">)</span>
