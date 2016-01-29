@@ -77,10 +77,10 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
 <p>The R code below shows one way to clean up data downloaded from the WTTC in this particular format (multiple countries, one variable).  I've written a function, <code>tidy_WTTC</code>, that should work for any dataset in this form available from the WTTC.  </p>
 <div class="highlight"><pre><span class="c1"># Load packages and data</span>
 
-library<span class="p">(</span>reshape2<span class="p">)</span>
-library<span class="p">(</span>ggplot2<span class="p">)</span>
-library<span class="p">(</span>plotly<span class="p">)</span>
-library<span class="p">(</span>zoo<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>reshape2<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>ggplot2<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>plotly<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>zoo<span class="p">)</span>
 
 dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&#39;tourism.csv&#39;</span><span class="p">)</span>
 
@@ -89,23 +89,23 @@ dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s"
 tidy_WTTC <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
 
   start <span class="o">&lt;-</span> df<span class="p">[</span><span class="m">7</span><span class="p">,</span> <span class="m">2</span><span class="p">]</span>
-  end <span class="o">&lt;-</span> df<span class="p">[</span><span class="m">7</span><span class="p">,</span> ncol<span class="p">(</span>df<span class="p">)]</span>
+  end <span class="o">&lt;-</span> df<span class="p">[</span><span class="m">7</span><span class="p">,</span> <span class="kp">ncol</span><span class="p">(</span>df<span class="p">)]</span>
 
-  df <span class="o">&lt;-</span> df<span class="p">[</span><span class="m">8</span><span class="o">:</span>nrow<span class="p">(</span>df<span class="p">),</span> <span class="p">]</span>
+  df <span class="o">&lt;-</span> df<span class="p">[</span><span class="m">8</span><span class="o">:</span><span class="kp">nrow</span><span class="p">(</span>df<span class="p">),</span> <span class="p">]</span>
 
-  nms <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;country&quot;</span><span class="p">,</span> paste0<span class="p">(</span><span class="s">&quot;y&quot;</span><span class="p">,</span> seq<span class="p">(</span>start<span class="p">,</span> end<span class="p">,</span> <span class="m">1</span><span class="p">)))</span>
+  nms <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;country&quot;</span><span class="p">,</span> <span class="kp">paste0</span><span class="p">(</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="kp">seq</span><span class="p">(</span>start<span class="p">,</span> end<span class="p">,</span> <span class="m">1</span><span class="p">)))</span>
 
-  names<span class="p">(</span>df<span class="p">)</span> <span class="o">&lt;-</span> nms
+  <span class="kp">names</span><span class="p">(</span>df<span class="p">)</span> <span class="o">&lt;-</span> nms
 
   df <span class="o">&lt;-</span> na.locf<span class="p">(</span>df<span class="p">,</span> fromLast <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
 
-  df <span class="o">&lt;-</span> df<span class="p">[</span>seq<span class="p">(</span><span class="m">1</span><span class="p">,</span> nrow<span class="p">(</span>df<span class="p">),</span> <span class="m">2</span><span class="p">),</span> <span class="p">]</span>
+  df <span class="o">&lt;-</span> df<span class="p">[</span><span class="kp">seq</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="kp">nrow</span><span class="p">(</span>df<span class="p">),</span> <span class="m">2</span><span class="p">),</span> <span class="p">]</span>
 
   df.melt <span class="o">&lt;-</span> melt<span class="p">(</span>df<span class="p">,</span> id.vars <span class="o">=</span> <span class="s">&quot;country&quot;</span><span class="p">,</span> value.name<span class="o">=</span><span class="s">&quot;value&quot;</span><span class="p">,</span> variable.name <span class="o">=</span> <span class="s">&quot;year&quot;</span><span class="p">)</span>
 
-  df.melt<span class="o">$</span>year <span class="o">&lt;-</span> as.numeric<span class="p">(</span>gsub<span class="p">(</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> df.melt<span class="o">$</span>year<span class="p">))</span>
+  df.melt<span class="o">$</span>year <span class="o">&lt;-</span> <span class="kp">as.numeric</span><span class="p">(</span><span class="kp">gsub</span><span class="p">(</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> df.melt<span class="o">$</span>year<span class="p">))</span>
 
-  df.melt<span class="o">$</span>value <span class="o">&lt;-</span> as.numeric<span class="p">(</span>df.melt<span class="o">$</span>value<span class="p">)</span>
+  df.melt<span class="o">$</span>value <span class="o">&lt;-</span> <span class="kp">as.numeric</span><span class="p">(</span>df.melt<span class="o">$</span>value<span class="p">)</span>
 
   df.melt
 <span class="p">}</span>
@@ -122,7 +122,7 @@ tidy_dat <span class="o">&lt;-</span> tidy_WTTC<span class="p">(</span>dat<span 
 t1 <span class="o">&lt;-</span> ggplot<span class="p">(</span>tidy_dat<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> year<span class="p">,</span> y <span class="o">=</span> value<span class="p">,</span> color <span class="o">=</span> country<span class="p">))</span> <span class="o">+</span> 
   geom_line<span class="p">(</span>size <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">+</span> 
   scale_color_brewer<span class="p">(</span>palette <span class="o">=</span> <span class="s">&quot;Set1&quot;</span><span class="p">)</span> <span class="o">+</span> 
-  labs<span class="p">(</span>list<span class="p">(</span>x <span class="o">=</span> <span class="s">&quot;Year&quot;</span><span class="p">,</span> 
+  labs<span class="p">(</span><span class="kt">list</span><span class="p">(</span>x <span class="o">=</span> <span class="s">&quot;Year&quot;</span><span class="p">,</span> 
             y <span class="o">=</span> <span class="s">&quot;Total contribution of tourism to GDP (percent)&quot;</span><span class="p">,</span> 
             title <span class="o">=</span> <span class="s">&quot;Total contribution of tourism to GDP (percent), select Pacific Island countries.  Data source: WTTC&quot;</span><span class="p">))</span>
 
@@ -222,7 +222,7 @@ py<span class="o">$</span>ggplotly<span class="p">(</span>t1<span class="p">)</s
     </div>     </div> 
 <footer>
 <br />
-<p><a href="http://walkerke.github.io">Teaching with Interactive Data Visualization</a> &copy; Kyle Walker 2015</p>
+<p><a href="http://walkerke.github.io">Teaching with Interactive Data Visualization</a> &copy; Kyle Walker 2016</p>
 </footer>
 
 </div> <!-- /container -->

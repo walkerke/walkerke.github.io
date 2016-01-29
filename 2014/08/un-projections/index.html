@@ -67,9 +67,9 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
 <p>I recently came across <a href="http://dataremixed.com/2014/07/story-types-a-thought-starter/">this really interesting post</a> from <a href="https://twitter.com/DataRemixed">Ben Jones</a> that explores the history and future of world population change with Tableau.  I haven't used Tableau much, but I was impressed with the different ways in which Ben used the software to visualize various aspects of global population change.  More broadly, I can see multiple ways in which a visualization like this would be useful in teaching a course like World Regional Geography.  An instructor could ask students to answer a series of questions regarding global population change, using the visualizations as their evidence.  Students would then report back to the class about what they've learned from the visualizations, presenting different views to support their answers to the questions.  </p>
 <p>Reading this post motivated me to share a couple more basic visualizations that I've used in my teaching to support discussions of global population change.  These are some of the first charts I created with <a href="http://rcharts.io/">rCharts</a> when I first started working with the package late last year.  However, I've updated the code below to use the new Hadley Wickham package <a href="https://github.com/hadley/dplyr">dplyr</a>, which makes data munging in R so much easier.  Eventually, I would like to create a <a href="http://shiny.rstudio.com/">Shiny</a> application that is similar to what Ben created with Tableau, but instead using R and rCharts.  </p>
 <p>In the examples below, I use population projection data from <a href="http://esa.un.org/wpp/">the United Nations' World Population Prospects, 2012 Revision</a>.  I create the visualizations with <a href="http://nvd3.org/">NVD3</a>.  The first example is a stacked area chart that shows the changing regional distribution of the world's population between 1950 and 2100.  </p>
-<div class="highlight"><pre>library<span class="p">(</span>dplyr<span class="p">)</span>
-library<span class="p">(</span>rCharts<span class="p">)</span>
-library<span class="p">(</span>RColorBrewer<span class="p">)</span>
+<div class="highlight"><pre><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>rCharts<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>RColorBrewer<span class="p">)</span>
 
 dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&quot;http://esa.un.org/wpp/ASCII-Data/ASCII_FILES/WPP2012_DB02_POPULATIONS_ANNUAL.csv&quot;</span><span class="p">)</span>
 
@@ -78,7 +78,7 @@ dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s"
 <span class="c1"># library(data.table)</span>
 <span class="c1"># dat &lt;- fread(&quot;WPP2012_DB02_POPULATIONS_ANNUAL.csv&quot;)</span>
 
-regions <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;Africa&quot;</span><span class="p">,</span> <span class="s">&quot;Latin America and the Caribbean&quot;</span><span class="p">,</span> <span class="s">&quot;Northern America&quot;</span><span class="p">,</span> <span class="s">&quot;Europe&quot;</span><span class="p">,</span> <span class="s">&quot;Oceania&quot;</span><span class="p">,</span> <span class="s">&quot;Asia&quot;</span><span class="p">)</span>
+regions <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Africa&quot;</span><span class="p">,</span> <span class="s">&quot;Latin America and the Caribbean&quot;</span><span class="p">,</span> <span class="s">&quot;Northern America&quot;</span><span class="p">,</span> <span class="s">&quot;Europe&quot;</span><span class="p">,</span> <span class="s">&quot;Oceania&quot;</span><span class="p">,</span> <span class="s">&quot;Asia&quot;</span><span class="p">)</span>
 
 region_dat <span class="o">&lt;-</span> dat <span class="o">%&gt;%</span>
   filter<span class="p">(</span>VarID <span class="o">==</span> <span class="m">2</span><span class="p">,</span> 
@@ -112,14 +112,14 @@ c1<span class="o">$</span>chart<span class="p">(</span>tooltipContent <span clas
 
 <p>I used this chart during the first week of my World Regional Geography class to discuss population change in global context.  The region that stands out, of course, is Africa, which is projected to almost-quadruple in population by the end of century.  If these projections pan out, Africa would have over 4 billion residents by 2100, and account for around 40 percent of the world's population.  The interactivity in the chart then allows for more detailed exploration of the data.  By clicking on the Europe data series, for example, the user can hide all of the other regions, and show how the continent's population is projected to peak in the next several years and then begin to decline.  These figures provided important context to many of the thematic topics specific to these regions I covered later in the class.  Additionally, the chart can be modified with a single click to a "Stream" or "Expanded" 100% view (try it!), for different views of the data. </p>
 <p>I also created another visualization to show UN projections for the world's population based on different projection scenarios.  The code and resultant chart are below.  </p>
-<div class="highlight"><pre>variants <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;Low&quot;</span><span class="p">,</span> <span class="s">&quot;Medium&quot;</span><span class="p">,</span> <span class="s">&quot;High&quot;</span><span class="p">,</span> <span class="s">&quot;Constant fertility&quot;</span><span class="p">)</span>
+<div class="highlight"><pre>variants <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Low&quot;</span><span class="p">,</span> <span class="s">&quot;Medium&quot;</span><span class="p">,</span> <span class="s">&quot;High&quot;</span><span class="p">,</span> <span class="s">&quot;Constant fertility&quot;</span><span class="p">)</span>
 
 global_dat <span class="o">&lt;-</span> dat <span class="o">%&gt;%</span>
   filter<span class="p">(</span>Location <span class="o">==</span> <span class="s">&quot;World&quot;</span><span class="p">,</span> 
          Variant <span class="o">%in%</span> variants<span class="p">,</span>
          Time <span class="o">&gt;=</span> <span class="m">2012</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  mutate<span class="p">(</span>varfactor <span class="o">=</span> factor<span class="p">(</span>Variant<span class="p">,</span>
-                            levels <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;Constant fertility&quot;</span><span class="p">,</span>
+  mutate<span class="p">(</span>varfactor <span class="o">=</span> <span class="kp">factor</span><span class="p">(</span>Variant<span class="p">,</span>
+                            levels <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Constant fertility&quot;</span><span class="p">,</span>
                                        <span class="s">&quot;High&quot;</span><span class="p">,</span>
                                        <span class="s">&quot;Medium&quot;</span><span class="p">,</span>
                                        <span class="s">&quot;Low&quot;</span><span class="p">)),</span> 
@@ -222,7 +222,7 @@ c2
     </div>     </div> 
 <footer>
 <br />
-<p><a href="http://walkerke.github.io">Teaching with Interactive Data Visualization</a> &copy; Kyle Walker 2015</p>
+<p><a href="http://walkerke.github.io">Teaching with Interactive Data Visualization</a> &copy; Kyle Walker 2016</p>
 </footer>
 
 </div> <!-- /container -->

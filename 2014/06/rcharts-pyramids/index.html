@@ -69,14 +69,14 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
 <p>Below, I'll discuss how to use the script.  I'd like anyone to be able to use this, regardless of their background with R; as such, I'm going to go easy on the technical details.  I'll follow up with another more code-heavy post, and <a href="https://github.com/walkerke/teaching-with-datavis/blob/master/pyramids/rcharts_pyramids.R">the code is available on GitHub here</a>.  </p>
 <hr />
 <p>To get started, make sure you have the following R packages installed: <strong>XML</strong>, <strong>reshape2</strong>, <strong>rCharts</strong>, and <strong>plyr</strong>.  <strong>rCharts</strong> is not on CRAN, so you'll need to install it from GitHub with the <strong>devtools</strong> package.  This script requires the <code>dev</code> branch of <strong>rCharts</strong>.  If you are just getting started with R, install the packages with the code below.  </p>
-<div class="highlight"><pre>install.packages<span class="p">(</span>c<span class="p">(</span><span class="s">&#39;XML&#39;</span><span class="p">,</span> <span class="s">&#39;reshape2&#39;</span><span class="p">,</span> <span class="s">&#39;devtools&#39;</span><span class="p">,</span> <span class="s">&#39;plyr&#39;</span><span class="p">))</span>
-library<span class="p">(</span>devtools<span class="p">)</span>
+<div class="highlight"><pre>install.packages<span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="s">&#39;XML&#39;</span><span class="p">,</span> <span class="s">&#39;reshape2&#39;</span><span class="p">,</span> <span class="s">&#39;devtools&#39;</span><span class="p">,</span> <span class="s">&#39;plyr&#39;</span><span class="p">))</span>
+<span class="kn">library</span><span class="p">(</span>devtools<span class="p">)</span>
 install_github<span class="p">(</span><span class="s">&#39;ramnathv/rCharts@dev&#39;</span><span class="p">)</span>
 </pre></div>
 
 
 <p>Once these packages are installed, you are ready to get started.  If you are using <a href="http://www.rstudio.com/">RStudio</a> (which I strongly recommend), simply enter the following command into the R Console: </p>
-<div class="highlight"><pre>source<span class="p">(</span><span class="s">&#39;https://raw.githubusercontent.com/walkerke/teaching-with-datavis/master/pyramids/rcharts_pyramids.R&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span class="kn">source</span><span class="p">(</span><span class="s">&#39;https://raw.githubusercontent.com/walkerke/teaching-with-datavis/master/pyramids/rcharts_pyramids.R&#39;</span><span class="p">)</span>
 </pre></div>
 
 
@@ -91,7 +91,7 @@ install_github<span class="p">(</span><span class="s">&#39;ramnathv/rCharts@dev&
 <hr />
 <p>The first example I'll show you is <code>nPyramid</code>, which uses the <a href="http://nvd3.org/">NVD3.js library</a>, which is built on top of D3.  I'm going to create a population pyramid for Qatar in 2014.  I spend a fair amount of time talking about Qatar in my course, as it exemplifies many of the topics we cover such as economic inequality, energy and economic growth, and international labor migration.  In fact, <a href="http://www.pewsocialtrends.org/2013/12/17/migration-tables/">around three-quarters of Qatar's population is foreign-born</a>; further, <a href="http://espn.go.com/video/clip?id=11019010&amp;categoryid=2378529">the conditions endured by migrant laborers in Qatar are attracting international attention in the run-up to the 2022 World Cup</a>.  </p>
 <p>To create the visualization, simply type the following command into your R console: </p>
-<div class="highlight"><pre>nPyramid<span class="p">(</span><span class="s">&#39;QA&#39;</span><span class="p">,</span> <span class="m">2014</span><span class="p">,</span> colors <span class="o">=</span> c<span class="p">(</span><span class="s">&#39;darkred&#39;</span><span class="p">,</span> <span class="s">&#39;silver&#39;</span><span class="p">))</span>
+<div class="highlight"><pre>nPyramid<span class="p">(</span><span class="s">&#39;QA&#39;</span><span class="p">,</span> <span class="m">2014</span><span class="p">,</span> colors <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;darkred&#39;</span><span class="p">,</span> <span class="s">&#39;silver&#39;</span><span class="p">))</span>
 </pre></div>
 
 
@@ -101,7 +101,7 @@ install_github<span class="p">(</span><span class="s">&#39;ramnathv/rCharts@dev&
 <p>The pyramid is striking for the dramatic gender imbalance in Qatar introduced by the influx of foreign laborers to the country.  Males aged 30-34 number nearly 300,000; this is over four times the number of females in that age category, who number just over 70,000.  Admittedly, population pyramids like this can be problematic for making gender comparisons (<a href="http://bl.ocks.org/mbostock/4062085">Mike Bostock argues as much here</a>), but this is allayed somewhat when using these pyramids interactively, as the visualizations produce a tooltip on hover that returns the precise population count for the age cohort, allowing for comparisons of the numbers.  </p>
 <hr />
 <p>The next example comes from <a href="http://www.highcharts.com/">Highcharts</a>, an interactive JavaScript charting library that includes many different examples and is very well-documented.  I'm going to use Highcharts here to create an interactive population pyramid for Japan in 2050 with the <code>hPyramid</code> function.  In class, we discussed the <a href="http://www.economist.com/news/asia/21603076-first-time-proper-debate-starting-about-immigration-incredible-shrinking-country?spc=scode&amp;spv=xm&amp;ah=9d7f7ab945510a56fa6d37c30b6f1709">challenges Japan is facing as its population ages</a>; this population pyramid provided important visual context.  To create the chart, use the code below: </p>
-<div class="highlight"><pre>hPyramid<span class="p">(</span><span class="s">&#39;JA&#39;</span><span class="p">,</span> <span class="m">2050</span><span class="p">,</span> colors <span class="o">=</span> c<span class="p">(</span><span class="s">&#39;blue&#39;</span><span class="p">,</span> <span class="s">&#39;red&#39;</span><span class="p">))</span>
+<div class="highlight"><pre>hPyramid<span class="p">(</span><span class="s">&#39;JA&#39;</span><span class="p">,</span> <span class="m">2050</span><span class="p">,</span> colors <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;blue&#39;</span><span class="p">,</span> <span class="s">&#39;red&#39;</span><span class="p">))</span>
 </pre></div>
 
 
@@ -110,14 +110,14 @@ install_github<span class="p">(</span><span class="s">&#39;ramnathv/rCharts@dev&
 <p>Japan's projected population structure in 2050 exemplifies an "inverted" population pyramid, with the oldest age cohorts comprising the largest proportions of the population, and the youngest the smallest.  There are many reasons why this is projected to happen in Japan, including high life expectancy, restrictive immigration policies, and declining marriage rates (contributing to low fertility levels).  In turn, Japan's shrinking workforce will have to provide for an increasingly large elderly population, which is illustrated in the chart.  As with the NVD3 pyramid, the chart gives a tooltip on mouseover that returns specific population figures.  One of the most striking features of the pyramid this reveals is the population of female centenarians (people aged 100+), which is projected to exceed 1 million by 2050 as per the Census Bureau.  </p>
 <hr />
 <p>The last example I'll show you is <code>dPyramid</code>, which uses the <a href="http://dimplejs.org/">DimpleJS</a> library, built on top of D3.  <code>dPyramid</code> works in much the same way as the other functions, but has the added bonus of being able to take advantage of Dimple's <code>storyboard</code> property, which facilitates the creation of temporal animations.  As such, <code>dPyramid</code> accepts a vector of years for the <code>year</code> parameter; if you choose multiple years instead of a single year, <code>dPyramid</code> will give you a population pyramid that changes over time.  Here's an example that shows the aging of Germany's population between 2000 and 2050.  If you are new to R, the <code>seq</code> function returns a sequence of numbers from argument 1 (in this case, the year 2000), to argument 2 (2050), in intervals of argument 3 (every 10 years).   </p>
-<div class="highlight"><pre>dPyramid<span class="p">(</span><span class="s">&#39;GM&#39;</span><span class="p">,</span> seq<span class="p">(</span><span class="m">2000</span><span class="p">,</span> <span class="m">2050</span><span class="p">,</span> <span class="m">10</span><span class="p">),</span> colors <span class="o">=</span> c<span class="p">(</span><span class="s">&#39;black&#39;</span><span class="p">,</span> <span class="s">&#39;red&#39;</span><span class="p">))</span>
+<div class="highlight"><pre>dPyramid<span class="p">(</span><span class="s">&#39;GM&#39;</span><span class="p">,</span> <span class="kp">seq</span><span class="p">(</span><span class="m">2000</span><span class="p">,</span> <span class="m">2050</span><span class="p">,</span> <span class="m">10</span><span class="p">),</span> colors <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;black&#39;</span><span class="p">,</span> <span class="s">&#39;red&#39;</span><span class="p">))</span>
 </pre></div>
 
 
 <iframe src="http://walkerke.github.io/teaching-with-datavis/pyramids/germany.html" width="850" height="425" seamless scrolling="no" frameBorder = "0"></iframe>
 
 <p>The animation does a compelling job of showing how Germany's population is projected to both age and shrink in the years ahead.  Animation can also be used to provide demographic context to key historical circumstances I teach about in class.  For example, I covered the devastation wrought by the <a href="http://www.aljazeera.com/indepth/features/2012/02/20122314155454169.html">Khmer Rouge</a> during the Cambodian genocide, and used the animated population pyramid below to illustrate the demographic impacts of the genocide. The chart covers 1974 to 1982, the time just before, during, and in the years following the Khmer Rouge.  </p>
-<div class="highlight"><pre>dPyramid<span class="p">(</span><span class="s">&#39;CB&#39;</span><span class="p">,</span> seq<span class="p">(</span><span class="m">1974</span><span class="p">,</span> <span class="m">1982</span><span class="p">,</span> <span class="m">1</span><span class="p">))</span>
+<div class="highlight"><pre>dPyramid<span class="p">(</span><span class="s">&#39;CB&#39;</span><span class="p">,</span> <span class="kp">seq</span><span class="p">(</span><span class="m">1974</span><span class="p">,</span> <span class="m">1982</span><span class="p">,</span> <span class="m">1</span><span class="p">))</span>
 </pre></div>
 
 
@@ -125,8 +125,8 @@ install_github<span class="p">(</span><span class="s">&#39;ramnathv/rCharts@dev&
 
 <p>You can see how the bars shrink between 1975 and 1979, the years when Cambodia was ruled by the Khmer Rouge.  I could see the shock on some of my students' faces when I showed this to them - many of them were unfamiliar with the history of Cambodia and the Khmer Rouge.  The visualization shows an overall decline in population of around 900,000 between 1974 and 1979, which reflects official population numbers; this likely underestimates the scale of the atrocities in Cambodia (<a href="http://www.yale.edu/gsp/publications/KiernanRevised1.pdf">see the article linked here</a>), as the actual losses may have been twice that.  </p>
 <p>To save any of your pyramids as a standalone HTML document, just assign your pyramid to a variable and use rCharts' <code>save</code> option to save your chart, setting the <code>cdn</code> parameter to <code>TRUE</code>.  The code below provides an example of how to save the html file in your working directory.    </p>
-<div class="highlight"><pre>q1 <span class="o">&lt;-</span> nPyramid<span class="p">(</span><span class="s">&#39;QA&#39;</span><span class="p">,</span> <span class="m">2014</span><span class="p">,</span> colors <span class="o">=</span> c<span class="p">(</span><span class="s">&#39;darkred&#39;</span><span class="p">,</span> <span class="s">&#39;silver&#39;</span><span class="p">))</span>
-q1<span class="o">$</span>save<span class="p">(</span><span class="s">&#39;qatar.html&#39;</span><span class="p">,</span> cdn <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+<div class="highlight"><pre>q1 <span class="o">&lt;-</span> nPyramid<span class="p">(</span><span class="s">&#39;QA&#39;</span><span class="p">,</span> <span class="m">2014</span><span class="p">,</span> colors <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;darkred&#39;</span><span class="p">,</span> <span class="s">&#39;silver&#39;</span><span class="p">))</span>
+q1<span class="o">$</span><span class="kp">save</span><span class="p">(</span><span class="s">&#39;qatar.html&#39;</span><span class="p">,</span> cdn <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
 </pre></div>
 
 
@@ -204,7 +204,7 @@ q1<span class="o">$</span>save<span class="p">(</span><span class="s">&#39;qatar
     </div>     </div> 
 <footer>
 <br />
-<p><a href="http://walkerke.github.io">Teaching with Interactive Data Visualization</a> &copy; Kyle Walker 2015</p>
+<p><a href="http://walkerke.github.io">Teaching with Interactive Data Visualization</a> &copy; Kyle Walker 2016</p>
 </footer>
 
 </div> <!-- /container -->

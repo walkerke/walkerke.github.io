@@ -72,50 +72,50 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
 <p>The data made available by the Pew Research Center are in Excel format.  There are many libraries for reading Excel data into R, but they often are not straightforward to use, so I first opened the file in Excel and saved it as a CSV for ease of use.  In their original form, the data are not in a great format for visualization in R; as such, I needed to do some munging, with help from Hadley Wickham's excellent packages.  </p>
 <div class="highlight"><pre><span class="c1"># First, download the Excel file from the Pew Research Center, and save it as a CSV in your working directory</span>
 
-library<span class="p">(</span>stringr<span class="p">)</span>
-library<span class="p">(</span>plyr<span class="p">)</span>
-library<span class="p">(</span>rCharts<span class="p">)</span>
-library<span class="p">(</span>reshape2<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>stringr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>plyr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>rCharts<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>reshape2<span class="p">)</span>
 
 dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&quot;all_counties_by_top_six_groups.csv&quot;</span><span class="p">)</span>
 
-keep <span class="o">&lt;-</span> seq<span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">25</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
+keep <span class="o">&lt;-</span> <span class="kp">seq</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">25</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
 
 dat <span class="o">&lt;-</span> dat<span class="p">[,</span>keep<span class="p">]</span>
 
-nms <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&#39;Name&#39;</span><span class="p">,</span> <span class="s">&#39;Total.Hisp&#39;</span><span class="p">,</span> <span class="s">&#39;Mexican&#39;</span><span class="p">,</span> <span class="s">&#39;Puerto.Rican&#39;</span><span class="p">,</span> <span class="s">&#39;Cuban&#39;</span><span class="p">,</span> <span class="s">&#39;Salvadoran&#39;</span><span class="p">,</span> <span class="s">&#39;Dominican&#39;</span><span class="p">,</span> <span class="s">&#39;Guatemalan&#39;</span><span class="p">,</span> <span class="s">&#39;Other&#39;</span><span class="p">)</span>
+nms <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;Name&#39;</span><span class="p">,</span> <span class="s">&#39;Total.Hisp&#39;</span><span class="p">,</span> <span class="s">&#39;Mexican&#39;</span><span class="p">,</span> <span class="s">&#39;Puerto.Rican&#39;</span><span class="p">,</span> <span class="s">&#39;Cuban&#39;</span><span class="p">,</span> <span class="s">&#39;Salvadoran&#39;</span><span class="p">,</span> <span class="s">&#39;Dominican&#39;</span><span class="p">,</span> <span class="s">&#39;Guatemalan&#39;</span><span class="p">,</span> <span class="s">&#39;Other&#39;</span><span class="p">)</span>
 
-names<span class="p">(</span>dat<span class="p">)</span> <span class="o">&lt;-</span> nms
+<span class="kp">names</span><span class="p">(</span>dat<span class="p">)</span> <span class="o">&lt;-</span> nms
 
-dat <span class="o">&lt;-</span> dat<span class="p">[</span><span class="o">-</span>c<span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">),]</span>
+dat <span class="o">&lt;-</span> dat<span class="p">[</span><span class="o">-</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">),]</span>
 </pre></div>
 
 
 <p>The above code simply cleans up the data to shape it into a nicely formatted data frame, and subsets it to get the population counts that we need.  However, there are still some steps to take before the data can be visualized.  Given the original data format, R has read in all my numeric data as factors, which wouldn't let me make the kinds of manipulations I needed to do to aggregate the data by state.  Such aggregation also required some string manipulation, so that I could identify which counts correspond to each state (given that the geographic identifiers in the data are presented as 'County, State').  The code that follows cleans up the data even further and aggregates each numeric column by state.  </p>
-<div class="highlight"><pre>dat <span class="o">&lt;-</span> cbind<span class="p">(</span>dat<span class="p">,</span> ldply<span class="p">(</span>str_split<span class="p">(</span>dat<span class="o">$</span>Name<span class="p">,</span> <span class="s">&quot;, &quot;</span><span class="p">)))</span>
+<div class="highlight"><pre>dat <span class="o">&lt;-</span> <span class="kp">cbind</span><span class="p">(</span>dat<span class="p">,</span> ldply<span class="p">(</span>str_split<span class="p">(</span>dat<span class="o">$</span>Name<span class="p">,</span> <span class="s">&quot;, &quot;</span><span class="p">)))</span>
 
-names<span class="p">(</span>dat<span class="p">)</span> <span class="o">&lt;-</span> c<span class="p">(</span>nms<span class="p">,</span> <span class="s">&#39;County&#39;</span><span class="p">,</span> <span class="s">&#39;State&#39;</span><span class="p">)</span>
+<span class="kp">names</span><span class="p">(</span>dat<span class="p">)</span> <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span>nms<span class="p">,</span> <span class="s">&#39;County&#39;</span><span class="p">,</span> <span class="s">&#39;State&#39;</span><span class="p">)</span>
 
 convCols <span class="o">&lt;-</span> <span class="m">2</span><span class="o">:</span><span class="m">9</span>
 
-dat<span class="p">[,</span>convCols<span class="p">]</span> <span class="o">&lt;-</span> apply<span class="p">(</span>dat<span class="p">[,</span>convCols<span class="p">],</span> <span class="m">2</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">)</span> as.numeric<span class="p">(</span>as.character<span class="p">(</span>gsub<span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> x<span class="p">))))</span>
+dat<span class="p">[,</span>convCols<span class="p">]</span> <span class="o">&lt;-</span> <span class="kp">apply</span><span class="p">(</span>dat<span class="p">[,</span>convCols<span class="p">],</span> <span class="m">2</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">)</span> <span class="kp">as.numeric</span><span class="p">(</span><span class="kp">as.character</span><span class="p">(</span><span class="kp">gsub</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> x<span class="p">))))</span>
 
-sums <span class="o">&lt;-</span> ddply<span class="p">(</span>dat<span class="p">,</span> .<span class="p">(</span>State<span class="p">),</span> numcolwise<span class="p">(</span>sum<span class="p">))</span>
+sums <span class="o">&lt;-</span> ddply<span class="p">(</span>dat<span class="p">,</span> <span class="m">.</span><span class="p">(</span>State<span class="p">),</span> numcolwise<span class="p">(</span><span class="kp">sum</span><span class="p">))</span>
 
-sorteddf <span class="o">&lt;-</span> sums<span class="p">[</span>order<span class="p">(</span><span class="o">-</span>sums<span class="o">$</span>Total.Hisp<span class="p">),][</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">,]</span>
+sorteddf <span class="o">&lt;-</span> sums<span class="p">[</span><span class="kp">order</span><span class="p">(</span><span class="o">-</span>sums<span class="o">$</span>Total.Hisp<span class="p">),][</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">,]</span>
 </pre></div>
 
 
 <p>I've now identified the 10 states with the largest Hispanic populations, and aggregated the different ancestry columns by state.  I now needed to decide how to visualize these data.  I elected to use the <a href="http://dimplejs.org/">dimple</a> D3 library, which is available through rCharts.  My hope was to create something like <a href="http://dimplejs.org/examples_viewer.html?id=bars_horizontal_stacked_100pct">this horizontal 100% chart</a>, which would allow direct comparison of the Hispanic population composition of these states.  Fortunately, rCharts makes this straightforward.  I first created a new data frame that held percentages instead of raw counts, reshaped it into a suitable format, and called rCharts' <code>dPlot</code> function to create the chart.  </p>
-<div class="highlight"><pre>newdf <span class="o">&lt;-</span> data.frame<span class="p">(</span>sorteddf<span class="o">$</span>State<span class="p">)</span>
+<div class="highlight"><pre>newdf <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>sorteddf<span class="o">$</span>State<span class="p">)</span>
 
-vals <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&#39;Mexican&#39;</span><span class="p">,</span> <span class="s">&#39;Puerto.Rican&#39;</span><span class="p">,</span> <span class="s">&#39;Cuban&#39;</span><span class="p">,</span> <span class="s">&#39;Salvadoran&#39;</span><span class="p">,</span> <span class="s">&#39;Dominican&#39;</span><span class="p">,</span> <span class="s">&#39;Guatemalan&#39;</span><span class="p">,</span> <span class="s">&#39;Other&#39;</span><span class="p">)</span>
+vals <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;Mexican&#39;</span><span class="p">,</span> <span class="s">&#39;Puerto.Rican&#39;</span><span class="p">,</span> <span class="s">&#39;Cuban&#39;</span><span class="p">,</span> <span class="s">&#39;Salvadoran&#39;</span><span class="p">,</span> <span class="s">&#39;Dominican&#39;</span><span class="p">,</span> <span class="s">&#39;Guatemalan&#39;</span><span class="p">,</span> <span class="s">&#39;Other&#39;</span><span class="p">)</span>
 
 <span class="kr">for</span> <span class="p">(</span>v <span class="kr">in</span> vals<span class="p">)</span> <span class="p">{</span>
-  newdf<span class="p">[[</span>v<span class="p">]]</span> <span class="o">&lt;-</span> round<span class="p">(((</span>sorteddf<span class="p">[[</span>v<span class="p">]]</span> <span class="o">/</span> sorteddf<span class="o">$</span>Total.Hisp<span class="p">)</span> <span class="o">*</span> <span class="m">100</span><span class="p">),</span> <span class="m">1</span><span class="p">)</span>
+  newdf<span class="p">[[</span>v<span class="p">]]</span> <span class="o">&lt;-</span> <span class="kp">round</span><span class="p">(((</span>sorteddf<span class="p">[[</span>v<span class="p">]]</span> <span class="o">/</span> sorteddf<span class="o">$</span>Total.Hisp<span class="p">)</span> <span class="o">*</span> <span class="m">100</span><span class="p">),</span> <span class="m">1</span><span class="p">)</span>
 <span class="p">}</span>
 
-names<span class="p">(</span>newdf<span class="p">)</span> <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&#39;State&#39;</span><span class="p">,</span> vals<span class="p">)</span>
+<span class="kp">names</span><span class="p">(</span>newdf<span class="p">)</span> <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;State&#39;</span><span class="p">,</span> vals<span class="p">)</span>
 
 df.melt <span class="o">&lt;-</span> melt<span class="p">(</span>newdf<span class="p">,</span> variable.name <span class="o">=</span> <span class="s">&#39;Ancestry&#39;</span><span class="p">,</span> value.name <span class="o">=</span> <span class="s">&#39;Share&#39;</span><span class="p">)</span>
 
@@ -222,7 +222,7 @@ d1<span class="o">$</span>legend<span class="p">(</span> x <span class="o">=</sp
     </div>     </div> 
 <footer>
 <br />
-<p><a href="http://walkerke.github.io">Teaching with Interactive Data Visualization</a> &copy; Kyle Walker 2015</p>
+<p><a href="http://walkerke.github.io">Teaching with Interactive Data Visualization</a> &copy; Kyle Walker 2016</p>
 </footer>
 
 </div> <!-- /container -->

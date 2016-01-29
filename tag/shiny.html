@@ -72,28 +72,28 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
 <p>I'd been using some static Excel charts to illustrate life expectancy declines in Russia, Belarus, and Ukraine in previous courses.  However, I felt that an interactive solution would be preferable so that my students and I could explore the data in class over the course of our discussion.  I opted for <a href="http://www.highcharts.com/">Highcharts</a>, through R and <a href="http://rcharts.io">rCharts</a>, for the interactivity.  I then turned to <a href="http://shiny.rstudio.com/">Shiny</a> from <a href="http://www.rstudio.com/">RStudio</a> to put everything together.  </p>
 <p>Shiny is a framework that allows R users to turn analyses and visualizations into interactive applications.  Shiny can be run locally on your computer, or deployed to the web via the <a href="https://www.shinyapps.io/">ShinyApps.io</a> hosting service, which is currently free.  The beauty of Shiny is that it allows you to explore your data interactively with a friendly web-based user interface without writing any JavaScript, and it lets R users create and deploy apps to be shared with non-R users who may nonetheless be interested in exploring a dataset or visualization. <a href="http://shiny.rstudio.com/gallery/">You can see RStudio's gallery of examples here.</a></p>
 <p>To get started, I acquired data from <a href="http://www.mortality.org/">The Human Mortality Database</a>, (HMD) a project of UC Berkeley and the Max Planck Institute.  The HMD prefers that users not re-distribute the data, so if you'd like to reproduce this chart, you'll need to download the data yourself.  However, the service is free (with registration) and relatively simple to use.  The HMD provides mortality data for 37 countries, including Russia, Belarus, and Ukraine. From the HMD, I downloaded the 1-year life expectancy at birth tables for these countries, and saved them to my working directory as delimited text files, naming them accordingly.  Once I did this, I used the code below to process the data into a suitable format for visualization.  </p>
-<div class="highlight"><pre>library<span class="p">(</span>tidyr<span class="p">)</span>
-library<span class="p">(</span>dplyr<span class="p">)</span>
+<div class="highlight"><pre><span class="kn">library</span><span class="p">(</span>tidyr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
 
 russia <span class="o">&lt;-</span> read.table<span class="p">(</span><span class="s">&#39;russia.txt&#39;</span><span class="p">,</span> skip <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
 
-names<span class="p">(</span>russia<span class="p">)</span> <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">,</span> <span class="s">&quot;Female&quot;</span><span class="p">,</span> <span class="s">&quot;Male&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
+<span class="kp">names</span><span class="p">(</span>russia<span class="p">)</span> <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">,</span> <span class="s">&quot;Female&quot;</span><span class="p">,</span> <span class="s">&quot;Male&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
 
 russia<span class="o">$</span>country <span class="o">&lt;-</span> <span class="s">&quot;Russia&quot;</span>
 
 ukraine <span class="o">&lt;-</span> read.table<span class="p">(</span><span class="s">&#39;ukraine.txt&#39;</span><span class="p">,</span> skip <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
 
-names<span class="p">(</span>ukraine<span class="p">)</span> <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">,</span> <span class="s">&quot;Female&quot;</span><span class="p">,</span> <span class="s">&quot;Male&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
+<span class="kp">names</span><span class="p">(</span>ukraine<span class="p">)</span> <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">,</span> <span class="s">&quot;Female&quot;</span><span class="p">,</span> <span class="s">&quot;Male&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
 
 ukraine<span class="o">$</span>country <span class="o">&lt;-</span> <span class="s">&quot;Ukraine&quot;</span>
 
 belarus <span class="o">&lt;-</span> read.table<span class="p">(</span><span class="s">&#39;belarus.txt&#39;</span><span class="p">,</span> skip <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
 
-names<span class="p">(</span>belarus<span class="p">)</span> <span class="o">&lt;-</span> c<span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">,</span> <span class="s">&quot;Female&quot;</span><span class="p">,</span> <span class="s">&quot;Male&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
+<span class="kp">names</span><span class="p">(</span>belarus<span class="p">)</span> <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Year&quot;</span><span class="p">,</span> <span class="s">&quot;Female&quot;</span><span class="p">,</span> <span class="s">&quot;Male&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
 
 belarus<span class="o">$</span>country <span class="o">&lt;-</span> <span class="s">&quot;Belarus&quot;</span>
 
-dat <span class="o">&lt;-</span> rbind<span class="p">(</span>russia<span class="p">,</span> ukraine<span class="p">,</span> belarus<span class="p">)</span>
+dat <span class="o">&lt;-</span> <span class="kp">rbind</span><span class="p">(</span>russia<span class="p">,</span> ukraine<span class="p">,</span> belarus<span class="p">)</span>
 
 dlong <span class="o">&lt;-</span> dat <span class="o">%&gt;%</span>
   select<span class="p">(</span><span class="o">-</span>Total<span class="p">)</span> <span class="o">%&gt;%</span>
@@ -108,7 +108,7 @@ write.csv<span class="p">(</span>dlong<span class="p">,</span> <span class="s">&
 <p>I prepared the UI first with the code below.  </p>
 <div class="highlight"><pre><span class="c1"># ui.R</span>
 
-library<span class="p">(</span>rCharts<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>rCharts<span class="p">)</span>
 
 dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&#39;data.csv&#39;</span><span class="p">)</span>
 
@@ -120,13 +120,13 @@ shinyUI<span class="p">(</span>fluidPage<span class="p">(</span>
     sidebarPanel<span class="p">(</span>
       selectInput<span class="p">(</span>inputId <span class="o">=</span> <span class="s">&quot;country&quot;</span><span class="p">,</span> 
                   label <span class="o">=</span> <span class="s">&quot;Select a country:&quot;</span><span class="p">,</span> 
-                  choices <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;Russia&quot;</span><span class="p">,</span> <span class="s">&quot;Belarus&quot;</span><span class="p">,</span> <span class="s">&quot;Ukraine&quot;</span><span class="p">),</span> 
+                  choices <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Russia&quot;</span><span class="p">,</span> <span class="s">&quot;Belarus&quot;</span><span class="p">,</span> <span class="s">&quot;Ukraine&quot;</span><span class="p">),</span> 
                   selected <span class="o">=</span> <span class="s">&quot;Russia&quot;</span><span class="p">),</span> 
       sliderInput<span class="p">(</span><span class="s">&quot;range&quot;</span><span class="p">,</span>
                   label <span class="o">=</span> <span class="s">&quot;Years to display:&quot;</span><span class="p">,</span>
                   min <span class="o">=</span> <span class="m">1959</span><span class="p">,</span>
                   max <span class="o">=</span> <span class="m">2010</span><span class="p">,</span>
-                  value <span class="o">=</span> c<span class="p">(</span><span class="m">1959</span><span class="p">,</span> <span class="m">2010</span><span class="p">),</span> 
+                  value <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">1959</span><span class="p">,</span> <span class="m">2010</span><span class="p">),</span> 
                   format <span class="o">=</span> <span class="s">&quot;0000&quot;</span><span class="p">),</span> 
       helpText<span class="p">(</span><span class="s">&quot;Data reflect the life expectancy &quot;</span><span class="p">,</span> 
                 <span class="s">&quot;at birth from 1959 to 2010 &quot;</span><span class="p">,</span> 
@@ -155,16 +155,16 @@ shinyUI<span class="p">(</span>fluidPage<span class="p">(</span>
 <p>Next, I set up the server.  </p>
 <div class="highlight"><pre><span class="c1"># server.R</span>
 
-library<span class="p">(</span>rCharts<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>rCharts<span class="p">)</span>
 
 dat <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&#39;data.csv&#39;</span><span class="p">)</span>
 
-options<span class="p">(</span>RCHART_WIDTH <span class="o">=</span> <span class="m">500</span><span class="p">)</span>
+<span class="kp">options</span><span class="p">(</span>RCHART_WIDTH <span class="o">=</span> <span class="m">500</span><span class="p">)</span>
 
 shinyServer<span class="p">(</span><span class="kr">function</span><span class="p">(</span>input<span class="p">,</span> output<span class="p">)</span> <span class="p">{</span>
   output<span class="o">$</span>lexplot <span class="o">&lt;-</span> renderChart2<span class="p">({</span>
     selected <span class="o">&lt;-</span> input<span class="o">$</span>country
-    country <span class="o">&lt;-</span> subset<span class="p">(</span>dat<span class="p">,</span> country <span class="o">==</span> selected <span class="o">&amp;</span> Year <span class="o">%in%</span> seq<span class="p">(</span>input<span class="o">$</span>range<span class="p">[</span><span class="m">1</span><span class="p">],</span> input<span class="o">$</span>range<span class="p">[</span><span class="m">2</span><span class="p">],</span> <span class="m">1</span><span class="p">))</span>
+    country <span class="o">&lt;-</span> <span class="kp">subset</span><span class="p">(</span>dat<span class="p">,</span> country <span class="o">==</span> selected <span class="o">&amp;</span> Year <span class="o">%in%</span> <span class="kp">seq</span><span class="p">(</span>input<span class="o">$</span><span class="kp">range</span><span class="p">[</span><span class="m">1</span><span class="p">],</span> input<span class="o">$</span><span class="kp">range</span><span class="p">[</span><span class="m">2</span><span class="p">],</span> <span class="m">1</span><span class="p">))</span>
     h1 <span class="o">&lt;-</span> hPlot<span class="p">(</span>
       x <span class="o">=</span> <span class="s">&quot;Year&quot;</span><span class="p">,</span> 
       y <span class="o">=</span> <span class="s">&quot;lex&quot;</span><span class="p">,</span> 
@@ -172,8 +172,8 @@ shinyServer<span class="p">(</span><span class="kr">function</span><span class="
       data <span class="o">=</span> country<span class="p">,</span> 
       type <span class="o">=</span> <span class="s">&quot;line&quot;</span><span class="p">)</span>
 
-    h1<span class="o">$</span>colors<span class="p">(</span>c<span class="p">(</span><span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="s">&quot;blue&quot;</span><span class="p">))</span>
-    h1<span class="o">$</span>yAxis<span class="p">(</span>title <span class="o">=</span> list<span class="p">(</span>enabled <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span> text <span class="o">=</span> <span class="s">&#39;Life expectancy at birth&#39;</span><span class="p">))</span>
+    h1<span class="o">$</span>colors<span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="s">&quot;blue&quot;</span><span class="p">))</span>
+    h1<span class="o">$</span>yAxis<span class="p">(</span>title <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>enabled <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span> text <span class="o">=</span> <span class="s">&#39;Life expectancy at birth&#39;</span><span class="p">))</span>
     <span class="kr">return</span><span class="p">(</span>h1<span class="p">)</span>
   <span class="p">})</span>
 <span class="p">})</span>
@@ -271,7 +271,7 @@ shinyServer<span class="p">(</span><span class="kr">function</span><span class="
     </div>     </div> 
 <footer>
 <br />
-<p><a href="http://walkerke.github.io">Teaching with Interactive Data Visualization</a> &copy; Kyle Walker 2015</p>
+<p><a href="http://walkerke.github.io">Teaching with Interactive Data Visualization</a> &copy; Kyle Walker 2016</p>
 </footer>
 
 </div> <!-- /container -->

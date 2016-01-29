@@ -58,8 +58,8 @@
 
     <div class='article'>
         <div class="content-title">
-            <a href="http://walkerke.github.io/2015/04/map-or-chart/"><h1>Should you visualize data with a map or a chart?  Thoughts from teaching introductory geography</h1></a>
-Wed 29 April 2015
+            <a href="http://walkerke.github.io/2016/01/idbr/"><h1>Visualizing international demographic indicators with idbr and Plotly</h1></a>
+Fri 29 January 2016
 
 by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
  
@@ -68,35 +68,163 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
  
         </div>
         
-        <div><p>While studying geography for many years as an undergraduate and graduate student, my main connection to the world of data visualization was through the worlds of cartography and Geographic Information Systems (GIS).  I learned about basic principles of data visualization in my geography courses, but it was always through the lens of mapmaking.  As such, when considering how to visualize a dataset, I have always turned to mapping first.  Unfortunately, this has led me over the course of my career to make several maps that in retrospect would have worked better as charts.  </p>
-<p>Several top names in the visualization community that I follow have recently given attention to this "map vs. chart" debate.  <a href="https://twitter.com/briantimoney">Brian Timoney</a> <a href="http://mapbrief.com/2014/11/13/the-elegant-effective-election-data-visualization-that-is-thankfully-not-a-map/">writes here on when "the best map is no map"</a>; <a href="https://twitter.com/jschwabish">Jon Schwabish</a> and <a href="https://twitter.com/BenChartoff">Ben Chartoff</a> <a href="http://policyviz.com/talking-maps-with-ben-chartoff/">had an interesting discussion on this topic available by podcast</a>; and I recently noticed <a href="https://twitter.com/arnicas/status/592008102947495936">this dot plot by</a> <a href="https://twitter.com/arnicas">Lynn Cherny</a> which is a remake of a <a href="https://twitter.com/_cingraham">Christopher Ingraham</a> <a href="http://www.washingtonpost.com/blogs/wonkblog/wp/2015/04/24/where-americans-drink-the-hardest/">map from the <em>Washington Post</em></a>.  All of these accounts suggest that in many instances, a map is not the best visualization choice - or at the very least, it is important to consider other options.  </p>
-<p>As a geographer, most datasets I work with in my teaching and research can be mapped.  I generally follow a couple rules of thumb when deciding whether to map my data: </p>
-<ul>
-<li>Is there a clear geographic pattern that I want to highlight in my dataset?  </li>
-<li>Do I have enough data to highlight that geographic pattern effectively?  </li>
-</ul>
-<p>If the answer is no on either account, I generally go with a chart instead of a map.  However, the answers to these questions are not always so clear in practice, which came up as I was preparing materials to teach my introductory geography students about income inequality in sub-Saharan Africa.  I wanted to show students country-level variations in the <a href="http://en.wikipedia.org/wiki/Gini_coefficient">Gini Index</a>, which is a common statistic used to measure income inequality.  Higher Gini values are reflective of more income inequality within a society.  I used <a href="http://data.worldbank.org/indicator/SI.POV.GINI">data from the World Bank</a> to accomplish this.  If you are an RStudio user, this workflow is fully reproducible by issuing the following command at the R console: </p>
-<div class="highlight"><pre><span class="kn">source</span><span class="p">(</span><span class="s">&quot;https://raw.githubusercontent.com/walkerke/teaching-with-datavis/master/map-or-chart/gini.R&quot;</span><span class="p">)</span>
+        <div><p>It's been a while since I last posted here - but I've been working on a new R package that I'm quite excited about, and I thought this would be the right place to post.  My new package, <strong>idbr</strong>, is an R interface to the <a href="http://www.census.gov/data/developers/data-sets/international-database.html">United States Census Bureau's International Data Base API</a>.  The IDB includes a host of international demographic indicators - including historical data and projections to 2050.  I use IDB data all of the time for my teaching - and <strong>idbr</strong> makes the process of getting the data much easier!  While this product uses the Census Bureau Data API, it is not endorsed or certified by the Census Bureau.  </p>
+<p>I plan to submit to CRAN soon once I've finished writing all of the documentation.  For now, install from GitHub with the following command: </p>
+<div class="highlight"><pre>devtools<span class="o">::</span>install_github<span class="p">(</span><span class="s">&#39;walkerke/idbr&#39;</span><span class="p">)</span>
 </pre></div>
 
 
-<p>You can also <a href="https://github.com/walkerke/teaching-with-datavis/blob/master/map-or-chart/gini.R">click here to view the source code directly</a>. Please note that there are several packages needed to run the script, and that I am using a development branch of the <strong>leaflet</strong> package to create the legend on the map, installable with <code>devtools::install_github('rstudio/leaflet@feature/color-legend')</code>.  I include a few hacks to get the legend looking the way I want, and as this is using a development branch of the package, the API is likely to change.  </p>
-<p>I'll start with an interactive Leaflet choropleth map.  Click a country to retrieve its most recent Gini index estimate, its overall rank, and the year the estimate was made.  If you have sourced the R script, type <code>gini_map</code> in your R console to create the map yourself.  Also, you can <a href="http://walkerke.github.io/teaching-with-datavis/map-or-chart/gini.html">click here for a full-screen version</a>.  </p>
-<iframe src="http://walkerke.github.io/teaching-with-datavis/map-or-chart/gini.html" scrolling = "no" frameBorder = "0" height = "500" width = "800"></iframe>
+<p>To get started, you'll need a Census API key; this can be obtained from <a href="http://api.census.gov/data/key_signup.html">http://api.census.gov/data/key_signup.html</a> if you don't already have one.  Before downloading data, set your API key for your <strong>idbr</strong> session with the <code>set_api_key</code> function: </p>
+<div class="highlight"><pre><span class="kn">library</span><span class="p">(</span>idbr<span class="p">)</span>
 
-<p>In several ways, the map serves its purpose.  The context of my discussion was income inequality in southern sub-Saharan Africa; the map highlights the high levels of inequality in these countries, and I can zoom/pan around and click the countries to interactively explore country values and ranks.  </p>
-<p>However, there are several issues with this map.  First, while the Mercator projection used by most web maps is fine for many purposes, <a href="https://www.youtube.com/watch?v=eLqC3FNNOaI">it is not good for showing the entire world</a> due to the areal distortion of countries, and especially bad when that map is a choropleth.  An alternative would be to use a different mapping library like D3, <a href="http://bl.ocks.org/mbostock/3682676">which can handle better projections for the world</a>; however, other issues remain.  For one, there is a fair amount of missing data, which is especially problematic for large countries on the map like Libya and Saudi Arabia, as it skews the interpretation of geographic patterns.  Also, the data themselves don't easily lend themselves to country-level comparisons on a map in which the area of countries is emphasized.  For example: what is the most unequal country in the world, according to the World Bank's Gini index estimate?  The answer is the <a href="http://en.wikipedia.org/wiki/Seychelles">Seychelles</a>, a small archipelago in the Indian Ocean that is invisible at the default zoom level of the map.  To see the Seychelles, the user has to zoom way in... </p>
-<p><img src=http://walkerke.github.io/teaching-with-datavis/map-or-chart/seychelles.PNG></p>
-<p>...which then makes every other country impossible to see.  </p>
-<p>For these reasons, I sought an alternative way to visualize the data.  One very popular chart type in the visualization community right now is the Cleveland-style dot plot.  My favorite implementation of the dot plot comes from <a href="https://twitter.com/evergreendata">Stephanie Evergreen</a> <a href="http://stephanieevergreen.com/easy-dot-plots-in-excel/">(see her Excel tutorial here)</a>.  I used <strong>ggplot2</strong> to create an "Evergreen-style" dot plot with the Gini index data, which is found below.  If you have sourced my R script, type <code>gini_chart</code> in your R console to reproduce the chart.  Click the chart if you'd like a larger version.    </p>
-<p><a href="http://walkerke.github.io/teaching-with-datavis/map-or-chart/gini_coef.png"><img src=http://walkerke.github.io/teaching-with-datavis/map-or-chart/gini_coef.png style="width: 800px"></a></p>
-<p>This chart solves a lot of the problems with the map.  It only includes the countries with the 20 highest Gini indices, which is what I was focusing on anyway; all countries are represented with the same symbol, which allows for better comparisons between countries of different sizes; geography is still represented by the color of the dots; and the relative values are much clearer in relationship to one another.  </p>
-<p>However, it is crucial to consider the context in which I am presenting this chart.  If I was sharing the data with a highly geographically-literate community (e.g. in a policy discussion), the chart is probably the way to go.  But what about an introductory-level university geography course?  I can't reasonably assume that my students have heard of all of these countries, especially the smaller ones, much less be able to situate them geographically.  In turn, I need to provide them with a spatial reference, which takes me back to... you guessed it, the map.  In spite of its faults, the Leaflet choropleth slippy map can make the data relatable, as its template (the world map) is familiar, the tile layer provides a nice reference, and the interface is friendly given everyone's use of Google Maps.  In class, I opted for a compromise, and used both the map and the chart.  I first showed the map to discuss general patterns and explore the data, and then showed the chart once I had appropriately introduced the geographical context. </p>
-<p>More broadly, I do think these discussions about the appropriateness of mapping for visualizing spatial datasets are important, and ought to be a central component of geography/GIS education.  To that end, <a href="http://personal.tcu.edu/kylewalker/preview.html">I'm teaching a new geography course at TCU in the fall that focuses on general data and visualization skills</a>, and is intended to serve as a complement to our GIS courses.  We'll be spending our fair share of time considering this map vs. chart issue in the course.  </p>
-<p>If you have any questions or feedback, I'd love to hear from you!  I'm on Twitter at <a href="https://twitter.com/kyle_e_walker">@kyle_e_walker</a>.  </p></div>
+idb_api_key<span class="p">(</span><span class="s">&#39;Your API key goes here&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>There are two main functions in the <strong>idbr</strong> package.  <code>idb1</code> fetches population data by one-year age bands for one or more countries in one or more years, optionally by age ranges or by sex.  <code>idb5</code> has a lot more indicators available, including total fertility rate, life expectancy, and population by five-year age ranges.  To view all of the variables available in the <code>idb</code> function, call <code>idb_variables()</code>.  Groups of similar variables, termed <strong>concepts</strong>, can be fetched at once; see the available concepts with <code>idb_concepts()</code>.  </p>
+<p>Below are some examples of how to use the package with Plotly's fantastic new R client.  Browse the code for <strong>idbr</strong> at <a href="https://github.com/walkerke/idbr">https://github.com/walkerke/idbr</a>, and please let me know if you have any feedback!</p>
+<p><strong>World map of infant mortality rates by country for 2016:</strong></p>
+<div class="highlight"><pre><span class="kn">library</span><span class="p">(</span>plotly<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>viridis<span class="p">)</span>
+
+df <span class="o">&lt;-</span> idb5<span class="p">(</span>country <span class="o">=</span> <span class="s">&#39;all&#39;</span><span class="p">,</span> year <span class="o">=</span> <span class="m">2016</span><span class="p">,</span> variable <span class="o">=</span> <span class="s">&#39;IMR&#39;</span><span class="p">,</span> country_name <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+
+plot_ly<span class="p">(</span>df<span class="p">,</span> z <span class="o">=</span> IMR<span class="p">,</span> text <span class="o">=</span> NAME<span class="p">,</span> locations <span class="o">=</span> NAME<span class="p">,</span> locationmode <span class="o">=</span> <span class="s">&#39;country names&#39;</span><span class="p">,</span>
+        type <span class="o">=</span> <span class="s">&#39;choropleth&#39;</span><span class="p">,</span> colors <span class="o">=</span> viridis<span class="p">(</span><span class="m">99</span><span class="p">),</span> hoverinfo <span class="o">=</span> <span class="s">&#39;text+z&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  layout<span class="p">(</span>title <span class="o">=</span> <span class="s">&#39;Infant mortality rate, 2016&#39;</span><span class="p">,</span> 
+         geo <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>projection <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>type <span class="o">=</span> <span class="s">&#39;robinson&#39;</span><span class="p">)))</span>
+</pre></div>
+
+
+<iframe src="http://personal.tcu.edu/kylewalker/r/imr.html" frameborder = "0" scrolling = "no" width = "800" height = "500"></iframe>
+
+<p><strong>Projected population pyramid of China in 2050:</strong></p>
+<div class="highlight"><pre><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+
+male <span class="o">&lt;-</span> idb1<span class="p">(</span><span class="s">&#39;CH&#39;</span><span class="p">,</span> <span class="m">2050</span><span class="p">,</span> sex <span class="o">=</span> <span class="s">&#39;male&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>POP <span class="o">=</span> POP <span class="o">*</span> <span class="m">-1</span><span class="p">,</span>
+         SEX <span class="o">=</span> <span class="s">&#39;Male&#39;</span><span class="p">)</span>
+
+female <span class="o">&lt;-</span> idb1<span class="p">(</span><span class="s">&#39;CH&#39;</span><span class="p">,</span> <span class="m">2050</span><span class="p">,</span> sex <span class="o">=</span> <span class="s">&#39;female&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>SEX <span class="o">=</span> <span class="s">&#39;Female&#39;</span><span class="p">)</span>
+
+china <span class="o">&lt;-</span> <span class="kp">rbind</span><span class="p">(</span>male<span class="p">,</span> female<span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>abs_pop <span class="o">=</span> <span class="kp">abs</span><span class="p">(</span>POP<span class="p">))</span>
+
+plot_ly<span class="p">(</span>china<span class="p">,</span> x <span class="o">=</span> POP<span class="p">,</span> y <span class="o">=</span> AGE<span class="p">,</span> color <span class="o">=</span> SEX<span class="p">,</span> type <span class="o">=</span> <span class="s">&#39;bar&#39;</span><span class="p">,</span> orientation <span class="o">=</span> <span class="s">&#39;h&#39;</span><span class="p">,</span>
+        hoverinfo <span class="o">=</span> <span class="s">&#39;y+text+name&#39;</span><span class="p">,</span> text <span class="o">=</span> abs_pop<span class="p">,</span> colors <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;red&#39;</span><span class="p">,</span> <span class="s">&#39;gold&#39;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  layout<span class="p">(</span>bargap <span class="o">=</span> <span class="m">0.1</span><span class="p">,</span> barmode <span class="o">=</span> <span class="s">&#39;overlay&#39;</span><span class="p">,</span>
+         xaxis <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>tickmode <span class="o">=</span> <span class="s">&#39;array&#39;</span><span class="p">,</span> tickvals <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">-10000000</span><span class="p">,</span> <span class="m">-5000000</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">5000000</span><span class="p">,</span> <span class="m">10000000</span><span class="p">),</span>
+         ticktext <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;10M&#39;</span><span class="p">,</span> <span class="s">&#39;5M&#39;</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">,</span> <span class="s">&#39;5M&#39;</span><span class="p">,</span> <span class="s">&#39;10M&#39;</span><span class="p">)),</span> 
+         title <span class="o">=</span> <span class="s">&#39;Projected population structure of China, 2050&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<iframe src="http://personal.tcu.edu/kylewalker/r/china.html" frameborder = "0" scrolling = "no" width = "800" height = "500"></iframe>
+
+<p><strong>Life expectancy at birth by sex compared in a Shiny app</strong></p>
+<p>First, get the data from <strong>idbr</strong> then save out (so you don't have to call the API each time): </p>
+<div class="highlight"><pre><span class="c1"># setup.R</span>
+
+<span class="kn">library</span><span class="p">(</span>idbr<span class="p">)</span>
+
+idb_api_key<span class="p">(</span><span class="s">&quot;Your API key here&quot;</span><span class="p">)</span>
+
+full <span class="o">&lt;-</span> idb5<span class="p">(</span>country <span class="o">=</span> <span class="s">&#39;all&#39;</span><span class="p">,</span> year <span class="o">=</span> <span class="s">&#39;2016&#39;</span><span class="p">,</span> variables <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;E0_F&#39;</span><span class="p">,</span> <span class="s">&#39;E0_M&#39;</span><span class="p">),</span> country_name <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+
+<span class="kp">save</span><span class="p">(</span>full<span class="p">,</span> file <span class="o">=</span> <span class="s">&#39;idbr_data.rds&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Next, build the app: </p>
+<div class="highlight"><pre><span class="c1"># app.R</span>
+
+<span class="kn">library</span><span class="p">(</span>shiny<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>countrycode<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>plotly<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tidyr<span class="p">)</span>
+
+<span class="kp">load</span><span class="p">(</span><span class="s">&#39;idbr_data.rds&#39;</span><span class="p">)</span>
+
+ui <span class="o">&lt;-</span> fluidPage<span class="p">(</span>
+
+  titlePanel<span class="p">(</span><span class="s">&quot;Life expectancy at birth by country and sex&quot;</span><span class="p">),</span>
+
+  sidebarLayout<span class="p">(</span>
+    sidebarPanel<span class="p">(</span>
+      selectInput<span class="p">(</span><span class="s">&quot;region&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;Select region to plot:&quot;</span><span class="p">,</span>
+                  choices <span class="o">=</span> <span class="kp">sort</span><span class="p">(</span><span class="kp">unique</span><span class="p">(</span>countrycode_data<span class="o">$</span>region<span class="p">)),</span>
+                  selected <span class="o">=</span> <span class="s">&#39;Northern Africa&#39;</span><span class="p">)</span>
+    <span class="p">),</span>
+
+    mainPanel<span class="p">(</span>
+      plotlyOutput<span class="p">(</span><span class="s">&quot;dumbbell&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+  <span class="p">)</span>
+<span class="p">)</span>
+
+server <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>input<span class="p">,</span> output<span class="p">)</span> <span class="p">{</span>
+
+  regiondf <span class="o">&lt;-</span> reactive<span class="p">({</span>
+
+    reg <span class="o">&lt;-</span> countrycode_data<span class="p">[</span>countrycode_data<span class="o">$</span>region <span class="o">==</span> input<span class="o">$</span>region<span class="p">,</span> <span class="p">]</span>
+
+    fips <span class="o">&lt;-</span> reg<span class="o">$</span>fips104
+
+    sub <span class="o">&lt;-</span> full <span class="o">%&gt;%</span>
+      filter<span class="p">(</span>FIPS <span class="o">%in%</span> fips<span class="p">)</span> <span class="o">%&gt;%</span>
+      rename<span class="p">(</span>Male <span class="o">=</span> E0_M<span class="p">,</span> Female <span class="o">=</span> E0_F<span class="p">)</span> <span class="o">%&gt;%</span>
+      arrange<span class="p">(</span>Female<span class="p">)</span>
+
+    <span class="kp">sub</span>
+
+  <span class="p">})</span>
+
+  output<span class="o">$</span>dumbbell <span class="o">&lt;-</span> renderPlotly<span class="p">({</span>
+
+    regiondf<span class="p">()</span> <span class="o">%&gt;%</span>
+      gather<span class="p">(</span>Sex<span class="p">,</span> value<span class="p">,</span> Male<span class="p">,</span> Female<span class="p">)</span> <span class="o">%&gt;%</span>
+      plot_ly<span class="p">(</span>x <span class="o">=</span> value<span class="p">,</span> y <span class="o">=</span> NAME<span class="p">,</span> mode <span class="o">=</span> <span class="s">&#39;lines&#39;</span><span class="p">,</span>
+              group <span class="o">=</span> NAME<span class="p">,</span> showlegend <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span> line <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>color <span class="o">=</span> <span class="s">&#39;gray&#39;</span><span class="p">),</span>
+              hovermode <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span> hoverinfo <span class="o">=</span> <span class="s">&#39;none&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+      add_trace<span class="p">(</span>x <span class="o">=</span> value<span class="p">,</span> y <span class="o">=</span> NAME<span class="p">,</span> color <span class="o">=</span> Sex<span class="p">,</span> mode <span class="o">=</span> <span class="s">&#39;markers&#39;</span><span class="p">,</span>
+              colors <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;darkred&#39;</span><span class="p">,</span> <span class="s">&#39;navy&#39;</span><span class="p">),</span> marker <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>size <span class="o">=</span> <span class="m">10</span><span class="p">))</span> <span class="o">%&gt;%</span>
+      layout<span class="p">(</span>xaxis <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>title <span class="o">=</span> <span class="s">&#39;Life expectancy at birth&#39;</span><span class="p">),</span>
+             yaxis <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>title <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
+             margin <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>l <span class="o">=</span> <span class="m">120</span><span class="p">))</span>
+
+  <span class="p">})</span>
+
+<span class="p">}</span>
+
+shinyApp<span class="p">(</span>ui <span class="o">=</span> ui<span class="p">,</span> server <span class="o">=</span> server<span class="p">)</span>
+</pre></div>
+
+
+<iframe src="https://walkerke.shinyapps.io/idbr_dumbbell/" frameborder = "0" scrolling = "no" width = "800" height = "500"></iframe></div>
         <hr />
     </div>
 		
+
+ 
+        
+
+ 
+
+    <div class='article'>
+        <a href="http://walkerke.github.io/2015/04/map-or-chart/"><h2>Should you visualize data with a map or a chart?  Thoughts from teaching introductory geography</h2></a>
+        <div class= "well small"> Wed 29 April 2015
+
+by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
+ 
+
+
+ </div>
+        <div class="summary"><p>While studying geography for many years as an undergraduate and graduate student, my main connection to the world of data visualization was through the worlds of cartography and Geographic Information Systems (GIS).  I learned about basic principles of data visualization in my geography courses, but it was always through the ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2015/04/map-or-chart/">read more</a></div>
+    </div>	
+				
 
  
         
@@ -153,30 +281,13 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
         <div class="summary"><p>I frequently come across criticisms of PowerPoint as a presentation tool, which is interesting to me given the ubiquity of its use across industries.  When I worked as a data analyst prior to coming to TCU, I frequently prepared PowerPoints using a company template for my boss's presentations or ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/12/slidify/">read more</a></div>
     </div>	
 				
-
- 
-        
-
- 
-
-    <div class='article'>
-        <a href="http://walkerke.github.io/2014/10/russia-lex/"><h2>Life expectancy trends in the former USSR</h2></a>
-        <div class= "well small"> Thu 16 October 2014
-
-by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Kyle Walker</a>
- 
-
-
- </div>
-        <div class="summary"><p>When covering Russia and the former republics of the USSR in World Regional Geography, a key part of my material addresses the issues that some of these countries have had in their transitions from centralized to market economies.  Some of these countries experienced dramatic demographic shifts after the dissolution of ...</p> <a class="btn btn-info xsmall" href="http://walkerke.github.io/2014/10/russia-lex/">read more</a></div>
-    </div>	
-				
 <div class="pagination">
 <ul>
     <li class="prev disabled"><a href="#">&larr; Previous</a></li>
 
     <li class="active"><a href="http://walkerke.github.io/index.html">1</a></li>
     <li class=""><a href="http://walkerke.github.io/index2.html">2</a></li>
+    <li class=""><a href="http://walkerke.github.io/index3.html">3</a></li>
 
     <li class="next"><a href="http://walkerke.github.io/index2.html">Next &rarr;</a></li>
 
@@ -246,7 +357,7 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
     </div>     </div> 
 <footer>
 <br />
-<p><a href="http://walkerke.github.io">Teaching with Interactive Data Visualization</a> &copy; Kyle Walker 2015</p>
+<p><a href="http://walkerke.github.io">Teaching with Interactive Data Visualization</a> &copy; Kyle Walker 2016</p>
 </footer>
 
 </div> <!-- /container -->

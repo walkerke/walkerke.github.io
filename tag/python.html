@@ -72,8 +72,8 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
 <p>Aside from maps, time series line charts are the most common chart type I use in my teaching, as I often discuss how characteristics of places evolve over time.  As such, I took dygraphs for a spin to create charts relevant to a couple topics I address in World Regional Geography.  </p>
 <p>The first chart shows quarterly unemployment rates in Egypt over the past decade.  I obtained the data from <a href="https://www.quandl.com">Quandl</a>, a massive repository of publicly-available datasets, by connecting to their API.  Quandl aims to be as user-friendly as possible; as such, <a href="https://www.quandl.com/ILOSTAT/UNE_DEAP_RT_SEX_T_Q_EGY-Unemployment-Rate-Quarterly-Egypt">on the page for the dataset you want</a>, you can get the command to access the data in R (or any number of other languages/formats) with a single click.  Additionally, you can specify the format for the data from Quandl; dygraphs in R accepts data in <code>xts</code> format, which Quandl can return for me.  </p>
 <p>Once I have the data, I can create the plot.    </p>
-<div class="highlight"><pre>library<span class="p">(</span>dygraphs<span class="p">)</span>
-library<span class="p">(</span>Quandl<span class="p">)</span>
+<div class="highlight"><pre><span class="kn">library</span><span class="p">(</span>dygraphs<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>Quandl<span class="p">)</span>
 
 
 egypt <span class="o">&lt;-</span> Quandl<span class="p">(</span><span class="s">&quot;ILOSTAT/UNE_DEAP_RT_SEX_T_Q_EGY&quot;</span><span class="p">,</span> type <span class="o">=</span> <span class="s">&quot;xts&quot;</span><span class="p">)</span>
@@ -81,7 +81,7 @@ egypt <span class="o">&lt;-</span> Quandl<span class="p">(</span><span class="s"
 dygraph<span class="p">(</span>egypt<span class="p">,</span> main <span class="o">=</span> <span class="s">&quot;Quarterly unemployment in Egypt, 2003-2013&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   dySeries<span class="p">(</span><span class="s">&quot;V1&quot;</span><span class="p">,</span> label <span class="o">=</span> <span class="s">&quot;Unemployment (%)&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   dyRangeSelector<span class="p">(</span>strokeColor <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> fillColor <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  dyOptions<span class="p">(</span>colors <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;darkred&quot;</span><span class="p">,</span> <span class="s">&quot;darkred&quot;</span><span class="p">))</span> 
+  dyOptions<span class="p">(</span>colors <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;darkred&quot;</span><span class="p">,</span> <span class="s">&quot;darkred&quot;</span><span class="p">))</span> 
 </pre></div>
 
 
@@ -90,23 +90,23 @@ dygraph<span class="p">(</span>egypt<span class="p">,</span> main <span class="o
 <p>The dygraphs package supports piping with the <code>%&gt;%</code> operator from the <strong>magrittr</strong> package, which organizes the code nicely.  I've changed the label in the legend and the colors, though I did notice that I had to supply a length-2 vector of colors to get the line's color to change, even though I only had one line.  I've also created a range selector at the bottom of the plot.  The chart itself has excellent interactivity; click and drag on the plot to zoom in to a specific section, and double-click to return to the original view.  In class, I can use this chart to show the major spike in unemployment after the fall of the Mubarak regime in early 2011. Unemployment, especially among youth, remains a critical issue in Egypt; <a href="http://data.worldbank.org/indicator/SL.UEM.1524.ZS">the World Bank estimates that 38.9 percent of Egyptians aged 15-24 were unemployed in 2013</a>.  </p>
 <p>The World Bank API is also an excellent resource for demographic and economic data; <a href="http://walkerke.github.io/2014/03/tfr-in-europe/">I've written about using it here</a>.  Quandl also provides access to World Bank data, but I'll include an example below that involves connecting directly to the World Bank's API to show how to get data from a different format into dygraphs.  </p>
 <p>The <strong>WDI</strong> package allows R users to connect directly to the World Bank's API and download data for selected countries, indicators, and years from the World Bank's <a href="http://data.worldbank.org/">Open Data Catalog</a>.  The code below fetches <a href="http://data.worldbank.org/indicator/TX.QTY.MRCH.XD.WD">export volume index data</a>, which shows how the relative size of countries' export economies have changed over time.  I discuss this in class heavily in the context of China, so I'll get data to compare China and the United States.  </p>
-<div class="highlight"><pre>library<span class="p">(</span>WDI<span class="p">)</span>
-library<span class="p">(</span>tidyr<span class="p">)</span>
-library<span class="p">(</span>xts<span class="p">)</span>
-library<span class="p">(</span>dplyr<span class="p">)</span>
+<div class="highlight"><pre><span class="kn">library</span><span class="p">(</span>WDI<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tidyr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>xts<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
 
-df <span class="o">&lt;-</span> WDI<span class="p">(</span>country <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;CN&quot;</span><span class="p">,</span> <span class="s">&quot;US&quot;</span><span class="p">),</span> indicator <span class="o">=</span> <span class="s">&quot;TX.QTY.MRCH.XD.WD&quot;</span><span class="p">,</span> start <span class="o">=</span> <span class="m">1980</span><span class="p">,</span> end <span class="o">=</span> <span class="m">2013</span><span class="p">,</span> extra <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+df <span class="o">&lt;-</span> WDI<span class="p">(</span>country <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;CN&quot;</span><span class="p">,</span> <span class="s">&quot;US&quot;</span><span class="p">),</span> indicator <span class="o">=</span> <span class="s">&quot;TX.QTY.MRCH.XD.WD&quot;</span><span class="p">,</span> start <span class="o">=</span> <span class="m">1980</span><span class="p">,</span> end <span class="o">=</span> <span class="m">2013</span><span class="p">,</span> extra <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
 
 df<span class="o">$</span>exports <span class="o">&lt;-</span> df<span class="o">$</span>TX.QTY.MRCH.XD.WD
 
 df1 <span class="o">&lt;-</span> df <span class="o">%&gt;%</span>
   select<span class="p">(</span>country<span class="p">,</span> year<span class="p">,</span> exports<span class="p">)</span> <span class="o">%&gt;%</span>
-  mutate<span class="p">(</span>country <span class="o">=</span> gsub<span class="p">(</span><span class="s">&quot;United States&quot;</span><span class="p">,</span> <span class="s">&quot;USA&quot;</span><span class="p">,</span> df<span class="o">$</span>country<span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>country <span class="o">=</span> <span class="kp">gsub</span><span class="p">(</span><span class="s">&quot;United States&quot;</span><span class="p">,</span> <span class="s">&quot;USA&quot;</span><span class="p">,</span> df<span class="o">$</span>country<span class="p">))</span> <span class="o">%&gt;%</span>
   spread<span class="p">(</span>key <span class="o">=</span> country<span class="p">,</span> value <span class="o">=</span> exports<span class="p">)</span> <span class="o">%&gt;%</span>
-  mutate<span class="p">(</span>date <span class="o">=</span> as.Date<span class="p">(</span>as.character<span class="p">(</span>year<span class="p">),</span> format <span class="o">=</span> <span class="s">&quot;%Y&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>date <span class="o">=</span> <span class="kp">as.Date</span><span class="p">(</span><span class="kp">as.character</span><span class="p">(</span>year<span class="p">),</span> format <span class="o">=</span> <span class="s">&quot;%Y&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>
   select<span class="p">(</span><span class="o">-</span>year<span class="p">)</span> 
 
-xtdata <span class="o">&lt;-</span> xts<span class="p">(</span>df1<span class="p">,</span> order.by <span class="o">=</span> df1<span class="o">$</span>date<span class="p">)</span> 
+xtdata <span class="o">&lt;-</span> xts<span class="p">(</span>df1<span class="p">,</span> order.by <span class="o">=</span> df1<span class="o">$</span><span class="kp">date</span><span class="p">)</span> 
 
 xtdata<span class="o">$</span>date <span class="o">&lt;-</span> <span class="kc">NULL</span>
 </pre></div>
@@ -114,8 +114,8 @@ xtdata<span class="o">$</span>date <span class="o">&lt;-</span> <span class="kc"
 
 <p>The WDI package returns data in "tidy" format, in which rows represent country-years.  I've reshaped my data frame to "wide" format, so that columns represent countries, and then I converted the data frame to an <code>xts</code> object for plotting with dygraphs.  Now, I can create the plot: </p>
 <div class="highlight"><pre>dygraph<span class="p">(</span>xtdata<span class="p">,</span> main <span class="o">=</span> <span class="s">&quot;Export volume index, 1980-2013 (2000 = 100)&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  dyHighlight<span class="p">(</span>highlightSeriesOpts <span class="o">=</span> list<span class="p">(</span>strokeWidth <span class="o">=</span> <span class="m">3</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  dyOptions<span class="p">(</span>colors <span class="o">=</span> c<span class="p">(</span><span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="s">&quot;navy&quot;</span><span class="p">))</span>
+  dyHighlight<span class="p">(</span>highlightSeriesOpts <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>strokeWidth <span class="o">=</span> <span class="m">3</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  dyOptions<span class="p">(</span>colors <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="s">&quot;navy&quot;</span><span class="p">))</span>
 </pre></div>
 
 
@@ -236,7 +236,7 @@ xtdata<span class="o">$</span>date <span class="o">&lt;-</span> <span class="kc"
     </div>     </div> 
 <footer>
 <br />
-<p><a href="http://walkerke.github.io">Teaching with Interactive Data Visualization</a> &copy; Kyle Walker 2015</p>
+<p><a href="http://walkerke.github.io">Teaching with Interactive Data Visualization</a> &copy; Kyle Walker 2016</p>
 </footer>
 
 </div> <!-- /container -->
