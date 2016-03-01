@@ -8,13 +8,13 @@
 &lt;/style&gt;
 
 &lt;p&gt;It's been a while since I last posted here - but I've been working on a new R package that I'm quite excited about, and I thought this would be the right place to post.  My new package, &lt;strong&gt;idbr&lt;/strong&gt;, is an R interface to the &lt;a href="http://www.census.gov/data/developers/data-sets/international-database.html"&gt;United States Census Bureau's International Data Base API&lt;/a&gt;.  The IDB includes a host of international demographic indicators - including historical data and projections to 2050.  I use IDB data all of the time for my teaching - and &lt;strong&gt;idbr&lt;/strong&gt; makes the process of getting the data much easier!  While this product uses the Census Bureau Data API, it is not endorsed or certified by the Census Bureau.  &lt;/p&gt;
-&lt;p&gt;I plan to submit to CRAN soon once I've finished writing all of the documentation.  For now, install from GitHub with the following command: &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;devtools&lt;span class="o"&gt;::&lt;/span&gt;install_github&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;walkerke/idbr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;p&gt;Install from CRAN with the following command: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;install.packages&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;idbr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;To get started, you'll need a Census API key; this can be obtained from &lt;a href="http://api.census.gov/data/key_signup.html"&gt;http://api.census.gov/data/key_signup.html&lt;/a&gt; if you don't already have one.  Before downloading data, set your API key for your &lt;strong&gt;idbr&lt;/strong&gt; session with the &lt;code&gt;set_api_key&lt;/code&gt; function: &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;idbr&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;idbr&lt;span class="p"&gt;)&lt;/span&gt;
 
 idb_api_key&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Your API key goes here&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -24,7 +24,7 @@ idb_api_key&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Yo
 &lt;p&gt;Below are some examples of how to use the package with Plotly's fantastic new R client.  Browse the code for &lt;strong&gt;idbr&lt;/strong&gt; at &lt;a href="https://github.com/walkerke/idbr"&gt;https://github.com/walkerke/idbr&lt;/a&gt;, and please let me know if you have any feedback!  &lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Please note&lt;/strong&gt;: the embedded visualizations are crashing my browser on my mobile device, so I've set it so they won't show up on phones.  To view the graphics, take a look at the post on your computer.  &lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;World map of infant mortality rates by country for 2016:&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;plotly&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;plotly&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;viridis&lt;span class="p"&gt;)&lt;/span&gt;
 
 df &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; idb5&lt;span class="p"&gt;(&lt;/span&gt;country &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;all&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; year &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;2016&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; variable &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;IMR&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; country_name &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;TRUE&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -39,7 +39,7 @@ plot_ly&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;,&lt;/span&gt
 &lt;iframe src="http://personal.tcu.edu/kylewalker/r/imr.html" frameborder = "0" scrolling = "no" width = "800" height = "500"&gt;&lt;/iframe&gt;
 
 &lt;p&gt;&lt;strong&gt;Projected population pyramid of China in 2050:&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;dplyr&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;dplyr&lt;span class="p"&gt;)&lt;/span&gt;
 
 male &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; idb1&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;CH&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;2050&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; sex &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;male&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%&amp;gt;%&lt;/span&gt;
   mutate&lt;span class="p"&gt;(&lt;/span&gt;POP &lt;span class="o"&gt;=&lt;/span&gt; POP &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="m"&gt;-1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
@@ -64,7 +64,7 @@ plot_ly&lt;span class="p"&gt;(&lt;/span&gt;china&lt;span class="p"&gt;,&lt;/span
 
 &lt;p&gt;&lt;strong&gt;Life expectancy at birth by sex compared in a Shiny app&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;First, get the data from &lt;strong&gt;idbr&lt;/strong&gt; then save out (so you don't have to call the API each time): &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;# setup.R&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# setup.R&lt;/span&gt;
 
 &lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;idbr&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -77,7 +77,7 @@ full &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; idb5&lt;span class="p"&gt;(&lt
 
 
 &lt;p&gt;Next, build the app: &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;# app.R&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# app.R&lt;/span&gt;
 
 &lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;shiny&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;countrycode&lt;span class="p"&gt;)&lt;/span&gt;

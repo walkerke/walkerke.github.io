@@ -77,13 +77,13 @@ by <a class="url fn" href="http://walkerke.github.io/author/kyle-walker.html">Ky
 </style>
 
 <p>It's been a while since I last posted here - but I've been working on a new R package that I'm quite excited about, and I thought this would be the right place to post.  My new package, <strong>idbr</strong>, is an R interface to the <a href="http://www.census.gov/data/developers/data-sets/international-database.html">United States Census Bureau's International Data Base API</a>.  The IDB includes a host of international demographic indicators - including historical data and projections to 2050.  I use IDB data all of the time for my teaching - and <strong>idbr</strong> makes the process of getting the data much easier!  While this product uses the Census Bureau Data API, it is not endorsed or certified by the Census Bureau.  </p>
-<p>I plan to submit to CRAN soon once I've finished writing all of the documentation.  For now, install from GitHub with the following command: </p>
-<div class="highlight"><pre>devtools<span class="o">::</span>install_github<span class="p">(</span><span class="s">&#39;walkerke/idbr&#39;</span><span class="p">)</span>
+<p>Install from CRAN with the following command: </p>
+<div class="highlight"><pre><span></span>install.packages<span class="p">(</span><span class="s">&#39;idbr&#39;</span><span class="p">)</span>
 </pre></div>
 
 
 <p>To get started, you'll need a Census API key; this can be obtained from <a href="http://api.census.gov/data/key_signup.html">http://api.census.gov/data/key_signup.html</a> if you don't already have one.  Before downloading data, set your API key for your <strong>idbr</strong> session with the <code>set_api_key</code> function: </p>
-<div class="highlight"><pre><span class="kn">library</span><span class="p">(</span>idbr<span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>idbr<span class="p">)</span>
 
 idb_api_key<span class="p">(</span><span class="s">&#39;Your API key goes here&#39;</span><span class="p">)</span>
 </pre></div>
@@ -93,7 +93,7 @@ idb_api_key<span class="p">(</span><span class="s">&#39;Your API key goes here&#
 <p>Below are some examples of how to use the package with Plotly's fantastic new R client.  Browse the code for <strong>idbr</strong> at <a href="https://github.com/walkerke/idbr">https://github.com/walkerke/idbr</a>, and please let me know if you have any feedback!  </p>
 <p><strong>Please note</strong>: the embedded visualizations are crashing my browser on my mobile device, so I've set it so they won't show up on phones.  To view the graphics, take a look at the post on your computer.  </p>
 <p><strong>World map of infant mortality rates by country for 2016:</strong></p>
-<div class="highlight"><pre><span class="kn">library</span><span class="p">(</span>plotly<span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>plotly<span class="p">)</span>
 <span class="kn">library</span><span class="p">(</span>viridis<span class="p">)</span>
 
 df <span class="o">&lt;-</span> idb5<span class="p">(</span>country <span class="o">=</span> <span class="s">&#39;all&#39;</span><span class="p">,</span> year <span class="o">=</span> <span class="m">2016</span><span class="p">,</span> variable <span class="o">=</span> <span class="s">&#39;IMR&#39;</span><span class="p">,</span> country_name <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
@@ -108,7 +108,7 @@ plot_ly<span class="p">(</span>df<span class="p">,</span> z <span class="o">=</s
 <iframe src="http://personal.tcu.edu/kylewalker/r/imr.html" frameborder = "0" scrolling = "no" width = "800" height = "500"></iframe>
 
 <p><strong>Projected population pyramid of China in 2050:</strong></p>
-<div class="highlight"><pre><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
 
 male <span class="o">&lt;-</span> idb1<span class="p">(</span><span class="s">&#39;CH&#39;</span><span class="p">,</span> <span class="m">2050</span><span class="p">,</span> sex <span class="o">=</span> <span class="s">&#39;male&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   mutate<span class="p">(</span>POP <span class="o">=</span> POP <span class="o">*</span> <span class="m">-1</span><span class="p">,</span>
@@ -133,7 +133,7 @@ plot_ly<span class="p">(</span>china<span class="p">,</span> x <span class="o">=
 
 <p><strong>Life expectancy at birth by sex compared in a Shiny app</strong></p>
 <p>First, get the data from <strong>idbr</strong> then save out (so you don't have to call the API each time): </p>
-<div class="highlight"><pre><span class="c1"># setup.R</span>
+<div class="highlight"><pre><span></span><span class="c1"># setup.R</span>
 
 <span class="kn">library</span><span class="p">(</span>idbr<span class="p">)</span>
 
@@ -146,7 +146,7 @@ full <span class="o">&lt;-</span> idb5<span class="p">(</span>country <span clas
 
 
 <p>Next, build the app: </p>
-<div class="highlight"><pre><span class="c1"># app.R</span>
+<div class="highlight"><pre><span></span><span class="c1"># app.R</span>
 
 <span class="kn">library</span><span class="p">(</span>shiny<span class="p">)</span>
 <span class="kn">library</span><span class="p">(</span>countrycode<span class="p">)</span>
