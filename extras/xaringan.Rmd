@@ -1,0 +1,28 @@
+---
+title: "Dropdowns"
+subtitle: "⚔<br/>with xaringan"
+author: "Kyle Walker"
+date: "2016/12/15"
+output:
+  xaringan::moon_reader:
+    seal: yes
+    nature:
+      highlightStyle: github
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+```{r, echo = FALSE}
+library(stringr)
+library(bsselectR)
+
+state_plots <- paste0(list.files("plots", full.names = TRUE))
+names(state_plots) <- str_replace(state_plots, "\\.png", "")
+names(state_plots) <- str_replace(names(state_plots), "plots/", "")
+
+
+bsselect(state_plots, type = "img", selected = "Oregon", 
+         live_search = TRUE, show_tick = TRUE, width = "100%")
+```
