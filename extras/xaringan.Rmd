@@ -23,6 +23,6 @@ names(state_plots) <- str_replace(state_plots, "\\.png", "")
 names(state_plots) <- str_replace(names(state_plots), "plots/", "")
 
 
-bsselect(state_plots, type = "img", selected = "Oregon", 
-         live_search = TRUE, show_tick = TRUE, width = "100%")
+as_iframe(bsselect(state_plots, type = "img", selected = "Oregon", 
+         live_search = TRUE, show_tick = TRUE), width = "100%")
 ```
