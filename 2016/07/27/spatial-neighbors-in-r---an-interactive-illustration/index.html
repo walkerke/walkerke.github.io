@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Spatial neighbors in R - an interactive illustration  &middot; Kyle Walker</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="">
+
+
+<meta property="og:title" content="Spatial neighbors in R - an interactive illustration  &middot; Kyle Walker ">
+<meta property="og:site_name" content="Kyle Walker"/>
+<meta property="og:url" content="/2016/07/27/spatial-neighbors-in-r---an-interactive-illustration/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="2016-07-27T21:13:14-05:00" />
+<meta property="og:article:modified_time" content="2016-07-27T21:13:14-05:00" />
+
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@kyle_e_walker" />
+<meta name="twitter:creator" content="@kyle_e_walker" />
+<meta name="twitter:title" content="Spatial neighbors in R - an interactive illustration" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="/2016/07/27/spatial-neighbors-in-r---an-interactive-illustration/" />
+<meta name="twitter:domain" content="/">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Spatial neighbors in R - an interactive illustration",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "2016-07-27",
+    "description": "",
+    "wordCount":  772 
+  }
+</script>
+
+
+
+<link rel="canonical" href="../../../../2016/07/27/spatial-neighbors-in-r---an-interactive-illustration/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../../touch-icon-144-precomposed.png">
+<link href="../../../../favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="../../../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../../../css/style.css">
+<link rel="stylesheet" href="../../../../css/highlight/default.css">
+
+  <!DOCTYPE HTML>
+<style>
+  
+  .main_wrapper>.main_header {
+    background-color: #035004;
+    color: #fff;
+  }
+  
+  .main_wrapper>.main_content .label:hover,
+  .main_wrapper>.main_content .navigation a:hover,
+  .main_wrapper>.main_content .pagination a:hover,
+  .main_wrapper>.main_content .readlink a:hover,
+  .main_wrapper>.main_content h2 a:hover,
+  .main_wrapper>.main_header a:hover {
+    background-color: #035004;
+    color: #fff;
+    text-decoration: none; 
+}
+
+  a {
+    color: #1a730f; 
+  }
+  
+  a:active, a:focus, a:hover {
+    color: #035004;
+}
+  
+</style>
+
+
+
+
+
+
+
+</head>
+<body class="map[name:superhero]">
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="../../../../">
+  Kyle Walker
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Writing about visualization, demographics, dashboards, and spatial data science.
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="../../../../about">About</a>
+
+<a href="../../../../post" title="Show list of posts">Posts</a>
+
+<a href="../../../../tags" title="Show list of tags">Tags</a>
+
+<a href="../../../../services">Services</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+<a id="contact-link-email" class="contact_link" href="mailto:kwalkerdata@gmail.com">
+  <span class="fa fa-envelope-square"></span><span>email</span></a>
+
+
+
+<a id="contact-link-github" class="contact_link" href="https://github.com/walkerke">
+  <span class="fa fa-github-square"></span><span>github</span></a>
+
+
+
+
+
+<a id="contact-link-linkedin" class="contact_link" href="https://www.linkedin.com/in/walkerke">
+  <span class="fa fa-linkedin-square"></span><span>linkedin</span></a>
+
+
+
+
+
+
+
+<a id="contact-link-twitter" class="contact_link" href="https://twitter.com/kyle_e_walker">
+  <span class="fa fa-twitter-square"></span><span>twitter</span></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1>Spatial neighbors in R - an interactive illustration
+</h1>
+
+  <div class="metas">
+<time datetime="2016-07-27">27 Jul, 2016</time>
+
+
+  
+    &middot; by Kyle Walker
+  
+  &middot; Read in about 4 min
+  &middot; (772 Words)
+  <br>
+  
+
+
+</div>
+
+</header>
+
+  <div class="container content">
+
+
+<p>I noticed <a href="http://www.arilamstein.com/blog/2016/07/12/announcing-r-shapefile-contest/">Ari Lamstein’s call for submissions to the R Shapefile Contest</a> with interest. Commonly, we see spatial data in R used for visualization - e.g. choropleth maps. However, R has a <em>massive</em> ecosystem available to use spatial data in a wide variety of analyses that leverage its geographic properties.</p>
+<p>I commonly read posts about whether spatial data is “special” or not - we geographers tend to say yes (see here: <a href="https://www.google.com/search?q=spatial+data+special" class="uri">https://www.google.com/search?q=spatial+data+special</a>). I like Justin Holman’s post on the topic (<a href="http://www.justinholman.com/2012/03/20/spatial-is-indeed-special/" class="uri">http://www.justinholman.com/2012/03/20/spatial-is-indeed-special/</a>) which reminds us that attributes of geographic data tend to exhibit <a href="https://en.wikipedia.org/wiki/Spatial_analysis#Spatial_autocorrelation">spatial autocorrelation</a>, which means nearby data points in geographic space tend to be more similar than data points that are further away.</p>
+<p>In turn, we are often interested in the concept of a <em>neighborhood</em> in spatial analysis, which refers to those data points that we consider to be proximate to a given focal data point. With areal vector data (polygons) this is not always straightforward, as there are multiple ways that we can measure proximity. In R, we accomplish this with the fantastic <a href="https://cran.r-project.org/web/packages/spdep/index.html"><strong>spdep</strong></a> package. <strong>spdep</strong> allows for the creation of objects of class <code>nb</code>, which are lists of vectors in which each vector contains the row positions of the neighboring units. You can read about the neighborhood functionality in the package here: <a href="https://cran.r-project.org/web/packages/spdep/vignettes/nb.pdf" class="uri">https://cran.r-project.org/web/packages/spdep/vignettes/nb.pdf</a>. I’m going to illustrate comparisons between neighborhoods for two common neighbor types: <em>contiguity-based neighbors</em> and <em>distance-based neighbors</em>.</p>
+<p>Consider here the R object named <code>spoly</code> of class <code>SpatialPolygonsDataFrame</code>:</p>
+<ul>
+<li><em>Contiguity-based neighbors</em> consider neighboring polygons to be those that “touch” a focal polygon, and are derived in <strong>spdep</strong> with the <code>poly2nb</code> function. Calling <code>poly2nb(spoly)</code> generates a queen’s-case neighborhood object, in which neighboring polygons are those that share a vertex with the focal polygon; <code>poly2nb(spoly, queen = FALSE)</code> creates a rook’s case neighborhood object, in which neighbors must share a line segment (analogous to a chess board here).<br />
+</li>
+<li><em>Distance-based neighbors</em> are those within a given proximity threshold to a focal polygon; distances are measured between polygon centroids. <code>knn2nb(knearneigh(coordinates(spoly), k = n))</code> creates an object of class <code>nb</code> that retains the <code>n</code> nearest neighbors for each polygon. You can also use a fixed distance band with <code>dnearneigh(coordinates(spoly), d1 = n1, d2 = n2)</code>, where <code>n1</code> is the minimum distance threshold (commonly set to <code>0</code>) and <code>n2</code> is the maximum distance at which polygons will be considered neighbors. If your data are in a geographic coordinate system, you can supply the argument <code>longlat = TRUE</code> to use great circle distances.</li>
+</ul>
+<p>This all makes more sense with an interactive illustration - so let’s test this out with the Shiny app below. Click on any Census tract in Travis County, Texas to show its neighbors for the chosen neighborhood type. Note how the neighborhoods for any given tract change as you modify the options.</p>
+<iframe src="https://walkerke.shinyapps.io/spatial-neighbors/" height="600" width="100%" frameborder="0" scrolling="no">
+</iframe>
+<p>I’ve also included an applied example that shows how the choice of neighborhood can influence the results of a spatial analysis, available on the second tab. The map shows Getis-Ord <span class="math inline">\(G^{*}_{i}\)</span> z-scores for median household income from the 2010-2014 American Community Survey. In a nutshell, <span class="math inline">\(G^{*}_{i}\)</span> compares the local (neighborhood) sum of attribute values (in which the focal tract is included) to the global sum, which is then converted to a z-score. Following the <strong>spdep</strong> documentation:</p>
+<blockquote>
+<p>High positive values indicate the possibility of a local cluster of high values of the variable being analysed, very low relative values a similar cluster of low values.</p>
+</blockquote>
+<p>If you’re interested in learning more, <a href="http://onlinelibrary.wiley.com/doi/10.1111/j.1538-4632.1992.tb00261.x/pdf">take a look at Getis and Ord’s paper here</a>.</p>
+<p>Change the neighborhood type to see how the values change - and how it might influence the interpretation of the results. The app suggests that high values tend to be found to the west of downtown Austin, and low values to the east – but the map can vary significantly depending on how you modify the input parameters. Techniques like this can also fall victim to <em>edge effects</em>; computations for tracts on the edges of Travis County don’t incorporate their full “neighborhoods,” as only one county is included here!</p>
+<p>This really only scratches the surface of this topic; there is a lot more to consider, such as more complex conceptualizations of spatial relationships, how to select a spatial weights matrix, and how to explore and model your data based on these relationships. For further reading, I’d recommend:</p>
+<ul>
+<li><a href="https://www.amazon.com/Geographic-Information-Analysis-David-OSullivan/dp/0470288574">O’Sullivan and Unwin, <em>Geographic Information Analysis</em></a></li>
+<li><a href="https://www.amazon.com/Applied-Spatial-Data-Analysis-Use/dp/1461476178">Bivand, Pebesma, and Gomez-Rubio, <em>Applied Spatial Data Analysis with R</em></a></li>
+</ul>
+<p>All code for this Shiny app can be found on GitHub at <a href="https://gist.github.com/walkerke/6915b02ac7f0c215bc2c75a687b3d269" class="uri">https://gist.github.com/walkerke/6915b02ac7f0c215bc2c75a687b3d269</a>.</p>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+
+</div>
+
+
+  <footer class="container">
+  <div class="container navigation no-print">
+  <h2>Navigation</h2>
+  
+  
+
+    
+    <a class="prev" href="../../../../2016/06/29/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/" title="Reproducing the Washington Post housing price maps with R and ggplot2">
+      Previous
+    </a>
+    
+
+    
+    <a class="next" href="../../../../2016/12/15/rmd-dropdowns/" title="Dropdown menus in R Markdown with bsselectR">
+      Next
+    </a>
+    
+
+  
+
+
+</div>
+
+  
+
+</footer>
+
+</article>
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+
+</div>
+
+
+  
+<div class="container copyright">
+  
+  &copy; 2016 Kyle Walker
+
+
+</div>
+
+
+</div>
+
+</footer>
+
+    </main>
+    
+<script type="text/javascript">
+  (function() {
+    
+    
+    if (window.location.hostname == "localhost")
+      return;
+
+    var dsq = document.createElement('script'); dsq.async = true; dsq.type = 'text/javascript';
+    dsq.src = '//your_disqus_shortname.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+
+<script src="../../../../js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+    
+  </body>
+</html>
+

@@ -1,0 +1,114 @@
+---
+title: "Using custom tiles in an RStudio Leaflet map"
+author: "Kyle Walker"
+date: 2015-03-10
+slug: custom_tiles
+---
+
+* Web: http://personal.tcu.edu/kylewalker
+* Twitter: https://twitter.com/kyle_e_walker
+
+Yesterday, I posted to Twitter an interactive map using the classic [John Snow Cholera dataset](http://en.wikipedia.org/wiki/1854_Broad_Street_cholera_outbreak) and tiles made from Snow's map, which attracted a fair share of interest.
+
+<blockquote class="twitter-tweet" lang="en"><p>Interactive Snow cholera map w/<a href="https://twitter.com/LeafletJS">@LeafletJS</a>, <a href="https://twitter.com/hashtag/rstats?src=hash">#rstats</a>, <a href="https://twitter.com/rstudio">@rstudio</a>: <a href="http://t.co/vKYnx6lSxT">http://t.co/vKYnx6lSxT</a> Thx <a href="https://twitter.com/lincolnmullen">@lincolnmullen</a> <a href="https://twitter.com/abresler">@abresler</a> <a href="http://t.co/1zkq7UiyKr">pic.twitter.com/1zkq7UiyKr</a></p>&mdash; Kyle Walker (@kyle_e_walker) <a href="https://twitter.com/kyle_e_walker/status/574925190280294400">March 9, 2015</a></blockquote>
+<script async src="http://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+I was inspired to try this by [Lincoln Mullen's tweet](https://twitter.com/lincolnmullen/status/573958380114604032) that custom historical tiles could be used in an RStudio Leaflet map.  Incidentally, I am teaching students in my [Advanced GIS course at TCU](http://personal.tcu.edu/kylewalker/assets/advancedgis.pdf) about tiled mapping next week; I was (and still am) going to use MapBox Studio as an example, but I thought this might work as a compelling example as well, especially as I assigned my students a lab assignment earlier in the semester in which they made kernel density maps from the Snow data.  
+
+Below, I'll explain how I got this done.  My data come from the [Yale University Library's GIS Workshop Archive](http://guides.library.yale.edu/gisworkshoparchive), in which they generously make the John Snow data publicly available.  However, the data are stored in an Esri File Geodatabase, for which there does not appear to be an open-source solution to get rasters out of yet; as such, I've placed the John Snow map image as a GeoTIFF and the deaths point data as a shapefile in [this GitHub repository](https://github.com/walkerke/teaching-with-datavis/tree/master/snow_data).  The Snow map is already __georectified__, which means that it has been georeferenced to a coordinate system and exported as a geographic dataset.  I'm not going to go over georeferencing here if you are working with a plain image; [you can read more about how to do that in QGIS here](http://www.qgistutorials.com/en/docs/georeferencing_basics.html).  
+
+To get started, I needed to create __tiles__ from my image.  Modern web maps in the style of Google Maps employ tiled mapping to render basemaps quickly; [you can read more about tiled mapping here](https://www.e-education.psu.edu/geog585/node/706).  In a nutshell, tiled maps are tessellations of 256px by 256px images that are referenced based on their zoom level and coordinates.  
+
+To create tiles from my John Snow map image, I used the [gdal2tiles](http://www.gdal.org/gdal2tiles.html) utility.  gdal2tiles is a command-line tool available within the [Geospatial Data Abstraction Library](http://www.gdal.org/index.html), which is a suite of command-line functions for manipulating geographic data.  Fortunately, if you have QGIS on your machine, you have GDAL installed.  The easiest way to access it is to open the __OSGeo4W Shell__ where your QGIS installation is located, which will give you access to the tools.  
+
+In the OSGeo4W shell, I `cd` into my directory where my John Snow image is located and enter the following command: 
+
+```
+gdal2tiles -s EPSG:32630 -z 14-18 snow.tif snow
+
+```
+
+The `-s` option refers to the input coordinate system of the georectified image; mine is in WGS84 UTM Zone 30N, which has the EPSG code of 32630.  The `-z` option governs the zoom levels for which tiles will be generated; as my map covers a relatively small area, I'm sticking with zoom levels 14 to 18.  I then specify an input image file ('snow.tif') and an output directory that I am calling `snow` which the function will create for me.  
+
+After the tool is finished running, I have a directory, `snow`, that is populated with PNG images, organized by their zoom level and coordinates.  My `snow` directory looks like this: 
+
+```
++---14
+|   +---8185
+|   \---8186
++---15
+|   +---16370
+|   +---16371
+|   \---16372
++---16
+|   +---32741
+|   +---32742
+|   +---32743
+|   \---32744
++---17
+|   +---65483
+|   +---65484
+|   +---65485
+|   +---65486
+|   +---65487
+|   \---65488
+\---18
+    +---130966
+    +---130967
+    +---130968
+    +---130969
+    +---130970
+    +---130971
+    +---130972
+    +---130973
+    +---130974
+    +---130975
+    +---130976
+    \---130977
+```
+I have a folder for each zoom level, organized into sub-folders that are designated by their tile X coordinates.  Within each of these subfolders are PNG images, the tiles themselves, that are named by their tile Y coordinates. Here's an example of a tile, "174980.png" at 18/130970/174980: 
+
+![tile image](https://dl.dropbox.com/s/3ift20yrw2lu9l2/174980.png)
+
+Now, I need a place to host my tiles so they can be consumed by a web mapping API like Leaflet.  To do this, I've created a [GitHub repository](https://github.com/walkerke/tiles) and published the tiles using GitHub Pages, which is what I use to host [my data visualization blog](http://walkerke.github.io/).  
+
+I'm now ready to create my map in RStudio!  I'm just creating a basic map with the Snow map as a basemap, circles sized proportionately to the number of cholera deaths at a given location, and a pop-up on click that shows the number of deaths.  The code below gets this done: 
+
+```{r, message=FALSE, warning=FALSE}
+
+library(leaflet)
+library(rgdal)
+
+dir <- getwd()
+
+deaths <- readOGR(dir, "deaths", verbose = FALSE)
+
+deathsxy <- spTransform(deaths, CRS("+proj=longlat +datum=WGS84"))
+
+circle_popup <- paste0("<strong>Address: </strong>", 
+                      deathsxy$Address, 
+                      "<br><strong>Number of deaths: </strong>", 
+                      deathsxy$Num_Cases)
+
+leaflet() %>%
+  setView(-0.1354223, 51.5135085, zoom = 17) %>%
+  addTiles(urlTemplate = "http://walkerke.github.io/tiles/snow/{z}/{x}/{y}.png",
+           attribution = 'Data source: <a href="http://guides.library.yale.edu/gisworkshoparchive">Yale University Library</a>', 
+           options = tileOptions(minZoom = 15, maxZoom = 18, tms = TRUE)) %>%
+  addCircles(data = deathsxy, 
+             radius = deathsxy$Num_Cases, 
+             popup = circle_popup, 
+             color = "red", 
+             fillColor = "red")
+
+```
+
+I won't go into detail here about the syntax for the spatial data; [check my other RPubs for tutorials on how to get spatial data into Leaflet](http://rpubs.com/walkerke).  I will, however, explain how I incorporate my custom tiles.  Note the `addTiles` function with the `urlTemplate` parameter.  This allows you to use tiles other than the default OpenStreetMap tileset.  The key is, then, to specify how the tiles will be retrieved.  I use the following URL: 
+
+```
+http://walkerke.github.io/tiles/snow/{z}/{x}/{y}.png
+```
+
+Notice how `z`, `x`, and `y` are enclosed within curly braces; this allows these values to vary as the user pans and zooms around the map.  Depending on the zoom level and extent of the map, Leaflet will retrieve appropriate tiles; notice how this corresponds to the names of my directories and images in my `snow` folder.  Incorporating other external tilesets in your maps works similarly; [see this GitHub Gist for the syntax for some popular ones](https://gist.github.com/walkerke/12a737c4d87aca2ecc70).  Of course, you should always cite your sources afterward, which can be accomplished with the `attribution` parameter.  Finally, if you have generated your tiles with gdal2tiles, be sure to set the `tms` parameter to `TRUE` with `tileOptions`, or else your tiles won't show up.  
+
+If you have any comments or questions, please let me know!  

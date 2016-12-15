@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Charting time series data with dygraphs in R and Python  &middot; Kyle Walker</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="R, Python, ">
+
+
+<meta property="og:title" content="Charting time series data with dygraphs in R and Python  &middot; Kyle Walker ">
+<meta property="og:site_name" content="Kyle Walker"/>
+<meta property="og:url" content="/2014/12/20/charting-time-series-data-with-dygraphs-in-r-and-python/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="2014-12-20T00:00:00Z" />
+<meta property="og:article:modified_time" content="2014-12-20T00:00:00Z" />
+
+  
+    
+<meta property="og:article:tag" content="R">
+    
+<meta property="og:article:tag" content="Python">
+    
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@kyle_e_walker" />
+<meta name="twitter:creator" content="@kyle_e_walker" />
+<meta name="twitter:title" content="Charting time series data with dygraphs in R and Python" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="/2014/12/20/charting-time-series-data-with-dygraphs-in-r-and-python/" />
+<meta name="twitter:domain" content="/">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Charting time series data with dygraphs in R and Python",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "2014-12-20",
+    "description": "",
+    "wordCount":  926 
+  }
+</script>
+
+
+
+<link rel="canonical" href="../../../../2014/12/20/charting-time-series-data-with-dygraphs-in-r-and-python/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../../touch-icon-144-precomposed.png">
+<link href="../../../../favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="../../../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../../../css/style.css">
+<link rel="stylesheet" href="../../../../css/highlight/default.css">
+
+  <!DOCTYPE HTML>
+<style>
+  
+  .main_wrapper>.main_header {
+    background-color: #035004;
+    color: #fff;
+  }
+  
+  .main_wrapper>.main_content .label:hover,
+  .main_wrapper>.main_content .navigation a:hover,
+  .main_wrapper>.main_content .pagination a:hover,
+  .main_wrapper>.main_content .readlink a:hover,
+  .main_wrapper>.main_content h2 a:hover,
+  .main_wrapper>.main_header a:hover {
+    background-color: #035004;
+    color: #fff;
+    text-decoration: none; 
+}
+
+  a {
+    color: #1a730f; 
+  }
+  
+  a:active, a:focus, a:hover {
+    color: #035004;
+}
+  
+</style>
+
+</head>
+<body class="map[name:superhero]">
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="../../../../">
+  Kyle Walker
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Writing about visualization, demographics, dashboards, and spatial data science.
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="../../../../about">About</a>
+
+<a href="../../../../post" title="Show list of posts">Posts</a>
+
+<a href="../../../../tags" title="Show list of tags">Tags</a>
+
+<a href="../../../../services">Services</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+<a id="contact-link-email" class="contact_link" href="mailto:kwalkerdata@gmail.com">
+  <span class="fa fa-envelope-square"></span><span>email</span></a>
+
+
+
+<a id="contact-link-github" class="contact_link" href="https://github.com/walkerke">
+  <span class="fa fa-github-square"></span><span>github</span></a>
+
+
+
+
+
+<a id="contact-link-linkedin" class="contact_link" href="https://www.linkedin.com/in/walkerke">
+  <span class="fa fa-linkedin-square"></span><span>linkedin</span></a>
+
+
+
+
+
+
+
+<a id="contact-link-twitter" class="contact_link" href="https://twitter.com/kyle_e_walker">
+  <span class="fa fa-twitter-square"></span><span>twitter</span></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1>Charting time series data with dygraphs in R and Python
+</h1>
+
+  <div class="metas">
+<time datetime="2014-12-20">20 Dec, 2014</time>
+
+
+  
+    &middot; by Kyle Walker
+  
+  &middot; Read in about 5 min
+  &middot; (926 Words)
+  <br>
+  
+<a class="label" href="../../../../tags/r">R</a>
+
+<a class="label" href="../../../../tags/python">Python</a>
+
+
+
+</div>
+
+</header>
+
+  <div class="container content">
+  <p>This past week, the good people at <a href="http://www.rstudio.com">RStudio</a> advertised over Twitter the release of <a href="http://www.htmlwidgets.org/index.html">htmlwidgets for R</a>, a project in collaboration with <a href="http://rcharts.io">rCharts</a> wizards <a href="https://twitter.com/ramnath_vaidya">Ramnath Vaidyanathan</a> and <a href="https://twitter.com/timelyportfolio">Kenton Russell</a>. The packages showcased are incredible; I was particularly intrigued by the <a href="http://rstudio.github.io/dygraphs/">dygraphs</a> package, which creates interactive time-series charts.</p>
+
+<p>Aside from maps, time series line charts are the most common chart type I use in my teaching, as I often discuss how characteristics of places evolve over time.  As such, I took dygraphs for a spin to create charts relevant to a couple topics I address in World Regional Geography.</p>
+
+<p>The first chart shows quarterly unemployment rates in Egypt over the past decade.  I obtained the data from <a href="https://www.quandl.com">Quandl</a>, a massive repository of publicly-available datasets, by connecting to their API.  Quandl aims to be as user-friendly as possible; as such, <a href="https://www.quandl.com/ILOSTAT/UNE_DEAP_RT_SEX_T_Q_EGY-Unemployment-Rate-Quarterly-Egypt">on the page for the dataset you want</a>, you can get the command to access the data in R (or any number of other languages/formats) with a single click.  Additionally, you can specify the format for the data from Quandl; dygraphs in R accepts data in <code>xts</code> format, which Quandl can return for me.</p>
+
+<p>Once I have the data, I can create the plot.</p>
+
+<pre><code class="language-r">library(dygraphs)
+library(Quandl)
+
+
+egypt &lt;- Quandl(&quot;ILOSTAT/UNE_DEAP_RT_SEX_T_Q_EGY&quot;, type = &quot;xts&quot;)
+
+dygraph(egypt, main = &quot;Quarterly unemployment in Egypt, 2003-2013&quot;) %&gt;%
+  dySeries(&quot;V1&quot;, label = &quot;Unemployment (%)&quot;) %&gt;%
+  dyRangeSelector(strokeColor = &quot;darkred&quot;, fillColor = &quot;darkred&quot;) %&gt;%
+  dyOptions(colors = c(&quot;darkred&quot;, &quot;darkred&quot;)) 
+</code></pre>
+
+<iframe id="frame" src="http://walkerke.github.io/teaching-with-datavis/dygraphs/egypt.html" height="500" width="800" frameBorder = "0" scrolling = "no"></iframe>
+
+<p>The dygraphs package supports piping with the <code>%&gt;%</code> operator from the <strong>magrittr</strong> package, which organizes the code nicely.  I&rsquo;ve changed the label in the legend and the colors, though I did notice that I had to supply a length-2 vector of colors to get the line&rsquo;s color to change, even though I only had one line.  I&rsquo;ve also created a range selector at the bottom of the plot.  The chart itself has excellent interactivity; click and drag on the plot to zoom in to a specific section, and double-click to return to the original view.  In class, I can use this chart to show the major spike in unemployment after the fall of the Mubarak regime in early 2011. Unemployment, especially among youth, remains a critical issue in Egypt; <a href="http://data.worldbank.org/indicator/SL.UEM.1524.ZS">the World Bank estimates that 38.9 percent of Egyptians aged 15-24 were unemployed in 2013</a>.</p>
+
+<p>The World Bank API is also an excellent resource for demographic and economic data; <a href="http://walkerke.github.io/2014/03/tfr-in-europe/">I&rsquo;ve written about using it here</a>.  Quandl also provides access to World Bank data, but I&rsquo;ll include an example below that involves connecting directly to the World Bank&rsquo;s API to show how to get data from a different format into dygraphs.</p>
+
+<p>The <strong>WDI</strong> package allows R users to connect directly to the World Bank&rsquo;s API and download data for selected countries, indicators, and years from the World Bank&rsquo;s <a href="http://data.worldbank.org/">Open Data Catalog</a>.  The code below fetches <a href="http://data.worldbank.org/indicator/TX.QTY.MRCH.XD.WD">export volume index data</a>, which shows how the relative size of countries&rsquo; export economies have changed over time.  I discuss this in class heavily in the context of China, so I&rsquo;ll get data to compare China and the United States.</p>
+
+<pre><code class="language-r">library(WDI)
+library(tidyr)
+library(xts)
+library(dplyr)
+
+df &lt;- WDI(country = c(&quot;CN&quot;, &quot;US&quot;), indicator = &quot;TX.QTY.MRCH.XD.WD&quot;, start = 1980, end = 2013, extra = FALSE)
+
+df$exports &lt;- df$TX.QTY.MRCH.XD.WD
+
+df1 &lt;- df %&gt;%
+  select(country, year, exports) %&gt;%
+  mutate(country = gsub(&quot;United States&quot;, &quot;USA&quot;, df$country)) %&gt;%
+  spread(key = country, value = exports) %&gt;%
+  mutate(date = as.Date(as.character(year), format = &quot;%Y&quot;)) %&gt;%
+  select(-year) 
+
+xtdata &lt;- xts(df1, order.by = df1$date) 
+
+xtdata$date &lt;- NULL
+</code></pre>
+
+<p>The WDI package returns data in &ldquo;tidy&rdquo; format, in which rows represent country-years.  I&rsquo;ve reshaped my data frame to &ldquo;wide&rdquo; format, so that columns represent countries, and then I converted the data frame to an <code>xts</code> object for plotting with dygraphs.  Now, I can create the plot:</p>
+
+<pre><code class="language-r">dygraph(xtdata, main = &quot;Export volume index, 1980-2013 (2000 = 100)&quot;) %&gt;%
+  dyHighlight(highlightSeriesOpts = list(strokeWidth = 3)) %&gt;%
+  dyOptions(colors = c(&quot;red&quot;, &quot;navy&quot;))
+</code></pre>
+
+<iframe id="frame" src="http://walkerke.github.io/teaching-with-datavis/dygraphs/exports.html" height="500" width="800" frameBorder = "0" scrolling = "no"></iframe>
+
+<p>I&rsquo;ve configured this plot so that a data series is highlighted if hovered over by the user&rsquo;s cursor.  The chart is designed to show one perspective on the massive growth of China&rsquo;s export economy in recent years; its index is over 700 in 2013, which means that China&rsquo;s export volume in this year is over seven times what it was in 2000.  By contrast, export volume in the United States only increased about 50 percent during the same period.</p>
+
+<p>Dygraphs can also be produced in my other language of choice, Python, using the <a href="https://github.com/DayStarEngineering/PyDyGraphs">PyDyGraphs module, available from GitHub.</a>  The module allows you to create interactive dygraphs charts in your IPython Notebook session.  This module is also very user-friendly; download the <code>pydygraphs.py</code> module from GitHub and run the code below in your IPython Notebook to produce a plot of aging over time in Italy, Spain, and the Netherlands.  This module is not as mature as the R package, however; I was unable to display the plot in <a href="http://nbviewer.ipython.org/gist/walkerke/7d055b109a3f4b790127">nbviewer</a>, although admittedly my knowledge of the Notebook&rsquo;s architecture is limited.</p>
+
+<pre><code class="language-python">import pandas as pd
+import wbdata as wb
+import pydygraphs
+
+## First, fetch the data from the World Bank API
+
+over65ind = {&quot;SP.POP.65UP.TO.ZS&quot;: &quot;pctover65&quot;}
+
+countries = [&quot;IT&quot;, &quot;NL&quot;, &quot;ES&quot;]
+
+df = wb.get_dataframe(over65ind, country = countries, data_date = (pd.datetime(1960, 1, 1), pd.datetime(2012, 1, 1)))
+
+df = df.reset_index()
+
+## Now, reshape to wide format
+
+wide = pd.pivot_table(df, values = 'pctover65', index = 'date', columns = 'country').reset_index()
+
+wide['date'] = wide['date'].astype(float)
+
+## Finally, create the interactive plot!
+
+fig = pydygraphs.figure()
+
+xaxis = 'date'
+
+fig.plotDataFrame(wide, xaxis)
+fig.title(&quot;Percent of population over age 65&quot;)
+fig.xlabel(&quot;Year&quot;)
+fig.ylabel(&quot;Percent over 65&quot;)
+
+fig.show()
+
+</code></pre>
+
+<p>Thanks are due, as always, to the RStudio team, Ramnath, and Kenton for their amazing work!</p>
+
+</div>
+
+
+  <footer class="container">
+  <div class="container navigation no-print">
+  <h2>Navigation</h2>
+  
+  
+
+    
+    <a class="prev" href="../../../../2014/12/02/using-slidify-to-teach-with-interactive-content/" title="Using Slidify to teach with interactive content">
+      Previous
+    </a>
+    
+
+    
+    <a class="next" href="../../../../2015/02/26/mapping-religious-adherence-in-the-us-with-cartodb/" title="Mapping religious adherence in the US with CartoDB">
+      Next
+    </a>
+    
+
+  
+
+
+</div>
+
+  
+
+</footer>
+
+</article>
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+
+</div>
+
+
+  
+<div class="container copyright">
+  
+  &copy; 2016 Kyle Walker
+
+
+</div>
+
+
+</div>
+
+</footer>
+
+    </main>
+    
+<script type="text/javascript">
+  (function() {
+    
+    
+    if (window.location.hostname == "localhost")
+      return;
+
+    var dsq = document.createElement('script'); dsq.async = true; dsq.type = 'text/javascript';
+    dsq.src = '//your_disqus_shortname.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+
+<script src="../../../../js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+    
+  </body>
+</html>
+

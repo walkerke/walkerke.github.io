@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kyle Walker</title>
+    <link>/tags/shiny/index.xml</link>
+    <description>Recent content on Kyle Walker</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
+    <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
+    <copyright>(c) 2016 Kyle Walker</copyright>
+    <atom:link href="/tags/shiny/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Life expectancy trends in the former USSR</title>
+      <link>/2014/10/16/russia-lex/</link>
+      <pubDate>Thu, 16 Oct 2014 00:00:00 +0000</pubDate>
+      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
+      <guid>/2014/10/16/russia-lex/</guid>
+      <description>&lt;p&gt;When covering Russia and the former republics of the USSR in World Regional Geography, a key part of my material addresses the issues that some of these countries have had in their transitions from centralized to market economies.  Some of these countries experienced dramatic demographic shifts after the dissolution of the USSR, including a noticeable decline in life expectancy.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;d been using some static Excel charts to illustrate life expectancy declines in Russia, Belarus, and Ukraine in previous courses.  However, I felt that an interactive solution would be preferable so that my students and I could explore the data in class over the course of our discussion.  I opted for &lt;a href=&#34;http://www.highcharts.com/&#34;&gt;Highcharts&lt;/a&gt;, through R and &lt;a href=&#34;http://rcharts.io&#34;&gt;rCharts&lt;/a&gt;, for the interactivity.  I then turned to &lt;a href=&#34;http://shiny.rstudio.com/&#34;&gt;Shiny&lt;/a&gt; from &lt;a href=&#34;http://www.rstudio.com/&#34;&gt;RStudio&lt;/a&gt; to put everything together.&lt;/p&gt;
+
+&lt;p&gt;Shiny is a framework that allows R users to turn analyses and visualizations into interactive applications.  Shiny can be run locally on your computer, or deployed to the web via the &lt;a href=&#34;https://www.shinyapps.io/&#34;&gt;ShinyApps.io&lt;/a&gt; hosting service, which is currently free.  The beauty of Shiny is that it allows you to explore your data interactively with a friendly web-based user interface without writing any JavaScript, and it lets R users create and deploy apps to be shared with non-R users who may nonetheless be interested in exploring a dataset or visualization. &lt;a href=&#34;http://shiny.rstudio.com/gallery/&#34;&gt;You can see RStudio&amp;rsquo;s gallery of examples here.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;To get started, I acquired data from &lt;a href=&#34;http://www.mortality.org/&#34;&gt;The Human Mortality Database&lt;/a&gt;, (HMD) a project of UC Berkeley and the Max Planck Institute.  The HMD prefers that users not re-distribute the data, so if you&amp;rsquo;d like to reproduce this chart, you&amp;rsquo;ll need to download the data yourself.  However, the service is free (with registration) and relatively simple to use.  The HMD provides mortality data for 37 countries, including Russia, Belarus, and Ukraine. From the HMD, I downloaded the 1-year life expectancy at birth tables for these countries, and saved them to my working directory as delimited text files, naming them accordingly.  Once I did this, I used the code below to process the data into a suitable format for visualization.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;
+library(tidyr)
+library(dplyr)
+
+russia &amp;lt;- read.table(&#39;russia.txt&#39;, skip = 3)
+
+names(russia) &amp;lt;- c(&amp;quot;Year&amp;quot;, &amp;quot;Female&amp;quot;, &amp;quot;Male&amp;quot;, &amp;quot;Total&amp;quot;)
+
+russia$country &amp;lt;- &amp;quot;Russia&amp;quot;
+
+ukraine &amp;lt;- read.table(&#39;ukraine.txt&#39;, skip = 3)
+
+names(ukraine) &amp;lt;- c(&amp;quot;Year&amp;quot;, &amp;quot;Female&amp;quot;, &amp;quot;Male&amp;quot;, &amp;quot;Total&amp;quot;)
+
+ukraine$country &amp;lt;- &amp;quot;Ukraine&amp;quot;
+
+belarus &amp;lt;- read.table(&#39;belarus.txt&#39;, skip = 3)
+
+names(belarus) &amp;lt;- c(&amp;quot;Year&amp;quot;, &amp;quot;Female&amp;quot;, &amp;quot;Male&amp;quot;, &amp;quot;Total&amp;quot;)
+
+belarus$country &amp;lt;- &amp;quot;Belarus&amp;quot;
+
+dat &amp;lt;- rbind(russia, ukraine, belarus)
+
+dlong &amp;lt;- dat %&amp;gt;%
+  select(-Total) %&amp;gt;%
+  gather(Gender, lex, Female:Male)
+
+write.csv(dlong, &#39;data.csv&#39;)
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In a nutshell, the above code reads in each of the three text files, identifies the country the data correspond to, then combines them.  It then uses functions from the &lt;a href=&#34;http://cran.r-project.org/web/packages/dplyr/index.html&#34;&gt;dplyr&lt;/a&gt; and &lt;a href=&#34;http://cran.r-project.org/web/packages/tidyr/index.html&#34;&gt;tidyr&lt;/a&gt; packages to convert the data to &amp;ldquo;tidy&amp;rdquo; (long) format, which is what I want for visualization.  I then saved the data as a CSV and moved it to a new folder where I would create my Shiny app.&lt;/p&gt;
+
+&lt;p&gt;A Shiny app requires two files to run: &lt;strong&gt;server.R&lt;/strong&gt;, which specifies the data analysis/visualization to show, and &lt;strong&gt;ui.R&lt;/strong&gt;, in which you prepare the user interface.  An optional third file (which I haven&amp;rsquo;t used here), &lt;strong&gt;global.R&lt;/strong&gt;, can be used to read in data or do any background data preparation that you want to make available to both the server and UI scripts.  I largely adapted my server and UI code from &lt;a href=&#34;http://shiny.rstudio.com/tutorial/&#34;&gt;RStudio&amp;rsquo;s Shiny tutorials&lt;/a&gt; and &lt;a href=&#34;http://ramnathv.github.io/rChartsShiny/&#34;&gt;Ramnath Vaidyanathan&amp;rsquo;s tutorial on using rCharts with Shiny&lt;/a&gt;, with some help from StackOverflow as well.&lt;/p&gt;
+
+&lt;p&gt;I prepared the UI first with the code below.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;
+# ui.R
+
+library(rCharts)
+
+dat &amp;lt;- read.csv(&#39;data.csv&#39;)
+
+# Define UI 
+shinyUI(fluidPage(
+  
+  # Sidebar 
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(inputId = &amp;quot;country&amp;quot;, 
+                  label = &amp;quot;Select a country:&amp;quot;, 
+                  choices = c(&amp;quot;Russia&amp;quot;, &amp;quot;Belarus&amp;quot;, &amp;quot;Ukraine&amp;quot;), 
+                  selected = &amp;quot;Russia&amp;quot;), 
+      sliderInput(&amp;quot;range&amp;quot;,
+                  label = &amp;quot;Years to display:&amp;quot;,
+                  min = 1959,
+                  max = 2010,
+                  value = c(1959, 2010), 
+                  format = &amp;quot;0000&amp;quot;), 
+      helpText(&amp;quot;Data reflect the life expectancy &amp;quot;, 
+                &amp;quot;at birth from 1959 to 2010 &amp;quot;, 
+               &amp;quot;for men and women in Russia, &amp;quot;, 
+                &amp;quot;Belarus, and Ukraine.  Data are &amp;quot;, 
+               &amp;quot;obtained from the Human Mortality &amp;quot;, 
+                &amp;quot;Database, a project of &amp;quot;, 
+                &amp;quot; the University of California, &amp;quot;, 
+                &amp;quot;Berkeley (USA), and Max Planck &amp;quot;, 
+                &amp;quot;Institute for Demographic Research &amp;quot;, 
+                &amp;quot;(Germany). Data are available &amp;quot;, 
+                &amp;quot;at www.mortality.org or www.humanmortality.de &amp;quot;, 
+               &amp;quot;(downloaded on 14 Oct 2014).&amp;quot;)
+    ),
+    
+    # Show the plot 
+    mainPanel(
+      showOutput(&amp;quot;lexplot&amp;quot;, &amp;quot;highcharts&amp;quot;)
+    )
+  )
+))
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the &lt;strong&gt;ui.R&lt;/strong&gt; script, I define the parameters of the Shiny user interface.  I&amp;rsquo;ll have a drop-down menu to select the country of choice (Russia, Belarus, or Ukraine), as well as a time slider that allows the user to specify the years to show in the chart.  I then use the &lt;code&gt;showOutput&lt;/code&gt; function from rCharts in the &lt;code&gt;mainPanel&lt;/code&gt; call to tell Shiny to show my chart in the main area.&lt;/p&gt;
+
+&lt;p&gt;Next, I set up the server.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;
+# server.R
+
+library(rCharts)
+
+dat &amp;lt;- read.csv(&#39;data.csv&#39;)
+
+options(RCHART_WIDTH = 500)
+
+shinyServer(function(input, output) {
+  output$lexplot &amp;lt;- renderChart2({
+    selected &amp;lt;- input$country
+    country &amp;lt;- subset(dat, country == selected &amp;amp; Year %in% seq(input$range[1], input$range[2], 1))
+    h1 &amp;lt;- hPlot(
+      x = &amp;quot;Year&amp;quot;, 
+      y = &amp;quot;lex&amp;quot;, 
+      group = &amp;quot;Gender&amp;quot;, 
+      data = country, 
+      type = &amp;quot;line&amp;quot;)
+    
+    h1$colors(c(&amp;quot;red&amp;quot;, &amp;quot;blue&amp;quot;))
+    h1$yAxis(title = list(enabled = TRUE, text = &#39;Life expectancy at birth&#39;))
+    return(h1)
+  })
+})
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The key here to get this to work is to make sure that your &lt;strong&gt;server.R&lt;/strong&gt; and &lt;strong&gt;ui.R&lt;/strong&gt; scripts communicate correctly.  My UI takes an input that is dependent upon the country and years selected by the user, so I create a subsetted data frame, &lt;code&gt;country&lt;/code&gt;, within the &lt;code&gt;renderChart2&lt;/code&gt; function that will respond to that.  I then specify the parameters of the Highchart plot, and tell my &lt;code&gt;renderChart2&lt;/code&gt; function to return that plot and assign it to the &lt;code&gt;lexplot&lt;/code&gt; property of the output, which is what my user interface script will expect.&lt;/p&gt;
+
+&lt;p&gt;RStudio will know that you are creating a Shiny app (given the names of your scripts), so you can simply click the &lt;strong&gt;Run App&lt;/strong&gt; button to run your app locally, and then deploy it to ShinyApps if you&amp;rsquo;d like.  Now, let&amp;rsquo;s take a look at the result.  Click the image below to access the application (I&amp;rsquo;m trying to cut down on my usage for my ShinyApps.io free account).  Use the drop-down menu to select a country, and the time slider to specify a range of years to display.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://walkerke.shinyapps.io/lex_former_ussr/&#34;&gt;&lt;img src=http://walkerke.github.io/img/russia_shiny.PNG&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;I now have an application that allows me to seamlessly switch between countries, change years, and explore the data thanks to Highcharts&amp;rsquo; built-in interactivity.  The charts reveal key trends in life expectancy both pre- and post- USSR.  In Russia, for example, we see that life expectancy declines through the mid-20th century, then peaks in the 1980s, &lt;a href=&#34;http://www.rand.org/pubs/conf_proceedings/CF124/cf124.chap4.html&#34;&gt;which is attributed to Mikhail Gorbachev&amp;rsquo;s anti-alcohol campaign.&lt;/a&gt;  Life expectancy then falls dramatically around the time that the USSR dissolved.  For example, male life expectancy in 1994 in Russia was a little over 57, around 7.5 years less than its peak in 1987.  &lt;a href=&#34;http://www.ncbi.nlm.nih.gov/pubmed/9508159&#34;&gt;Studies have attributed this to a variety of factors, including alcohol abuse, poor nutrition and health behaviors, and problems with the health care system.&lt;/a&gt;  However, life expectancy improves in the late 2000s, &lt;a href=&#34;http://www.demographic-research.org/volumes/vol28/32/28-32.pdf&#34;&gt;in part due to declines in cardiovascular disease and homicides&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In class, I first presented the chart (which displays very nicely in a &lt;a href=&#34;http://ramnathv.github.io/slidify/&#34;&gt;Slidify&lt;/a&gt; presentation) and explored the data with my students.  I then showed my students the first segment from the documentary &lt;a href=&#34;https://www.youtube.com/watch?v=J1OyIJtjdpo&#34;&gt;Death of a Nation: Russia&lt;/a&gt; by Marcel Theroux which explores some of the underlying issues behind these demographic changes in more depth.  We then used the video to collectively think about some reasons for the decline of life expectancy in Russia after the fall of the USSR.  The video paired very nicely with the interactive Shiny app; the charts provided key visual demographic context, and the video then put faces to the data.&lt;/p&gt;
+
+&lt;p&gt;The app is fully reproducible (just make sure you download the data from &lt;a href=&#34;http://www.mortality.org&#34;&gt;the Human Mortality Database&lt;/a&gt; first) and you can find the code in its &lt;a href=&#34;https://github.com/walkerke/teaching-with-datavis/tree/master/russia-lex&#34;&gt;GitHub repository&lt;/a&gt;.  Feel free to use the app as you&amp;rsquo;d like, or modify the code as you wish to create your own apps!&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Thanks to:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The creators of the Human Mortality Database for making their data freely available&lt;/li&gt;
+&lt;li&gt;The &lt;a href=&#34;http://http://www.rstudio.com/&#34;&gt;RStudio&lt;/a&gt; team for Shiny and all its associated training materials&lt;/li&gt;
+&lt;li&gt;The developers of rCharts and Highcharts&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
