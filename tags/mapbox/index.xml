@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kyle Walker</title>
-    <link>/tags/mapbox/index.xml</link>
+    <link>http://walkerke.github.io/tags/mapbox/index.xml</link>
     <description>Recent content on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2016 Kyle Walker</copyright>
-    <atom:link href="/tags/mapbox/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://walkerke.github.io/tags/mapbox/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Using a new Mapbox Studio map in an R Leaflet project</title>
-      <link>/2016/05/18/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</link>
+      <link>http://walkerke.github.io/2016/05/18/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</link>
       <pubDate>Wed, 18 May 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/05/18/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</guid>
+      <guid>http://walkerke.github.io/2016/05/18/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
