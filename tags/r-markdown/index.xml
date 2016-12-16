@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kyle Walker</title>
-    <link>http://walkerke.github.io/tags/r-markdown/index.xml</link>
+    <link>/tags/r-markdown/index.xml</link>
     <description>Recent content on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2016 Kyle Walker</copyright>
-    <atom:link href="http://walkerke.github.io/tags/r-markdown/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/r-markdown/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Dropdown menus in R Markdown with bsselectR</title>
-      <link>http://walkerke.github.io/2016/12/15/rmd-dropdowns/</link>
+      <link>/2016/12/rmd-dropdowns/</link>
       <pubDate>Thu, 15 Dec 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>http://walkerke.github.io/2016/12/15/rmd-dropdowns/</guid>
+      <guid>/2016/12/rmd-dropdowns/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Reproducing the Washington Post housing price maps with R and ggplot2  &middot; Kyle Walker</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="R, ">
+
+
+<meta property="og:title" content="Reproducing the Washington Post housing price maps with R and ggplot2  &middot; Kyle Walker ">
+<meta property="og:site_name" content="Kyle Walker"/>
+<meta property="og:url" content="/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="2016-06-29T21:13:14-05:00" />
+<meta property="og:article:modified_time" content="2016-06-29T21:13:14-05:00" />
+
+  
+    
+<meta property="og:article:tag" content="R">
+    
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@kyle_e_walker" />
+<meta name="twitter:creator" content="@kyle_e_walker" />
+<meta name="twitter:title" content="Reproducing the Washington Post housing price maps with R and ggplot2" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/" />
+<meta name="twitter:domain" content="/">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Reproducing the Washington Post housing price maps with R and ggplot2",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "2016-06-29",
+    "description": "",
+    "wordCount":  1420 
+  }
+</script>
+
+
+
+<link rel="canonical" href="../../../2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../touch-icon-144-precomposed.png">
+<link href="../../../favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="../../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../../css/style.css">
+<link rel="stylesheet" href="../../../css/highlight/zenburn.css">
+
+  <!DOCTYPE HTML>
+<style>
+  
+  .main_wrapper>.main_header {
+    background-color: #035004;
+    color: #fff;
+  }
+  
+  .main_wrapper>.main_content .label:hover,
+  .main_wrapper>.main_content .navigation a:hover,
+  .main_wrapper>.main_content .pagination a:hover,
+  .main_wrapper>.main_content .readlink a:hover,
+  .main_wrapper>.main_content h2 a:hover,
+  .main_wrapper>.main_header a:hover {
+    background-color: #035004;
+    color: #fff;
+    text-decoration: none; 
+}
+
+  a {
+    color: #1a730f; 
+  }
+  
+  a:active, a:focus, a:hover {
+    color: #035004;
+}
+  
+</style>
+
+
+
+
+
+
+
+</head>
+<body class="map[name:superhero]">
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="../../../">
+  Kyle Walker
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Writing about visualization, demographics, dashboards, and spatial data science.
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="../../../about">About</a>
+
+<a href="../../../post" title="Show list of posts">Posts</a>
+
+<a href="../../../tags" title="Show list of tags">Tags</a>
+
+<a href="../../../services">Services</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+<a id="contact-link-email" class="contact_link" href="mailto:kwalkerdata@gmail.com">
+  <span class="fa fa-envelope-square"></span><span>email</span></a>
+
+
+
+<a id="contact-link-github" class="contact_link" href="https://github.com/walkerke">
+  <span class="fa fa-github-square"></span><span>github</span></a>
+
+
+
+
+
+<a id="contact-link-linkedin" class="contact_link" href="https://www.linkedin.com/in/walkerke">
+  <span class="fa fa-linkedin-square"></span><span>linkedin</span></a>
+
+
+
+
+
+
+
+<a id="contact-link-twitter" class="contact_link" href="https://twitter.com/kyle_e_walker">
+  <span class="fa fa-twitter-square"></span><span>twitter</span></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1>Reproducing the Washington Post housing price maps with R and ggplot2
+</h1>
+
+  <div class="metas">
+<time datetime="2016-06-29">29 Jun, 2016</time>
+
+
+  
+    &middot; by Kyle Walker
+  
+  &middot; Read in about 7 min
+  &middot; (1420 Words)
+  <br>
+  
+<a class="label" href="../../../tags/r">R</a>
+
+
+
+</div>
+
+</header>
+
+  <div class="container content">
+
+
+<p>This week, Emily Badger and Darla Cameron at <em>The Washington Post</em>’s Wonkblog published an article (<a href="https://www.washingtonpost.com/news/wonk/wp/2016/06/27/americans-are-paying-more-to-live-in-the-very-places-they-once-abandoned/">linked here</a>) discussing data from the <a href="http://www.fhfa.gov/PolicyProgramsResearch/Research/Pages/wp1601.aspx">Federal Housing Finance Agency</a> that suggest that the greatest increase in house prices in large metropolitan areas tend to be found in urban rather than suburban areas. Wonkblog published a series of maps illustrating this for Washington DC, Portland OR, Houston TX, Denver CO, and Minneapolis-St. Paul, MN. I was particularly impressed by the visuals produced by the Wonkblog team, but wanted to see if the trend is replicated in my metropolitan area, Dallas-Fort Worth. In turn, I set out to re-produce Wonkblog’s map for DFW as best as I could with R’s ggplot2 visualization package. Here is the result:</p>
+<p><img src="http://personal.tcu.edu/kylewalker/img/dfw_prices.png" style="width: 100%"></p>
+<p>It appears as though the greatest annual increases in house prices in DFW are indeed found nearer to the two urban cores of Dallas and Fort Worth - although unfortunately some central-city zips are missing from the dataset (including 76102, which covers downtown Fort Worth). I’ll follow up with a more detailed analysis of the data over at <a href="http://urbanstudies.tcu.edu/research/blog/">TCU’s Center for Urban Studies blog</a>. Here, I’m going to go over how I made the map - which I was able to accomplish entirely within R. You can get the full script at <a href="https://gist.github.com/walkerke/0d95f962eb8bd88b3ce83c16e785ff1d" class="uri">https://gist.github.com/walkerke/0d95f962eb8bd88b3ce83c16e785ff1d</a>.</p>
+<p>To get started, I obtained the data from <a href="http://www.fhfa.gov/DataTools/Downloads/Documents/HPI/HPI_AT_ZIP5.xlsx" class="uri">http://www.fhfa.gov/DataTools/Downloads/Documents/HPI/HPI_AT_ZIP5.xlsx</a> and saved the Excel spreadsheet in my working directory. In my R script, I loaded up a bunch of packages to be used in this process, then used <a href="https://github.com/hadley/dplyr">dplyr</a> to process the data, finding the average annual percent change in housing prices for each zip code in the dataset. There was a little wrangling to be done - for one, missing values in the spreadsheet were denoted with a period, which caused the annual change column to be interpreted as a string. Also note how I created a factor attribute to match the classification scheme used in Wonkblog’s maps; we’ll come back to this later.</p>
+<pre class="r"><code>library(readxl)
+library(tigris)
+library(sp)
+library(maptools)
+library(ggplot2)
+library(rgdal)
+library(ggthemes)
+library(viridis)
+library(extrafont)
+library(rgeos)
+library(raster)
+library(dplyr)
+library(ggsn)
+
+# Process tabular data as in WaPo article
+orig &lt;- read_excel(&#39;HPI_AT_ZIP5.xlsx&#39;, skip = 6)
+
+averages &lt;- orig %&gt;%
+  select(zip = `Five-Digit ZIP Code`, year = Year, change = `Annual Change (%)`) %&gt;%
+  filter(year &gt; 1989, change != &#39;.&#39;) %&gt;%
+  mutate(change = as.numeric(change)) %&gt;%
+  group_by(zip) %&gt;%
+  summarize(avg = mean(change, na.rm = TRUE)) %&gt;%
+  mutate(avgf = cut(avg, breaks = c(-100, 0:5, 100), right = FALSE, 
+                    labels = c(&#39;Decrease&#39;, &#39;0&#39;, &#39;1&#39;, &#39;2&#39;, &#39;3&#39;, &#39;4&#39;, &#39;+5%&#39;)))</code></pre>
+<p>I then needed to figure out what zip codes are in the Dallas-Fort Worth area. Zip codes are curious geographies in that they aren’t actually areal units in the way that we normally think about them; they are merely codes that the US Postal Service uses to guide mail routes. Some zip codes are no more than specific buildings, or even PO boxes. Nonetheless, zip codes are a very common “geography” at which data are aggregated, such as in this dataset. In response to this demand for zip code geographies, the US Census Bureau produces “zip code tabulation areas,” also known as ZCTAs, which approximate the areal extent of zip codes. As you might guess, ZCTAs don’t always fit neatly within city or county (or even state, in some instances) boundaries.</p>
+<p>In R, your one-stop shop for Census geographic data is the <a href="https://github.com/walkerke/tigris">tigris</a> package. I wrote this package with Bob Rudis last year; it allows you to get most Census shapefiles and load them into R with a single line of code. I fetched ZCTA data for the map; county data to figure out which ZCTAs intersected the four largest DFW counties, which is determined with the <code>over</code> function from the <a href="https://cran.r-project.org/web/packages/sp/index.html">sp</a> package; primary roads data for a visual reference; and places data to label major cities. Finally, I subsetted the <code>averages</code> data frame for those ZCTAs that intersected the four counties.</p>
+<pre class="r"><code>zips &lt;- zctas(cb = TRUE)
+
+ctys &lt;- counties(&#39;TX&#39;, cb = TRUE)
+
+dfw_metro &lt;- ctys[ctys$NAME %in% c(&#39;Dallas&#39;, &#39;Tarrant&#39;, &#39;Collin&#39;, &#39;Denton&#39;), ]
+
+over_zips &lt;- bind_rows(over(dfw_metro, zips, returnList = TRUE))
+
+dfw_zips &lt;- spTransform(zips[zips$ZCTA5CE10 %in% over_zips$ZCTA5CE10, ], 
+                        CRS(&quot;+init=epsg:26914&quot;))
+
+pri &lt;- spTransform(primary_roads(), CRS(&quot;+init=epsg:26914&quot;))
+
+cities &lt;- places(&#39;TX&#39;, cb = TRUE)
+
+dfw_cities &lt;- spTransform(cities[cities$NAME %in% c(&#39;Fort Worth&#39;, &#39;Dallas&#39;, &#39;Denton&#39;, &#39;Plano&#39;), ], 
+                          CRS(&quot;+init=epsg:26914&quot;))
+
+dfw_cities$long &lt;- coordinates(dfw_cities)[,1]
+
+dfw_cities$lat &lt;- coordinates(dfw_cities)[,2]
+
+dfw_averages &lt;- averages[averages$zip %in% dfw_zips$ZCTA5CE10, ]</code></pre>
+<p>With the data in hand, I had to figure out how to replicate the visualization. The Wonkblog maps have a compelling look in which ZCTAs around the major cities are in front of a circular grey background, and fringe ZCTAs are cut off at the edge of the circle. To accomplish this, I turned to R’s spatial analysis infrastructure, which is largely found in the <a href="https://cran.r-project.org/web/packages/rgeos/index.html">rgeos</a> package. The steps are as follows:</p>
+<ol style="list-style-type: decimal">
+<li>I created a circular <code>SpatialPolygons</code> object with <code>gBuffer</code>, with a radius that is half of the east-west extent of the zips’ bounding box. This will cover most of the zips, but cut off the edges as in the Wonkblog maps.<br />
+</li>
+<li>I then “clipped” the ZCTAs to the extent of the circle to achieve the Wonkblog look with <code>gIntersection</code>.<br />
+</li>
+<li>I use the <code>gClip</code> function <a href="http://robinlovelace.net/r/2014/07/29/clipping-with-r.html">authored by Robin Lovelace</a> to clip the primary roads data, which is much faster than a simple <code>gIntersection</code> call as the primary roads data cover the entire US by default.</li>
+</ol>
+<pre class="r"><code># Create a circle
+radius &lt;- ( (bbox(dfw_zips)[3] - bbox(dfw_zips)[1]) / 2 )
+
+circle &lt;- gBuffer(gCentroid(dfw_zips), width = radius, quadsegs = 500)
+
+# Restrict the zips to the extent of the circle
+dfw_clipped &lt;- gIntersection(dfw_zips, circle, byid = TRUE, id = dfw_zips$ZCTA5CE10)
+
+dfw_clipped$id &lt;- row.names(dfw_clipped)
+
+# Clip function for the roads thanks to Robin Lovelace (faster)
+gClip &lt;- function(shp, bb){
+  if(class(bb) == &quot;matrix&quot;) b_poly &lt;- as(extent(as.vector(t(bb))), &quot;SpatialPolygons&quot;)
+  else b_poly &lt;- as(extent(bb), &quot;SpatialPolygons&quot;)
+  proj4string(b_poly) &lt;- proj4string(shp)
+  gIntersection(shp, b_poly, byid = T)
+}
+
+pri_clipped &lt;- gClip(pri, circle)
+
+# Convert to SpatialLinesDataFrame for ggplot2
+pri_clipped$id &lt;- 1:length(pri_clipped)</code></pre>
+<p>We can quickly check to see what the spatial data now look like:</p>
+<pre class="r"><code>plot(circle)
+plot(dfw_clipped, add = TRUE)
+plot(pri_clipped, add = TRUE, col = &#39;red&#39;)</code></pre>
+<p><img src="http://personal.tcu.edu/kylewalker/img/circle.png" style="width: 100%"></p>
+<p>The roads extend slightly beyond the circle, but this is OK as they will be colored white and blend in with the plot background in the final visualization.</p>
+<p>Next, I used the code below to make the map. Some notes about the code:</p>
+<ul>
+<li>I used <code>fortify</code> to convert my <code>Spatial</code> objects to data frames that ggplot2 can understand.<br />
+</li>
+<li>I added the circle with <code>geom_polygon</code> and set it with a grey background.<br />
+</li>
+<li>The ZCTAs are visualized with <code>geom_map</code>, using data from the <code>dfw_averages</code> data frame and linked by zip code ID. I use the <code>avgf</code> factor attribute for the polygon fill to match the Wonkblog maps. I style with the viridis palette, which is fairly similar to the palette used by Wonkblog.<br />
+</li>
+<li>The roads are added with <code>geom_path</code>.<br />
+</li>
+<li>I also added the four reference cities - Dallas, Fort Worth, Denton, and Plano - with <code>geom_text</code> to place their names at the locations of their polygon centroids.<br />
+</li>
+<li>I use the <a href="http://oswaldosantos.github.io/ggsn/">ggsn</a> package to add a scale bar to the map.</li>
+</ul>
+<pre class="r"><code>dfwf &lt;- fortify(dfw_clipped, region = &#39;id&#39;)
+
+circlef &lt;- fortify(circle)
+
+roadsf &lt;- fortify(pri_clipped)
+
+ggplot() + 
+  geom_polygon(data = circlef, aes(x = long, y = lat, group = group), 
+               fill = &#39;#eaeaea&#39;) + 
+  geom_map(data = dfw_averages, map = dfwf, 
+           aes(fill = avgf, map_id = zip)) +
+  geom_path(data = roadsf, aes(x = long, y = lat, group = group), color = &#39;white&#39;, 
+            size = 0.5) + 
+  geom_text(data = dfw_cities@data, aes(x = long, y = lat, label = NAME),
+            color = &#39;black&#39;, fontface = &#39;bold&#39;, family = &#39;Tahoma&#39;) +
+  theme_map(base_family = &#39;Tahoma&#39;, base_size = 14) + 
+  coord_equal() + 
+  theme(legend.position = &#39;top&#39;, 
+        legend.key = element_blank()) + 
+  scale_fill_manual(values = viridis(7)[2:7], 
+                    guide = guide_legend(nrow = 1, direction = &#39;horizontal&#39;, 
+                                         label.hjust = 0, label.position = &#39;bottom&#39;, 
+                                         keywidth = 5.51, keyheight = 0.75, title = &quot;&quot;)) + 
+  labs(title = &quot;Home prices in Dallas-Fort Worth, Tex.&quot;, 
+       subtitle = &quot;Annual average home-price change from 1990 to 2015&quot;, 
+       caption = &quot;Map by @kyle_e_walker | Source: Federal Housing Finance Agency&quot;) + 
+  scalebar(data = circlef, dist = 20, location = &quot;bottomleft&quot;)</code></pre>
+<p>My end result resembles the Wonkblog maps for Dallas-Fort Worth, with a few exceptions. I wasn’t able to replicate the city label halo adequately, and I opted against the highway shields; these are probably best accomplished in an external graphics program.</p>
+<p>In my opinion, the big take-away from this is that <em>the entire</em> process of data wrangling and visualization took place in an R script, without turning to external GIS software or graphics programs. In turn, this workflow is reproducible - go ahead and try it out for your city!</p>
+
+
+
+
+</div>
+
+
+  <footer class="container">
+  <div class="container navigation no-print">
+  <h2>Navigation</h2>
+  
+  
+
+    
+    <a class="prev" href="../../../2016/06/interactive-flow-visualization-in-r/" title="Interactive flow visualization in R">
+      Previous
+    </a>
+    
+
+    
+    <a class="next" href="../../../2016/07/spatial-neighbors-in-r---an-interactive-illustration/" title="Spatial neighbors in R - an interactive illustration">
+      Next
+    </a>
+    
+
+  
+
+
+</div>
+
+  
+
+</footer>
+
+</article>
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+
+</div>
+
+
+  
+<div class="container copyright">
+  
+  &copy; 2016 Kyle Walker
+
+
+</div>
+
+
+</div>
+
+</footer>
+
+    </main>
+    
+<script type="text/javascript">
+  (function() {
+    
+    
+    if (window.location.hostname == "localhost")
+      return;
+
+    var dsq = document.createElement('script'); dsq.async = true; dsq.type = 'text/javascript';
+    dsq.src = '//your_disqus_shortname.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+
+<script src="../../../js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+    
+  </body>
+</html>
+

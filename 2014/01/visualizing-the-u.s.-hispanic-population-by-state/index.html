@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Visualizing the U.S. Hispanic population by state  &middot; Kyle Walker</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="R, rCharts, ">
+
+
+<meta property="og:title" content="Visualizing the U.S. Hispanic population by state  &middot; Kyle Walker ">
+<meta property="og:site_name" content="Kyle Walker"/>
+<meta property="og:url" content="/2014/01/visualizing-the-u.s.-hispanic-population-by-state/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="2014-01-09T00:00:00Z" />
+<meta property="og:article:modified_time" content="2014-01-09T00:00:00Z" />
+
+  
+    
+<meta property="og:article:tag" content="R">
+    
+<meta property="og:article:tag" content="rCharts">
+    
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@kyle_e_walker" />
+<meta name="twitter:creator" content="@kyle_e_walker" />
+<meta name="twitter:title" content="Visualizing the U.S. Hispanic population by state" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="/2014/01/visualizing-the-u.s.-hispanic-population-by-state/" />
+<meta name="twitter:domain" content="/">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Visualizing the U.S. Hispanic population by state",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "2014-01-09",
+    "description": "",
+    "wordCount":  1436 
+  }
+</script>
+
+
+
+<link rel="canonical" href="../../../2014/01/visualizing-the-u.s.-hispanic-population-by-state/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../touch-icon-144-precomposed.png">
+<link href="../../../favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="../../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../../css/style.css">
+<link rel="stylesheet" href="../../../css/highlight/zenburn.css">
+
+  <!DOCTYPE HTML>
+<style>
+  
+  .main_wrapper>.main_header {
+    background-color: #035004;
+    color: #fff;
+  }
+  
+  .main_wrapper>.main_content .label:hover,
+  .main_wrapper>.main_content .navigation a:hover,
+  .main_wrapper>.main_content .pagination a:hover,
+  .main_wrapper>.main_content .readlink a:hover,
+  .main_wrapper>.main_content h2 a:hover,
+  .main_wrapper>.main_header a:hover {
+    background-color: #035004;
+    color: #fff;
+    text-decoration: none; 
+}
+
+  a {
+    color: #1a730f; 
+  }
+  
+  a:active, a:focus, a:hover {
+    color: #035004;
+}
+  
+</style>
+
+</head>
+<body class="map[name:superhero]">
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="../../../">
+  Kyle Walker
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Writing about visualization, demographics, dashboards, and spatial data science.
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="../../../about">About</a>
+
+<a href="../../../post" title="Show list of posts">Posts</a>
+
+<a href="../../../tags" title="Show list of tags">Tags</a>
+
+<a href="../../../services">Services</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+<a id="contact-link-email" class="contact_link" href="mailto:kwalkerdata@gmail.com">
+  <span class="fa fa-envelope-square"></span><span>email</span></a>
+
+
+
+<a id="contact-link-github" class="contact_link" href="https://github.com/walkerke">
+  <span class="fa fa-github-square"></span><span>github</span></a>
+
+
+
+
+
+<a id="contact-link-linkedin" class="contact_link" href="https://www.linkedin.com/in/walkerke">
+  <span class="fa fa-linkedin-square"></span><span>linkedin</span></a>
+
+
+
+
+
+
+
+<a id="contact-link-twitter" class="contact_link" href="https://twitter.com/kyle_e_walker">
+  <span class="fa fa-twitter-square"></span><span>twitter</span></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1>Visualizing the U.S. Hispanic population by state
+</h1>
+
+  <div class="metas">
+<time datetime="2014-01-09">9 Jan, 2014</time>
+
+
+  
+    &middot; by Kyle Walker
+  
+  &middot; Read in about 7 min
+  &middot; (1436 Words)
+  <br>
+  
+<a class="label" href="../../../tags/r">R</a>
+
+<a class="label" href="../../../tags/rcharts">rCharts</a>
+
+
+
+</div>
+
+</header>
+
+  <div class="container content">
+  
+
+<p>Welcome! This is the first post of my effort to document my foray into developing interactive data visualizations for use in my teaching.  Hopefully these examples will be of use to some readers who are interested in creating their own visualizations.</p>
+
+<p>I&rsquo;ll first provide a bit of background.  I&rsquo;m a geography professor at Texas Christian University in Fort Worth, and started getting interested in data visualization when putting together materials for a course I taught in population geography last spring.  Visuals are essential for social science instructors; however, it is not always easy to find publicly available images that are both effective and suitable for what you want to teach (I imagine many of you, like me, have gone on many a failed Google image search).  So, I started looking into developing my own materials.  I happened upon the incredible <a href="http://d3js.org/">D3 JavaScript library</a> by Mike Bostock and the stunning graphics from the <a href="http://www.healthmetricsandevaluation.org/tools/data-visualizations">Institute for Health Metrics and Evaluation</a> and was immediately blown away.  Interactive examples like <a href="http://bl.ocks.org/mbostock/4062085">this population pyramid</a> can be very effective for conveying social science concepts.</p>
+
+<p>As a relative newcomer to JavaScript, however, I looked into what other resources were available for creating these types of interactive visualizations, especially in languages I have more of a familiarity with (R and Python, specifically).  Thus far, I&rsquo;ve been using the fantastic <a href="http://rcharts.io/">rCharts</a> R package by Ramnath Vaidyanathan, which provides an R wrapper for several JavaScript charting libraries, and the the <a href="http://cran.r-project.org/web/packages/googleVis/index.html">googleVis</a> package, which is an R interface for the Google Charts API, and among other things allows R users to create <a href="http://www.gapminder.org/">Hans Rosling-style motion charts.</a>.  I&rsquo;ve also started looking into tools like <a href="https://plot.ly/">plotly</a>, which has both R and Python APIs, and hope to create my own D3 visualizations from scratch eventually.</p>
+
+<p>When possible, my examples on this site will use open data/open source tools and will be available on GitHub, so that anyone interested can use and adapt these examples as they need.</p>
+
+<hr />
+
+<p>My first example is a visualization of the composition of Hispanic populations by state in the U.S., for the ten states with the largest Hispanic populations in 2010.   In my introductory geography course, I&rsquo;m going to be soon discussing shifts in the racial &amp; ethnic composition of the U.S.  Sometime between 2040 and 2050, non-Hispanic whites are projected to become a minority in the U.S., in large part due to continued growth of the Hispanic population.  However, I find that many discussions of this demographic shift in the media tend to homogenize the Hispanic population, which is not what I want to convey to my students; as such, I wanted to find a way to visualize its diversity.  I came across <a href="http://www.pewhispanic.org/2012/09/06/population-distribution-of-hispanic-origin-groups-by-county/">these interesting interactive maps from the Pew Research Center</a>, and downloaded the data they made available to see what I might do with it.</p>
+
+<p>The data made available by the Pew Research Center are in Excel format.  There are many libraries for reading Excel data into R, but they often are not straightforward to use, so I first opened the file in Excel and saved it as a CSV for ease of use.  In their original form, the data are not in a great format for visualization in R; as such, I needed to do some munging, with help from Hadley Wickham&rsquo;s excellent packages.</p>
+
+<pre><code class="language-r"># First, download the Excel file from the Pew Research Center, and save it as a CSV in your working directory
+
+library(stringr)
+library(plyr)
+library(rCharts)
+library(reshape2)
+
+dat &lt;- read.csv(&quot;all_counties_by_top_six_groups.csv&quot;)
+
+keep &lt;- seq(1, 25, 3)
+
+dat &lt;- dat[,keep]
+
+nms &lt;- c('Name', 'Total.Hisp', 'Mexican', 'Puerto.Rican', 'Cuban', 'Salvadoran', 'Dominican', 'Guatemalan', 'Other')
+
+names(dat) &lt;- nms
+
+dat &lt;- dat[-c(1:3),]
+
+</code></pre>
+
+<p>The above code simply cleans up the data to shape it into a nicely formatted data frame, and subsets it to get the population counts that we need.  However, there are still some steps to take before the data can be visualized.  Given the original data format, R has read in all my numeric data as factors, which wouldn&rsquo;t let me make the kinds of manipulations I needed to do to aggregate the data by state.  Such aggregation also required some string manipulation, so that I could identify which counts correspond to each state (given that the geographic identifiers in the data are presented as &lsquo;County, State&rsquo;).  The code that follows cleans up the data even further and aggregates each numeric column by state.</p>
+
+<pre><code class="language-r">dat &lt;- cbind(dat, ldply(str_split(dat$Name, &quot;, &quot;)))
+
+names(dat) &lt;- c(nms, 'County', 'State')
+
+convCols &lt;- 2:9
+
+dat[,convCols] &lt;- apply(dat[,convCols], 2, function(x) as.numeric(as.character(gsub(&quot;,&quot;, &quot;&quot;, x))))
+
+sums &lt;- ddply(dat, .(State), numcolwise(sum))
+
+sorteddf &lt;- sums[order(-sums$Total.Hisp),][1:10,]
+
+</code></pre>
+
+<p>I&rsquo;ve now identified the 10 states with the largest Hispanic populations, and aggregated the different ancestry columns by state.  I now needed to decide how to visualize these data.  I elected to use the <a href="http://dimplejs.org/">dimple</a> D3 library, which is available through rCharts.  My hope was to create something like <a href="http://dimplejs.org/examples_viewer.html?id=bars_horizontal_stacked_100pct">this horizontal 100% chart</a>, which would allow direct comparison of the Hispanic population composition of these states.  Fortunately, rCharts makes this straightforward.  I first created a new data frame that held percentages instead of raw counts, reshaped it into a suitable format, and called rCharts&rsquo; <code>dPlot</code> function to create the chart.</p>
+
+<pre><code class="language-r">newdf &lt;- data.frame(sorteddf$State)
+
+vals &lt;- c('Mexican', 'Puerto.Rican', 'Cuban', 'Salvadoran', 'Dominican', 'Guatemalan', 'Other')
+
+for (v in vals) {
+  newdf[[v]] &lt;- round(((sorteddf[[v]] / sorteddf$Total.Hisp) * 100), 1)
+}
+
+names(newdf) &lt;- c('State', vals)
+
+df.melt &lt;- melt(newdf, variable.name = 'Ancestry', value.name = 'Share')
+
+d1 &lt;- dPlot(
+  x = &quot;Share&quot;, 
+  y = &quot;State&quot;, 
+  groups = &quot;Ancestry&quot;, 
+  data = df.melt, 
+  type = 'bar')
+
+#Here, set the chart options to tell rCharts how to format the visualization  
+d1$xAxis(type = &quot;addPctAxis&quot;)
+d1$yAxis(type = &quot;addCategoryAxis&quot;, orderRule = &quot;State&quot;)
+
+d1$legend( x = 60, y = 10, width = 700, height = 20, horizontalAlign = &quot;left&quot;, orderRule = &quot;Ancestry&quot;)
+
+</code></pre>
+
+<p>Below, you can see the result:</p>
+
+<hr />
+
+<h2 id="iframe-src-http-bl-ocks-org-walkerke-raw-8300770-width-825-height-450-seamless-frameborder-0-iframe"><iframe src="http://bl.ocks.org/walkerke/raw/8300770/" width="825" height="450" seamless frameBorder = "0"></iframe></h2>
+
+<p>The plot has accomplished what I hoped - displaying the considerable diversity of the Hispanic population across different states in the U.S.  The key here to the chart is the interactivity; while I could have produced a static visualization just like this, each component of the chart provides a tooltip on hover that gives specific information about its content.  I now have a more interactive document that I can explore with my students.</p>
+
+<p>As the chart reveals, Hispanics are generally of Mexican origin in several states, including my state of Texas, where 84% of Hispanics are of Mexican ancestry; this will be the frame of reference for my students.  However, I can show students how in other parts of the country, such as my old home of New York, &lsquo;Hispanic&rsquo; means something very different, as individuals of Mexican heritage only make up 13% of the state&rsquo;s Hispanic population.  It is also interesting to see how the &lsquo;Other&rsquo; category varies by state.  In some states (New York, New Jersey, New Mexico, Florida), this category is very large.  The <a href="http://www.pewhispanic.org/files/2012/06/The-10-Largest-Hispanic-Origin-Groups.pdf">Pew Center report provides some additional information on this</a>; for example, many Colombians, Hondurans, and Peruvians live in the Miami area, and Queens, NYC has a large Ecuadorian population.  In New Mexico, the data reflect the Spanish and Native American heritage of many Hispanics in the state.</p>
+
+<p>There are still some improvements that could be made; for example, in some browsers, the y-axis title is partially hidden, which I need to look into further.  Also, in order to get the effects to work correctly, I had to modify the version of Dimple in the HTML to point to version 1.1.3 (rCharts is still on 1.1.1).</p>
+
+<p><strong>To create this chart on your computer, follow these steps:</strong></p>
+
+<ol>
+<li>Visit the <a href="http://www.pewhispanic.org/2012/09/06/population-distribution-of-hispanic-origin-groups-by-county/">Pew Research Center site</a>, download the Excel file they make available, and save it as a CSV in your working directory (don&rsquo;t change the name, just the type).<br /></li>
+<li>Be sure that you have the following R packages installed: <code>stringr</code>, <code>plyr</code>, <code>rCharts</code>, and <code>reshape2</code>.  <code>rCharts</code> is not yet on CRAN, so you&rsquo;ll need to install it from GitHub with the <code>devtools</code> package.  I use the <code>dev</code> branch of rCharts, which has the latest updates; you can install this with the command, <code>devtools::install_github('rCharts', 'ramnathv', ref='dev')</code>.<br /></li>
+<li>Run the following command: <code>source(&quot;https://raw.github.com/walkerke/teaching-with-datavis/master/hispanics-by-state.R&quot;)</code></li>
+<li>Type <code>d1</code> in your console, and you&rsquo;ll have your chart!</li>
+</ol>
+
+<p>Alternatively, feel free to grab the code from GitHub and modify it as you wish.</p>
+
+<p>I&rsquo;d love to hear your feedback; you can send me an email at <a href="mailto:kyle.walker@tcu.edu">kyle.walker@tcu.edu</a>, or connect with me on <a href="https://twitter.com/kyle_e_walker">Twitter</a>.</p>
+
+<p><strong>Thanks to:</strong></p>
+
+<ul>
+<li><a href="http://www.pewhispanic.org/">The Pew Research Center&rsquo;s Hispanic Trends Project</a> for making their data publicly available;</li>
+<li><a href="https://twitter.com/ramnath_vaidya">Ramnath Vaidyanathan</a> and <a href="https://twitter.com/timelyportfolio">Timely Portfolio</a> for their efforts and tutorials on rCharts;</li>
+<li><a href="https://twitter.com/jkiernander">John Kiernander</a> for the DimpleJS library;</li>
+<li><a href="https://twitter.com/hadleywickham">Hadley Wickham</a> and the <a href="https://twitter.com/rstudioapp">RStudio team</a> for making R a much better place to work with data.<br /></li>
+</ul>
+
+</div>
+
+
+  <footer class="container">
+  <div class="container navigation no-print">
+  <h2>Navigation</h2>
+  
+  
+
+    
+
+    
+    <a class="next" href="../../../2014/05/tourism-plotly/" title="Visualizing the economics of tourism in the Pacific with Plotly">
+      Next
+    </a>
+    
+
+  
+
+
+</div>
+
+  
+
+</footer>
+
+</article>
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+
+</div>
+
+
+  
+<div class="container copyright">
+  
+  &copy; 2016 Kyle Walker
+
+
+</div>
+
+
+</div>
+
+</footer>
+
+    </main>
+    
+<script type="text/javascript">
+  (function() {
+    
+    
+    if (window.location.hostname == "localhost")
+      return;
+
+    var dsq = document.createElement('script'); dsq.async = true; dsq.type = 'text/javascript';
+    dsq.src = '//your_disqus_shortname.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+
+<script src="../../../js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+    
+  </body>
+</html>
+
