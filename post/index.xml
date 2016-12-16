@@ -39,7 +39,7 @@ bsselect(quotes, type = &amp;quot;text&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;iframe src=&#34;http://walkerke.github.io/extras/quotes.html&#34; height=&#34;150&#34; width=&#34;750&#34; frameborder=&#34;0&#34; scrolling=&#34;no&#34;&gt;
 &lt;/iframe&gt;
 &lt;p&gt;Use the menu to flip through the three quotes.&lt;/p&gt;
-&lt;p&gt;A more practical example, however, would be the use of &lt;code&gt;bsselect&lt;/code&gt; in an R Markdown document where the user could flip through a number of plots that are stored in a subdirectory. Let’s take a recent, applied example: scatterplots of the relationship between the percentage vote for Donald Trump and the percentage of country residents with at least a bachelor’s degree by state.&lt;/p&gt;
+&lt;p&gt;A more practical example, however, would be the use of &lt;code&gt;bsselect&lt;/code&gt; in an R Markdown document where the user could flip through a number of plots that are stored in a subdirectory. Let’s take a recent, applied example: scatterplots of the relationship between the percentage vote for Donald Trump and the percentage of county residents with at least a bachelor’s degree by state.&lt;/p&gt;
 &lt;p&gt;We’ll get the data from the amazing &lt;a href=&#34;https://data.opendatasoft.com/explore/dataset/usa-2016-presidential-election-by-county%40public/information/?basemap=mapbox.light&amp;amp;location=3,35.55614,-74.32467&#34;&gt;OpenDataSoft dataset&lt;/a&gt;. I downloaded the semicolon-delimited dataset from the site, though there is API access as well. The following code will generate identical plots for each state, and save them in a subdirectory of my working directory named &lt;code&gt;plots&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
 library(scales)

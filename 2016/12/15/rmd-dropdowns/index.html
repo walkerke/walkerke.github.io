@@ -251,7 +251,7 @@ bsselect(quotes, type = &quot;text&quot;)</code></pre>
 <iframe src="http://walkerke.github.io/extras/quotes.html" height="150" width="750" frameborder="0" scrolling="no">
 </iframe>
 <p>Use the menu to flip through the three quotes.</p>
-<p>A more practical example, however, would be the use of <code>bsselect</code> in an R Markdown document where the user could flip through a number of plots that are stored in a subdirectory. Let’s take a recent, applied example: scatterplots of the relationship between the percentage vote for Donald Trump and the percentage of country residents with at least a bachelor’s degree by state.</p>
+<p>A more practical example, however, would be the use of <code>bsselect</code> in an R Markdown document where the user could flip through a number of plots that are stored in a subdirectory. Let’s take a recent, applied example: scatterplots of the relationship between the percentage vote for Donald Trump and the percentage of county residents with at least a bachelor’s degree by state.</p>
 <p>We’ll get the data from the amazing <a href="https://data.opendatasoft.com/explore/dataset/usa-2016-presidential-election-by-county%40public/information/?basemap=mapbox.light&amp;location=3,35.55614,-74.32467">OpenDataSoft dataset</a>. I downloaded the semicolon-delimited dataset from the site, though there is API access as well. The following code will generate identical plots for each state, and save them in a subdirectory of my working directory named <code>plots</code>.</p>
 <pre class="r"><code>library(tidyverse)
 library(scales)
