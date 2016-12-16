@@ -227,7 +227,7 @@
 
 
 <p>This week, Emily Badger and Darla Cameron at <em>The Washington Post</em>’s Wonkblog published an article (<a href="https://www.washingtonpost.com/news/wonk/wp/2016/06/27/americans-are-paying-more-to-live-in-the-very-places-they-once-abandoned/">linked here</a>) discussing data from the <a href="http://www.fhfa.gov/PolicyProgramsResearch/Research/Pages/wp1601.aspx">Federal Housing Finance Agency</a> that suggest that the greatest increase in house prices in large metropolitan areas tend to be found in urban rather than suburban areas. Wonkblog published a series of maps illustrating this for Washington DC, Portland OR, Houston TX, Denver CO, and Minneapolis-St. Paul, MN. I was particularly impressed by the visuals produced by the Wonkblog team, but wanted to see if the trend is replicated in my metropolitan area, Dallas-Fort Worth. In turn, I set out to re-produce Wonkblog’s map for DFW as best as I could with R’s ggplot2 visualization package. Here is the result:</p>
-<p><img src=img/dfw_prices.png style="width: 100%"></p>
+<p><img src="http://personal.tcu.edu/kylewalker/img/dfw_prices.png" style="width: 100%"></p>
 <p>It appears as though the greatest annual increases in house prices in DFW are indeed found nearer to the two urban cores of Dallas and Fort Worth - although unfortunately some central-city zips are missing from the dataset (including 76102, which covers downtown Fort Worth). I’ll follow up with a more detailed analysis of the data over at <a href="http://urbanstudies.tcu.edu/research/blog/">TCU’s Center for Urban Studies blog</a>. Here, I’m going to go over how I made the map - which I was able to accomplish entirely within R. You can get the full script at <a href="https://gist.github.com/walkerke/0d95f962eb8bd88b3ce83c16e785ff1d" class="uri">https://gist.github.com/walkerke/0d95f962eb8bd88b3ce83c16e785ff1d</a>.</p>
 <p>To get started, I obtained the data from <a href="http://www.fhfa.gov/DataTools/Downloads/Documents/HPI/HPI_AT_ZIP5.xlsx" class="uri">http://www.fhfa.gov/DataTools/Downloads/Documents/HPI/HPI_AT_ZIP5.xlsx</a> and saved the Excel spreadsheet in my working directory. In my R script, I loaded up a bunch of packages to be used in this process, then used <a href="https://github.com/hadley/dplyr">dplyr</a> to process the data, finding the average annual percent change in housing prices for each zip code in the dataset. There was a little wrangling to be done - for one, missing values in the spreadsheet were denoted with a period, which caused the annual change column to be interpreted as a string. Also note how I created a factor attribute to match the classification scheme used in Wonkblog’s maps; we’ll come back to this later.</p>
 <pre class="r"><code>library(readxl)
@@ -314,7 +314,7 @@ pri_clipped$id &lt;- 1:length(pri_clipped)</code></pre>
 <pre class="r"><code>plot(circle)
 plot(dfw_clipped, add = TRUE)
 plot(pri_clipped, add = TRUE, col = &#39;red&#39;)</code></pre>
-<p><img src=img/circle.png style="width: 100%"></p>
+<p><img src="http://personal.tcu.edu/kylewalker/img/circle.png" style="width: 100%"></p>
 <p>The roads extend slightly beyond the circle, but this is OK as they will be colored white and blend in with the plot background in the final visualization.</p>
 <p>Next, I used the code below to make the map. Some notes about the code:</p>
 <ul>

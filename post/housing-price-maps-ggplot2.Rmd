@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, eval = FALS
 
 This week, Emily Badger and Darla Cameron at _The Washington Post_'s Wonkblog published an article ([linked here](https://www.washingtonpost.com/news/wonk/wp/2016/06/27/americans-are-paying-more-to-live-in-the-very-places-they-once-abandoned/)) discussing data from the [Federal Housing Finance Agency](http://www.fhfa.gov/PolicyProgramsResearch/Research/Pages/wp1601.aspx) that suggest that the greatest increase in house prices in large metropolitan areas tend to be found in urban rather than suburban areas.  Wonkblog published a series of maps illustrating this for Washington DC, Portland OR, Houston TX, Denver CO, and Minneapolis-St. Paul, MN.  I was particularly impressed by the visuals produced by the Wonkblog team, but wanted to see if the trend is replicated in my metropolitan area, Dallas-Fort Worth.  In turn, I set out to re-produce Wonkblog's map for DFW as best as I could with R's ggplot2 visualization package.  Here is the result: 
 
-<img src=img/dfw_prices.png style="width: 100%">
+<img src="http://personal.tcu.edu/kylewalker/img/dfw_prices.png" style="width: 100%">
 
 It appears as though the greatest annual increases in house prices in DFW are indeed found nearer to the two urban cores of Dallas and Fort Worth - although unfortunately some central-city zips are missing from the dataset (including 76102, which covers downtown Fort Worth).  I'll follow up with a more detailed analysis of the data over at [TCU's Center for Urban Studies blog](http://urbanstudies.tcu.edu/research/blog/).  Here, I'm going to go over how I made the map - which I was able to accomplish entirely within R.  You can get the full script at <https://gist.github.com/walkerke/0d95f962eb8bd88b3ce83c16e785ff1d>. 
 
@@ -115,7 +115,7 @@ plot(dfw_clipped, add = TRUE)
 plot(pri_clipped, add = TRUE, col = 'red')
 ```
 
-<img src=img/circle.png style="width: 100%">
+<img src="http://personal.tcu.edu/kylewalker/img/circle.png" style="width: 100%">
 
 The roads extend slightly beyond the circle, but this is OK as they will be colored white and blend in with the plot background in the final visualization.  
 
