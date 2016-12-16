@@ -59,7 +59,7 @@
     },
     "datePublished": "2016-12-15",
     "description": "",
-    "wordCount":  820 
+    "wordCount":  819 
   }
 </script>
 
@@ -216,7 +216,7 @@
     &middot; by Kyle Walker
   
   &middot; Read in about 4 min
-  &middot; (820 Words)
+  &middot; (819 Words)
   <br>
   
 <a class="label" href="http://walkerke.github.io/tags/r">R</a>
@@ -291,8 +291,9 @@ pwalk(list(paths, plots), ggsave, path = &quot;plots&quot;, dpi = 300)</code></p
 library(bsselectR)
 
 state_plots &lt;- paste0(list.files(&quot;plots&quot;, full.names = TRUE))
-names(state_plots) &lt;- str_replace(state_plots, &quot;\\.png&quot;, &quot;&quot;)
-names(state_plots) &lt;- str_replace(names(state_plots), &quot;plots/&quot;, &quot;&quot;)
+names(state_plots) &lt;- str_replace_all(state_plots, 
+                                      c(&quot;\\.png&quot; = &quot;&quot;, 
+                                        &quot;plots/&quot; = &quot;&quot;))
 
 bsselect(state_plots, type = &quot;img&quot;, selected = &quot;Oregon&quot;, 
          live_search = TRUE, show_tick = TRUE)</code></pre>

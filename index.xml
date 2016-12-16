@@ -79,8 +79,9 @@ pwalk(list(paths, plots), ggsave, path = &amp;quot;plots&amp;quot;, dpi = 300)&l
 library(bsselectR)
 
 state_plots &amp;lt;- paste0(list.files(&amp;quot;plots&amp;quot;, full.names = TRUE))
-names(state_plots) &amp;lt;- str_replace(state_plots, &amp;quot;\\.png&amp;quot;, &amp;quot;&amp;quot;)
-names(state_plots) &amp;lt;- str_replace(names(state_plots), &amp;quot;plots/&amp;quot;, &amp;quot;&amp;quot;)
+names(state_plots) &amp;lt;- str_replace_all(state_plots, 
+                                      c(&amp;quot;\\.png&amp;quot; = &amp;quot;&amp;quot;, 
+                                        &amp;quot;plots/&amp;quot; = &amp;quot;&amp;quot;))
 
 bsselect(state_plots, type = &amp;quot;img&amp;quot;, selected = &amp;quot;Oregon&amp;quot;, 
          live_search = TRUE, show_tick = TRUE)&lt;/code&gt;&lt;/pre&gt;
