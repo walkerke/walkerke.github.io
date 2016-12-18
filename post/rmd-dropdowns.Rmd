@@ -82,7 +82,7 @@ plots <- lapply(states, function(x) {
          x = "Percent over age 25 with at least a bachelor's degree", 
          y = "Percent voting Trump", 
          size = "Total population", 
-         caption = "Data sources: ")
+         caption = "Data sources: Mike Kearney, 2010-2014 ACS")
   
   p
   
@@ -108,7 +108,7 @@ bsselect(state_plots, type = "img", selected = "Oregon",
          live_search = TRUE, show_tick = TRUE)
 ```
 
-<iframe src="http://walkerke.github.io/extras/trump_by_education.html" width="100%" height = "750" scrolling="no" frameborder="0"></iframe>
+<iframe src="http://walkerke.github.io/extras/trump_by_education.html" width="100%" height = "825" scrolling="no" frameborder="0"></iframe>
 
 Publish your directory to your hosting service of choice, and you'll have an interactive report to share like the one above.  
 

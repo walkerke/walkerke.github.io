@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kyle Walker</title>
-    <link>/index.xml</link>
+    <link>http://walkerke.github.io/index.xml</link>
     <description>Recent content on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
@@ -10,14 +10,14 @@
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2016 Kyle Walker</copyright>
     <lastBuildDate>Thu, 15 Dec 2016 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://walkerke.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Dropdown menus in R Markdown with bsselectR</title>
-      <link>/2016/12/rmd-dropdowns/</link>
+      <link>http://walkerke.github.io/2016/12/rmd-dropdowns/</link>
       <pubDate>Thu, 15 Dec 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/12/rmd-dropdowns/</guid>
+      <guid>http://walkerke.github.io/2016/12/rmd-dropdowns/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -86,7 +86,7 @@ plots &amp;lt;- lapply(states, function(x) {
          x = &amp;quot;Percent over age 25 with at least a bachelor&amp;#39;s degree&amp;quot;, 
          y = &amp;quot;Percent voting Trump&amp;quot;, 
          size = &amp;quot;Total population&amp;quot;, 
-         caption = &amp;quot;Data sources: &amp;quot;)
+         caption = &amp;quot;Data sources: Mike Kearney, 2010-2014 ACS&amp;quot;)
   
   p
   
@@ -106,7 +106,7 @@ names(state_plots) &amp;lt;- str_replace_all(state_plots,
 
 bsselect(state_plots, type = &amp;quot;img&amp;quot;, selected = &amp;quot;Oregon&amp;quot;, 
          live_search = TRUE, show_tick = TRUE)&lt;/code&gt;&lt;/pre&gt;
-&lt;iframe src=&#34;http://walkerke.github.io/extras/trump_by_education.html&#34; width=&#34;100%&#34; height=&#34;750&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34;&gt;
+&lt;iframe src=&#34;http://walkerke.github.io/extras/trump_by_education.html&#34; width=&#34;100%&#34; height=&#34;825&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34;&gt;
 &lt;/iframe&gt;
 &lt;p&gt;Publish your directory to your hosting service of choice, and you’ll have an interactive report to share like the one above.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;bsselect&lt;/code&gt; also works in other R Markdown documents, such as presentations! The example below shows a bsselectR dropdown in a &lt;a href=&#34;https://github.com/yihui/xaringan&#34;&gt;xaringan&lt;/a&gt; &lt;a href=&#34;https://remarkjs.com/#1&#34;&gt;remark.js&lt;/a&gt; presentation. To avoid CSS/JS conflicts, I’ve wrapped the call to &lt;code&gt;bsselect&lt;/code&gt; in bsselectR’s &lt;code&gt;as_iframe&lt;/code&gt; function, which will save out the widget and embed it as an iframe.&lt;/p&gt;
@@ -129,10 +129,10 @@ bsselect(state_plots, type = &amp;quot;img&amp;quot;, selected = &amp;quot;Orego
     
     <item>
       <title>Spatial neighbors in R - an interactive illustration</title>
-      <link>/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</link>
+      <link>http://walkerke.github.io/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</link>
       <pubDate>Wed, 27 Jul 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</guid>
+      <guid>http://walkerke.github.io/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -188,10 +188,10 @@ bsselect(state_plots, type = &amp;quot;img&amp;quot;, selected = &amp;quot;Orego
     
     <item>
       <title>Reproducing the Washington Post housing price maps with R and ggplot2</title>
-      <link>/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</link>
+      <link>http://walkerke.github.io/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</link>
       <pubDate>Wed, 29 Jun 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</guid>
+      <guid>http://walkerke.github.io/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -345,10 +345,10 @@ ggplot() +
     
     <item>
       <title>Interactive flow visualization in R</title>
-      <link>/2016/06/interactive-flow-visualization-in-r/</link>
+      <link>http://walkerke.github.io/2016/06/interactive-flow-visualization-in-r/</link>
       <pubDate>Sun, 26 Jun 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/06/interactive-flow-visualization-in-r/</guid>
+      <guid>http://walkerke.github.io/2016/06/interactive-flow-visualization-in-r/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -554,10 +554,10 @@ globejs(arcsLwd = weights, arcs = arcs, arcsColor = df4$colors)&lt;/code&gt;&lt;
     
     <item>
       <title>Using a new Mapbox Studio map in an R Leaflet project</title>
-      <link>/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</link>
+      <link>http://walkerke.github.io/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</link>
       <pubDate>Wed, 18 May 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</guid>
+      <guid>http://walkerke.github.io/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -630,10 +630,10 @@ leaflet(df) %&amp;gt;%
     
     <item>
       <title>Visualizing international demographic indicators with idbr and Plotly</title>
-      <link>/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</link>
+      <link>http://walkerke.github.io/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</link>
       <pubDate>Fri, 29 Jan 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</guid>
+      <guid>http://walkerke.github.io/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</guid>
       <description>&lt;p&gt;It&amp;rsquo;s been a while since I last posted here - but I&amp;rsquo;ve been working on a new R package that I&amp;rsquo;m quite excited about, and I thought this would be the right place to post.  My new package, &lt;strong&gt;idbr&lt;/strong&gt;, is an R interface to the &lt;a href=&#34;http://www.census.gov/data/developers/data-sets/international-database.html&#34;&gt;United States Census Bureau&amp;rsquo;s International Data Base API&lt;/a&gt;.  The IDB includes a host of international demographic indicators - including historical data and projections to 2050.  I use IDB data all of the time for my teaching - and &lt;strong&gt;idbr&lt;/strong&gt; makes the process of getting the data much easier!  While this product uses the Census Bureau Data API, it is not endorsed or certified by the Census Bureau.&lt;/p&gt;
 
 &lt;p&gt;Install from CRAN with the following command:&lt;/p&gt;
@@ -781,10 +781,10 @@ shinyApp(ui = ui, server = server)
     
     <item>
       <title>acs14lite: A lightweight R interface to the 2010-2014 ACS API</title>
-      <link>/2015/12/acs14lite/</link>
+      <link>http://walkerke.github.io/2015/12/acs14lite/</link>
       <pubDate>Sat, 12 Dec 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/12/acs14lite/</guid>
+      <guid>http://walkerke.github.io/2015/12/acs14lite/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -896,10 +896,10 @@ r2cartodb(la_tracts2, &amp;#39;la_poverty&amp;#39;)
     
     <item>
       <title>Fetching roads data in R with tigris</title>
-      <link>/2015/12/roads-tigris/</link>
+      <link>http://walkerke.github.io/2015/12/roads-tigris/</link>
       <pubDate>Thu, 03 Dec 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/12/roads-tigris/</guid>
+      <guid>http://walkerke.github.io/2015/12/roads-tigris/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -945,10 +945,10 @@ geojson_write(rt1, file = &amp;#39;route1.geojson&amp;#39;)&lt;/code&gt;&lt;/pre
     
     <item>
       <title>Obesity by state, 2013: a CartoDB state squares experiment</title>
-      <link>/2015/05/obesity-squares/</link>
+      <link>http://walkerke.github.io/2015/05/obesity-squares/</link>
       <pubDate>Sat, 09 May 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/05/obesity-squares/</guid>
+      <guid>http://walkerke.github.io/2015/05/obesity-squares/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -1016,10 +1016,10 @@ FROM obesity_squares&lt;/code&gt;&lt;/pre&gt;
     
     <item>
       <title>Using custom tiles in an RStudio Leaflet map</title>
-      <link>/2015/03/custom_tiles/</link>
+      <link>http://walkerke.github.io/2015/03/custom_tiles/</link>
       <pubDate>Tue, 10 Mar 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/03/custom_tiles/</guid>
+      <guid>http://walkerke.github.io/2015/03/custom_tiles/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -1140,10 +1140,10 @@ leaflet() %&amp;gt;%
     
     <item>
       <title>Mapping religious adherence in the US with CartoDB</title>
-      <link>/2015/02/mapping-religious-adherence-in-the-us-with-cartodb/</link>
+      <link>http://walkerke.github.io/2015/02/mapping-religious-adherence-in-the-us-with-cartodb/</link>
       <pubDate>Thu, 26 Feb 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/02/mapping-religious-adherence-in-the-us-with-cartodb/</guid>
+      <guid>http://walkerke.github.io/2015/02/mapping-religious-adherence-in-the-us-with-cartodb/</guid>
       <description>&lt;p&gt;Before coming to TCU, I worked as a data analyst for the &lt;a href=&#34;https://www.cpg.org/&#34;&gt;Church Pension Group&lt;/a&gt;, which manages the retirement funds and provides other financial services for the Episcopal Church.  I was part of a small research group that completed both internal and public-facing studies using the company&amp;rsquo;s data.  &lt;a href=&#34;https://www.cpg.org/global/research/reports-statistics/&#34;&gt;You can take a look at some of the studies I worked on here&lt;/a&gt;.  While I was at CPG, I developed an interest in the sociology of religion, as changing rates of religious adherence were of critical importance to CPG&amp;rsquo;s work, as they impact the overall viability of parishes (and in turn the fiscal health of the Church).  During this time, data for the &lt;a href=&#34;http://www.rcms2010.org/&#34;&gt;2010 US Religion Census (or Religious Congregations and Membership Study, abbreviated as RCMS)&lt;/a&gt; started to become available.  As the US Census does not ask questions about religion, researchers interested in studying religion must turn to other data sources like these.&lt;/p&gt;
 
 &lt;p&gt;I never had the opportunity to really dig into this dataset while at CPG, as I left for my current position at TCU shortly afterward.  However, as I teach about the geography of religious adherence (defined here as the proportion of the population actively practicing a religion) in my World Regional Geography course, I took the opportunity to dive back into the data.  I was inspired by &lt;a href=&#34;http://www.glenmary.org/rcms2010/&#34;&gt;this map from the Glenmary Research Center&lt;/a&gt; which maps the top religious family by county in the United States.  This map is excellent, but I wanted an interactive version that I could explore with my students in class (and that they could explore outside of class).  However, I did really like the bivariate cartographic technique they used to present the data (&lt;a href=&#34;http://www.joshuastevens.net/cartography/make-a-bivariate-choropleth-map/&#34;&gt;see this post from Joshua Stevens for a great overview of bivariate mapping&lt;/a&gt;).  In this instance, the top religious group in each county is assigned a color; then, the intensity of the color is related to the adherence percentage for that group.  This makes sense; if two counties have Catholic as their top group, but one has an adherence of 75 percent as opposed to 20 percent for the other, they should not be represented the same way.&lt;/p&gt;
@@ -1223,10 +1223,10 @@ leaflet() %&amp;gt;%
     
     <item>
       <title>Charting time series data with dygraphs in R and Python</title>
-      <link>/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</link>
+      <link>http://walkerke.github.io/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</link>
       <pubDate>Sat, 20 Dec 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</guid>
+      <guid>http://walkerke.github.io/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</guid>
       <description>&lt;p&gt;This past week, the good people at &lt;a href=&#34;http://www.rstudio.com&#34;&gt;RStudio&lt;/a&gt; advertised over Twitter the release of &lt;a href=&#34;http://www.htmlwidgets.org/index.html&#34;&gt;htmlwidgets for R&lt;/a&gt;, a project in collaboration with &lt;a href=&#34;http://rcharts.io&#34;&gt;rCharts&lt;/a&gt; wizards &lt;a href=&#34;https://twitter.com/ramnath_vaidya&#34;&gt;Ramnath Vaidyanathan&lt;/a&gt; and &lt;a href=&#34;https://twitter.com/timelyportfolio&#34;&gt;Kenton Russell&lt;/a&gt;. The packages showcased are incredible; I was particularly intrigued by the &lt;a href=&#34;http://rstudio.github.io/dygraphs/&#34;&gt;dygraphs&lt;/a&gt; package, which creates interactive time-series charts.&lt;/p&gt;
 
 &lt;p&gt;Aside from maps, time series line charts are the most common chart type I use in my teaching, as I often discuss how characteristics of places evolve over time.  As such, I took dygraphs for a spin to create charts relevant to a couple topics I address in World Regional Geography.&lt;/p&gt;
@@ -1330,10 +1330,10 @@ fig.show()
     
     <item>
       <title>Using Slidify to teach with interactive content</title>
-      <link>/2014/12/using-slidify-to-teach-with-interactive-content/</link>
+      <link>http://walkerke.github.io/2014/12/using-slidify-to-teach-with-interactive-content/</link>
       <pubDate>Tue, 02 Dec 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/12/using-slidify-to-teach-with-interactive-content/</guid>
+      <guid>http://walkerke.github.io/2014/12/using-slidify-to-teach-with-interactive-content/</guid>
       <description>
 
 &lt;p&gt;I frequently come across criticisms of PowerPoint as a presentation tool, which is interesting to me given the ubiquity of its use across industries.  When I worked as a data analyst prior to coming to TCU, I frequently prepared PowerPoints using a company template for my boss&amp;rsquo;s presentations or for talks of my own.  In academia, we have considerable freedom in how we can communicate information; however, PowerPoint is still widely used in the classroom and is everywhere at professional conferences.&lt;/p&gt;
@@ -1404,10 +1404,10 @@ fig.show()
     
     <item>
       <title>Life expectancy trends in the former USSR</title>
-      <link>/2014/10/russia-lex/</link>
+      <link>http://walkerke.github.io/2014/10/russia-lex/</link>
       <pubDate>Thu, 16 Oct 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/10/russia-lex/</guid>
+      <guid>http://walkerke.github.io/2014/10/russia-lex/</guid>
       <description>&lt;p&gt;When covering Russia and the former republics of the USSR in World Regional Geography, a key part of my material addresses the issues that some of these countries have had in their transitions from centralized to market economies.  Some of these countries experienced dramatic demographic shifts after the dissolution of the USSR, including a noticeable decline in life expectancy.&lt;/p&gt;
 
 &lt;p&gt;I&amp;rsquo;d been using some static Excel charts to illustrate life expectancy declines in Russia, Belarus, and Ukraine in previous courses.  However, I felt that an interactive solution would be preferable so that my students and I could explore the data in class over the course of our discussion.  I opted for &lt;a href=&#34;http://www.highcharts.com/&#34;&gt;Highcharts&lt;/a&gt;, through R and &lt;a href=&#34;http://rcharts.io&#34;&gt;rCharts&lt;/a&gt;, for the interactivity.  I then turned to &lt;a href=&#34;http://shiny.rstudio.com/&#34;&gt;Shiny&lt;/a&gt; from &lt;a href=&#34;http://www.rstudio.com/&#34;&gt;RStudio&lt;/a&gt; to put everything together.&lt;/p&gt;
@@ -1560,10 +1560,10 @@ shinyServer(function(input, output) {
     
     <item>
       <title>Exploring the United Nations population projections with rCharts</title>
-      <link>/2014/08/un-projections/</link>
+      <link>http://walkerke.github.io/2014/08/un-projections/</link>
       <pubDate>Tue, 05 Aug 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/08/un-projections/</guid>
+      <guid>http://walkerke.github.io/2014/08/un-projections/</guid>
       <description>&lt;p&gt;&lt;strong&gt;Please note: some NVD3 charts are performing very slowly in the latest version of Google Chrome at the moment; &lt;a href=&#34;https://github.com/novus/nvd3/issues/702&#34;&gt;see this GitHub issue.&lt;/a&gt;  As such, this post is best viewed in other browsers.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;I recently came across &lt;a href=&#34;http://dataremixed.com/2014/07/story-types-a-thought-starter/&#34;&gt;this really interesting post&lt;/a&gt; from &lt;a href=&#34;https://twitter.com/DataRemixed&#34;&gt;Ben Jones&lt;/a&gt; that explores the history and future of world population change with Tableau.  I haven&amp;rsquo;t used Tableau much, but I was impressed with the different ways in which Ben used the software to visualize various aspects of global population change.  More broadly, I can see multiple ways in which a visualization like this would be useful in teaching a course like World Regional Geography.  An instructor could ask students to answer a series of questions regarding global population change, using the visualizations as their evidence.  Students would then report back to the class about what they&amp;rsquo;ve learned from the visualizations, presenting different views to support their answers to the questions.&lt;/p&gt;
