@@ -19,7 +19,7 @@
 
 <meta property="og:title" content="Dropdown menus in R Markdown with bsselectR  &middot; Kyle Walker ">
 <meta property="og:site_name" content="Kyle Walker"/>
-<meta property="og:url" content="http://walkerke.github.io/2016/12/rmd-dropdowns/" />
+<meta property="og:url" content="/2016/12/rmd-dropdowns/" />
 <meta property="og:locale" content="en-us">
 
 
@@ -44,8 +44,8 @@
 <meta name="twitter:creator" content="@kyle_e_walker" />
 <meta name="twitter:title" content="Dropdown menus in R Markdown with bsselectR" />
 <meta name="twitter:description" content="" />
-<meta name="twitter:url" content="http://walkerke.github.io/2016/12/rmd-dropdowns/" />
-<meta name="twitter:domain" content="http://walkerke.github.io">
+<meta name="twitter:url" content="/2016/12/rmd-dropdowns/" />
+<meta name="twitter:domain" content="/">
   
 
 <script type="application/ld+json">
@@ -59,16 +59,16 @@
     },
     "datePublished": "2016-12-15",
     "description": "",
-    "wordCount":  819 
+    "wordCount":  917 
   }
 </script>
 
 
 
-<link rel="canonical" href="http://walkerke.github.io/2016/12/rmd-dropdowns/" />
+<link rel="canonical" href="../../../2016/12/rmd-dropdowns/" />
 
-<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://walkerke.github.io/touch-icon-144-precomposed.png">
-<link href="http://walkerke.github.io/favicon.png" rel="icon">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../touch-icon-144-precomposed.png">
+<link href="../../../favicon.png" rel="icon">
 
 <meta name="generator" content="Hugo 0.17" />
 
@@ -78,9 +78,9 @@
 <![endif]-->
 
 <link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="http://walkerke.github.io/css/font-awesome.min.css">
-<link rel="stylesheet" href="http://walkerke.github.io/css/style.css">
-<link rel="stylesheet" href="http://walkerke.github.io/css/highlight/zenburn.css">
+<link rel="stylesheet" href="../../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../../css/style.css">
+<link rel="stylesheet" href="../../../css/highlight/zenburn.css">
 
   <!DOCTYPE HTML>
 <style>
@@ -123,7 +123,7 @@
     <header id="main-header" class="container main_header">
   <div class="container brand">
   <div class="container title h1-like">
-  <a class="baselink" href="http://walkerke.github.io">
+  <a class="baselink" href="../../../">
   Kyle Walker
 
 </a>
@@ -146,13 +146,13 @@
 
 
   
-<a href="http://walkerke.github.io/about">About</a>
+<a href="../../../about">About</a>
 
-<a href="http://walkerke.github.io/post" title="Show list of posts">Posts</a>
+<a href="../../../post" title="Show list of posts">Posts</a>
 
-<a href="http://walkerke.github.io/tags" title="Show list of tags">Tags</a>
+<a href="../../../tags" title="Show list of tags">Tags</a>
 
-<a href="http://walkerke.github.io/services">Services</a>
+<a href="../../../services">Services</a>
 
 
 </nav>
@@ -215,15 +215,15 @@
   
     &middot; by Kyle Walker
   
-  &middot; Read in about 4 min
-  &middot; (819 Words)
+  &middot; Read in about 5 min
+  &middot; (917 Words)
   <br>
   
-<a class="label" href="http://walkerke.github.io/tags/r">R</a>
+<a class="label" href="../../../tags/r">R</a>
 
-<a class="label" href="http://walkerke.github.io/tags/presentations">presentations</a>
+<a class="label" href="../../../tags/presentations">presentations</a>
 
-<a class="label" href="http://walkerke.github.io/tags/r-markdown">R Markdown</a>
+<a class="label" href="../../../tags/r-markdown">R Markdown</a>
 
 
 
@@ -252,32 +252,53 @@ bsselect(quotes, type = &quot;text&quot;)</code></pre>
 </iframe>
 <p>Use the menu to flip through the three quotes.</p>
 <p>A more practical example, however, would be the use of <code>bsselect</code> in an R Markdown document where the user could flip through a number of plots that are stored in a subdirectory. Let’s take a recent, applied example: scatterplots of the relationship between the percentage vote for Donald Trump and the percentage of county residents with at least a bachelor’s degree by state.</p>
-<p>We’ll get the data from the amazing <a href="https://data.opendatasoft.com/explore/dataset/usa-2016-presidential-election-by-county%40public/information/?basemap=mapbox.light&amp;location=3,35.55614,-74.32467">OpenDataSoft dataset</a>. I downloaded the semicolon-delimited dataset from the site, though there is API access as well. The following code will generate identical plots for each state, and save them in a subdirectory of my working directory named <code>plots</code>.</p>
+<p>We’ll get the election data from <a href="https://github.com/mkearney/presidential_election_county_results_2016">Mike Kearney’s open presidential election dataset</a> (updated December 9, so there may be some undercounts) and education data from the ACS using my personal <a href="https://github.com/walkerke/acs14lite">acs14lite package</a>. The following code will generate identical plots for each state, and save them in a subdirectory of my working directory named <code>plots</code>.</p>
 <pre class="r"><code>library(tidyverse)
 library(scales)
+library(acs14lite)
 
-df &lt;- read_delim(&quot;usa-2016-presidential-election-by-county.csv&quot;, delim = &quot;;&quot;)
+votes16 &lt;- read_csv(&quot;https://raw.githubusercontent.com/mkearney/presidential_election_county_results_2016/master/pres.elect16.results.dec9.csv&quot;)
 
-states &lt;- sort(unique(df$State))
+vars_to_get &lt;- c(&quot;B15002_001E&quot;, &quot;B15002_015E&quot;, &quot;B15002_016E&quot;,  &quot;B15002_017E&quot;,  &quot;B15002_018E&quot;,
+                 &quot;B15002_032E&quot;,  &quot;B15002_033E&quot;,  &quot;B15002_034E&quot;,  &quot;B15002_035E&quot;, &quot;B01001_001E&quot;)
+
+educ &lt;- acs14(api_key = &quot;Your key goes here&quot;, 
+              geography = &quot;county&quot;, variable = vars_to_get)
+
+educ &lt;- educ %&gt;%
+  mutate(pctba = (B15002_015E + B15002_016E + B15002_017E + B15002_018E + B15002_032E + 
+                    B15002_033E + B15002_034E + B15002_035E)  / B15002_001E, 
+         fips = paste0(state, county))
+
+state_match &lt;- data.frame(state_name = state.name, st = state.abb)
+
+df &lt;- votes16 %&gt;%
+  mutate(fips = stringr::str_pad(fips, 5, &quot;left&quot;, &quot;0&quot;)) %&gt;%
+  filter(cand == &quot;Donald Trump&quot;) %&gt;%
+  inner_join(educ, by = &quot;fips&quot;) %&gt;%
+  left_join(state_match, by = &quot;st&quot;)
+
+states &lt;- as.character(sort(unique(df$state_name)))
 states &lt;- states[!is.na(states)]
-states &lt;- states[states != &quot;District of Columbia&quot;]
+states &lt;- states[!states %in% c(&quot;District of Columbia&quot;, &quot;Alaska&quot;)]
 
 plots &lt;- lapply(states, function(x) {
   
-  state = filter(df, State == x)
+  state = filter(df, state_name == x)
   
-  p &lt;- ggplot(state, aes(x = At.Least.Bachelor.s.Degree / 100, 
-              y = `Republicans 2016`)) +
-    geom_point(aes(size = Total.Population), alpha = 0.5, color = &quot;blue&quot;) + 
+  p &lt;- ggplot(state, aes(x = pctba, 
+              y = pct)) +
+    geom_point(aes(size = B01001_001E), alpha = 0.5, color = &quot;blue&quot;) + 
     geom_smooth(method = &quot;lm&quot;) + 
     scale_y_continuous(labels = percent_format()) + 
     scale_x_continuous(labels = percent_format()) + 
     scale_size_continuous(labels = comma_format()) + 
     theme_minimal() + 
     labs(title = x, 
-         x = &quot;Percent with at least a bachelor&#39;s degree&quot;, 
+         x = &quot;Percent over age 25 with at least a bachelor&#39;s degree&quot;, 
          y = &quot;Percent voting Trump&quot;, 
-         size = &quot;Total population&quot;)
+         size = &quot;Total population&quot;, 
+         caption = &quot;Data sources: &quot;)
   
   p
   
@@ -318,7 +339,7 @@ bsselect(state_plots, type = &quot;img&quot;, selected = &quot;Oregon&quot;,
   
 
     
-    <a class="prev" href="http://walkerke.github.io/2016/07/spatial-neighbors-in-r---an-interactive-illustration/" title="Spatial neighbors in R - an interactive illustration">
+    <a class="prev" href="../../../2016/07/spatial-neighbors-in-r---an-interactive-illustration/" title="Spatial neighbors in R - an interactive illustration">
       Previous
     </a>
     
@@ -383,7 +404,7 @@ bsselect(state_plots, type = &quot;img&quot;, selected = &quot;Oregon&quot;,
 
 
 
-<script src="http://walkerke.github.io/js/highlight.pack.js"></script>
+<script src="../../../js/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
 

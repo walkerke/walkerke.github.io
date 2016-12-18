@@ -34,34 +34,55 @@ Use the menu to flip through the three quotes.
 
 A more practical example, however, would be the use of `bsselect` in an R Markdown document where the user could flip through a number of plots that are stored in a subdirectory.  Let's take a recent, applied example: scatterplots of the relationship between the percentage vote for Donald Trump and the percentage of county residents with at least a bachelor's degree by state.  
 
-We'll get the data from the amazing [OpenDataSoft dataset](https://data.opendatasoft.com/explore/dataset/usa-2016-presidential-election-by-county%40public/information/?basemap=mapbox.light&location=3,35.55614,-74.32467).  I downloaded the semicolon-delimited dataset from the site, though there is API access as well.  The following code will generate identical plots for each state, and save them in a subdirectory of my working directory named `plots`.  
+We'll get the election data from [Mike Kearney's open presidential election dataset](https://github.com/mkearney/presidential_election_county_results_2016) (updated December 9, so there may be some undercounts) and education data from the ACS using my personal [acs14lite package](https://github.com/walkerke/acs14lite).  The following code will generate identical plots for each state, and save them in a subdirectory of my working directory named `plots`.  
 
 ```{r, eval = FALSE}
 library(tidyverse)
 library(scales)
+library(acs14lite)
 
-df <- read_delim("usa-2016-presidential-election-by-county.csv", delim = ";")
+votes16 <- read_csv("https://raw.githubusercontent.com/mkearney/presidential_election_county_results_2016/master/pres.elect16.results.dec9.csv")
 
-states <- sort(unique(df$State))
+vars_to_get <- c("B15002_001E", "B15002_015E", "B15002_016E",  "B15002_017E",  "B15002_018E",
+                 "B15002_032E",  "B15002_033E",  "B15002_034E",  "B15002_035E", "B01001_001E")
+
+educ <- acs14(api_key = "Your key goes here", 
+              geography = "county", variable = vars_to_get)
+
+educ <- educ %>%
+  mutate(pctba = (B15002_015E + B15002_016E + B15002_017E + B15002_018E + B15002_032E + 
+                    B15002_033E + B15002_034E + B15002_035E)  / B15002_001E, 
+         fips = paste0(state, county))
+
+state_match <- data.frame(state_name = state.name, st = state.abb)
+
+df <- votes16 %>%
+  mutate(fips = stringr::str_pad(fips, 5, "left", "0")) %>%
+  filter(cand == "Donald Trump") %>%
+  inner_join(educ, by = "fips") %>%
+  left_join(state_match, by = "st")
+
+states <- as.character(sort(unique(df$state_name)))
 states <- states[!is.na(states)]
-states <- states[states != "District of Columbia"]
+states <- states[!states %in% c("District of Columbia", "Alaska")]
 
 plots <- lapply(states, function(x) {
   
-  state = filter(df, State == x)
+  state = filter(df, state_name == x)
   
-  p <- ggplot(state, aes(x = At.Least.Bachelor.s.Degree / 100, 
-              y = `Republicans 2016`)) +
-    geom_point(aes(size = Total.Population), alpha = 0.5, color = "blue") + 
+  p <- ggplot(state, aes(x = pctba, 
+              y = pct)) +
+    geom_point(aes(size = B01001_001E), alpha = 0.5, color = "blue") + 
     geom_smooth(method = "lm") + 
     scale_y_continuous(labels = percent_format()) + 
     scale_x_continuous(labels = percent_format()) + 
     scale_size_continuous(labels = comma_format()) + 
     theme_minimal() + 
     labs(title = x, 
-         x = "Percent with at least a bachelor's degree", 
+         x = "Percent over age 25 with at least a bachelor's degree", 
          y = "Percent voting Trump", 
-         size = "Total population")
+         size = "Total population", 
+         caption = "Data sources: ")
   
   p
   

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kyle Walker</title>
-    <link>http://walkerke.github.io/tags/presentations/index.xml</link>
+    <link>/tags/presentations/index.xml</link>
     <description>Recent content on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2016 Kyle Walker</copyright>
-    <atom:link href="http://walkerke.github.io/tags/presentations/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/presentations/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Dropdown menus in R Markdown with bsselectR</title>
-      <link>http://walkerke.github.io/2016/12/rmd-dropdowns/</link>
+      <link>/2016/12/rmd-dropdowns/</link>
       <pubDate>Thu, 15 Dec 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>http://walkerke.github.io/2016/12/rmd-dropdowns/</guid>
+      <guid>/2016/12/rmd-dropdowns/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -39,32 +39,53 @@ bsselect(quotes, type = &amp;quot;text&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;/iframe&gt;
 &lt;p&gt;Use the menu to flip through the three quotes.&lt;/p&gt;
 &lt;p&gt;A more practical example, however, would be the use of &lt;code&gt;bsselect&lt;/code&gt; in an R Markdown document where the user could flip through a number of plots that are stored in a subdirectory. Let’s take a recent, applied example: scatterplots of the relationship between the percentage vote for Donald Trump and the percentage of county residents with at least a bachelor’s degree by state.&lt;/p&gt;
-&lt;p&gt;We’ll get the data from the amazing &lt;a href=&#34;https://data.opendatasoft.com/explore/dataset/usa-2016-presidential-election-by-county%40public/information/?basemap=mapbox.light&amp;amp;location=3,35.55614,-74.32467&#34;&gt;OpenDataSoft dataset&lt;/a&gt;. I downloaded the semicolon-delimited dataset from the site, though there is API access as well. The following code will generate identical plots for each state, and save them in a subdirectory of my working directory named &lt;code&gt;plots&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;We’ll get the election data from &lt;a href=&#34;https://github.com/mkearney/presidential_election_county_results_2016&#34;&gt;Mike Kearney’s open presidential election dataset&lt;/a&gt; (updated December 9, so there may be some undercounts) and education data from the ACS using my personal &lt;a href=&#34;https://github.com/walkerke/acs14lite&#34;&gt;acs14lite package&lt;/a&gt;. The following code will generate identical plots for each state, and save them in a subdirectory of my working directory named &lt;code&gt;plots&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
 library(scales)
+library(acs14lite)
 
-df &amp;lt;- read_delim(&amp;quot;usa-2016-presidential-election-by-county.csv&amp;quot;, delim = &amp;quot;;&amp;quot;)
+votes16 &amp;lt;- read_csv(&amp;quot;https://raw.githubusercontent.com/mkearney/presidential_election_county_results_2016/master/pres.elect16.results.dec9.csv&amp;quot;)
 
-states &amp;lt;- sort(unique(df$State))
+vars_to_get &amp;lt;- c(&amp;quot;B15002_001E&amp;quot;, &amp;quot;B15002_015E&amp;quot;, &amp;quot;B15002_016E&amp;quot;,  &amp;quot;B15002_017E&amp;quot;,  &amp;quot;B15002_018E&amp;quot;,
+                 &amp;quot;B15002_032E&amp;quot;,  &amp;quot;B15002_033E&amp;quot;,  &amp;quot;B15002_034E&amp;quot;,  &amp;quot;B15002_035E&amp;quot;, &amp;quot;B01001_001E&amp;quot;)
+
+educ &amp;lt;- acs14(api_key = &amp;quot;Your key goes here&amp;quot;, 
+              geography = &amp;quot;county&amp;quot;, variable = vars_to_get)
+
+educ &amp;lt;- educ %&amp;gt;%
+  mutate(pctba = (B15002_015E + B15002_016E + B15002_017E + B15002_018E + B15002_032E + 
+                    B15002_033E + B15002_034E + B15002_035E)  / B15002_001E, 
+         fips = paste0(state, county))
+
+state_match &amp;lt;- data.frame(state_name = state.name, st = state.abb)
+
+df &amp;lt;- votes16 %&amp;gt;%
+  mutate(fips = stringr::str_pad(fips, 5, &amp;quot;left&amp;quot;, &amp;quot;0&amp;quot;)) %&amp;gt;%
+  filter(cand == &amp;quot;Donald Trump&amp;quot;) %&amp;gt;%
+  inner_join(educ, by = &amp;quot;fips&amp;quot;) %&amp;gt;%
+  left_join(state_match, by = &amp;quot;st&amp;quot;)
+
+states &amp;lt;- as.character(sort(unique(df$state_name)))
 states &amp;lt;- states[!is.na(states)]
-states &amp;lt;- states[states != &amp;quot;District of Columbia&amp;quot;]
+states &amp;lt;- states[!states %in% c(&amp;quot;District of Columbia&amp;quot;, &amp;quot;Alaska&amp;quot;)]
 
 plots &amp;lt;- lapply(states, function(x) {
   
-  state = filter(df, State == x)
+  state = filter(df, state_name == x)
   
-  p &amp;lt;- ggplot(state, aes(x = At.Least.Bachelor.s.Degree / 100, 
-              y = `Republicans 2016`)) +
-    geom_point(aes(size = Total.Population), alpha = 0.5, color = &amp;quot;blue&amp;quot;) + 
+  p &amp;lt;- ggplot(state, aes(x = pctba, 
+              y = pct)) +
+    geom_point(aes(size = B01001_001E), alpha = 0.5, color = &amp;quot;blue&amp;quot;) + 
     geom_smooth(method = &amp;quot;lm&amp;quot;) + 
     scale_y_continuous(labels = percent_format()) + 
     scale_x_continuous(labels = percent_format()) + 
     scale_size_continuous(labels = comma_format()) + 
     theme_minimal() + 
     labs(title = x, 
-         x = &amp;quot;Percent with at least a bachelor&amp;#39;s degree&amp;quot;, 
+         x = &amp;quot;Percent over age 25 with at least a bachelor&amp;#39;s degree&amp;quot;, 
          y = &amp;quot;Percent voting Trump&amp;quot;, 
-         size = &amp;quot;Total population&amp;quot;)
+         size = &amp;quot;Total population&amp;quot;, 
+         caption = &amp;quot;Data sources: &amp;quot;)
   
   p
   
@@ -107,10 +128,10 @@ bsselect(state_plots, type = &amp;quot;img&amp;quot;, selected = &amp;quot;Orego
     
     <item>
       <title>Using Slidify to teach with interactive content</title>
-      <link>http://walkerke.github.io/2014/12/using-slidify-to-teach-with-interactive-content/</link>
+      <link>/2014/12/using-slidify-to-teach-with-interactive-content/</link>
       <pubDate>Tue, 02 Dec 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>http://walkerke.github.io/2014/12/using-slidify-to-teach-with-interactive-content/</guid>
+      <guid>/2014/12/using-slidify-to-teach-with-interactive-content/</guid>
       <description>
 
 &lt;p&gt;I frequently come across criticisms of PowerPoint as a presentation tool, which is interesting to me given the ubiquity of its use across industries.  When I worked as a data analyst prior to coming to TCU, I frequently prepared PowerPoints using a company template for my boss&amp;rsquo;s presentations or for talks of my own.  In academia, we have considerable freedom in how we can communicate information; however, PowerPoint is still widely used in the classroom and is everywhere at professional conferences.&lt;/p&gt;
