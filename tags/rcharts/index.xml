@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kyle Walker</title>
-    <link>http://walkerke.github.io/tags/rcharts/index.xml</link>
+    <link>/tags/rcharts/index.xml</link>
     <description>Recent content on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2016 Kyle Walker</copyright>
-    <atom:link href="http://walkerke.github.io/tags/rcharts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/rcharts/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Life expectancy trends in the former USSR</title>
-      <link>http://walkerke.github.io/2014/10/russia-lex/</link>
+      <link>/2014/10/russia-lex/</link>
       <pubDate>Thu, 16 Oct 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>http://walkerke.github.io/2014/10/russia-lex/</guid>
+      <guid>/2014/10/russia-lex/</guid>
       <description>&lt;p&gt;When covering Russia and the former republics of the USSR in World Regional Geography, a key part of my material addresses the issues that some of these countries have had in their transitions from centralized to market economies.  Some of these countries experienced dramatic demographic shifts after the dissolution of the USSR, including a noticeable decline in life expectancy.&lt;/p&gt;
 
 &lt;p&gt;I&amp;rsquo;d been using some static Excel charts to illustrate life expectancy declines in Russia, Belarus, and Ukraine in previous courses.  However, I felt that an interactive solution would be preferable so that my students and I could explore the data in class over the course of our discussion.  I opted for &lt;a href=&#34;http://www.highcharts.com/&#34;&gt;Highcharts&lt;/a&gt;, through R and &lt;a href=&#34;http://rcharts.io&#34;&gt;rCharts&lt;/a&gt;, for the interactivity.  I then turned to &lt;a href=&#34;http://shiny.rstudio.com/&#34;&gt;Shiny&lt;/a&gt; from &lt;a href=&#34;http://www.rstudio.com/&#34;&gt;RStudio&lt;/a&gt; to put everything together.&lt;/p&gt;
@@ -169,10 +169,10 @@ shinyServer(function(input, output) {
     
     <item>
       <title>Interactive international population pyramids with R, rCharts</title>
-      <link>http://walkerke.github.io/2014/06/rcharts-pyramids/</link>
+      <link>/2014/06/rcharts-pyramids/</link>
       <pubDate>Sat, 07 Jun 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>http://walkerke.github.io/2014/06/rcharts-pyramids/</guid>
+      <guid>/2014/06/rcharts-pyramids/</guid>
       <description>&lt;p&gt;I find population pyramids to be very effective teaching tools.  In short, a population pyramid is a type of chart that shows the population size of different age cohorts on the x-axis, with gender usually displayed back-to-back to create the shape of a &amp;ldquo;pyramid.&amp;rdquo;  It is used to illustrate a snapshot of the age and sex structure of a population, and can serve as a tool that aids in discussion of many thematic issues such as population growth, aging, and gender imbalance.  The visually appealing structure of the population pyramid also makes it easy to compare the population structures of different countries, which is why I like to use pyramids in my classes.  This is exemplified by &lt;a href=&#34;http://blogs.worldbank.org/futuredevelopment/end-population-pyramid&#34;&gt;this post from the World Bank&lt;/a&gt;, which shows how different &amp;ldquo;shapes&amp;rdquo; of the pyramid reflect different demographic contexts.&lt;/p&gt;
 
 &lt;p&gt;I was originally motivated to learn interactive visualization to produce interactive population pyramids.  My inspiration came from these examples from &lt;a href=&#34;http://vis.stanford.edu/jheer/d3/pyramid/shift.html&#34;&gt;Jeff Heer&lt;/a&gt; and &lt;a href=&#34;http://bl.ocks.org/mbostock/4062085&#34;&gt;Mike Bostock&lt;/a&gt;, which use data from the U.S. Census.  Since then, a number of other creative interactive population pyramid applications have gotten a lot of attention, such as &lt;a href=&#34;http://populationpyramid.net/&#34;&gt;this visualization from Martin De Wulf&lt;/a&gt;, and &lt;a href=&#34;http://www.nytimes.com/2014/05/13/upshot/a-changing-shape-in-americas-age-distribution.html?rref=upshot&amp;amp;_r=1&#34;&gt;this animated graphic from the Pew Research Center&lt;/a&gt;, referenced in &lt;em&gt;The New York Times&amp;rsquo;&lt;/em&gt; Upshot.&lt;/p&gt;
@@ -273,10 +273,10 @@ q1$save(&#39;qatar.html&#39;, cdn = TRUE)
     
     <item>
       <title>Visualizing the U.S. Hispanic population by state</title>
-      <link>http://walkerke.github.io/2014/01/visualizing-the-u.s.-hispanic-population-by-state/</link>
+      <link>/2014/01/visualizing-the-u.s.-hispanic-population-by-state/</link>
       <pubDate>Thu, 09 Jan 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>http://walkerke.github.io/2014/01/visualizing-the-u.s.-hispanic-population-by-state/</guid>
+      <guid>/2014/01/visualizing-the-u.s.-hispanic-population-by-state/</guid>
       <description>
 
 &lt;p&gt;Welcome! This is the first post of my effort to document my foray into developing interactive data visualizations for use in my teaching.  Hopefully these examples will be of use to some readers who are interested in creating their own visualizations.&lt;/p&gt;

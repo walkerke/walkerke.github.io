@@ -4,6 +4,9 @@ author: "Kyle Walker"
 date: 2016-12-15
 tags: ["R", "presentations", "R Markdown"]
 slug: rmd-dropdowns
+output: 
+  html_document: 
+    code_folding: hide
 ---
 
 I strongly believe that interactive reports, presentations, and scholarly articles are going to become much more prominent in the years ahead.  Whereas a PDF article or presentation can often only show a limited aspect of a research project, interactive documents can allow a reader or presenter to explore project content in a much broader sense.  
