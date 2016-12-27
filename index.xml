@@ -2,22 +2,157 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kyle Walker</title>
-    <link>/index.xml</link>
+    <link>http://walkerke.github.io/index.xml</link>
     <description>Recent content on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2016 Kyle Walker</copyright>
-    <lastBuildDate>Thu, 15 Dec 2016 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 27 Dec 2016 06:15:14 +0000</lastBuildDate>
+    <atom:link href="http://walkerke.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Spatial analysis pipelines with simple features in R</title>
+      <link>http://walkerke.github.io/2016/12/spatial-pipelines/</link>
+      <pubDate>Tue, 27 Dec 2016 06:15:14 +0000</pubDate>
+      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
+      <guid>http://walkerke.github.io/2016/12/spatial-pipelines/</guid>
+      <description>&lt;!-- BLOGDOWN-BODY-BEFORE
+
+/BLOGDOWN-BODY-BEFORE --&gt;
+
+&lt;p&gt;In November, the new &lt;a href=&#34;https://cran.r-project.org/web/packages/sf/index.html&#34;&gt;simple features package for R &lt;strong&gt;sf&lt;/strong&gt;&lt;/a&gt; hit CRAN. The package is like &lt;strong&gt;rgdal&lt;/strong&gt;, &lt;strong&gt;sp&lt;/strong&gt;, and &lt;strong&gt;rgeos&lt;/strong&gt; rolled into one, is much faster, and allows for data processing with dplyr verbs! Also, as &lt;code&gt;sf&lt;/code&gt; objects are represented in a much simpler way than &lt;code&gt;sp&lt;/code&gt; objects, it allows for spatial analysis in R within &lt;a href=&#34;https://cran.r-project.org/web/packages/magrittr/index.html&#34;&gt;&lt;strong&gt;magrittr&lt;/strong&gt;&lt;/a&gt; pipelines.&lt;/p&gt;
+&lt;p&gt;This post showcases some of this functionality in a simulated spatial analysis workflow, in which an analyst wants to determine whether customers have visited a point of interest (POI) based on GPS tracking data. In this hypothetical example, we’ll assess whether visitors to midtown Manhattan have walked through Bryant Park.&lt;/p&gt;
+&lt;p&gt;Let’s take a single visitor who spent an entire day strolling around Midtown Manhattan, and left 100 GPS traces from her phone:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(leaflet)
+library(sf)
+library(sp)
+library(TSP)
+library(magrittr)
+
+set.seed(1983)
+
+long &amp;lt;- sample(seq(-73.9995, -73.9688, 0.0001), 100, replace = TRUE)
+lat &amp;lt;- sample(seq(40.7483, 40.7646, 0.0001), 100, replace = TRUE)
+
+df &amp;lt;- data.frame(long, lat, id = 1:100)
+
+leaflet(df) %&amp;gt;%
+  addTiles() %&amp;gt;%
+  addMarkers()&lt;/code&gt;&lt;/pre&gt;
+&lt;iframe src=&#34;http://walkerke.github.io/extras/blog/midtown_points.html&#34; frameborder=&#34;0&#34; scrolling=&#34;no&#34; width=&#34;100%&#34; height=&#34;400&#34;&gt;
+&lt;/iframe&gt;
+&lt;p&gt;A real-world example would have time-stamped data, allowing for a more realistic path. We’ll construct a hypothetical path by solving for the &lt;a href=&#34;https://en.wikipedia.org/wiki/Hamiltonian_path&#34;&gt;Hamiltonian Path&lt;/a&gt; with the R package &lt;a href=&#34;https://cran.r-project.org/web/packages/TSP/&#34;&gt;&lt;strong&gt;TSP&lt;/strong&gt;&lt;/a&gt; to simulate this (acknowledging that this hypothetical path will go through buildings).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;path &amp;lt;- df[,1:2] %&amp;gt;%
+  dist() %&amp;gt;%
+  TSP() %&amp;gt;%
+  insert_dummy(label = &amp;quot;cut&amp;quot;) %&amp;gt;%
+  solve_TSP(method = &amp;quot;nearest_insertion&amp;quot;) %&amp;gt;%
+  cut_tour(cut = &amp;quot;cut&amp;quot;) 
+
+df2 &amp;lt;- df[match(path, df$id), ] &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now that we’ve ordered our GPS traces correctly, we can generate a path with a simple features pipeline. We convert the ordered points to a matrix; generate a line with &lt;code&gt;st_linestring()&lt;/code&gt;; create a simple feature collection object with &lt;code&gt;st_sfc()&lt;/code&gt;; then transform to a projected coordinate system with &lt;code&gt;st_transform()&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;lines &amp;lt;- df2[,1:2] %&amp;gt;%
+  as.matrix() %&amp;gt;%
+  st_linestring() %&amp;gt;%
+  st_sfc(crs = 4326) %&amp;gt;%
+  st_transform(crs = 32618)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We first specify the CRS as the WGS 1984 geographic coordinate system, then transform to UTM Zone 18N as we want a projected coordinate system for planar geometric operations. Let’s take a look at our lines:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;lines_map &amp;lt;- lines %&amp;gt;%
+  st_transform(crs = 4326) %&amp;gt;%
+  as(&amp;quot;Spatial&amp;quot;) %&amp;gt;%
+  leaflet() %&amp;gt;%
+  addTiles() %&amp;gt;%
+  addPolylines()
+
+lines_map&lt;/code&gt;&lt;/pre&gt;
+&lt;iframe src=&#34;http://walkerke.github.io/extras/blog/midtown_lines.html&#34; frameborder=&#34;0&#34; scrolling=&#34;no&#34; width=&#34;100%&#34; height=&#34;400&#34;&gt;
+&lt;/iframe&gt;
+&lt;p&gt;Now, we need to see whether this path intersects Bryant Park. A polygon representing the boundaries of Bryant Park would be ideal; however, let’s say hypothetically that we only have XY coordinates for this point of interest. As such, we can buffer the point by 100 meters to represent the approximate extent of the park.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;bryant_buffer &amp;lt;- c(-73.983581, 40.753714) %&amp;gt;%
+  st_point() %&amp;gt;%
+  st_sfc(crs = 4326) %&amp;gt;%
+  st_transform(32618) %&amp;gt;%
+  st_buffer(dist = 100)
+
+buffer_for_map &amp;lt;- bryant_buffer %&amp;gt;%
+  st_transform(4326) %&amp;gt;%
+  as(&amp;quot;Spatial&amp;quot;)
+
+lines_map %&amp;gt;%
+  addPolygons(data = buffer_for_map)&lt;/code&gt;&lt;/pre&gt;
+&lt;iframe src=&#34;http://walkerke.github.io/extras/blog/midtown_buffer.html&#34; frameborder=&#34;0&#34; scrolling=&#34;no&#34; width=&#34;100%&#34; height=&#34;400&#34;&gt;
+&lt;/iframe&gt;
+&lt;p&gt;We have an approximation of the park’s extent; we’ll get some false positives here but this will work for purposes of illustration. We can then use &lt;code&gt;st_intersects&lt;/code&gt; to see if our lines intersect the buffer:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;st_intersects(lines, bryant_buffer)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [[1]]
+## [1] 1&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The function returns &lt;code&gt;1&lt;/code&gt;, which means that we do have an intersection. Now, let’s try testing this out over 1000 simulations, and see how many times a simulated sample of 1000 visitors walk through Bryant Park. We first need to generate 1000 paths:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;paths &amp;lt;- lapply(1:1000, function(x) {
+  
+  set.seed(x)
+  
+  long &amp;lt;- sample(seq(-73.9995, -73.9688, 0.0001), 100, replace = TRUE)
+  lat &amp;lt;- sample(seq(40.7483, 40.7646, 0.0001), 100, replace = TRUE)
+  df &amp;lt;- data.frame(long, lat, id = 1:100)
+  
+  path &amp;lt;- df[,1:2] %&amp;gt;%
+    dist(diag = FALSE) %&amp;gt;%
+    TSP() %&amp;gt;%
+    insert_dummy(label = &amp;quot;cut&amp;quot;) %&amp;gt;%
+    solve_TSP(method = &amp;quot;nearest_insertion&amp;quot;) %&amp;gt;%
+    cut_tour(cut = &amp;quot;cut&amp;quot;) 
+  
+  df2 &amp;lt;- df[match(path, df$id), ] 
+  
+  lines &amp;lt;- df2[,1:2] %&amp;gt;%
+    as.matrix() %&amp;gt;%
+    st_linestring() %&amp;gt;%
+    st_sfc(crs = 4326) %&amp;gt;%
+    st_transform(32618)
+  
+  lines
+  
+})&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can now see how many visitors walked through Bryant Park:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;visits &amp;lt;- unlist(
+  lapply(paths, function(x) {
+    y &amp;lt;- st_intersects(x, bryant_buffer)
+    if (length(y[[1]]) == 1) {
+      return(1)
+    } else {
+      return(0)
+    } 
+  })
+)
+
+table(visits)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+##   0   1 
+## 335 665&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;665 of our 1000 visitors walked through Bryant Park.&lt;/p&gt;
+&lt;p&gt;This just scratches the surface of the spatial work that can be done in R with the &lt;strong&gt;sf&lt;/strong&gt; package. In the future, I’ll write more about the new &lt;code&gt;sf&lt;/code&gt; class, which represents spatial objects much like data frames and in turn can accept dplyr verbs for data wrangling.&lt;/p&gt;
+
+
+
+&lt;!-- BLOGDOWN-HEAD
+
+
+
+
+
+
+/BLOGDOWN-HEAD --&gt;
+</description>
+    </item>
     
     <item>
       <title>Dropdown menus in R Markdown with bsselectR</title>
-      <link>/2016/12/rmd-dropdowns/</link>
+      <link>http://walkerke.github.io/2016/12/rmd-dropdowns/</link>
       <pubDate>Thu, 15 Dec 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/12/rmd-dropdowns/</guid>
+      <guid>http://walkerke.github.io/2016/12/rmd-dropdowns/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -129,10 +264,10 @@ bsselect(state_plots, type = &amp;quot;img&amp;quot;, selected = &amp;quot;Orego
     
     <item>
       <title>Spatial neighbors in R - an interactive illustration</title>
-      <link>/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</link>
+      <link>http://walkerke.github.io/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</link>
       <pubDate>Wed, 27 Jul 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</guid>
+      <guid>http://walkerke.github.io/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -188,10 +323,10 @@ bsselect(state_plots, type = &amp;quot;img&amp;quot;, selected = &amp;quot;Orego
     
     <item>
       <title>Reproducing the Washington Post housing price maps with R and ggplot2</title>
-      <link>/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</link>
+      <link>http://walkerke.github.io/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</link>
       <pubDate>Wed, 29 Jun 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</guid>
+      <guid>http://walkerke.github.io/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -345,10 +480,10 @@ ggplot() +
     
     <item>
       <title>Interactive flow visualization in R</title>
-      <link>/2016/06/interactive-flow-visualization-in-r/</link>
+      <link>http://walkerke.github.io/2016/06/interactive-flow-visualization-in-r/</link>
       <pubDate>Sun, 26 Jun 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/06/interactive-flow-visualization-in-r/</guid>
+      <guid>http://walkerke.github.io/2016/06/interactive-flow-visualization-in-r/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -554,10 +689,10 @@ globejs(arcsLwd = weights, arcs = arcs, arcsColor = df4$colors)&lt;/code&gt;&lt;
     
     <item>
       <title>Using a new Mapbox Studio map in an R Leaflet project</title>
-      <link>/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</link>
+      <link>http://walkerke.github.io/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</link>
       <pubDate>Wed, 18 May 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</guid>
+      <guid>http://walkerke.github.io/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -630,10 +765,10 @@ leaflet(df) %&amp;gt;%
     
     <item>
       <title>Visualizing international demographic indicators with idbr and Plotly</title>
-      <link>/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</link>
+      <link>http://walkerke.github.io/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</link>
       <pubDate>Fri, 29 Jan 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</guid>
+      <guid>http://walkerke.github.io/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</guid>
       <description>&lt;p&gt;It&amp;rsquo;s been a while since I last posted here - but I&amp;rsquo;ve been working on a new R package that I&amp;rsquo;m quite excited about, and I thought this would be the right place to post.  My new package, &lt;strong&gt;idbr&lt;/strong&gt;, is an R interface to the &lt;a href=&#34;http://www.census.gov/data/developers/data-sets/international-database.html&#34;&gt;United States Census Bureau&amp;rsquo;s International Data Base API&lt;/a&gt;.  The IDB includes a host of international demographic indicators - including historical data and projections to 2050.  I use IDB data all of the time for my teaching - and &lt;strong&gt;idbr&lt;/strong&gt; makes the process of getting the data much easier!  While this product uses the Census Bureau Data API, it is not endorsed or certified by the Census Bureau.&lt;/p&gt;
 
 &lt;p&gt;Install from CRAN with the following command:&lt;/p&gt;
@@ -781,10 +916,10 @@ shinyApp(ui = ui, server = server)
     
     <item>
       <title>acs14lite: A lightweight R interface to the 2010-2014 ACS API</title>
-      <link>/2015/12/acs14lite/</link>
+      <link>http://walkerke.github.io/2015/12/acs14lite/</link>
       <pubDate>Sat, 12 Dec 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/12/acs14lite/</guid>
+      <guid>http://walkerke.github.io/2015/12/acs14lite/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -896,10 +1031,10 @@ r2cartodb(la_tracts2, &amp;#39;la_poverty&amp;#39;)
     
     <item>
       <title>Fetching roads data in R with tigris</title>
-      <link>/2015/12/roads-tigris/</link>
+      <link>http://walkerke.github.io/2015/12/roads-tigris/</link>
       <pubDate>Thu, 03 Dec 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/12/roads-tigris/</guid>
+      <guid>http://walkerke.github.io/2015/12/roads-tigris/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -945,10 +1080,10 @@ geojson_write(rt1, file = &amp;#39;route1.geojson&amp;#39;)&lt;/code&gt;&lt;/pre
     
     <item>
       <title>Obesity by state, 2013: a CartoDB state squares experiment</title>
-      <link>/2015/05/obesity-squares/</link>
+      <link>http://walkerke.github.io/2015/05/obesity-squares/</link>
       <pubDate>Sat, 09 May 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/05/obesity-squares/</guid>
+      <guid>http://walkerke.github.io/2015/05/obesity-squares/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -1016,10 +1151,10 @@ FROM obesity_squares&lt;/code&gt;&lt;/pre&gt;
     
     <item>
       <title>Using custom tiles in an RStudio Leaflet map</title>
-      <link>/2015/03/custom_tiles/</link>
+      <link>http://walkerke.github.io/2015/03/custom_tiles/</link>
       <pubDate>Tue, 10 Mar 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/03/custom_tiles/</guid>
+      <guid>http://walkerke.github.io/2015/03/custom_tiles/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -1140,10 +1275,10 @@ leaflet() %&amp;gt;%
     
     <item>
       <title>Mapping religious adherence in the US with CartoDB</title>
-      <link>/2015/02/mapping-religious-adherence-in-the-us-with-cartodb/</link>
+      <link>http://walkerke.github.io/2015/02/mapping-religious-adherence-in-the-us-with-cartodb/</link>
       <pubDate>Thu, 26 Feb 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/02/mapping-religious-adherence-in-the-us-with-cartodb/</guid>
+      <guid>http://walkerke.github.io/2015/02/mapping-religious-adherence-in-the-us-with-cartodb/</guid>
       <description>&lt;p&gt;Before coming to TCU, I worked as a data analyst for the &lt;a href=&#34;https://www.cpg.org/&#34;&gt;Church Pension Group&lt;/a&gt;, which manages the retirement funds and provides other financial services for the Episcopal Church.  I was part of a small research group that completed both internal and public-facing studies using the company&amp;rsquo;s data.  &lt;a href=&#34;https://www.cpg.org/global/research/reports-statistics/&#34;&gt;You can take a look at some of the studies I worked on here&lt;/a&gt;.  While I was at CPG, I developed an interest in the sociology of religion, as changing rates of religious adherence were of critical importance to CPG&amp;rsquo;s work, as they impact the overall viability of parishes (and in turn the fiscal health of the Church).  During this time, data for the &lt;a href=&#34;http://www.rcms2010.org/&#34;&gt;2010 US Religion Census (or Religious Congregations and Membership Study, abbreviated as RCMS)&lt;/a&gt; started to become available.  As the US Census does not ask questions about religion, researchers interested in studying religion must turn to other data sources like these.&lt;/p&gt;
 
 &lt;p&gt;I never had the opportunity to really dig into this dataset while at CPG, as I left for my current position at TCU shortly afterward.  However, as I teach about the geography of religious adherence (defined here as the proportion of the population actively practicing a religion) in my World Regional Geography course, I took the opportunity to dive back into the data.  I was inspired by &lt;a href=&#34;http://www.glenmary.org/rcms2010/&#34;&gt;this map from the Glenmary Research Center&lt;/a&gt; which maps the top religious family by county in the United States.  This map is excellent, but I wanted an interactive version that I could explore with my students in class (and that they could explore outside of class).  However, I did really like the bivariate cartographic technique they used to present the data (&lt;a href=&#34;http://www.joshuastevens.net/cartography/make-a-bivariate-choropleth-map/&#34;&gt;see this post from Joshua Stevens for a great overview of bivariate mapping&lt;/a&gt;).  In this instance, the top religious group in each county is assigned a color; then, the intensity of the color is related to the adherence percentage for that group.  This makes sense; if two counties have Catholic as their top group, but one has an adherence of 75 percent as opposed to 20 percent for the other, they should not be represented the same way.&lt;/p&gt;
@@ -1223,10 +1358,10 @@ leaflet() %&amp;gt;%
     
     <item>
       <title>Charting time series data with dygraphs in R and Python</title>
-      <link>/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</link>
+      <link>http://walkerke.github.io/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</link>
       <pubDate>Sat, 20 Dec 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</guid>
+      <guid>http://walkerke.github.io/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</guid>
       <description>&lt;p&gt;This past week, the good people at &lt;a href=&#34;http://www.rstudio.com&#34;&gt;RStudio&lt;/a&gt; advertised over Twitter the release of &lt;a href=&#34;http://www.htmlwidgets.org/index.html&#34;&gt;htmlwidgets for R&lt;/a&gt;, a project in collaboration with &lt;a href=&#34;http://rcharts.io&#34;&gt;rCharts&lt;/a&gt; wizards &lt;a href=&#34;https://twitter.com/ramnath_vaidya&#34;&gt;Ramnath Vaidyanathan&lt;/a&gt; and &lt;a href=&#34;https://twitter.com/timelyportfolio&#34;&gt;Kenton Russell&lt;/a&gt;. The packages showcased are incredible; I was particularly intrigued by the &lt;a href=&#34;http://rstudio.github.io/dygraphs/&#34;&gt;dygraphs&lt;/a&gt; package, which creates interactive time-series charts.&lt;/p&gt;
 
 &lt;p&gt;Aside from maps, time series line charts are the most common chart type I use in my teaching, as I often discuss how characteristics of places evolve over time.  As such, I took dygraphs for a spin to create charts relevant to a couple topics I address in World Regional Geography.&lt;/p&gt;
@@ -1330,10 +1465,10 @@ fig.show()
     
     <item>
       <title>Using Slidify to teach with interactive content</title>
-      <link>/2014/12/using-slidify-to-teach-with-interactive-content/</link>
+      <link>http://walkerke.github.io/2014/12/using-slidify-to-teach-with-interactive-content/</link>
       <pubDate>Tue, 02 Dec 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/12/using-slidify-to-teach-with-interactive-content/</guid>
+      <guid>http://walkerke.github.io/2014/12/using-slidify-to-teach-with-interactive-content/</guid>
       <description>
 
 &lt;p&gt;I frequently come across criticisms of PowerPoint as a presentation tool, which is interesting to me given the ubiquity of its use across industries.  When I worked as a data analyst prior to coming to TCU, I frequently prepared PowerPoints using a company template for my boss&amp;rsquo;s presentations or for talks of my own.  In academia, we have considerable freedom in how we can communicate information; however, PowerPoint is still widely used in the classroom and is everywhere at professional conferences.&lt;/p&gt;
@@ -1404,10 +1539,10 @@ fig.show()
     
     <item>
       <title>Life expectancy trends in the former USSR</title>
-      <link>/2014/10/russia-lex/</link>
+      <link>http://walkerke.github.io/2014/10/russia-lex/</link>
       <pubDate>Thu, 16 Oct 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/10/russia-lex/</guid>
+      <guid>http://walkerke.github.io/2014/10/russia-lex/</guid>
       <description>&lt;p&gt;When covering Russia and the former republics of the USSR in World Regional Geography, a key part of my material addresses the issues that some of these countries have had in their transitions from centralized to market economies.  Some of these countries experienced dramatic demographic shifts after the dissolution of the USSR, including a noticeable decline in life expectancy.&lt;/p&gt;
 
 &lt;p&gt;I&amp;rsquo;d been using some static Excel charts to illustrate life expectancy declines in Russia, Belarus, and Ukraine in previous courses.  However, I felt that an interactive solution would be preferable so that my students and I could explore the data in class over the course of our discussion.  I opted for &lt;a href=&#34;http://www.highcharts.com/&#34;&gt;Highcharts&lt;/a&gt;, through R and &lt;a href=&#34;http://rcharts.io&#34;&gt;rCharts&lt;/a&gt;, for the interactivity.  I then turned to &lt;a href=&#34;http://shiny.rstudio.com/&#34;&gt;Shiny&lt;/a&gt; from &lt;a href=&#34;http://www.rstudio.com/&#34;&gt;RStudio&lt;/a&gt; to put everything together.&lt;/p&gt;
@@ -1554,120 +1689,6 @@ shinyServer(function(input, output) {
 &lt;li&gt;The creators of the Human Mortality Database for making their data freely available&lt;/li&gt;
 &lt;li&gt;The &lt;a href=&#34;http://http://www.rstudio.com/&#34;&gt;RStudio&lt;/a&gt; team for Shiny and all its associated training materials&lt;/li&gt;
 &lt;li&gt;The developers of rCharts and Highcharts&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Exploring the United Nations population projections with rCharts</title>
-      <link>/2014/08/un-projections/</link>
-      <pubDate>Tue, 05 Aug 2014 00:00:00 +0000</pubDate>
-      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/08/un-projections/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;Please note: some NVD3 charts are performing very slowly in the latest version of Google Chrome at the moment; &lt;a href=&#34;https://github.com/novus/nvd3/issues/702&#34;&gt;see this GitHub issue.&lt;/a&gt;  As such, this post is best viewed in other browsers.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;I recently came across &lt;a href=&#34;http://dataremixed.com/2014/07/story-types-a-thought-starter/&#34;&gt;this really interesting post&lt;/a&gt; from &lt;a href=&#34;https://twitter.com/DataRemixed&#34;&gt;Ben Jones&lt;/a&gt; that explores the history and future of world population change with Tableau.  I haven&amp;rsquo;t used Tableau much, but I was impressed with the different ways in which Ben used the software to visualize various aspects of global population change.  More broadly, I can see multiple ways in which a visualization like this would be useful in teaching a course like World Regional Geography.  An instructor could ask students to answer a series of questions regarding global population change, using the visualizations as their evidence.  Students would then report back to the class about what they&amp;rsquo;ve learned from the visualizations, presenting different views to support their answers to the questions.&lt;/p&gt;
-
-&lt;p&gt;Reading this post motivated me to share a couple more basic visualizations that I&amp;rsquo;ve used in my teaching to support discussions of global population change.  These are some of the first charts I created with &lt;a href=&#34;http://rcharts.io/&#34;&gt;rCharts&lt;/a&gt; when I first started working with the package late last year.  However, I&amp;rsquo;ve updated the code below to use the new Hadley Wickham package &lt;a href=&#34;https://github.com/hadley/dplyr&#34;&gt;dplyr&lt;/a&gt;, which makes data munging in R so much easier.  Eventually, I would like to create a &lt;a href=&#34;http://shiny.rstudio.com/&#34;&gt;Shiny&lt;/a&gt; application that is similar to what Ben created with Tableau, but instead using R and rCharts.&lt;/p&gt;
-
-&lt;p&gt;In the examples below, I use population projection data from &lt;a href=&#34;http://esa.un.org/wpp/&#34;&gt;the United Nations&amp;rsquo; World Population Prospects, 2012 Revision&lt;/a&gt;.  I create the visualizations with &lt;a href=&#34;http://nvd3.org/&#34;&gt;NVD3&lt;/a&gt;.  The first example is a stacked area chart that shows the changing regional distribution of the world&amp;rsquo;s population between 1950 and 2100.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(dplyr)
-library(rCharts)
-library(RColorBrewer)
-
-dat &amp;lt;- read.csv(&amp;quot;http://esa.un.org/wpp/ASCII-Data/ASCII_FILES/WPP2012_DB02_POPULATIONS_ANNUAL.csv&amp;quot;)
-
-## Alternatively, download the file from the above link and save it in your working directory
-
-# library(data.table)
-# dat &amp;lt;- fread(&amp;quot;WPP2012_DB02_POPULATIONS_ANNUAL.csv&amp;quot;)
-
-regions &amp;lt;- c(&amp;quot;Africa&amp;quot;, &amp;quot;Latin America and the Caribbean&amp;quot;, &amp;quot;Northern America&amp;quot;, &amp;quot;Europe&amp;quot;, &amp;quot;Oceania&amp;quot;, &amp;quot;Asia&amp;quot;)
-
-region_dat &amp;lt;- dat %&amp;gt;%
-  filter(VarID == 2, 
-         Location %in% regions) %&amp;gt;%
-  mutate(billions = PopTotal / 1000000) %&amp;gt;%
-  select(Location, Time, billions)
-
-# Stacked area chart by region
-
-c1 &amp;lt;- nPlot(billions ~ Time, 
-            group = &amp;quot;Location&amp;quot;, 
-            data = region_dat, 
-            type = &amp;quot;stackedAreaChart&amp;quot;)
-
-c1$chart(color = brewer.pal(6, &amp;quot;Set2&amp;quot;))
-c1$yAxis(tickFormat= &amp;quot;#!d3.format(&#39;,.1f&#39;)!#&amp;quot;)
-c1$yAxis(axisLabel = &amp;quot;Population (billions)&amp;quot;, width = 62)
-c1$xAxis(axisLabel = &amp;quot;Year&amp;quot;)
-
-c1$chart(tooltipContent = &amp;quot;#! function(key, x, y){
-        return &#39;&amp;lt;h3&amp;gt;&#39; + key + &#39;&amp;lt;/h3&amp;gt;&#39; + 
-        &#39;&amp;lt;p&amp;gt;&#39; + y + &#39; billion in &#39; + x + &#39;&amp;lt;/p&amp;gt;&#39;
-        } !#&amp;quot;)
-        
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The above code reads the data file directly into R from the UN&amp;rsquo;s website; however this can be slow (about a couple minutes) so if you&amp;rsquo;d prefer, I&amp;rsquo;d advise downloading the CSV to your working directory and using &lt;code&gt;fread&lt;/code&gt; from the &lt;strong&gt;data.table&lt;/strong&gt; package to read it in (&lt;a href=&#34;http://r.789695.n4.nabble.com/Odd-problem-using-fread-to-read-in-a-csv-file-no-data-just-headers-td4686302.html&#34;&gt;there is an issue with using &lt;code&gt;fread&lt;/code&gt; to read CSVs from websites on Windows&lt;/a&gt;).  I then subset the data into a new data frame, &lt;code&gt;region_dat&lt;/code&gt;, using &lt;strong&gt;dplyr&lt;/strong&gt;.  If you are unfamiliar with dplyr, I highly recommend that you check it out; &lt;a href=&#34;http://rpubs.com/walkerke/ipums_dplyr&#34;&gt;I have written about other use cases for dplyr here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The remaining code creates the NVD3 chart with rCharts. Notice that when working with rCharts, you sometimes have to pass in JavaScript directly to modify the chart options, which is enclosed in &lt;code&gt;&amp;quot;#!...!#&amp;quot;&lt;/code&gt;.  I do this when formatting the y-axis values as well as the content of the tooltip.  Notice that &lt;code&gt;key&lt;/code&gt; refers to the group value, &lt;code&gt;y&lt;/code&gt; is the y-axis value, and &lt;code&gt;x&lt;/code&gt; is the x-axis value in the JavaScript function.  You can also pass in other values to the tooltip with NVD3; &lt;a href=&#34;https://gist.github.com/walkerke/11002398&#34;&gt;I show how in this GitHub gist&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Typing &lt;code&gt;c1&lt;/code&gt; in the console then produces the chart below:&lt;/p&gt;
-
-&lt;iframe src=&#34;http://walkerke.github.io/teaching-with-datavis/un-projections/regions.html&#34; width=&#34;850&#34; height=&#34;400&#34; seamless scrolling=&#34;no&#34; frameBorder = &#34;0&#34;&gt;&lt;/iframe&gt;
-
-&lt;p&gt;I used this chart during the first week of my World Regional Geography class to discuss population change in global context.  The region that stands out, of course, is Africa, which is projected to almost-quadruple in population by the end of century.  If these projections pan out, Africa would have over 4 billion residents by 2100, and account for around 40 percent of the world&amp;rsquo;s population.  The interactivity in the chart then allows for more detailed exploration of the data.  By clicking on the Europe data series, for example, the user can hide all of the other regions, and show how the continent&amp;rsquo;s population is projected to peak in the next several years and then begin to decline.  These figures provided important context to many of the thematic topics specific to these regions I covered later in the class.  Additionally, the chart can be modified with a single click to a &amp;ldquo;Stream&amp;rdquo; or &amp;ldquo;Expanded&amp;rdquo; 100% view (try it!), for different views of the data.&lt;/p&gt;
-
-&lt;p&gt;I also created another visualization to show UN projections for the world&amp;rsquo;s population based on different projection scenarios.  The code and resultant chart are below.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;variants &amp;lt;- c(&amp;quot;Low&amp;quot;, &amp;quot;Medium&amp;quot;, &amp;quot;High&amp;quot;, &amp;quot;Constant fertility&amp;quot;)
-
-global_dat &amp;lt;- dat %&amp;gt;%
-  filter(Location == &amp;quot;World&amp;quot;, 
-         Variant %in% variants,
-         Time &amp;gt;= 2012) %&amp;gt;%
-  mutate(varfactor = factor(Variant,
-                            levels = c(&amp;quot;Constant fertility&amp;quot;,
-                                       &amp;quot;High&amp;quot;,
-                                       &amp;quot;Medium&amp;quot;,
-                                       &amp;quot;Low&amp;quot;)), 
-         billions = PopTotal / 1000000) %&amp;gt;%
-  select(varfactor, Time, billions) %&amp;gt;%
-  arrange(varfactor)
-
-c2 &amp;lt;- nPlot(billions ~ Time, 
-            group = &amp;quot;varfactor&amp;quot;, 
-            data = global_dat, 
-            type=&amp;quot;lineChart&amp;quot;)
-
-c2$chart(color = brewer.pal(4, &amp;quot;Set2&amp;quot;))
-c2$yAxis(tickFormat= &amp;quot;#!d3.format(&#39;,.1f&#39;)!#&amp;quot;)
-c2$yAxis(axisLabel = &amp;quot;Population (billions)&amp;quot;, width = 62)
-c2$xAxis(axisLabel = &amp;quot;Year&amp;quot;)
-
-
-c2$chart(tooltipContent = &amp;quot;#! function(key, x, y){
-        return &#39;&amp;lt;h3&amp;gt;&#39; + &#39;Variant: &#39; + key + &#39;&amp;lt;/h3&amp;gt;&#39; + 
-        &#39;&amp;lt;p&amp;gt;&#39; + y + &#39; billion in &#39; + x + &#39;&amp;lt;/p&amp;gt;&#39;
-        } !#&amp;quot;)
-c2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;iframe src=&#34;http://walkerke.github.io/teaching-with-datavis/un-projections/global.html&#34; width=&#34;850&#34; height=&#34;400&#34; seamless scrolling=&#34;no&#34; frameBorder = &#34;0&#34;&gt;&lt;/iframe&gt;
-
-&lt;p&gt;The chart shows wide disparities between the UN&amp;rsquo;s projection scenarios.  If global fertility were to remain at 2012 levels, the world&amp;rsquo;s population would be expected to reach nearly 28 billion by the end of the century!  However, any reasonable projection scenarios take into account global declines in fertility.  While the annual rate of world population growth has been declining for several decades, &lt;a href=&#34;http://en.wikipedia.org/wiki/Demographic_momentum&#34;&gt;demographic momentum&lt;/a&gt; is projected to carry the world&amp;rsquo;s population to close to 11 billion by 2100, according to the most commonly-cited Medium projection variant.  However, it is notable that if global fertility were to decline more than expected, the world&amp;rsquo;s population could peak in size and then decline over the next century.  This is shown by the Low variant, which is calculated with a fertility rate half a child lower than the medium variant.  If you are interested in learning more about the UN&amp;rsquo;s projections and methodology, &lt;a href=&#34;http://esa.un.org/wpp/Documentation/pdf/WPP2012_HIGHLIGHTS.pdf&#34;&gt;read their report here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The UN population projection dataset contains a lot more information than just this, however.  Projections are included for every country, and other files are available with additional demographic information &lt;a href=&#34;http://esa.un.org/wpp/ASCII-Data/DISK_NAVIGATION_ASCII.htm&#34;&gt;at the UN&amp;rsquo;s website&lt;/a&gt;.  As such, there are many other ways to visualize these data; I envision a Shiny application in which the user could interactively select countries and compare projection scenarios.&lt;/p&gt;
-
-&lt;p&gt;You are welcome to use these visualizations if you&amp;rsquo;d like, or feel free to &lt;a href=&#34;https://github.com/walkerke/teaching-with-datavis/blob/master/un-projections/un-projections.R&#34;&gt;get the code from GitHub&lt;/a&gt; and build on this.  If you do, I&amp;rsquo;d love to hear about what you&amp;rsquo;ve created!&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Thanks to:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The UN Population Division for making all their data freely and publicly available;&lt;/li&gt;
-&lt;li&gt;The developers of rCharts and dplyr&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>

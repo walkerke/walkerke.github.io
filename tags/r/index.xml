@@ -2,21 +2,156 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kyle Walker</title>
-    <link>/tags/r/index.xml</link>
+    <link>http://walkerke.github.io/tags/r/index.xml</link>
     <description>Recent content on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2016 Kyle Walker</copyright>
-    <atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://walkerke.github.io/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Spatial analysis pipelines with simple features in R</title>
+      <link>http://walkerke.github.io/2016/12/spatial-pipelines/</link>
+      <pubDate>Tue, 27 Dec 2016 06:15:14 +0000</pubDate>
+      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
+      <guid>http://walkerke.github.io/2016/12/spatial-pipelines/</guid>
+      <description>&lt;!-- BLOGDOWN-BODY-BEFORE
+
+/BLOGDOWN-BODY-BEFORE --&gt;
+
+&lt;p&gt;In November, the new &lt;a href=&#34;https://cran.r-project.org/web/packages/sf/index.html&#34;&gt;simple features package for R &lt;strong&gt;sf&lt;/strong&gt;&lt;/a&gt; hit CRAN. The package is like &lt;strong&gt;rgdal&lt;/strong&gt;, &lt;strong&gt;sp&lt;/strong&gt;, and &lt;strong&gt;rgeos&lt;/strong&gt; rolled into one, is much faster, and allows for data processing with dplyr verbs! Also, as &lt;code&gt;sf&lt;/code&gt; objects are represented in a much simpler way than &lt;code&gt;sp&lt;/code&gt; objects, it allows for spatial analysis in R within &lt;a href=&#34;https://cran.r-project.org/web/packages/magrittr/index.html&#34;&gt;&lt;strong&gt;magrittr&lt;/strong&gt;&lt;/a&gt; pipelines.&lt;/p&gt;
+&lt;p&gt;This post showcases some of this functionality in a simulated spatial analysis workflow, in which an analyst wants to determine whether customers have visited a point of interest (POI) based on GPS tracking data. In this hypothetical example, we’ll assess whether visitors to midtown Manhattan have walked through Bryant Park.&lt;/p&gt;
+&lt;p&gt;Let’s take a single visitor who spent an entire day strolling around Midtown Manhattan, and left 100 GPS traces from her phone:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(leaflet)
+library(sf)
+library(sp)
+library(TSP)
+library(magrittr)
+
+set.seed(1983)
+
+long &amp;lt;- sample(seq(-73.9995, -73.9688, 0.0001), 100, replace = TRUE)
+lat &amp;lt;- sample(seq(40.7483, 40.7646, 0.0001), 100, replace = TRUE)
+
+df &amp;lt;- data.frame(long, lat, id = 1:100)
+
+leaflet(df) %&amp;gt;%
+  addTiles() %&amp;gt;%
+  addMarkers()&lt;/code&gt;&lt;/pre&gt;
+&lt;iframe src=&#34;http://walkerke.github.io/extras/blog/midtown_points.html&#34; frameborder=&#34;0&#34; scrolling=&#34;no&#34; width=&#34;100%&#34; height=&#34;400&#34;&gt;
+&lt;/iframe&gt;
+&lt;p&gt;A real-world example would have time-stamped data, allowing for a more realistic path. We’ll construct a hypothetical path by solving for the &lt;a href=&#34;https://en.wikipedia.org/wiki/Hamiltonian_path&#34;&gt;Hamiltonian Path&lt;/a&gt; with the R package &lt;a href=&#34;https://cran.r-project.org/web/packages/TSP/&#34;&gt;&lt;strong&gt;TSP&lt;/strong&gt;&lt;/a&gt; to simulate this (acknowledging that this hypothetical path will go through buildings).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;path &amp;lt;- df[,1:2] %&amp;gt;%
+  dist() %&amp;gt;%
+  TSP() %&amp;gt;%
+  insert_dummy(label = &amp;quot;cut&amp;quot;) %&amp;gt;%
+  solve_TSP(method = &amp;quot;nearest_insertion&amp;quot;) %&amp;gt;%
+  cut_tour(cut = &amp;quot;cut&amp;quot;) 
+
+df2 &amp;lt;- df[match(path, df$id), ] &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now that we’ve ordered our GPS traces correctly, we can generate a path with a simple features pipeline. We convert the ordered points to a matrix; generate a line with &lt;code&gt;st_linestring()&lt;/code&gt;; create a simple feature collection object with &lt;code&gt;st_sfc()&lt;/code&gt;; then transform to a projected coordinate system with &lt;code&gt;st_transform()&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;lines &amp;lt;- df2[,1:2] %&amp;gt;%
+  as.matrix() %&amp;gt;%
+  st_linestring() %&amp;gt;%
+  st_sfc(crs = 4326) %&amp;gt;%
+  st_transform(crs = 32618)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We first specify the CRS as the WGS 1984 geographic coordinate system, then transform to UTM Zone 18N as we want a projected coordinate system for planar geometric operations. Let’s take a look at our lines:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;lines_map &amp;lt;- lines %&amp;gt;%
+  st_transform(crs = 4326) %&amp;gt;%
+  as(&amp;quot;Spatial&amp;quot;) %&amp;gt;%
+  leaflet() %&amp;gt;%
+  addTiles() %&amp;gt;%
+  addPolylines()
+
+lines_map&lt;/code&gt;&lt;/pre&gt;
+&lt;iframe src=&#34;http://walkerke.github.io/extras/blog/midtown_lines.html&#34; frameborder=&#34;0&#34; scrolling=&#34;no&#34; width=&#34;100%&#34; height=&#34;400&#34;&gt;
+&lt;/iframe&gt;
+&lt;p&gt;Now, we need to see whether this path intersects Bryant Park. A polygon representing the boundaries of Bryant Park would be ideal; however, let’s say hypothetically that we only have XY coordinates for this point of interest. As such, we can buffer the point by 100 meters to represent the approximate extent of the park.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;bryant_buffer &amp;lt;- c(-73.983581, 40.753714) %&amp;gt;%
+  st_point() %&amp;gt;%
+  st_sfc(crs = 4326) %&amp;gt;%
+  st_transform(32618) %&amp;gt;%
+  st_buffer(dist = 100)
+
+buffer_for_map &amp;lt;- bryant_buffer %&amp;gt;%
+  st_transform(4326) %&amp;gt;%
+  as(&amp;quot;Spatial&amp;quot;)
+
+lines_map %&amp;gt;%
+  addPolygons(data = buffer_for_map)&lt;/code&gt;&lt;/pre&gt;
+&lt;iframe src=&#34;http://walkerke.github.io/extras/blog/midtown_buffer.html&#34; frameborder=&#34;0&#34; scrolling=&#34;no&#34; width=&#34;100%&#34; height=&#34;400&#34;&gt;
+&lt;/iframe&gt;
+&lt;p&gt;We have an approximation of the park’s extent; we’ll get some false positives here but this will work for purposes of illustration. We can then use &lt;code&gt;st_intersects&lt;/code&gt; to see if our lines intersect the buffer:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;st_intersects(lines, bryant_buffer)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [[1]]
+## [1] 1&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The function returns &lt;code&gt;1&lt;/code&gt;, which means that we do have an intersection. Now, let’s try testing this out over 1000 simulations, and see how many times a simulated sample of 1000 visitors walk through Bryant Park. We first need to generate 1000 paths:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;paths &amp;lt;- lapply(1:1000, function(x) {
+  
+  set.seed(x)
+  
+  long &amp;lt;- sample(seq(-73.9995, -73.9688, 0.0001), 100, replace = TRUE)
+  lat &amp;lt;- sample(seq(40.7483, 40.7646, 0.0001), 100, replace = TRUE)
+  df &amp;lt;- data.frame(long, lat, id = 1:100)
+  
+  path &amp;lt;- df[,1:2] %&amp;gt;%
+    dist(diag = FALSE) %&amp;gt;%
+    TSP() %&amp;gt;%
+    insert_dummy(label = &amp;quot;cut&amp;quot;) %&amp;gt;%
+    solve_TSP(method = &amp;quot;nearest_insertion&amp;quot;) %&amp;gt;%
+    cut_tour(cut = &amp;quot;cut&amp;quot;) 
+  
+  df2 &amp;lt;- df[match(path, df$id), ] 
+  
+  lines &amp;lt;- df2[,1:2] %&amp;gt;%
+    as.matrix() %&amp;gt;%
+    st_linestring() %&amp;gt;%
+    st_sfc(crs = 4326) %&amp;gt;%
+    st_transform(32618)
+  
+  lines
+  
+})&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can now see how many visitors walked through Bryant Park:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;visits &amp;lt;- unlist(
+  lapply(paths, function(x) {
+    y &amp;lt;- st_intersects(x, bryant_buffer)
+    if (length(y[[1]]) == 1) {
+      return(1)
+    } else {
+      return(0)
+    } 
+  })
+)
+
+table(visits)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+##   0   1 
+## 335 665&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;665 of our 1000 visitors walked through Bryant Park.&lt;/p&gt;
+&lt;p&gt;This just scratches the surface of the spatial work that can be done in R with the &lt;strong&gt;sf&lt;/strong&gt; package. In the future, I’ll write more about the new &lt;code&gt;sf&lt;/code&gt; class, which represents spatial objects much like data frames and in turn can accept dplyr verbs for data wrangling.&lt;/p&gt;
+
+
+
+&lt;!-- BLOGDOWN-HEAD
+
+
+
+
+
+
+/BLOGDOWN-HEAD --&gt;
+</description>
+    </item>
     
     <item>
       <title>Dropdown menus in R Markdown with bsselectR</title>
-      <link>/2016/12/rmd-dropdowns/</link>
+      <link>http://walkerke.github.io/2016/12/rmd-dropdowns/</link>
       <pubDate>Thu, 15 Dec 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/12/rmd-dropdowns/</guid>
+      <guid>http://walkerke.github.io/2016/12/rmd-dropdowns/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -128,10 +263,10 @@ bsselect(state_plots, type = &amp;quot;img&amp;quot;, selected = &amp;quot;Orego
     
     <item>
       <title>Reproducing the Washington Post housing price maps with R and ggplot2</title>
-      <link>/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</link>
+      <link>http://walkerke.github.io/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</link>
       <pubDate>Wed, 29 Jun 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</guid>
+      <guid>http://walkerke.github.io/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -285,10 +420,10 @@ ggplot() +
     
     <item>
       <title>Interactive flow visualization in R</title>
-      <link>/2016/06/interactive-flow-visualization-in-r/</link>
+      <link>http://walkerke.github.io/2016/06/interactive-flow-visualization-in-r/</link>
       <pubDate>Sun, 26 Jun 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/06/interactive-flow-visualization-in-r/</guid>
+      <guid>http://walkerke.github.io/2016/06/interactive-flow-visualization-in-r/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -494,10 +629,10 @@ globejs(arcsLwd = weights, arcs = arcs, arcsColor = df4$colors)&lt;/code&gt;&lt;
     
     <item>
       <title>Using a new Mapbox Studio map in an R Leaflet project</title>
-      <link>/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</link>
+      <link>http://walkerke.github.io/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</link>
       <pubDate>Wed, 18 May 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</guid>
+      <guid>http://walkerke.github.io/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -570,10 +705,10 @@ leaflet(df) %&amp;gt;%
     
     <item>
       <title>Visualizing international demographic indicators with idbr and Plotly</title>
-      <link>/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</link>
+      <link>http://walkerke.github.io/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</link>
       <pubDate>Fri, 29 Jan 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</guid>
+      <guid>http://walkerke.github.io/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</guid>
       <description>&lt;p&gt;It&amp;rsquo;s been a while since I last posted here - but I&amp;rsquo;ve been working on a new R package that I&amp;rsquo;m quite excited about, and I thought this would be the right place to post.  My new package, &lt;strong&gt;idbr&lt;/strong&gt;, is an R interface to the &lt;a href=&#34;http://www.census.gov/data/developers/data-sets/international-database.html&#34;&gt;United States Census Bureau&amp;rsquo;s International Data Base API&lt;/a&gt;.  The IDB includes a host of international demographic indicators - including historical data and projections to 2050.  I use IDB data all of the time for my teaching - and &lt;strong&gt;idbr&lt;/strong&gt; makes the process of getting the data much easier!  While this product uses the Census Bureau Data API, it is not endorsed or certified by the Census Bureau.&lt;/p&gt;
 
 &lt;p&gt;Install from CRAN with the following command:&lt;/p&gt;
@@ -721,10 +856,10 @@ shinyApp(ui = ui, server = server)
     
     <item>
       <title>acs14lite: A lightweight R interface to the 2010-2014 ACS API</title>
-      <link>/2015/12/acs14lite/</link>
+      <link>http://walkerke.github.io/2015/12/acs14lite/</link>
       <pubDate>Sat, 12 Dec 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/12/acs14lite/</guid>
+      <guid>http://walkerke.github.io/2015/12/acs14lite/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -836,10 +971,10 @@ r2cartodb(la_tracts2, &amp;#39;la_poverty&amp;#39;)
     
     <item>
       <title>Fetching roads data in R with tigris</title>
-      <link>/2015/12/roads-tigris/</link>
+      <link>http://walkerke.github.io/2015/12/roads-tigris/</link>
       <pubDate>Thu, 03 Dec 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/12/roads-tigris/</guid>
+      <guid>http://walkerke.github.io/2015/12/roads-tigris/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -885,10 +1020,10 @@ geojson_write(rt1, file = &amp;#39;route1.geojson&amp;#39;)&lt;/code&gt;&lt;/pre
     
     <item>
       <title>Mapping religious adherence in the US with CartoDB</title>
-      <link>/2015/02/mapping-religious-adherence-in-the-us-with-cartodb/</link>
+      <link>http://walkerke.github.io/2015/02/mapping-religious-adherence-in-the-us-with-cartodb/</link>
       <pubDate>Thu, 26 Feb 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/02/mapping-religious-adherence-in-the-us-with-cartodb/</guid>
+      <guid>http://walkerke.github.io/2015/02/mapping-religious-adherence-in-the-us-with-cartodb/</guid>
       <description>&lt;p&gt;Before coming to TCU, I worked as a data analyst for the &lt;a href=&#34;https://www.cpg.org/&#34;&gt;Church Pension Group&lt;/a&gt;, which manages the retirement funds and provides other financial services for the Episcopal Church.  I was part of a small research group that completed both internal and public-facing studies using the company&amp;rsquo;s data.  &lt;a href=&#34;https://www.cpg.org/global/research/reports-statistics/&#34;&gt;You can take a look at some of the studies I worked on here&lt;/a&gt;.  While I was at CPG, I developed an interest in the sociology of religion, as changing rates of religious adherence were of critical importance to CPG&amp;rsquo;s work, as they impact the overall viability of parishes (and in turn the fiscal health of the Church).  During this time, data for the &lt;a href=&#34;http://www.rcms2010.org/&#34;&gt;2010 US Religion Census (or Religious Congregations and Membership Study, abbreviated as RCMS)&lt;/a&gt; started to become available.  As the US Census does not ask questions about religion, researchers interested in studying religion must turn to other data sources like these.&lt;/p&gt;
 
 &lt;p&gt;I never had the opportunity to really dig into this dataset while at CPG, as I left for my current position at TCU shortly afterward.  However, as I teach about the geography of religious adherence (defined here as the proportion of the population actively practicing a religion) in my World Regional Geography course, I took the opportunity to dive back into the data.  I was inspired by &lt;a href=&#34;http://www.glenmary.org/rcms2010/&#34;&gt;this map from the Glenmary Research Center&lt;/a&gt; which maps the top religious family by county in the United States.  This map is excellent, but I wanted an interactive version that I could explore with my students in class (and that they could explore outside of class).  However, I did really like the bivariate cartographic technique they used to present the data (&lt;a href=&#34;http://www.joshuastevens.net/cartography/make-a-bivariate-choropleth-map/&#34;&gt;see this post from Joshua Stevens for a great overview of bivariate mapping&lt;/a&gt;).  In this instance, the top religious group in each county is assigned a color; then, the intensity of the color is related to the adherence percentage for that group.  This makes sense; if two counties have Catholic as their top group, but one has an adherence of 75 percent as opposed to 20 percent for the other, they should not be represented the same way.&lt;/p&gt;
@@ -968,10 +1103,10 @@ geojson_write(rt1, file = &amp;#39;route1.geojson&amp;#39;)&lt;/code&gt;&lt;/pre
     
     <item>
       <title>Charting time series data with dygraphs in R and Python</title>
-      <link>/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</link>
+      <link>http://walkerke.github.io/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</link>
       <pubDate>Sat, 20 Dec 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</guid>
+      <guid>http://walkerke.github.io/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</guid>
       <description>&lt;p&gt;This past week, the good people at &lt;a href=&#34;http://www.rstudio.com&#34;&gt;RStudio&lt;/a&gt; advertised over Twitter the release of &lt;a href=&#34;http://www.htmlwidgets.org/index.html&#34;&gt;htmlwidgets for R&lt;/a&gt;, a project in collaboration with &lt;a href=&#34;http://rcharts.io&#34;&gt;rCharts&lt;/a&gt; wizards &lt;a href=&#34;https://twitter.com/ramnath_vaidya&#34;&gt;Ramnath Vaidyanathan&lt;/a&gt; and &lt;a href=&#34;https://twitter.com/timelyportfolio&#34;&gt;Kenton Russell&lt;/a&gt;. The packages showcased are incredible; I was particularly intrigued by the &lt;a href=&#34;http://rstudio.github.io/dygraphs/&#34;&gt;dygraphs&lt;/a&gt; package, which creates interactive time-series charts.&lt;/p&gt;
 
 &lt;p&gt;Aside from maps, time series line charts are the most common chart type I use in my teaching, as I often discuss how characteristics of places evolve over time.  As such, I took dygraphs for a spin to create charts relevant to a couple topics I address in World Regional Geography.&lt;/p&gt;
@@ -1075,10 +1210,10 @@ fig.show()
     
     <item>
       <title>Using Slidify to teach with interactive content</title>
-      <link>/2014/12/using-slidify-to-teach-with-interactive-content/</link>
+      <link>http://walkerke.github.io/2014/12/using-slidify-to-teach-with-interactive-content/</link>
       <pubDate>Tue, 02 Dec 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/12/using-slidify-to-teach-with-interactive-content/</guid>
+      <guid>http://walkerke.github.io/2014/12/using-slidify-to-teach-with-interactive-content/</guid>
       <description>
 
 &lt;p&gt;I frequently come across criticisms of PowerPoint as a presentation tool, which is interesting to me given the ubiquity of its use across industries.  When I worked as a data analyst prior to coming to TCU, I frequently prepared PowerPoints using a company template for my boss&amp;rsquo;s presentations or for talks of my own.  In academia, we have considerable freedom in how we can communicate information; however, PowerPoint is still widely used in the classroom and is everywhere at professional conferences.&lt;/p&gt;
@@ -1149,10 +1284,10 @@ fig.show()
     
     <item>
       <title>Life expectancy trends in the former USSR</title>
-      <link>/2014/10/russia-lex/</link>
+      <link>http://walkerke.github.io/2014/10/russia-lex/</link>
       <pubDate>Thu, 16 Oct 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/10/russia-lex/</guid>
+      <guid>http://walkerke.github.io/2014/10/russia-lex/</guid>
       <description>&lt;p&gt;When covering Russia and the former republics of the USSR in World Regional Geography, a key part of my material addresses the issues that some of these countries have had in their transitions from centralized to market economies.  Some of these countries experienced dramatic demographic shifts after the dissolution of the USSR, including a noticeable decline in life expectancy.&lt;/p&gt;
 
 &lt;p&gt;I&amp;rsquo;d been using some static Excel charts to illustrate life expectancy declines in Russia, Belarus, and Ukraine in previous courses.  However, I felt that an interactive solution would be preferable so that my students and I could explore the data in class over the course of our discussion.  I opted for &lt;a href=&#34;http://www.highcharts.com/&#34;&gt;Highcharts&lt;/a&gt;, through R and &lt;a href=&#34;http://rcharts.io&#34;&gt;rCharts&lt;/a&gt;, for the interactivity.  I then turned to &lt;a href=&#34;http://shiny.rstudio.com/&#34;&gt;Shiny&lt;/a&gt; from &lt;a href=&#34;http://www.rstudio.com/&#34;&gt;RStudio&lt;/a&gt; to put everything together.&lt;/p&gt;
@@ -1305,10 +1440,10 @@ shinyServer(function(input, output) {
     
     <item>
       <title>Exploring the United Nations population projections with rCharts</title>
-      <link>/2014/08/un-projections/</link>
+      <link>http://walkerke.github.io/2014/08/un-projections/</link>
       <pubDate>Tue, 05 Aug 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/08/un-projections/</guid>
+      <guid>http://walkerke.github.io/2014/08/un-projections/</guid>
       <description>&lt;p&gt;&lt;strong&gt;Please note: some NVD3 charts are performing very slowly in the latest version of Google Chrome at the moment; &lt;a href=&#34;https://github.com/novus/nvd3/issues/702&#34;&gt;see this GitHub issue.&lt;/a&gt;  As such, this post is best viewed in other browsers.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;I recently came across &lt;a href=&#34;http://dataremixed.com/2014/07/story-types-a-thought-starter/&#34;&gt;this really interesting post&lt;/a&gt; from &lt;a href=&#34;https://twitter.com/DataRemixed&#34;&gt;Ben Jones&lt;/a&gt; that explores the history and future of world population change with Tableau.  I haven&amp;rsquo;t used Tableau much, but I was impressed with the different ways in which Ben used the software to visualize various aspects of global population change.  More broadly, I can see multiple ways in which a visualization like this would be useful in teaching a course like World Regional Geography.  An instructor could ask students to answer a series of questions regarding global population change, using the visualizations as their evidence.  Students would then report back to the class about what they&amp;rsquo;ve learned from the visualizations, presenting different views to support their answers to the questions.&lt;/p&gt;
@@ -1419,10 +1554,10 @@ c2
     
     <item>
       <title>Interactive international population pyramids with R, rCharts</title>
-      <link>/2014/06/rcharts-pyramids/</link>
+      <link>http://walkerke.github.io/2014/06/rcharts-pyramids/</link>
       <pubDate>Sat, 07 Jun 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/06/rcharts-pyramids/</guid>
+      <guid>http://walkerke.github.io/2014/06/rcharts-pyramids/</guid>
       <description>&lt;p&gt;I find population pyramids to be very effective teaching tools.  In short, a population pyramid is a type of chart that shows the population size of different age cohorts on the x-axis, with gender usually displayed back-to-back to create the shape of a &amp;ldquo;pyramid.&amp;rdquo;  It is used to illustrate a snapshot of the age and sex structure of a population, and can serve as a tool that aids in discussion of many thematic issues such as population growth, aging, and gender imbalance.  The visually appealing structure of the population pyramid also makes it easy to compare the population structures of different countries, which is why I like to use pyramids in my classes.  This is exemplified by &lt;a href=&#34;http://blogs.worldbank.org/futuredevelopment/end-population-pyramid&#34;&gt;this post from the World Bank&lt;/a&gt;, which shows how different &amp;ldquo;shapes&amp;rdquo; of the pyramid reflect different demographic contexts.&lt;/p&gt;
 
 &lt;p&gt;I was originally motivated to learn interactive visualization to produce interactive population pyramids.  My inspiration came from these examples from &lt;a href=&#34;http://vis.stanford.edu/jheer/d3/pyramid/shift.html&#34;&gt;Jeff Heer&lt;/a&gt; and &lt;a href=&#34;http://bl.ocks.org/mbostock/4062085&#34;&gt;Mike Bostock&lt;/a&gt;, which use data from the U.S. Census.  Since then, a number of other creative interactive population pyramid applications have gotten a lot of attention, such as &lt;a href=&#34;http://populationpyramid.net/&#34;&gt;this visualization from Martin De Wulf&lt;/a&gt;, and &lt;a href=&#34;http://www.nytimes.com/2014/05/13/upshot/a-changing-shape-in-americas-age-distribution.html?rref=upshot&amp;amp;_r=1&#34;&gt;this animated graphic from the Pew Research Center&lt;/a&gt;, referenced in &lt;em&gt;The New York Times&amp;rsquo;&lt;/em&gt; Upshot.&lt;/p&gt;
@@ -1523,10 +1658,10 @@ q1$save(&#39;qatar.html&#39;, cdn = TRUE)
     
     <item>
       <title>Visualizing the economics of tourism in the Pacific with Plotly</title>
-      <link>/2014/05/tourism-plotly/</link>
+      <link>http://walkerke.github.io/2014/05/tourism-plotly/</link>
       <pubDate>Mon, 12 May 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/05/tourism-plotly/</guid>
+      <guid>http://walkerke.github.io/2014/05/tourism-plotly/</guid>
       <description>&lt;p&gt;Over the last month or so, I&amp;rsquo;ve been working a lot with &lt;a href=&#34;http://plot.ly&#34;&gt;Plotly&lt;/a&gt; to visualize data for my World Regional Geography course.  Plotly is a web-based service that allows for the creation of interactive, D3-based visualizations that can be easily shared.  Visualizations are deployed and hosted on Plotly&amp;rsquo;s servers, so the service requires a connection to the internet to work.  One of the great things about Plotly is that it has APIs for popular data programming languages like &lt;a href=&#34;http://plot.ly/r/&#34;&gt;R&lt;/a&gt;, &lt;a href=&#34;http://plot.ly/python/&#34;&gt;Python&lt;/a&gt;, and &lt;a href=&#34;http://plot.ly/julia/&#34;&gt;Julia&lt;/a&gt;.  I really got hooked on Plotly, however, when I learned about &lt;code&gt;ggplotly&lt;/code&gt;, &lt;a href=&#34;http://ropensci.org/blog/2014/04/17/plotly/&#34;&gt;which allows you to convert &lt;strong&gt;ggplot2&lt;/strong&gt; graphs in R to interactive Plotly charts with just a couple extra lines of code&lt;/a&gt;.   I&amp;rsquo;m going to go over an example of how I used &lt;code&gt;ggplotly&lt;/code&gt; to assist with a discussion of the economic significance of tourism in the Pacific.&lt;/p&gt;
 
 &lt;hr /&gt;
@@ -1641,130 +1776,6 @@ py$ggplotly(t1)
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://twitter.com/plotlygraphs&#34;&gt;The Plotly team&lt;/a&gt; for their amazing work;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://twitter.com/WTTC&#34;&gt;The World Travel and Tourism Council&lt;/a&gt; for generously making their data publicly available.&lt;br /&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Visualizing the U.S. Hispanic population by state</title>
-      <link>/2014/01/visualizing-the-u.s.-hispanic-population-by-state/</link>
-      <pubDate>Thu, 09 Jan 2014 00:00:00 +0000</pubDate>
-      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/01/visualizing-the-u.s.-hispanic-population-by-state/</guid>
-      <description>
-
-&lt;p&gt;Welcome! This is the first post of my effort to document my foray into developing interactive data visualizations for use in my teaching.  Hopefully these examples will be of use to some readers who are interested in creating their own visualizations.&lt;/p&gt;
-
-&lt;p&gt;I&amp;rsquo;ll first provide a bit of background.  I&amp;rsquo;m a geography professor at Texas Christian University in Fort Worth, and started getting interested in data visualization when putting together materials for a course I taught in population geography last spring.  Visuals are essential for social science instructors; however, it is not always easy to find publicly available images that are both effective and suitable for what you want to teach (I imagine many of you, like me, have gone on many a failed Google image search).  So, I started looking into developing my own materials.  I happened upon the incredible &lt;a href=&#34;http://d3js.org/&#34;&gt;D3 JavaScript library&lt;/a&gt; by Mike Bostock and the stunning graphics from the &lt;a href=&#34;http://www.healthmetricsandevaluation.org/tools/data-visualizations&#34;&gt;Institute for Health Metrics and Evaluation&lt;/a&gt; and was immediately blown away.  Interactive examples like &lt;a href=&#34;http://bl.ocks.org/mbostock/4062085&#34;&gt;this population pyramid&lt;/a&gt; can be very effective for conveying social science concepts.&lt;/p&gt;
-
-&lt;p&gt;As a relative newcomer to JavaScript, however, I looked into what other resources were available for creating these types of interactive visualizations, especially in languages I have more of a familiarity with (R and Python, specifically).  Thus far, I&amp;rsquo;ve been using the fantastic &lt;a href=&#34;http://rcharts.io/&#34;&gt;rCharts&lt;/a&gt; R package by Ramnath Vaidyanathan, which provides an R wrapper for several JavaScript charting libraries, and the the &lt;a href=&#34;http://cran.r-project.org/web/packages/googleVis/index.html&#34;&gt;googleVis&lt;/a&gt; package, which is an R interface for the Google Charts API, and among other things allows R users to create &lt;a href=&#34;http://www.gapminder.org/&#34;&gt;Hans Rosling-style motion charts.&lt;/a&gt;.  I&amp;rsquo;ve also started looking into tools like &lt;a href=&#34;https://plot.ly/&#34;&gt;plotly&lt;/a&gt;, which has both R and Python APIs, and hope to create my own D3 visualizations from scratch eventually.&lt;/p&gt;
-
-&lt;p&gt;When possible, my examples on this site will use open data/open source tools and will be available on GitHub, so that anyone interested can use and adapt these examples as they need.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;My first example is a visualization of the composition of Hispanic populations by state in the U.S., for the ten states with the largest Hispanic populations in 2010.   In my introductory geography course, I&amp;rsquo;m going to be soon discussing shifts in the racial &amp;amp; ethnic composition of the U.S.  Sometime between 2040 and 2050, non-Hispanic whites are projected to become a minority in the U.S., in large part due to continued growth of the Hispanic population.  However, I find that many discussions of this demographic shift in the media tend to homogenize the Hispanic population, which is not what I want to convey to my students; as such, I wanted to find a way to visualize its diversity.  I came across &lt;a href=&#34;http://www.pewhispanic.org/2012/09/06/population-distribution-of-hispanic-origin-groups-by-county/&#34;&gt;these interesting interactive maps from the Pew Research Center&lt;/a&gt;, and downloaded the data they made available to see what I might do with it.&lt;/p&gt;
-
-&lt;p&gt;The data made available by the Pew Research Center are in Excel format.  There are many libraries for reading Excel data into R, but they often are not straightforward to use, so I first opened the file in Excel and saved it as a CSV for ease of use.  In their original form, the data are not in a great format for visualization in R; as such, I needed to do some munging, with help from Hadley Wickham&amp;rsquo;s excellent packages.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# First, download the Excel file from the Pew Research Center, and save it as a CSV in your working directory
-
-library(stringr)
-library(plyr)
-library(rCharts)
-library(reshape2)
-
-dat &amp;lt;- read.csv(&amp;quot;all_counties_by_top_six_groups.csv&amp;quot;)
-
-keep &amp;lt;- seq(1, 25, 3)
-
-dat &amp;lt;- dat[,keep]
-
-nms &amp;lt;- c(&#39;Name&#39;, &#39;Total.Hisp&#39;, &#39;Mexican&#39;, &#39;Puerto.Rican&#39;, &#39;Cuban&#39;, &#39;Salvadoran&#39;, &#39;Dominican&#39;, &#39;Guatemalan&#39;, &#39;Other&#39;)
-
-names(dat) &amp;lt;- nms
-
-dat &amp;lt;- dat[-c(1:3),]
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The above code simply cleans up the data to shape it into a nicely formatted data frame, and subsets it to get the population counts that we need.  However, there are still some steps to take before the data can be visualized.  Given the original data format, R has read in all my numeric data as factors, which wouldn&amp;rsquo;t let me make the kinds of manipulations I needed to do to aggregate the data by state.  Such aggregation also required some string manipulation, so that I could identify which counts correspond to each state (given that the geographic identifiers in the data are presented as &amp;lsquo;County, State&amp;rsquo;).  The code that follows cleans up the data even further and aggregates each numeric column by state.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dat &amp;lt;- cbind(dat, ldply(str_split(dat$Name, &amp;quot;, &amp;quot;)))
-
-names(dat) &amp;lt;- c(nms, &#39;County&#39;, &#39;State&#39;)
-
-convCols &amp;lt;- 2:9
-
-dat[,convCols] &amp;lt;- apply(dat[,convCols], 2, function(x) as.numeric(as.character(gsub(&amp;quot;,&amp;quot;, &amp;quot;&amp;quot;, x))))
-
-sums &amp;lt;- ddply(dat, .(State), numcolwise(sum))
-
-sorteddf &amp;lt;- sums[order(-sums$Total.Hisp),][1:10,]
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I&amp;rsquo;ve now identified the 10 states with the largest Hispanic populations, and aggregated the different ancestry columns by state.  I now needed to decide how to visualize these data.  I elected to use the &lt;a href=&#34;http://dimplejs.org/&#34;&gt;dimple&lt;/a&gt; D3 library, which is available through rCharts.  My hope was to create something like &lt;a href=&#34;http://dimplejs.org/examples_viewer.html?id=bars_horizontal_stacked_100pct&#34;&gt;this horizontal 100% chart&lt;/a&gt;, which would allow direct comparison of the Hispanic population composition of these states.  Fortunately, rCharts makes this straightforward.  I first created a new data frame that held percentages instead of raw counts, reshaped it into a suitable format, and called rCharts&amp;rsquo; &lt;code&gt;dPlot&lt;/code&gt; function to create the chart.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;newdf &amp;lt;- data.frame(sorteddf$State)
-
-vals &amp;lt;- c(&#39;Mexican&#39;, &#39;Puerto.Rican&#39;, &#39;Cuban&#39;, &#39;Salvadoran&#39;, &#39;Dominican&#39;, &#39;Guatemalan&#39;, &#39;Other&#39;)
-
-for (v in vals) {
-  newdf[[v]] &amp;lt;- round(((sorteddf[[v]] / sorteddf$Total.Hisp) * 100), 1)
-}
-
-names(newdf) &amp;lt;- c(&#39;State&#39;, vals)
-
-df.melt &amp;lt;- melt(newdf, variable.name = &#39;Ancestry&#39;, value.name = &#39;Share&#39;)
-
-d1 &amp;lt;- dPlot(
-  x = &amp;quot;Share&amp;quot;, 
-  y = &amp;quot;State&amp;quot;, 
-  groups = &amp;quot;Ancestry&amp;quot;, 
-  data = df.melt, 
-  type = &#39;bar&#39;)
-
-#Here, set the chart options to tell rCharts how to format the visualization  
-d1$xAxis(type = &amp;quot;addPctAxis&amp;quot;)
-d1$yAxis(type = &amp;quot;addCategoryAxis&amp;quot;, orderRule = &amp;quot;State&amp;quot;)
-
-d1$legend( x = 60, y = 10, width = 700, height = 20, horizontalAlign = &amp;quot;left&amp;quot;, orderRule = &amp;quot;Ancestry&amp;quot;)
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Below, you can see the result:&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;iframe-src-http-bl-ocks-org-walkerke-raw-8300770-width-825-height-450-seamless-frameborder-0-iframe&#34;&gt;&lt;iframe src=&#34;http://bl.ocks.org/walkerke/raw/8300770/&#34; width=&#34;825&#34; height=&#34;450&#34; seamless frameBorder = &#34;0&#34;&gt;&lt;/iframe&gt;&lt;/h2&gt;
-
-&lt;p&gt;The plot has accomplished what I hoped - displaying the considerable diversity of the Hispanic population across different states in the U.S.  The key here to the chart is the interactivity; while I could have produced a static visualization just like this, each component of the chart provides a tooltip on hover that gives specific information about its content.  I now have a more interactive document that I can explore with my students.&lt;/p&gt;
-
-&lt;p&gt;As the chart reveals, Hispanics are generally of Mexican origin in several states, including my state of Texas, where 84% of Hispanics are of Mexican ancestry; this will be the frame of reference for my students.  However, I can show students how in other parts of the country, such as my old home of New York, &amp;lsquo;Hispanic&amp;rsquo; means something very different, as individuals of Mexican heritage only make up 13% of the state&amp;rsquo;s Hispanic population.  It is also interesting to see how the &amp;lsquo;Other&amp;rsquo; category varies by state.  In some states (New York, New Jersey, New Mexico, Florida), this category is very large.  The &lt;a href=&#34;http://www.pewhispanic.org/files/2012/06/The-10-Largest-Hispanic-Origin-Groups.pdf&#34;&gt;Pew Center report provides some additional information on this&lt;/a&gt;; for example, many Colombians, Hondurans, and Peruvians live in the Miami area, and Queens, NYC has a large Ecuadorian population.  In New Mexico, the data reflect the Spanish and Native American heritage of many Hispanics in the state.&lt;/p&gt;
-
-&lt;p&gt;There are still some improvements that could be made; for example, in some browsers, the y-axis title is partially hidden, which I need to look into further.  Also, in order to get the effects to work correctly, I had to modify the version of Dimple in the HTML to point to version 1.1.3 (rCharts is still on 1.1.1).&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;To create this chart on your computer, follow these steps:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Visit the &lt;a href=&#34;http://www.pewhispanic.org/2012/09/06/population-distribution-of-hispanic-origin-groups-by-county/&#34;&gt;Pew Research Center site&lt;/a&gt;, download the Excel file they make available, and save it as a CSV in your working directory (don&amp;rsquo;t change the name, just the type).&lt;br /&gt;&lt;/li&gt;
-&lt;li&gt;Be sure that you have the following R packages installed: &lt;code&gt;stringr&lt;/code&gt;, &lt;code&gt;plyr&lt;/code&gt;, &lt;code&gt;rCharts&lt;/code&gt;, and &lt;code&gt;reshape2&lt;/code&gt;.  &lt;code&gt;rCharts&lt;/code&gt; is not yet on CRAN, so you&amp;rsquo;ll need to install it from GitHub with the &lt;code&gt;devtools&lt;/code&gt; package.  I use the &lt;code&gt;dev&lt;/code&gt; branch of rCharts, which has the latest updates; you can install this with the command, &lt;code&gt;devtools::install_github(&#39;rCharts&#39;, &#39;ramnathv&#39;, ref=&#39;dev&#39;)&lt;/code&gt;.&lt;br /&gt;&lt;/li&gt;
-&lt;li&gt;Run the following command: &lt;code&gt;source(&amp;quot;https://raw.github.com/walkerke/teaching-with-datavis/master/hispanics-by-state.R&amp;quot;)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Type &lt;code&gt;d1&lt;/code&gt; in your console, and you&amp;rsquo;ll have your chart!&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Alternatively, feel free to grab the code from GitHub and modify it as you wish.&lt;/p&gt;
-
-&lt;p&gt;I&amp;rsquo;d love to hear your feedback; you can send me an email at &lt;a href=&#34;mailto:kyle.walker@tcu.edu&#34;&gt;kyle.walker@tcu.edu&lt;/a&gt;, or connect with me on &lt;a href=&#34;https://twitter.com/kyle_e_walker&#34;&gt;Twitter&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Thanks to:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.pewhispanic.org/&#34;&gt;The Pew Research Center&amp;rsquo;s Hispanic Trends Project&lt;/a&gt; for making their data publicly available;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://twitter.com/ramnath_vaidya&#34;&gt;Ramnath Vaidyanathan&lt;/a&gt; and &lt;a href=&#34;https://twitter.com/timelyportfolio&#34;&gt;Timely Portfolio&lt;/a&gt; for their efforts and tutorials on rCharts;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://twitter.com/jkiernander&#34;&gt;John Kiernander&lt;/a&gt; for the DimpleJS library;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://twitter.com/hadleywickham&#34;&gt;Hadley Wickham&lt;/a&gt; and the &lt;a href=&#34;https://twitter.com/rstudioapp&#34;&gt;RStudio team&lt;/a&gt; for making R a much better place to work with data.&lt;br /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>

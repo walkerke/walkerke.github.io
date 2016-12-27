@@ -1,7 +1,7 @@
 ---
 title: "Spatial analysis pipelines with simple features in R"
 author: "Kyle Walker"
-date: 2016-12-27
+date: 2016-12-27T06:15:14
 slug: spatial-pipelines
 tags: ["R"]
 ---
