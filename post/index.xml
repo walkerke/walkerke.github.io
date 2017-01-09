@@ -13,7 +13,7 @@
     <atom:link href="http://walkerke.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>GIS workshop at the 2017 Society for Historical Archaeology meetings</title>
+      <title>GIS workshop at the 2017 Society for Historical Archaeology Conference</title>
       <link>http://walkerke.github.io/2017/01/sha-2017/</link>
       <pubDate>Mon, 09 Jan 2017 08:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
@@ -22,7 +22,7 @@
 
 /BLOGDOWN-BODY-BEFORE --&gt;
 
-&lt;p&gt;Last week, I had the opportunity to lead a Geographic Information Systems workshop at the &lt;a href=&#34;https://sha.org/conferences/&#34;&gt;2017 Society for Historical Archaeology Annual Meetings&lt;/a&gt;. During the day-long workshop, I introduced participants to a wide variety of key GIS concepts, and taught them how to apply those concepts to a series of historical topics. During the workshop, we used ArcGIS (ArcMap and ArcScene) as well as CARTO.&lt;/p&gt;
+&lt;p&gt;Last week, I had the opportunity to lead a Geographic Information Systems workshop at the &lt;a href=&#34;https://sha.org/conferences/&#34;&gt;2017 Society for Historical Archaeology Conference&lt;/a&gt;. During the day-long workshop, I introduced participants to a wide variety of key GIS concepts, and taught them how to apply those concepts to a series of historical topics. During the workshop, we used ArcGIS (ArcMap and ArcScene) as well as CARTO.&lt;/p&gt;
 &lt;p&gt;By the end of the day, students had learned how to interactively map Civil War battle sites &lt;a href=&#34;https://archive.org/details/CivilWarBattleSummariesOfMajorBattles&#34;&gt;from the National Park Service&lt;/a&gt; in CARTO that can be filtered with a time slider widget, as in the embedded map below:&lt;/p&gt;
 &lt;iframe width=&#34;100%&#34; height=&#34;520&#34; frameborder=&#34;0&#34; src=&#34;https://kwalkertcu.carto.com/builder/0820b9bc-d2c4-11e6-b3ec-0e3ebc282e83/embed&#34; allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen&gt;
 &lt;/iframe&gt;

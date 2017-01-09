@@ -1,12 +1,12 @@
 ---
-title: "GIS workshop at the 2017 Society for Historical Archaeology meetings"
+title: "GIS workshop at the 2017 Society for Historical Archaeology Conference"
 author: "Kyle Walker"
 date: 2017-01-09T08:00:00
 tags: ["GIS", "workshops"]
 slug: sha-2017
 ---
 
-Last week, I had the opportunity to lead a Geographic Information Systems workshop at the [2017 Society for Historical Archaeology Annual Meetings](https://sha.org/conferences/).  During the day-long workshop, I introduced participants to a wide variety of key GIS concepts, and taught them how to apply those concepts to a series of historical topics.  During the workshop, we used ArcGIS (ArcMap and ArcScene) as well as CARTO.  
+Last week, I had the opportunity to lead a Geographic Information Systems workshop at the [2017 Society for Historical Archaeology Conference](https://sha.org/conferences/).  During the day-long workshop, I introduced participants to a wide variety of key GIS concepts, and taught them how to apply those concepts to a series of historical topics.  During the workshop, we used ArcGIS (ArcMap and ArcScene) as well as CARTO.  
 
 By the end of the day, students had learned how to interactively map Civil War battle sites [from the National Park Service](https://archive.org/details/CivilWarBattleSummariesOfMajorBattles) in CARTO that can be filtered with a time slider widget, as in the embedded map below: 
 
