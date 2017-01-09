@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kyle Walker</title>
+    <link>http://walkerke.github.io/tags/gis/index.xml</link>
+    <description>Recent content on Kyle Walker</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
+    <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
+    <copyright>(c) 2016 Kyle Walker</copyright>
+    <atom:link href="http://walkerke.github.io/tags/gis/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>GIS workshop at the 2017 Society for Historical Archaeology meetings</title>
+      <link>http://walkerke.github.io/2017/01/sha-2017/</link>
+      <pubDate>Mon, 09 Jan 2017 08:00:00 +0000</pubDate>
+      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
+      <guid>http://walkerke.github.io/2017/01/sha-2017/</guid>
+      <description>&lt;!-- BLOGDOWN-BODY-BEFORE
+
+/BLOGDOWN-BODY-BEFORE --&gt;
+
+&lt;p&gt;Last week, I had the opportunity to lead a Geographic Information Systems workshop at the &lt;a href=&#34;https://sha.org/conferences/&#34;&gt;2017 Society for Historical Archaeology Annual Meetings&lt;/a&gt;. During the day-long workshop, I introduced participants to a wide variety of key GIS concepts, and taught them how to apply those concepts to a series of historical topics. During the workshop, we used ArcGIS (ArcMap and ArcScene) as well as CARTO.&lt;/p&gt;
+&lt;p&gt;By the end of the day, students had learned how to interactively map Civil War battle sites &lt;a href=&#34;https://archive.org/details/CivilWarBattleSummariesOfMajorBattles&#34;&gt;from the National Park Service&lt;/a&gt; in CARTO that can be filtered with a time slider widget, as in the embedded map below:&lt;/p&gt;
+&lt;iframe width=&#34;100%&#34; height=&#34;520&#34; frameborder=&#34;0&#34; src=&#34;https://kwalkertcu.carto.com/builder/0820b9bc-d2c4-11e6-b3ec-0e3ebc282e83/embed&#34; allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen&gt;
+&lt;/iframe&gt;
+&lt;p&gt;In ArcMap, they learned how to explore immigration data from the 1880 US Census (available from &lt;a href=&#34;http://www.nhgis.org&#34;&gt;NHGIS&lt;/a&gt;) and visualize the data with dot-density and choropleth maps, as in the example below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://walkerke.github.io/extras/images/immigration.PNG&#34; style=&#34;width: 100%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;They also learned some of the spatial analysis functionality of ArcMap, including buffers, spatial joins, and kernel density visualization. To do this, we used the classic John Snow cholera dataset, made available by the &lt;a href=&#34;http://guides.library.yale.edu/GIS/gisworkshoparchive&#34;&gt;Yale University Libraries&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://walkerke.github.io/extras/images/snow_density.PNG&#34; style=&#34;width: 100%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We also covered the basics of digital elevation models (DEMs). Students learned about surface analysis concepts such as slope, hillshading, and viewsheds, and produced a three-dimensional display of a historical topographic map by draping it over a DEM in ArcScene. Data for this unit came from &lt;a href=&#34;https://tnris.org/data-catalog/entry/txdot-texas-historic-overlay/&#34;&gt;TNRIS&lt;/a&gt; and &lt;a href=&#34;https://nationalmap.gov/3DEP/&#34;&gt;USGS&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://walkerke.github.io/extras/images/blanco_scene.gif&#34; style=&#34;width: 100%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;All slides and data for the workshop &lt;a href=&#34;https://github.com/walkerke/sha2017&#34;&gt;are available on GitHub&lt;/a&gt;. If you are interested in a similar workshop for your organization, please contact me at &lt;a href=&#34;mailto:kwalkerdata@gmail.com&#34;&gt;kwalkerdata@gmail.com&lt;/a&gt;, and let’s discuss!&lt;/p&gt;
+
+
+
+&lt;!-- BLOGDOWN-HEAD
+
+
+
+
+
+
+/BLOGDOWN-HEAD --&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
