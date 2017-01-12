@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kyle Walker</title>
-    <link>http://walkerke.github.io/tags/plotly/index.xml</link>
+    <link>/tags/plotly/index.xml</link>
     <description>Recent content on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2017 Kyle Walker</copyright>
-    <atom:link href="http://walkerke.github.io/tags/plotly/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/plotly/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Visualizing the economics of tourism in the Pacific with Plotly</title>
-      <link>http://walkerke.github.io/2014/05/tourism-plotly/</link>
+      <link>/2014/05/tourism-plotly/</link>
       <pubDate>Mon, 12 May 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>http://walkerke.github.io/2014/05/tourism-plotly/</guid>
+      <guid>/2014/05/tourism-plotly/</guid>
       <description>&lt;p&gt;Over the last month or so, I&amp;rsquo;ve been working a lot with &lt;a href=&#34;http://plot.ly&#34;&gt;Plotly&lt;/a&gt; to visualize data for my World Regional Geography course.  Plotly is a web-based service that allows for the creation of interactive, D3-based visualizations that can be easily shared.  Visualizations are deployed and hosted on Plotly&amp;rsquo;s servers, so the service requires a connection to the internet to work.  One of the great things about Plotly is that it has APIs for popular data programming languages like &lt;a href=&#34;http://plot.ly/r/&#34;&gt;R&lt;/a&gt;, &lt;a href=&#34;http://plot.ly/python/&#34;&gt;Python&lt;/a&gt;, and &lt;a href=&#34;http://plot.ly/julia/&#34;&gt;Julia&lt;/a&gt;.  I really got hooked on Plotly, however, when I learned about &lt;code&gt;ggplotly&lt;/code&gt;, &lt;a href=&#34;http://ropensci.org/blog/2014/04/17/plotly/&#34;&gt;which allows you to convert &lt;strong&gt;ggplot2&lt;/strong&gt; graphs in R to interactive Plotly charts with just a couple extra lines of code&lt;/a&gt;.   I&amp;rsquo;m going to go over an example of how I used &lt;code&gt;ggplotly&lt;/code&gt; to assist with a discussion of the economic significance of tourism in the Pacific.&lt;/p&gt;
 
 &lt;hr /&gt;

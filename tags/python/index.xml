@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kyle Walker</title>
-    <link>http://walkerke.github.io/tags/python/index.xml</link>
+    <link>/tags/python/index.xml</link>
     <description>Recent content on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2017 Kyle Walker</copyright>
-    <atom:link href="http://walkerke.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Charting time series data with dygraphs in R and Python</title>
-      <link>http://walkerke.github.io/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</link>
+      <link>/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</link>
       <pubDate>Sat, 20 Dec 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>http://walkerke.github.io/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</guid>
+      <guid>/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</guid>
       <description>&lt;p&gt;This past week, the good people at &lt;a href=&#34;http://www.rstudio.com&#34;&gt;RStudio&lt;/a&gt; advertised over Twitter the release of &lt;a href=&#34;http://www.htmlwidgets.org/index.html&#34;&gt;htmlwidgets for R&lt;/a&gt;, a project in collaboration with &lt;a href=&#34;http://rcharts.io&#34;&gt;rCharts&lt;/a&gt; wizards &lt;a href=&#34;https://twitter.com/ramnath_vaidya&#34;&gt;Ramnath Vaidyanathan&lt;/a&gt; and &lt;a href=&#34;https://twitter.com/timelyportfolio&#34;&gt;Kenton Russell&lt;/a&gt;. The packages showcased are incredible; I was particularly intrigued by the &lt;a href=&#34;http://rstudio.github.io/dygraphs/&#34;&gt;dygraphs&lt;/a&gt; package, which creates interactive time-series charts.&lt;/p&gt;
 
 &lt;p&gt;Aside from maps, time series line charts are the most common chart type I use in my teaching, as I often discuss how characteristics of places evolve over time.  As such, I took dygraphs for a spin to create charts relevant to a couple topics I address in World Regional Geography.&lt;/p&gt;
