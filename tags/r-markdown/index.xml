@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kyle Walker</title>
-    <link>/tags/r-markdown/index.xml</link>
+    <link>https://walkerke.github.io/tags/r-markdown/index.xml</link>
     <description>Recent content on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2017 Kyle Walker</copyright>
-    <atom:link href="/tags/r-markdown/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://walkerke.github.io/tags/r-markdown/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Dropdown menus in R Markdown with bsselectR</title>
-      <link>/2016/12/rmd-dropdowns/</link>
+      <link>https://walkerke.github.io/2016/12/rmd-dropdowns/</link>
       <pubDate>Thu, 15 Dec 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/12/rmd-dropdowns/</guid>
+      <guid>https://walkerke.github.io/2016/12/rmd-dropdowns/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -35,7 +35,7 @@ quotes &amp;lt;- c(&amp;quot;Look deep into nature, and then you will understand
 names(quotes) &amp;lt;- c(&amp;quot;Einstein&amp;quot;, &amp;quot;Shakespeare&amp;quot;, &amp;quot;Angelou&amp;quot;)
 
 bsselect(quotes, type = &amp;quot;text&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;iframe src=&#34;http://walkerke.github.io/extras/quotes.html&#34; height=&#34;150&#34; width=&#34;750&#34; frameborder=&#34;0&#34; scrolling=&#34;no&#34;&gt;
+&lt;iframe src=&#34;https://walkerke.github.io/extras/quotes.html&#34; height=&#34;150&#34; width=&#34;750&#34; frameborder=&#34;0&#34; scrolling=&#34;no&#34;&gt;
 &lt;/iframe&gt;
 &lt;p&gt;Use the menu to flip through the three quotes.&lt;/p&gt;
 &lt;p&gt;A more practical example, however, would be the use of &lt;code&gt;bsselect&lt;/code&gt; in an R Markdown document where the user could flip through a number of plots that are stored in a subdirectory. Let’s take a recent, applied example: scatterplots of the relationship between the percentage vote for Donald Trump and the percentage of county residents with at least a bachelor’s degree by state.&lt;/p&gt;
@@ -105,11 +105,11 @@ names(state_plots) &amp;lt;- str_replace_all(state_plots,
 
 bsselect(state_plots, type = &amp;quot;img&amp;quot;, selected = &amp;quot;Oregon&amp;quot;, 
          live_search = TRUE, show_tick = TRUE)&lt;/code&gt;&lt;/pre&gt;
-&lt;iframe src=&#34;http://walkerke.github.io/extras/trump_by_education.html&#34; width=&#34;100%&#34; height=&#34;825&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34;&gt;
+&lt;iframe src=&#34;https://walkerke.github.io/extras/trump_by_education.html&#34; width=&#34;100%&#34; height=&#34;825&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34;&gt;
 &lt;/iframe&gt;
 &lt;p&gt;Publish your directory to your hosting service of choice, and you’ll have an interactive report to share like the one above.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;bsselect&lt;/code&gt; also works in other R Markdown documents, such as presentations! The example below shows a bsselectR dropdown in a &lt;a href=&#34;https://github.com/yihui/xaringan&#34;&gt;xaringan&lt;/a&gt; &lt;a href=&#34;https://remarkjs.com/#1&#34;&gt;remark.js&lt;/a&gt; presentation. To avoid CSS/JS conflicts, I’ve wrapped the call to &lt;code&gt;bsselect&lt;/code&gt; in bsselectR’s &lt;code&gt;as_iframe&lt;/code&gt; function, which will save out the widget and embed it as an iframe.&lt;/p&gt;
-&lt;iframe src=&#34;http://walkerke.github.io/extras/xaringan.html&#34; width=&#34;100%&#34; height=&#34;600&#34; frameborder=&#34;0&#34;&gt;
+&lt;iframe src=&#34;https://walkerke.github.io/extras/xaringan.html&#34; width=&#34;100%&#34; height=&#34;600&#34; frameborder=&#34;0&#34;&gt;
 &lt;/iframe&gt;
 &lt;p&gt;I’d welcome feedback and pull requests; I’ll be adding features to the package bit by bit in the time ahead.&lt;/p&gt;
 

@@ -35,7 +35,7 @@ leaflet(df) %>%
   addMarkers()
 ```
 
-<iframe src="http://walkerke.github.io/extras/blog/midtown_points.html" frameborder="0" scrolling="no" width="100%" height="400"></iframe>
+<iframe src="https://walkerke.github.io/extras/blog/midtown_points.html" frameborder="0" scrolling="no" width="100%" height="400"></iframe>
 
 A real-world example would have time-stamped data, allowing for a more realistic path.  We'll construct a hypothetical path by solving for the [Hamiltonian Path](https://en.wikipedia.org/wiki/Hamiltonian_path) with the R package [__TSP__](https://cran.r-project.org/web/packages/TSP/) to simulate this (acknowledging that this hypothetical path will go through buildings).  
 
@@ -75,7 +75,7 @@ lines_map
 
 ```
 
-<iframe src="http://walkerke.github.io/extras/blog/midtown_lines.html" frameborder="0" scrolling="no" width="100%" height="400"></iframe>
+<iframe src="https://walkerke.github.io/extras/blog/midtown_lines.html" frameborder="0" scrolling="no" width="100%" height="400"></iframe>
 
 Now, we need to see whether this path intersects Bryant Park.  A polygon representing the boundaries of Bryant Park would be ideal; however, let's say hypothetically that we only have XY coordinates for this point of interest.  As such, we can buffer the point by 100 meters to represent the approximate extent of the park.  
 
@@ -94,7 +94,7 @@ lines_map %>%
   addPolygons(data = buffer_for_map)
 ```
 
-<iframe src="http://walkerke.github.io/extras/blog/midtown_buffer.html" frameborder="0" scrolling="no" width="100%" height="400"></iframe>
+<iframe src="https://walkerke.github.io/extras/blog/midtown_buffer.html" frameborder="0" scrolling="no" width="100%" height="400"></iframe>
 
 We have an approximation of the park's extent; we'll get some false positives here but this will work for purposes of illustration.  We can then use `st_intersects` to see if our lines intersect the buffer: 
 

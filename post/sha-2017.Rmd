@@ -14,7 +14,7 @@ By the end of the day, students had learned how to interactively map Civil War b
 
 In ArcMap, they learned how to explore immigration data from the 1880 US Census (available from [NHGIS](http://www.nhgis.org)) and visualize the data with dot-density and choropleth maps, as in the example below: 
 
-<img src="http://walkerke.github.io/extras/images/immigration.PNG" style="width: 100%">
+<img src="https://walkerke.github.io/extras/images/immigration.PNG" style="width: 100%">
 
 They also learned some of the spatial analysis functionality of ArcMap, including buffers, spatial joins, and kernel density visualization.  To do this, we used the classic John Snow cholera dataset, made available by the [Yale University Libraries](http://guides.library.yale.edu/GIS/gisworkshoparchive): 
 

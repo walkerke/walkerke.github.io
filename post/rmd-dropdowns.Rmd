@@ -28,7 +28,7 @@ names(quotes) <- c("Einstein", "Shakespeare", "Angelou")
 bsselect(quotes, type = "text")
 ```
 
-<iframe src="http://walkerke.github.io/extras/quotes.html" height="150" width = "750" frameborder = "0" scrolling = "no"></iframe>
+<iframe src="https://walkerke.github.io/extras/quotes.html" height="150" width = "750" frameborder = "0" scrolling = "no"></iframe>
 
 Use the menu to flip through the three quotes.  
 
@@ -108,13 +108,13 @@ bsselect(state_plots, type = "img", selected = "Oregon",
          live_search = TRUE, show_tick = TRUE)
 ```
 
-<iframe src="http://walkerke.github.io/extras/trump_by_education.html" width="100%" height = "825" scrolling="no" frameborder="0"></iframe>
+<iframe src="https://walkerke.github.io/extras/trump_by_education.html" width="100%" height = "825" scrolling="no" frameborder="0"></iframe>
 
 Publish your directory to your hosting service of choice, and you'll have an interactive report to share like the one above.  
 
 `bsselect` also works in other R Markdown documents, such as presentations!  The example below shows a bsselectR dropdown in a [xaringan](https://github.com/yihui/xaringan) [remark.js](https://remarkjs.com/#1) presentation.  To avoid CSS/JS conflicts, I've wrapped the call to `bsselect` in bsselectR's `as_iframe` function, which will save out the widget and embed it as an iframe.  
 
-<iframe src="http://walkerke.github.io/extras/xaringan.html" width="100%" height="600" frameborder = "0"></iframe>
+<iframe src="https://walkerke.github.io/extras/xaringan.html" width="100%" height="600" frameborder = "0"></iframe>
 
 I'd welcome feedback and pull requests; I'll be adding features to the package bit by bit in the time ahead.  
 

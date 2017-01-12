@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kyle Walker</title>
-    <link>/tags/shiny/index.xml</link>
+    <link>https://walkerke.github.io/tags/shiny/index.xml</link>
     <description>Recent content on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2017 Kyle Walker</copyright>
-    <atom:link href="/tags/shiny/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://walkerke.github.io/tags/shiny/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Life expectancy trends in the former USSR</title>
-      <link>/2014/10/russia-lex/</link>
+      <link>https://walkerke.github.io/2014/10/russia-lex/</link>
       <pubDate>Thu, 16 Oct 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/10/russia-lex/</guid>
+      <guid>https://walkerke.github.io/2014/10/russia-lex/</guid>
       <description>&lt;p&gt;When covering Russia and the former republics of the USSR in World Regional Geography, a key part of my material addresses the issues that some of these countries have had in their transitions from centralized to market economies.  Some of these countries experienced dramatic demographic shifts after the dissolution of the USSR, including a noticeable decline in life expectancy.&lt;/p&gt;
 
 &lt;p&gt;I&amp;rsquo;d been using some static Excel charts to illustrate life expectancy declines in Russia, Belarus, and Ukraine in previous courses.  However, I felt that an interactive solution would be preferable so that my students and I could explore the data in class over the course of our discussion.  I opted for &lt;a href=&#34;http://www.highcharts.com/&#34;&gt;Highcharts&lt;/a&gt;, through R and &lt;a href=&#34;http://rcharts.io&#34;&gt;rCharts&lt;/a&gt;, for the interactivity.  I then turned to &lt;a href=&#34;http://shiny.rstudio.com/&#34;&gt;Shiny&lt;/a&gt; from &lt;a href=&#34;http://www.rstudio.com/&#34;&gt;RStudio&lt;/a&gt; to put everything together.&lt;/p&gt;
