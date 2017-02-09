@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Why I teach with SageMathCloud  &middot; Kyle Walker</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="teaching, sage, ">
+
+
+<meta property="og:title" content="Why I teach with SageMathCloud  &middot; Kyle Walker ">
+<meta property="og:site_name" content="Kyle Walker"/>
+<meta property="og:url" content="https://walkerke.github.io/2017/02/sage-math-cloud/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="2017-02-09T09:26:00Z" />
+<meta property="og:article:modified_time" content="2017-02-09T09:26:00Z" />
+
+  
+    
+<meta property="og:article:tag" content="teaching">
+    
+<meta property="og:article:tag" content="sage">
+    
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@kyle_e_walker" />
+<meta name="twitter:creator" content="@kyle_e_walker" />
+<meta name="twitter:title" content="Why I teach with SageMathCloud" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="https://walkerke.github.io/2017/02/sage-math-cloud/" />
+<meta name="twitter:domain" content="https://walkerke.github.io/">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Why I teach with SageMathCloud",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "2017-02-09",
+    "description": "",
+    "wordCount":  668 
+  }
+</script>
+
+
+
+<link rel="canonical" href="https://walkerke.github.io/2017/02/sage-math-cloud/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://walkerke.github.io/touch-icon-144-precomposed.png">
+<link href="https://walkerke.github.io/favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://walkerke.github.io/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://walkerke.github.io/css/style.css">
+<link rel="stylesheet" href="https://walkerke.github.io/css/highlight/zenburn.css">
+
+  <!DOCTYPE HTML>
+<style>
+  
+  .main_wrapper>.main_header {
+    background-color: #035004;
+    color: #fff;
+  }
+  
+  .main_wrapper>.main_content .label:hover,
+  .main_wrapper>.main_content .navigation a:hover,
+  .main_wrapper>.main_content .pagination a:hover,
+  .main_wrapper>.main_content .readlink a:hover,
+  .main_wrapper>.main_content h2 a:hover,
+  .main_wrapper>.main_header a:hover {
+    background-color: #035004;
+    color: #fff;
+    text-decoration: none; 
+}
+
+  a {
+    color: #1a730f; 
+  }
+  
+  a:active, a:focus, a:hover {
+    color: #035004;
+}
+  
+</style>
+
+
+
+
+
+
+
+</head>
+<body class="map[name:superhero]">
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="https://walkerke.github.io/">
+  Kyle Walker
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Writing about visualization, demographics, dashboards, and spatial data science. <br/><br/>Interested in learning more?  Hire me for a workshop or to consult on your next project.  See the Services page for more details.
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="https://walkerke.github.io/about">About</a>
+
+<a href="https://walkerke.github.io/post" title="Show list of posts">Posts</a>
+
+<a href="https://walkerke.github.io/tags" title="Show list of tags">Tags</a>
+
+<a href="https://walkerke.github.io/services">Services</a>
+
+<a href="https://www.r-bloggers.com/">R-Bloggers</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+<a id="contact-link-email" class="contact_link" href="mailto:kwalkerdata@gmail.com">
+  <span class="fa fa-envelope-square"></span><span>email</span></a>
+
+
+
+<a id="contact-link-github" class="contact_link" href="https://github.com/walkerke">
+  <span class="fa fa-github-square"></span><span>github</span></a>
+
+
+
+
+
+<a id="contact-link-linkedin" class="contact_link" href="https://www.linkedin.com/in/walkerke">
+  <span class="fa fa-linkedin-square"></span><span>linkedin</span></a>
+
+
+
+
+
+
+
+<a id="contact-link-twitter" class="contact_link" href="https://twitter.com/kyle_e_walker">
+  <span class="fa fa-twitter-square"></span><span>twitter</span></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1>Why I teach with SageMathCloud
+</h1>
+
+  <div class="metas">
+<time datetime="2017-02-09">9 Feb, 2017</time>
+
+
+  
+    &middot; by Kyle Walker
+  
+  &middot; Read in about 4 min
+  &middot; (668 Words)
+  <br>
+  
+<a class="label" href="https://walkerke.github.io/tags/teaching">teaching</a>
+
+<a class="label" href="https://walkerke.github.io/tags/sage">sage</a>
+
+
+
+</div>
+
+</header>
+
+  <div class="container content">
+
+
+<p>Every fall, I teach <a href="https://github.com/walkerke/geog30323">a course</a> on exploratory data analysis and data visualization using Python via the <a href="https://docs.continuum.io/anaconda/">Anaconda distribution</a> and the <a href="http://jupyter.org/">Jupyter Notebook</a>. This past semester, I ran the course using <a href="https://cloud.sagemath.com/">SageMathCloud</a>, an online platform created by <a href="http://wstein.org/">William Stein</a> that delivers a cloud-based computational data analysis environment with access to Python, R, Julia, and several other languages. My experience with SageMathCloud was incredibly positive - I’ll go so far as to say that it is the best teaching tool I have ever used in my career. I strongly encourage you to check it out; below, I’ll outline a few reasons why.</p>
+<div id="sagemathcloud-provides-a-consistent-cloud-based-computational-environment-for-your-course." class="section level3">
+<h3>1. SageMathCloud provides a consistent cloud-based computational environment for your course.</h3>
+<p>One of the biggest headaches in teaching technology courses or leading technology workshops is ensuring a consistent computing environment for all students. At a university, this involves working with IT to get the software installed at requisite computer labs, and/or working with students to install the software on their own computers. For a workshop, the instructor will nonetheless likely have to deal with ensuring that installation runs smoothly across different operating systems, and endeavor to keep the Python environments consistent. When using Python, Anaconda solves many of these problems; however, over the course of the semester, a package update on one computer impacts this consistency. By contrast, using SageMathCloud ensures environment consistency for all students, given that they log in and access a central Anaconda Python 3 installation. Plus - whenever I wanted a package updated or a new package installed, SageMathCloud support responded to this almost immediately.</p>
+<p><img src="https://walkerke.github.io/img/blog/kernels.png" style="width: 100%"></p>
+</div>
+<div id="sagemathcloud-is-affordable-and-saves-you-from-administering-your-own-server." class="section level3">
+<h3>2. SageMathCloud is affordable, and saves you from administering your own server.</h3>
+<p>Granted, many of the issues I outlined above could be handled with <a href="https://github.com/jupyterhub/jupyterhub">JupyterHub</a>. In fact, I looked into this first; however, the costs of setting up a dedicated server for this by my university exceeded my budget for the course. Some additional searching for an alternative solution led to me to SageMathCloud - <a href="https://cloud.sagemath.com/policies/pricing.html">which cost only $199 for my semester-long course!</a> Additionally, using SageMathCloud saved me from having to deal with any server administration headaches. Any technical issues we encountered during the semester - which only happened a couple of times - were solved by SageMathCloud support within an hour or two of my ticket submission.</p>
+</div>
+<div id="sagemathcloud-has-outstanding-learning-management-system-functionality." class="section level3">
+<h3>3. SageMathCloud has outstanding learning management system functionality.</h3>
+<p>Jupyter Notebooks are <a href="https://groups.google.com/forum/?hl=en#!forum/jupyter-education">widely used in the classroom</a>, and SageMathCloud includes a variety of features to make them work even better. In SageMathCloud, an instructor can set up a “course” in which s/he can deliver course materials to students. Within the course, I can assign notebooks that I author as an instructor to students, who then interactively complete the assignments in their SageMathCloud account. Instructors can then access student’s notebooks and even chat with them while they are working on their homework - which makes debugging error messages and troubleshooting problems much easier. Plus - students’ progress is auto-saved, and the “Time Travel” feature of SageMathCloud tracks every edit made by students. On a few occasions, students accidentally deleted progress in their notebooks; the Time Travel feature recovered their work every time.</p>
+<p><img src="https://walkerke.github.io/img/blog/time-travel.PNG" style="width: 100%"></p>
+</div>
+<div id="sagemathcloud-is-an-open-source-company." class="section level3">
+<h3>4. SageMathCloud is an open source company.</h3>
+<p>I am a big proponent of open source software, but <a href="http://www.buildingwidgets.com/blog/2016/12/9/bhkisodyhvttcub1mvz10fc5ow2no2">Kenton Russell’s comments on open source development</a> also resonate deeply with me. The open source company, in my opinion, represents a path forward here. In this model, the company offers a core open source product for free and additional features and services for a fee, and employs a paid staff working on open source development. <a href="https://www.rstudio.com/">RStudio</a> and <a href="https://www.mapbox.com/">Mapbox</a> are both excellent examples of this. As such, paying for services provided by open source companies helps promote open source development and contributes to the sustainability of those projects - which are reasons to teach with those products. You can view SageMathCloud’s source code at <a href="https://github.com/sagemathinc/smc" class="uri">https://github.com/sagemathinc/smc</a>.</p>
+<p>You can sign up for a free account with SageMathCloud at <a href="https://cloud.sagemath.com" class="uri">https://cloud.sagemath.com</a>; I encourage you to take a look and see if it’ll work for your course or workshop!</p>
+</div>
+
+
+
+
+</div>
+
+
+  <footer class="container">
+  <div class="container navigation no-print">
+  <h2>Navigation</h2>
+  
+  
+
+    
+    <a class="prev" href="https://walkerke.github.io/2017/01/sha-2017/" title="GIS workshop at the 2017 Society for Historical Archaeology Conference">
+      Previous
+    </a>
+    
+
+    
+
+  
+
+
+</div>
+
+  
+
+</footer>
+
+</article>
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+
+</div>
+
+
+  
+<div class="container copyright">
+  
+  &copy; 2017 Kyle Walker
+
+
+</div>
+
+
+</div>
+
+</footer>
+
+    </main>
+    
+<script type="text/javascript">
+  (function() {
+    
+    
+    if (window.location.hostname == "localhost")
+      return;
+
+    var dsq = document.createElement('script'); dsq.async = true; dsq.type = 'text/javascript';
+    dsq.src = '//your_disqus_shortname.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+
+<script src="https://walkerke.github.io/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51388803-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+    
+  </body>
+</html>
+

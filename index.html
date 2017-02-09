@@ -166,11 +166,40 @@
 <section id="main-content" class="container main_content homepage">
   <header class="container header">
 
-    <span>last update: <time datetime="2017-01-09T08:00:00Z">9 January at 8:00am</time>
+    <span>last update: <time datetime="2017-02-09T09:26:00Z">9 February at 9:26am</time>
 </span>
 
   </header>
   
+  
+    <article class="container content summary">
+  <div class="container hat">
+  <h2><a href="https://walkerke.github.io/2017/02/sage-math-cloud/">Why I teach with SageMathCloud
+</a>
+</h2>
+
+  <time datetime="2017-02-09">9 Feb, 2017</time>
+
+</div>
+
+  <p class="container content">
+  
+  
+    Every fall, I teach a course on exploratory data analysis and data visualization using Python via the Anaconda distribution and the Jupyter Notebook. This past semester, I ran the course using SageMathCloud, an online platform created by William Stein that delivers a cloud-based computational data analysis environment with access to Python, R, Julia, and several other languages. My experience with SageMathCloud was incredibly positive - I’ll go so far as to say that it is the best teaching tool I have ever used in my career.
+  
+
+
+</p>
+
+
+  <div class="container readlink">
+  <a href="https://walkerke.github.io/2017/02/sage-math-cloud/">Read more &rarr;</a>
+
+</div>
+
+
+</article>
+
   
     <article class="container content summary">
   <div class="container hat">
@@ -438,36 +467,6 @@ Over the past couple years, R developers have created an infrastructure to bridg
 </article>
 
   
-    <article class="container content summary">
-  <div class="container hat">
-  <h2><a href="https://walkerke.github.io/2015/12/roads-tigris/">Fetching roads data in R with tigris
-</a>
-</h2>
-
-  <time datetime="2015-12-03">3 Dec, 2015</time>
-
-</div>
-
-  <p class="container content">
-  
-  
-    There are three functions available in the tigris package (https://github.com/walkerke/tigris) to fetch road data. primary_roads() loads all interstates for the entire US; primary_secondary_roads() gets you interstates and US/state/county highways, by state; and roads() gets you all road segments for a given county within a state. In this example, we’ll use the primary_secondary_roads() function to get our data for Route 1 in California.
-library(tigris)library(leaflet)library(rgdal)library(geojsonio)library(widgetframe)ca &lt;- primary_secondary_roads(state = &#39;California&#39;)rt1 &lt;- ca[ca$FULLNAME == &#39;State Rte 1&#39;, ]We can then plot with the leaflet package:
-  
-
-
-</p>
-
-
-  <div class="container readlink">
-  <a href="https://walkerke.github.io/2015/12/roads-tigris/">Read more &rarr;</a>
-
-</div>
-
-
-</article>
-
-  
   
 <div class="container pagination">
   
@@ -490,12 +489,16 @@ library(tigris)library(leaflet)library(rgdal)library(geojsonio)library(widge
   2
 </a>
 
+<a href="https://walkerke.github.io//page/3/">
+  3
+</a>
+
 
 <a aria-label="Next" href="https://walkerke.github.io//page/2/">
   <span aria-hidden="true">»</span>
 </a>
 
-<a aria-label="Last" href="https://walkerke.github.io//page/2/">
+<a aria-label="Last" href="https://walkerke.github.io//page/3/">
   <span aria-hidden="true">»»</span>
 </a>
 

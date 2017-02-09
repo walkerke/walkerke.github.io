@@ -166,11 +166,41 @@
 <section id="main-content" class="container main_content homepage">
   <header class="container header">
 
-    <span>last update: <time datetime="2017-01-09T08:00:00Z">9 January at 8:00am</time>
+    <span>last update: <time datetime="2017-02-09T09:26:00Z">9 February at 9:26am</time>
 </span>
 
   </header>
   
+  
+    <article class="container content summary">
+  <div class="container hat">
+  <h2><a href="https://walkerke.github.io/2015/12/roads-tigris/">Fetching roads data in R with tigris
+</a>
+</h2>
+
+  <time datetime="2015-12-03">3 Dec, 2015</time>
+
+</div>
+
+  <p class="container content">
+  
+  
+    There are three functions available in the tigris package (https://github.com/walkerke/tigris) to fetch road data. primary_roads() loads all interstates for the entire US; primary_secondary_roads() gets you interstates and US/state/county highways, by state; and roads() gets you all road segments for a given county within a state. In this example, we’ll use the primary_secondary_roads() function to get our data for Route 1 in California.
+library(tigris)library(leaflet)library(rgdal)library(geojsonio)library(widgetframe)ca &lt;- primary_secondary_roads(state = &#39;California&#39;)rt1 &lt;- ca[ca$FULLNAME == &#39;State Rte 1&#39;, ]We can then plot with the leaflet package:
+  
+
+
+</p>
+
+
+  <div class="container readlink">
+  <a href="https://walkerke.github.io/2015/12/roads-tigris/">Read more &rarr;</a>
+
+</div>
+
+
+</article>
+
   
     <article class="container content summary">
   <div class="container hat">
@@ -438,36 +468,6 @@ I recently came across this really interesting post from Ben Jones that explores
 </article>
 
   
-    <article class="container content summary">
-  <div class="container hat">
-  <h2><a href="https://walkerke.github.io/2014/01/visualizing-the-u.s.-hispanic-population-by-state/">Visualizing the U.S. Hispanic population by state
-</a>
-</h2>
-
-  <time datetime="2014-01-09">9 Jan, 2014</time>
-
-</div>
-
-  <p class="container content">
-  
-  
-    Welcome! This is the first post of my effort to document my foray into developing interactive data visualizations for use in my teaching. Hopefully these examples will be of use to some readers who are interested in creating their own visualizations.
-I&rsquo;ll first provide a bit of background. I&rsquo;m a geography professor at Texas Christian University in Fort Worth, and started getting interested in data visualization when putting together materials for a course I taught in population geography last spring.
-  
-
-
-</p>
-
-
-  <div class="container readlink">
-  <a href="https://walkerke.github.io/2014/01/visualizing-the-u.s.-hispanic-population-by-state/">Read more &rarr;</a>
-
-</div>
-
-
-</article>
-
-  
   
 <div class="container pagination">
   
@@ -490,12 +490,16 @@ I&rsquo;ll first provide a bit of background. I&rsquo;m a geography professor at
   2
 </a>
 
+<a href="https://walkerke.github.io//page/3/">
+  3
+</a>
 
-<a class="disabled" aria-label="Next" href="#">
+
+<a aria-label="Next" href="https://walkerke.github.io//page/3/">
   <span aria-hidden="true">»</span>
 </a>
 
-<a aria-label="Last" href="https://walkerke.github.io//page/2/">
+<a aria-label="Last" href="https://walkerke.github.io//page/3/">
   <span aria-hidden="true">»»</span>
 </a>
 
