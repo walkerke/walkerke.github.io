@@ -19,7 +19,7 @@
 
 <meta property="og:title" content="How to use the Rodeo IDE with ArcGIS Pro  &middot; Kyle Walker ">
 <meta property="og:site_name" content="Kyle Walker"/>
-<meta property="og:url" content="/2017/02/rodeo-arcpro/" />
+<meta property="og:url" content="https://walkerke.github.io/2017/02/rodeo-arcpro/" />
 <meta property="og:locale" content="en-us">
 
 
@@ -44,8 +44,8 @@
 <meta name="twitter:creator" content="@kyle_e_walker" />
 <meta name="twitter:title" content="How to use the Rodeo IDE with ArcGIS Pro" />
 <meta name="twitter:description" content="" />
-<meta name="twitter:url" content="/2017/02/rodeo-arcpro/" />
-<meta name="twitter:domain" content="/">
+<meta name="twitter:url" content="https://walkerke.github.io/2017/02/rodeo-arcpro/" />
+<meta name="twitter:domain" content="https://walkerke.github.io/">
   
 
 <script type="application/ld+json">
@@ -65,10 +65,10 @@
 
 
 
-<link rel="canonical" href="../../../2017/02/rodeo-arcpro/" />
+<link rel="canonical" href="https://walkerke.github.io/2017/02/rodeo-arcpro/" />
 
-<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../touch-icon-144-precomposed.png">
-<link href="../../../favicon.png" rel="icon">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://walkerke.github.io/touch-icon-144-precomposed.png">
+<link href="https://walkerke.github.io/favicon.png" rel="icon">
 
 <meta name="generator" content="Hugo 0.17" />
 
@@ -78,9 +78,9 @@
 <![endif]-->
 
 <link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="../../../css/font-awesome.min.css">
-<link rel="stylesheet" href="../../../css/style.css">
-<link rel="stylesheet" href="../../../css/highlight/zenburn.css">
+<link rel="stylesheet" href="https://walkerke.github.io/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://walkerke.github.io/css/style.css">
+<link rel="stylesheet" href="https://walkerke.github.io/css/highlight/zenburn.css">
 
   <!DOCTYPE HTML>
 <style>
@@ -123,7 +123,7 @@
     <header id="main-header" class="container main_header">
   <div class="container brand">
   <div class="container title h1-like">
-  <a class="baselink" href="../../../">
+  <a class="baselink" href="https://walkerke.github.io/">
   Kyle Walker
 
 </a>
@@ -146,13 +146,13 @@
 
 
   
-<a href="../../../about">About</a>
+<a href="https://walkerke.github.io/about">About</a>
 
-<a href="../../../post" title="Show list of posts">Posts</a>
+<a href="https://walkerke.github.io/post" title="Show list of posts">Posts</a>
 
-<a href="../../../tags" title="Show list of tags">Tags</a>
+<a href="https://walkerke.github.io/tags" title="Show list of tags">Tags</a>
 
-<a href="../../../services">Services</a>
+<a href="https://walkerke.github.io/services">Services</a>
 
 <a href="https://www.r-bloggers.com/">R-Bloggers</a>
 
@@ -221,11 +221,11 @@
   &middot; (228 Words)
   <br>
   
-<a class="label" href="../../../tags/python">python</a>
+<a class="label" href="https://walkerke.github.io/tags/python">python</a>
 
-<a class="label" href="../../../tags/arcgis">arcgis</a>
+<a class="label" href="https://walkerke.github.io/tags/arcgis">arcgis</a>
 
-<a class="label" href="../../../tags/gis">gis</a>
+<a class="label" href="https://walkerke.github.io/tags/gis">gis</a>
 
 
 
@@ -238,13 +238,13 @@
 
 <p>Recently, I had a need to automate some GIS operations using <a href="https://pro.arcgis.com/en/pro-app/">ArcGIS Pro</a> and the <a href="http://pro.arcgis.com/en/pro-app/arcpy/get-started/what-is-arcpy-.htm">ArcPy Python site package</a>. As of version 1.3, ArcGIS Pro ships with Anaconda as its Python installation, which makes it easier to work with ArcGIS as part of a broader data science workflow. I wanted to do my work in my Python IDE of choice, <a href="http://rodeo.yhat.com/">Yhat’s Rodeo</a>; however, this didn’t work out of the box. I’m sharing the process I used to connect Rodeo to ArcGIS Pro’s Anaconda Python 3.</p>
 <p>For IDEs to access ArcGIS Pro licensing when the ArcGIS Pro application is not open, you’ll need to enable offline access. Click the <strong>Projects</strong> tab in ArcGIS Pro, then choose the <strong>Settings</strong> option; scroll down and check the appropriate box.</p>
-<p><img src="img/arcpro1.png"></p>
+<p><img src="https://walkerke.github.io/img/blog/arcpro1.PNG"></p>
 <p>Next, click the <strong>Python</strong> option from the menu on the left. From here, search for the <strong>jupyter</strong> package and install it, which should install Jupyter and its associated libraries. This step is necessary to get Rodeo to work with ArcGIS Pro.</p>
-<p><img src="img/arcpro2.png"></p>
+<p><img src="https://walkerke.github.io/img/blog/arcpro2.PNG"></p>
 <p>Now, launch your Rodeo application, and click <strong>Rodeo &gt; Preferences</strong> to switch its <a href="http://rodeo.yhat.com/docs/#using-conda-environments">conda environment</a>. Click the <strong>Python</strong> tab, and change your Python Command by navigating to the Python executable associated with the <strong>arcgispro-py3</strong> conda environment; you can find it where ArcGIS Pro is installed on your machine in <code>ArcGIS\Pro\bin\Python\envs\arcgispro-py3\</code>.</p>
-<p><img src="img/arcpro3.png"></p>
+<p><img src="https://walkerke.github.io/img/blog/arcpro3.PNG"></p>
 <p>Click OK, import <strong>arcpy</strong>, and write scripts to automate ArcGIS as usual!</p>
-<p><img src="img/arcpro4.png"></p>
+<p><img src="https://walkerke.github.io/img/blog/arcpro4.PNG"></p>
 
 
 
@@ -259,7 +259,7 @@
   
 
     
-    <a class="prev" href="../../../2017/02/sage-math-cloud/" title="Why I teach with SageMathCloud">
+    <a class="prev" href="https://walkerke.github.io/2017/02/sage-math-cloud/" title="Why I teach with SageMathCloud">
       Previous
     </a>
     
@@ -324,7 +324,7 @@
 
 
 
-<script src="../../../js/highlight.pack.js"></script>
+<script src="https://walkerke.github.io/js/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
 

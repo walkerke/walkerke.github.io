@@ -2,119 +2,45 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kyle Walker</title>
-    <link>/tags/python/index.xml</link>
+    <link>https://walkerke.github.io/tags/python/index.xml</link>
     <description>Recent content on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2017 Kyle Walker</copyright>
-    <atom:link href="/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://walkerke.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>Charting time series data with dygraphs in R and Python</title>
-      <link>/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</link>
-      <pubDate>Sat, 20 Dec 2014 00:00:00 +0000</pubDate>
+      <title>How to use the Rodeo IDE with ArcGIS Pro</title>
+      <link>https://walkerke.github.io/2017/02/rodeo-arcpro/</link>
+      <pubDate>Thu, 23 Feb 2017 04:26:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</guid>
-      <description>&lt;p&gt;This past week, the good people at &lt;a href=&#34;http://www.rstudio.com&#34;&gt;RStudio&lt;/a&gt; advertised over Twitter the release of &lt;a href=&#34;http://www.htmlwidgets.org/index.html&#34;&gt;htmlwidgets for R&lt;/a&gt;, a project in collaboration with &lt;a href=&#34;http://rcharts.io&#34;&gt;rCharts&lt;/a&gt; wizards &lt;a href=&#34;https://twitter.com/ramnath_vaidya&#34;&gt;Ramnath Vaidyanathan&lt;/a&gt; and &lt;a href=&#34;https://twitter.com/timelyportfolio&#34;&gt;Kenton Russell&lt;/a&gt;. The packages showcased are incredible; I was particularly intrigued by the &lt;a href=&#34;http://rstudio.github.io/dygraphs/&#34;&gt;dygraphs&lt;/a&gt; package, which creates interactive time-series charts.&lt;/p&gt;
+      <guid>https://walkerke.github.io/2017/02/rodeo-arcpro/</guid>
+      <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
-&lt;p&gt;Aside from maps, time series line charts are the most common chart type I use in my teaching, as I often discuss how characteristics of places evolve over time.  As such, I took dygraphs for a spin to create charts relevant to a couple topics I address in World Regional Geography.&lt;/p&gt;
+/BLOGDOWN-BODY-BEFORE --&gt;
 
-&lt;p&gt;The first chart shows quarterly unemployment rates in Egypt over the past decade.  I obtained the data from &lt;a href=&#34;https://www.quandl.com&#34;&gt;Quandl&lt;/a&gt;, a massive repository of publicly-available datasets, by connecting to their API.  Quandl aims to be as user-friendly as possible; as such, &lt;a href=&#34;https://www.quandl.com/ILOSTAT/UNE_DEAP_RT_SEX_T_Q_EGY-Unemployment-Rate-Quarterly-Egypt&#34;&gt;on the page for the dataset you want&lt;/a&gt;, you can get the command to access the data in R (or any number of other languages/formats) with a single click.  Additionally, you can specify the format for the data from Quandl; dygraphs in R accepts data in &lt;code&gt;xts&lt;/code&gt; format, which Quandl can return for me.&lt;/p&gt;
+&lt;p&gt;Recently, I had a need to automate some GIS operations using &lt;a href=&#34;https://pro.arcgis.com/en/pro-app/&#34;&gt;ArcGIS Pro&lt;/a&gt; and the &lt;a href=&#34;http://pro.arcgis.com/en/pro-app/arcpy/get-started/what-is-arcpy-.htm&#34;&gt;ArcPy Python site package&lt;/a&gt;. As of version 1.3, ArcGIS Pro ships with Anaconda as its Python installation, which makes it easier to work with ArcGIS as part of a broader data science workflow. I wanted to do my work in my Python IDE of choice, &lt;a href=&#34;http://rodeo.yhat.com/&#34;&gt;Yhat’s Rodeo&lt;/a&gt;; however, this didn’t work out of the box. I’m sharing the process I used to connect Rodeo to ArcGIS Pro’s Anaconda Python 3.&lt;/p&gt;
+&lt;p&gt;For IDEs to access ArcGIS Pro licensing when the ArcGIS Pro application is not open, you’ll need to enable offline access. Click the &lt;strong&gt;Projects&lt;/strong&gt; tab in ArcGIS Pro, then choose the &lt;strong&gt;Settings&lt;/strong&gt; option; scroll down and check the appropriate box.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://walkerke.github.io/img/blog/arcpro1.PNG&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Next, click the &lt;strong&gt;Python&lt;/strong&gt; option from the menu on the left. From here, search for the &lt;strong&gt;jupyter&lt;/strong&gt; package and install it, which should install Jupyter and its associated libraries. This step is necessary to get Rodeo to work with ArcGIS Pro.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://walkerke.github.io/img/blog/arcpro2.PNG&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Now, launch your Rodeo application, and click &lt;strong&gt;Rodeo &amp;gt; Preferences&lt;/strong&gt; to switch its &lt;a href=&#34;http://rodeo.yhat.com/docs/#using-conda-environments&#34;&gt;conda environment&lt;/a&gt;. Click the &lt;strong&gt;Python&lt;/strong&gt; tab, and change your Python Command by navigating to the Python executable associated with the &lt;strong&gt;arcgispro-py3&lt;/strong&gt; conda environment; you can find it where ArcGIS Pro is installed on your machine in &lt;code&gt;ArcGIS\Pro\bin\Python\envs\arcgispro-py3\&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://walkerke.github.io/img/blog/arcpro3.PNG&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Click OK, import &lt;strong&gt;arcpy&lt;/strong&gt;, and write scripts to automate ArcGIS as usual!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://walkerke.github.io/img/blog/arcpro4.PNG&#34;&gt;&lt;/p&gt;
 
-&lt;p&gt;Once I have the data, I can create the plot.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(dygraphs)
-library(Quandl)
 
 
-egypt &amp;lt;- Quandl(&amp;quot;ILOSTAT/UNE_DEAP_RT_SEX_T_Q_EGY&amp;quot;, type = &amp;quot;xts&amp;quot;)
+&lt;!-- BLOGDOWN-HEAD
 
-dygraph(egypt, main = &amp;quot;Quarterly unemployment in Egypt, 2003-2013&amp;quot;) %&amp;gt;%
-  dySeries(&amp;quot;V1&amp;quot;, label = &amp;quot;Unemployment (%)&amp;quot;) %&amp;gt;%
-  dyRangeSelector(strokeColor = &amp;quot;darkred&amp;quot;, fillColor = &amp;quot;darkred&amp;quot;) %&amp;gt;%
-  dyOptions(colors = c(&amp;quot;darkred&amp;quot;, &amp;quot;darkred&amp;quot;)) 
-&lt;/code&gt;&lt;/pre&gt;
 
-&lt;iframe id=&#34;frame&#34; src=&#34;http://walkerke.github.io/teaching-with-datavis/dygraphs/egypt.html&#34; height=&#34;500&#34; width=&#34;800&#34; frameBorder = &#34;0&#34; scrolling = &#34;no&#34;&gt;&lt;/iframe&gt;
 
-&lt;p&gt;The dygraphs package supports piping with the &lt;code&gt;%&amp;gt;%&lt;/code&gt; operator from the &lt;strong&gt;magrittr&lt;/strong&gt; package, which organizes the code nicely.  I&amp;rsquo;ve changed the label in the legend and the colors, though I did notice that I had to supply a length-2 vector of colors to get the line&amp;rsquo;s color to change, even though I only had one line.  I&amp;rsquo;ve also created a range selector at the bottom of the plot.  The chart itself has excellent interactivity; click and drag on the plot to zoom in to a specific section, and double-click to return to the original view.  In class, I can use this chart to show the major spike in unemployment after the fall of the Mubarak regime in early 2011. Unemployment, especially among youth, remains a critical issue in Egypt; &lt;a href=&#34;http://data.worldbank.org/indicator/SL.UEM.1524.ZS&#34;&gt;the World Bank estimates that 38.9 percent of Egyptians aged 15-24 were unemployed in 2013&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;The World Bank API is also an excellent resource for demographic and economic data; &lt;a href=&#34;http://walkerke.github.io/2014/03/tfr-in-europe/&#34;&gt;I&amp;rsquo;ve written about using it here&lt;/a&gt;.  Quandl also provides access to World Bank data, but I&amp;rsquo;ll include an example below that involves connecting directly to the World Bank&amp;rsquo;s API to show how to get data from a different format into dygraphs.&lt;/p&gt;
 
-&lt;p&gt;The &lt;strong&gt;WDI&lt;/strong&gt; package allows R users to connect directly to the World Bank&amp;rsquo;s API and download data for selected countries, indicators, and years from the World Bank&amp;rsquo;s &lt;a href=&#34;http://data.worldbank.org/&#34;&gt;Open Data Catalog&lt;/a&gt;.  The code below fetches &lt;a href=&#34;http://data.worldbank.org/indicator/TX.QTY.MRCH.XD.WD&#34;&gt;export volume index data&lt;/a&gt;, which shows how the relative size of countries&amp;rsquo; export economies have changed over time.  I discuss this in class heavily in the context of China, so I&amp;rsquo;ll get data to compare China and the United States.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(WDI)
-library(tidyr)
-library(xts)
-library(dplyr)
-
-df &amp;lt;- WDI(country = c(&amp;quot;CN&amp;quot;, &amp;quot;US&amp;quot;), indicator = &amp;quot;TX.QTY.MRCH.XD.WD&amp;quot;, start = 1980, end = 2013, extra = FALSE)
-
-df$exports &amp;lt;- df$TX.QTY.MRCH.XD.WD
-
-df1 &amp;lt;- df %&amp;gt;%
-  select(country, year, exports) %&amp;gt;%
-  mutate(country = gsub(&amp;quot;United States&amp;quot;, &amp;quot;USA&amp;quot;, df$country)) %&amp;gt;%
-  spread(key = country, value = exports) %&amp;gt;%
-  mutate(date = as.Date(as.character(year), format = &amp;quot;%Y&amp;quot;)) %&amp;gt;%
-  select(-year) 
-
-xtdata &amp;lt;- xts(df1, order.by = df1$date) 
-
-xtdata$date &amp;lt;- NULL
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The WDI package returns data in &amp;ldquo;tidy&amp;rdquo; format, in which rows represent country-years.  I&amp;rsquo;ve reshaped my data frame to &amp;ldquo;wide&amp;rdquo; format, so that columns represent countries, and then I converted the data frame to an &lt;code&gt;xts&lt;/code&gt; object for plotting with dygraphs.  Now, I can create the plot:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dygraph(xtdata, main = &amp;quot;Export volume index, 1980-2013 (2000 = 100)&amp;quot;) %&amp;gt;%
-  dyHighlight(highlightSeriesOpts = list(strokeWidth = 3)) %&amp;gt;%
-  dyOptions(colors = c(&amp;quot;red&amp;quot;, &amp;quot;navy&amp;quot;))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;iframe id=&#34;frame&#34; src=&#34;http://walkerke.github.io/teaching-with-datavis/dygraphs/exports.html&#34; height=&#34;500&#34; width=&#34;800&#34; frameBorder = &#34;0&#34; scrolling = &#34;no&#34;&gt;&lt;/iframe&gt;
-
-&lt;p&gt;I&amp;rsquo;ve configured this plot so that a data series is highlighted if hovered over by the user&amp;rsquo;s cursor.  The chart is designed to show one perspective on the massive growth of China&amp;rsquo;s export economy in recent years; its index is over 700 in 2013, which means that China&amp;rsquo;s export volume in this year is over seven times what it was in 2000.  By contrast, export volume in the United States only increased about 50 percent during the same period.&lt;/p&gt;
-
-&lt;p&gt;Dygraphs can also be produced in my other language of choice, Python, using the &lt;a href=&#34;https://github.com/DayStarEngineering/PyDyGraphs&#34;&gt;PyDyGraphs module, available from GitHub.&lt;/a&gt;  The module allows you to create interactive dygraphs charts in your IPython Notebook session.  This module is also very user-friendly; download the &lt;code&gt;pydygraphs.py&lt;/code&gt; module from GitHub and run the code below in your IPython Notebook to produce a plot of aging over time in Italy, Spain, and the Netherlands.  This module is not as mature as the R package, however; I was unable to display the plot in &lt;a href=&#34;http://nbviewer.ipython.org/gist/walkerke/7d055b109a3f4b790127&#34;&gt;nbviewer&lt;/a&gt;, although admittedly my knowledge of the Notebook&amp;rsquo;s architecture is limited.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import pandas as pd
-import wbdata as wb
-import pydygraphs
-
-## First, fetch the data from the World Bank API
-
-over65ind = {&amp;quot;SP.POP.65UP.TO.ZS&amp;quot;: &amp;quot;pctover65&amp;quot;}
-
-countries = [&amp;quot;IT&amp;quot;, &amp;quot;NL&amp;quot;, &amp;quot;ES&amp;quot;]
-
-df = wb.get_dataframe(over65ind, country = countries, data_date = (pd.datetime(1960, 1, 1), pd.datetime(2012, 1, 1)))
-
-df = df.reset_index()
-
-## Now, reshape to wide format
-
-wide = pd.pivot_table(df, values = &#39;pctover65&#39;, index = &#39;date&#39;, columns = &#39;country&#39;).reset_index()
-
-wide[&#39;date&#39;] = wide[&#39;date&#39;].astype(float)
-
-## Finally, create the interactive plot!
-
-fig = pydygraphs.figure()
-
-xaxis = &#39;date&#39;
-
-fig.plotDataFrame(wide, xaxis)
-fig.title(&amp;quot;Percent of population over age 65&amp;quot;)
-fig.xlabel(&amp;quot;Year&amp;quot;)
-fig.ylabel(&amp;quot;Percent over 65&amp;quot;)
-
-fig.show()
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Thanks are due, as always, to the RStudio team, Ramnath, and Kenton for their amazing work!&lt;/p&gt;
+/BLOGDOWN-HEAD --&gt;
 </description>
     </item>
     

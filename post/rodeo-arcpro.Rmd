@@ -10,16 +10,16 @@ Recently, I had a need to automate some GIS operations using [ArcGIS Pro](https:
 
 For IDEs to access ArcGIS Pro licensing when the ArcGIS Pro application is not open, you'll need to enable offline access.  Click the __Projects__ tab in ArcGIS Pro, then choose the __Settings__ option; scroll down and check the appropriate box.  
 
-<img src="img/arcpro1.png">
+<img src="https://walkerke.github.io/img/blog/arcpro1.PNG">
 
 Next, click the __Python__ option from the menu on the left.  From here, search for the __jupyter__ package and install it, which should install Jupyter and its associated libraries.  This step is necessary to get Rodeo to work with ArcGIS Pro.  
 
-<img src="img/arcpro2.png">
+<img src="https://walkerke.github.io/img/blog/arcpro2.PNG">
 
 Now, launch your Rodeo application, and click __Rodeo > Preferences__ to switch its [conda environment](http://rodeo.yhat.com/docs/#using-conda-environments).  Click the __Python__ tab, and change your Python Command by navigating to the Python executable associated with the __arcgispro-py3__ conda environment; you can find it where ArcGIS Pro is installed on your machine in `ArcGIS\Pro\bin\Python\envs\arcgispro-py3\`.   
 
-<img src="img/arcpro3.png">
+<img src="https://walkerke.github.io/img/blog/arcpro3.PNG">
 
 Click OK, import __arcpy__, and write scripts to automate ArcGIS as usual!
 
-<img src="img/arcpro4.png">
+<img src="https://walkerke.github.io/img/blog/arcpro4.PNG">
