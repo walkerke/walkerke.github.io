@@ -8,7 +8,7 @@ slug: rodeo-arcpro
 
 Recently, I had a need to automate some GIS operations using [ArcGIS Pro](https://pro.arcgis.com/en/pro-app/) and the [ArcPy Python site package](http://pro.arcgis.com/en/pro-app/arcpy/get-started/what-is-arcpy-.htm).  As of version 1.3, ArcGIS Pro ships with Anaconda as its Python installation, which makes it easier to work with ArcGIS as part of a broader data science workflow.  I wanted to do my work in my Python IDE of choice, [Yhat's Rodeo](http://rodeo.yhat.com/); however, this didn't work out of the box.  I'm sharing the process I used to connect Rodeo to ArcGIS Pro's Anaconda Python 3.  
 
-For IDEs to access ArcGIS Pro licensing when the ArcGIS Pro application is not open, you'll need to enable offline access.  Click the __Projects__ tab in ArcGIS Pro, then choose the __Settings__ option; scroll down and check the appropriate box.  
+For IDEs to access ArcGIS Pro licensing regardless of whether or not you have an internet connection, you'll need to enable offline access.  Click the __Projects__ tab in ArcGIS Pro, then choose the __Settings__ option; scroll down and check the appropriate box.  
 
 <img src="https://walkerke.github.io/img/blog/arcpro1.PNG">
 
