@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Post-rsses on Kyle Walker</title>
-    <link>/post/index.xml</link>
+    <link>https://walkerke.github.io/post/index.xml</link>
     <description>Recent content in Post-rsses on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
@@ -10,19 +10,19 @@
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2017 Kyle Walker</copyright>
     <lastBuildDate>Tue, 02 May 2017 08:00:00 +0000</lastBuildDate>
-    <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://walkerke.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>New in the tigris package: simple features support and historic shapefiles</title>
-      <link>/2017/05/tigris-v05/</link>
+      <link>https://walkerke.github.io/2017/05/tigris-v05/</link>
       <pubDate>Tue, 02 May 2017 08:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2017/05/tigris-v05/</guid>
+      <guid>https://walkerke.github.io/2017/05/tigris-v05/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
 
-&lt;p&gt;I am excited to announce that &lt;strong&gt;tigris&lt;/strong&gt; 0.5 is now on CRAN. This is a major release that has been in the works for several months. Get it with &lt;code&gt;install.packages(&amp;quot;tigris&amp;quot;)&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;I am excited to announce that &lt;a href=&#34;https://github.com/walkerke/tigris&#34;&gt;&lt;strong&gt;tigris&lt;/strong&gt;&lt;/a&gt; 0.5 is now on CRAN. This is a major release that has been in the works for several months. Get it with &lt;code&gt;install.packages(&amp;quot;tigris&amp;quot;)&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;One major new feature is support for the simple features data model via the &lt;a href=&#34;https://github.com/edzer/sfr&#34;&gt;sf R package&lt;/a&gt;. &lt;strong&gt;sf&lt;/strong&gt; allows for the representation of spatial objects in R like data frames, but with a list-column containing feature geometry. This has multiple advantages, as objects of class &lt;code&gt;sf&lt;/code&gt; accept &lt;strong&gt;tidyverse&lt;/strong&gt; functions for data wrangling and are much faster to work with. For &lt;strong&gt;tigris&lt;/strong&gt;, this means that large objects like Census blocks or national railroads are much more usable in R.&lt;/p&gt;
 &lt;p&gt;To return an object of class &lt;code&gt;sf&lt;/code&gt; via &lt;strong&gt;tigris&lt;/strong&gt;, either supply the argument &lt;code&gt;class = &amp;quot;sf&amp;quot;&lt;/code&gt; or set this globally in your R session with &lt;code&gt;options(tigris_class = &amp;quot;sf&amp;quot;)&lt;/code&gt;. For example:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tigris)
@@ -53,7 +53,7 @@ head(co)&lt;/code&gt;&lt;/pre&gt;
 ## 5 32525874 MULTIPOLYGON(((-87.870464 3...
 ## 6  2336975 MULTIPOLYGON(((-86.199408 3...&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;code&gt;geo_join&lt;/code&gt; and &lt;code&gt;rbind_tigris&lt;/code&gt; still work with objects of class &lt;code&gt;sf&lt;/code&gt;; however, you can use the &lt;code&gt;*_join&lt;/code&gt; functions from the tidyverse as well.&lt;/p&gt;
-&lt;p&gt;The second major new feature is support for historic shapefiles going back to 1990. Historical data are available for the &lt;code&gt;states()&lt;/code&gt;, &lt;code&gt;counties()&lt;/code&gt;, &lt;code&gt;tracts()&lt;/code&gt;, and &lt;code&gt;block_groups()&lt;/code&gt; functions, and I’ve re-factored much of &lt;strong&gt;tigris&lt;/strong&gt;’s code to easily accommodate other geographies if requested by users.&lt;/p&gt;
+&lt;p&gt;The second major new feature is support for historic shapefiles going back to 1990. Historical data are available for the &lt;code&gt;states&lt;/code&gt;, &lt;code&gt;counties&lt;/code&gt;, &lt;code&gt;tracts&lt;/code&gt;, and &lt;code&gt;block_groups&lt;/code&gt; functions, and I’ve re-factored much of &lt;strong&gt;tigris&lt;/strong&gt;’s code to easily accommodate other geographies if requested by users.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(purrr)
 
 options(tigris_class = &amp;quot;sp&amp;quot;)
@@ -67,6 +67,7 @@ walk(c(1990, 2000, 2010), function(year) {
 })&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;#####../content/post/tigris-v05_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;768&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;My motivation for these updates is twofold. First, I’m working on a new package called &lt;strong&gt;tidycensus&lt;/strong&gt; that will integrate &lt;strong&gt;tigris&lt;/strong&gt; with the decennial Census and American Community Survey APIs. This package will allow R users to return integrated spatial and demographic datasets as &lt;code&gt;sf&lt;/code&gt; objects in one function call, and will be designed to work seamlessly within the tidyverse. Second, I’m starting a book project this summer called &lt;em&gt;Analyzing the US Census with R&lt;/em&gt;. The book will cover Census data acquisition and wrangling; spatial modeling with Census data; and working with Census microdata from the &lt;a href=&#34;https://www.ipums.org/&#34;&gt;Integrated Public Use Microdata Series&lt;/a&gt;, all within R. Look for updates on both projects in this space!&lt;/p&gt;
+&lt;p&gt;If you are interested in supporting the development of these projects, I encourage you to hire me for a workshop on these topics or to consult on your next project. Check out &lt;a href=&#34;https://walkerke.github.io/services/&#34;&gt;the Services page&lt;/a&gt; for information on how we can get started.&lt;/p&gt;
 
 
 
@@ -83,10 +84,10 @@ walk(c(1990, 2000, 2010), function(year) {
     
     <item>
       <title>How to use the Rodeo IDE with ArcGIS Pro</title>
-      <link>/2017/02/rodeo-arcpro/</link>
+      <link>https://walkerke.github.io/2017/02/rodeo-arcpro/</link>
       <pubDate>Thu, 23 Feb 2017 04:26:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2017/02/rodeo-arcpro/</guid>
+      <guid>https://walkerke.github.io/2017/02/rodeo-arcpro/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -116,10 +117,10 @@ walk(c(1990, 2000, 2010), function(year) {
     
     <item>
       <title>Why I teach with SageMathCloud</title>
-      <link>/2017/02/sage-math-cloud/</link>
+      <link>https://walkerke.github.io/2017/02/sage-math-cloud/</link>
       <pubDate>Thu, 09 Feb 2017 09:26:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2017/02/sage-math-cloud/</guid>
+      <guid>https://walkerke.github.io/2017/02/sage-math-cloud/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -160,10 +161,10 @@ walk(c(1990, 2000, 2010), function(year) {
     
     <item>
       <title>GIS workshop at the 2017 Society for Historical Archaeology Conference</title>
-      <link>/2017/01/sha-2017/</link>
+      <link>https://walkerke.github.io/2017/01/sha-2017/</link>
       <pubDate>Mon, 09 Jan 2017 08:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2017/01/sha-2017/</guid>
+      <guid>https://walkerke.github.io/2017/01/sha-2017/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -195,10 +196,10 @@ walk(c(1990, 2000, 2010), function(year) {
     
     <item>
       <title>Spatial analysis pipelines with simple features in R</title>
-      <link>/2016/12/spatial-pipelines/</link>
+      <link>https://walkerke.github.io/2016/12/spatial-pipelines/</link>
       <pubDate>Tue, 27 Dec 2016 06:15:14 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/12/spatial-pipelines/</guid>
+      <guid>https://walkerke.github.io/2016/12/spatial-pipelines/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -330,10 +331,10 @@ table(visits)&lt;/code&gt;&lt;/pre&gt;
     
     <item>
       <title>Dropdown menus in R Markdown with bsselectR</title>
-      <link>/2016/12/rmd-dropdowns/</link>
+      <link>https://walkerke.github.io/2016/12/rmd-dropdowns/</link>
       <pubDate>Thu, 15 Dec 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/12/rmd-dropdowns/</guid>
+      <guid>https://walkerke.github.io/2016/12/rmd-dropdowns/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -445,10 +446,10 @@ bsselect(state_plots, type = &amp;quot;img&amp;quot;, selected = &amp;quot;Orego
     
     <item>
       <title>Spatial neighbors in R - an interactive illustration</title>
-      <link>/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</link>
+      <link>https://walkerke.github.io/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</link>
       <pubDate>Wed, 27 Jul 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</guid>
+      <guid>https://walkerke.github.io/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -504,10 +505,10 @@ bsselect(state_plots, type = &amp;quot;img&amp;quot;, selected = &amp;quot;Orego
     
     <item>
       <title>Reproducing the Washington Post housing price maps with R and ggplot2</title>
-      <link>/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</link>
+      <link>https://walkerke.github.io/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</link>
       <pubDate>Wed, 29 Jun 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</guid>
+      <guid>https://walkerke.github.io/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -661,10 +662,10 @@ ggplot() +
     
     <item>
       <title>Interactive flow visualization in R</title>
-      <link>/2016/06/interactive-flow-visualization-in-r/</link>
+      <link>https://walkerke.github.io/2016/06/interactive-flow-visualization-in-r/</link>
       <pubDate>Sun, 26 Jun 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/06/interactive-flow-visualization-in-r/</guid>
+      <guid>https://walkerke.github.io/2016/06/interactive-flow-visualization-in-r/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -870,10 +871,10 @@ globejs(arcsLwd = weights, arcs = arcs, arcsColor = df4$colors)&lt;/code&gt;&lt;
     
     <item>
       <title>Using a new Mapbox Studio map in an R Leaflet project</title>
-      <link>/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</link>
+      <link>https://walkerke.github.io/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</link>
       <pubDate>Wed, 18 May 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</guid>
+      <guid>https://walkerke.github.io/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -946,10 +947,10 @@ leaflet(df) %&amp;gt;%
     
     <item>
       <title>Visualizing international demographic indicators with idbr and Plotly</title>
-      <link>/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</link>
+      <link>https://walkerke.github.io/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</link>
       <pubDate>Fri, 29 Jan 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</guid>
+      <guid>https://walkerke.github.io/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</guid>
       <description>&lt;p&gt;It&amp;rsquo;s been a while since I last posted here - but I&amp;rsquo;ve been working on a new R package that I&amp;rsquo;m quite excited about, and I thought this would be the right place to post.  My new package, &lt;strong&gt;idbr&lt;/strong&gt;, is an R interface to the &lt;a href=&#34;http://www.census.gov/data/developers/data-sets/international-database.html&#34;&gt;United States Census Bureau&amp;rsquo;s International Data Base API&lt;/a&gt;.  The IDB includes a host of international demographic indicators - including historical data and projections to 2050.  I use IDB data all of the time for my teaching - and &lt;strong&gt;idbr&lt;/strong&gt; makes the process of getting the data much easier!  While this product uses the Census Bureau Data API, it is not endorsed or certified by the Census Bureau.&lt;/p&gt;
 
 &lt;p&gt;Install from CRAN with the following command:&lt;/p&gt;
@@ -1097,10 +1098,10 @@ shinyApp(ui = ui, server = server)
     
     <item>
       <title>acs14lite: A lightweight R interface to the 2010-2014 ACS API</title>
-      <link>/2015/12/acs14lite/</link>
+      <link>https://walkerke.github.io/2015/12/acs14lite/</link>
       <pubDate>Sat, 12 Dec 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/12/acs14lite/</guid>
+      <guid>https://walkerke.github.io/2015/12/acs14lite/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -1212,10 +1213,10 @@ r2cartodb(la_tracts2, &amp;#39;la_poverty&amp;#39;)
     
     <item>
       <title>Fetching roads data in R with tigris</title>
-      <link>/2015/12/roads-tigris/</link>
+      <link>https://walkerke.github.io/2015/12/roads-tigris/</link>
       <pubDate>Thu, 03 Dec 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/12/roads-tigris/</guid>
+      <guid>https://walkerke.github.io/2015/12/roads-tigris/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -1261,10 +1262,10 @@ geojson_write(rt1, file = &amp;#39;route1.geojson&amp;#39;)&lt;/code&gt;&lt;/pre
     
     <item>
       <title>Obesity by state, 2013: a CartoDB state squares experiment</title>
-      <link>/2015/05/obesity-squares/</link>
+      <link>https://walkerke.github.io/2015/05/obesity-squares/</link>
       <pubDate>Sat, 09 May 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/05/obesity-squares/</guid>
+      <guid>https://walkerke.github.io/2015/05/obesity-squares/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -1332,10 +1333,10 @@ FROM obesity_squares&lt;/code&gt;&lt;/pre&gt;
     
     <item>
       <title>Using custom tiles in an RStudio Leaflet map</title>
-      <link>/2015/03/custom_tiles/</link>
+      <link>https://walkerke.github.io/2015/03/custom_tiles/</link>
       <pubDate>Tue, 10 Mar 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2015/03/custom_tiles/</guid>
+      <guid>https://walkerke.github.io/2015/03/custom_tiles/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;

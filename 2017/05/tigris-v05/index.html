@@ -19,7 +19,7 @@
 
 <meta property="og:title" content="New in the tigris package: simple features support and historic shapefiles  &middot; Kyle Walker ">
 <meta property="og:site_name" content="Kyle Walker"/>
-<meta property="og:url" content="/2017/05/tigris-v05/" />
+<meta property="og:url" content="https://walkerke.github.io/2017/05/tigris-v05/" />
 <meta property="og:locale" content="en-us">
 
 
@@ -44,8 +44,8 @@
 <meta name="twitter:creator" content="@kyle_e_walker" />
 <meta name="twitter:title" content="New in the tigris package: simple features support and historic shapefiles" />
 <meta name="twitter:description" content="" />
-<meta name="twitter:url" content="/2017/05/tigris-v05/" />
-<meta name="twitter:domain" content="/">
+<meta name="twitter:url" content="https://walkerke.github.io/2017/05/tigris-v05/" />
+<meta name="twitter:domain" content="https://walkerke.github.io/">
   
 
 <script type="application/ld+json">
@@ -59,16 +59,16 @@
     },
     "datePublished": "2017-05-02",
     "description": "",
-    "wordCount":  493 
+    "wordCount":  536 
   }
 </script>
 
 
 
-<link rel="canonical" href="../../../2017/05/tigris-v05/" />
+<link rel="canonical" href="https://walkerke.github.io/2017/05/tigris-v05/" />
 
-<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../touch-icon-144-precomposed.png">
-<link href="../../../favicon.png" rel="icon">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://walkerke.github.io/touch-icon-144-precomposed.png">
+<link href="https://walkerke.github.io/favicon.png" rel="icon">
 
 <meta name="generator" content="Hugo 0.17" />
 
@@ -78,9 +78,9 @@
 <![endif]-->
 
 <link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="../../../css/font-awesome.min.css">
-<link rel="stylesheet" href="../../../css/style.css">
-<link rel="stylesheet" href="../../../css/highlight/zenburn.css">
+<link rel="stylesheet" href="https://walkerke.github.io/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://walkerke.github.io/css/style.css">
+<link rel="stylesheet" href="https://walkerke.github.io/css/highlight/zenburn.css">
 
   <!DOCTYPE HTML>
 <style>
@@ -123,7 +123,7 @@
     <header id="main-header" class="container main_header">
   <div class="container brand">
   <div class="container title h1-like">
-  <a class="baselink" href="../../../">
+  <a class="baselink" href="https://walkerke.github.io/">
   Kyle Walker
 
 </a>
@@ -146,13 +146,13 @@
 
 
   
-<a href="../../../about">About</a>
+<a href="https://walkerke.github.io/about">About</a>
 
-<a href="../../../post" title="Show list of posts">Posts</a>
+<a href="https://walkerke.github.io/post" title="Show list of posts">Posts</a>
 
-<a href="../../../tags" title="Show list of tags">Tags</a>
+<a href="https://walkerke.github.io/tags" title="Show list of tags">Tags</a>
 
-<a href="../../../services">Services</a>
+<a href="https://walkerke.github.io/services">Services</a>
 
 <a href="https://www.r-bloggers.com/">R-Bloggers</a>
 
@@ -218,14 +218,14 @@
     &middot; by Kyle Walker
   
   &middot; Read in about 3 min
-  &middot; (493 Words)
+  &middot; (536 Words)
   <br>
   
-<a class="label" href="../../../tags/r">r</a>
+<a class="label" href="https://walkerke.github.io/tags/r">r</a>
 
-<a class="label" href="../../../tags/census">census</a>
+<a class="label" href="https://walkerke.github.io/tags/census">census</a>
 
-<a class="label" href="../../../tags/tigris">tigris</a>
+<a class="label" href="https://walkerke.github.io/tags/tigris">tigris</a>
 
 
 
@@ -236,7 +236,7 @@
   <div class="container content">
 
 
-<p>I am excited to announce that <strong>tigris</strong> 0.5 is now on CRAN. This is a major release that has been in the works for several months. Get it with <code>install.packages(&quot;tigris&quot;)</code>.</p>
+<p>I am excited to announce that <a href="https://github.com/walkerke/tigris"><strong>tigris</strong></a> 0.5 is now on CRAN. This is a major release that has been in the works for several months. Get it with <code>install.packages(&quot;tigris&quot;)</code>.</p>
 <p>One major new feature is support for the simple features data model via the <a href="https://github.com/edzer/sfr">sf R package</a>. <strong>sf</strong> allows for the representation of spatial objects in R like data frames, but with a list-column containing feature geometry. This has multiple advantages, as objects of class <code>sf</code> accept <strong>tidyverse</strong> functions for data wrangling and are much faster to work with. For <strong>tigris</strong>, this means that large objects like Census blocks or national railroads are much more usable in R.</p>
 <p>To return an object of class <code>sf</code> via <strong>tigris</strong>, either supply the argument <code>class = &quot;sf&quot;</code> or set this globally in your R session with <code>options(tigris_class = &quot;sf&quot;)</code>. For example:</p>
 <pre class="r"><code>library(tigris)
@@ -267,7 +267,7 @@ head(co)</code></pre>
 ## 5 32525874 MULTIPOLYGON(((-87.870464 3...
 ## 6  2336975 MULTIPOLYGON(((-86.199408 3...</code></pre>
 <p><code>geo_join</code> and <code>rbind_tigris</code> still work with objects of class <code>sf</code>; however, you can use the <code>*_join</code> functions from the tidyverse as well.</p>
-<p>The second major new feature is support for historic shapefiles going back to 1990. Historical data are available for the <code>states()</code>, <code>counties()</code>, <code>tracts()</code>, and <code>block_groups()</code> functions, and I’ve re-factored much of <strong>tigris</strong>’s code to easily accommodate other geographies if requested by users.</p>
+<p>The second major new feature is support for historic shapefiles going back to 1990. Historical data are available for the <code>states</code>, <code>counties</code>, <code>tracts</code>, and <code>block_groups</code> functions, and I’ve re-factored much of <strong>tigris</strong>’s code to easily accommodate other geographies if requested by users.</p>
 <pre class="r"><code>library(purrr)
 
 options(tigris_class = &quot;sp&quot;)
@@ -281,6 +281,7 @@ walk(c(1990, 2000, 2010), function(year) {
 })</code></pre>
 <p><img src="figures/unnamed-chunk-2-1.png" width="768" /></p>
 <p>My motivation for these updates is twofold. First, I’m working on a new package called <strong>tidycensus</strong> that will integrate <strong>tigris</strong> with the decennial Census and American Community Survey APIs. This package will allow R users to return integrated spatial and demographic datasets as <code>sf</code> objects in one function call, and will be designed to work seamlessly within the tidyverse. Second, I’m starting a book project this summer called <em>Analyzing the US Census with R</em>. The book will cover Census data acquisition and wrangling; spatial modeling with Census data; and working with Census microdata from the <a href="https://www.ipums.org/">Integrated Public Use Microdata Series</a>, all within R. Look for updates on both projects in this space!</p>
+<p>If you are interested in supporting the development of these projects, I encourage you to hire me for a workshop on these topics or to consult on your next project. Check out <a href="https://walkerke.github.io/services/">the Services page</a> for information on how we can get started.</p>
 
 
 
@@ -295,7 +296,7 @@ walk(c(1990, 2000, 2010), function(year) {
   
 
     
-    <a class="prev" href="../../../2017/02/rodeo-arcpro/" title="How to use the Rodeo IDE with ArcGIS Pro">
+    <a class="prev" href="https://walkerke.github.io/2017/02/rodeo-arcpro/" title="How to use the Rodeo IDE with ArcGIS Pro">
       Previous
     </a>
     
@@ -360,7 +361,7 @@ walk(c(1990, 2000, 2010), function(year) {
 
 
 
-<script src="../../../js/highlight.pack.js"></script>
+<script src="https://walkerke.github.io/js/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
 

@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kyle Walker</title>
-    <link>/tags/tigris/index.xml</link>
+    <link>https://walkerke.github.io/tags/tigris/index.xml</link>
     <description>Recent content on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2017 Kyle Walker</copyright>
-    <atom:link href="/tags/tigris/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://walkerke.github.io/tags/tigris/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>New in the tigris package: simple features support and historic shapefiles</title>
-      <link>/2017/05/tigris-v05/</link>
+      <link>https://walkerke.github.io/2017/05/tigris-v05/</link>
       <pubDate>Tue, 02 May 2017 08:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2017/05/tigris-v05/</guid>
+      <guid>https://walkerke.github.io/2017/05/tigris-v05/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
 
-&lt;p&gt;I am excited to announce that &lt;strong&gt;tigris&lt;/strong&gt; 0.5 is now on CRAN. This is a major release that has been in the works for several months. Get it with &lt;code&gt;install.packages(&amp;quot;tigris&amp;quot;)&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;I am excited to announce that &lt;a href=&#34;https://github.com/walkerke/tigris&#34;&gt;&lt;strong&gt;tigris&lt;/strong&gt;&lt;/a&gt; 0.5 is now on CRAN. This is a major release that has been in the works for several months. Get it with &lt;code&gt;install.packages(&amp;quot;tigris&amp;quot;)&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;One major new feature is support for the simple features data model via the &lt;a href=&#34;https://github.com/edzer/sfr&#34;&gt;sf R package&lt;/a&gt;. &lt;strong&gt;sf&lt;/strong&gt; allows for the representation of spatial objects in R like data frames, but with a list-column containing feature geometry. This has multiple advantages, as objects of class &lt;code&gt;sf&lt;/code&gt; accept &lt;strong&gt;tidyverse&lt;/strong&gt; functions for data wrangling and are much faster to work with. For &lt;strong&gt;tigris&lt;/strong&gt;, this means that large objects like Census blocks or national railroads are much more usable in R.&lt;/p&gt;
 &lt;p&gt;To return an object of class &lt;code&gt;sf&lt;/code&gt; via &lt;strong&gt;tigris&lt;/strong&gt;, either supply the argument &lt;code&gt;class = &amp;quot;sf&amp;quot;&lt;/code&gt; or set this globally in your R session with &lt;code&gt;options(tigris_class = &amp;quot;sf&amp;quot;)&lt;/code&gt;. For example:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tigris)
@@ -52,7 +52,7 @@ head(co)&lt;/code&gt;&lt;/pre&gt;
 ## 5 32525874 MULTIPOLYGON(((-87.870464 3...
 ## 6  2336975 MULTIPOLYGON(((-86.199408 3...&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;code&gt;geo_join&lt;/code&gt; and &lt;code&gt;rbind_tigris&lt;/code&gt; still work with objects of class &lt;code&gt;sf&lt;/code&gt;; however, you can use the &lt;code&gt;*_join&lt;/code&gt; functions from the tidyverse as well.&lt;/p&gt;
-&lt;p&gt;The second major new feature is support for historic shapefiles going back to 1990. Historical data are available for the &lt;code&gt;states()&lt;/code&gt;, &lt;code&gt;counties()&lt;/code&gt;, &lt;code&gt;tracts()&lt;/code&gt;, and &lt;code&gt;block_groups()&lt;/code&gt; functions, and I’ve re-factored much of &lt;strong&gt;tigris&lt;/strong&gt;’s code to easily accommodate other geographies if requested by users.&lt;/p&gt;
+&lt;p&gt;The second major new feature is support for historic shapefiles going back to 1990. Historical data are available for the &lt;code&gt;states&lt;/code&gt;, &lt;code&gt;counties&lt;/code&gt;, &lt;code&gt;tracts&lt;/code&gt;, and &lt;code&gt;block_groups&lt;/code&gt; functions, and I’ve re-factored much of &lt;strong&gt;tigris&lt;/strong&gt;’s code to easily accommodate other geographies if requested by users.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(purrr)
 
 options(tigris_class = &amp;quot;sp&amp;quot;)
@@ -66,6 +66,7 @@ walk(c(1990, 2000, 2010), function(year) {
 })&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;#####../content/post/tigris-v05_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;768&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;My motivation for these updates is twofold. First, I’m working on a new package called &lt;strong&gt;tidycensus&lt;/strong&gt; that will integrate &lt;strong&gt;tigris&lt;/strong&gt; with the decennial Census and American Community Survey APIs. This package will allow R users to return integrated spatial and demographic datasets as &lt;code&gt;sf&lt;/code&gt; objects in one function call, and will be designed to work seamlessly within the tidyverse. Second, I’m starting a book project this summer called &lt;em&gt;Analyzing the US Census with R&lt;/em&gt;. The book will cover Census data acquisition and wrangling; spatial modeling with Census data; and working with Census microdata from the &lt;a href=&#34;https://www.ipums.org/&#34;&gt;Integrated Public Use Microdata Series&lt;/a&gt;, all within R. Look for updates on both projects in this space!&lt;/p&gt;
+&lt;p&gt;If you are interested in supporting the development of these projects, I encourage you to hire me for a workshop on these topics or to consult on your next project. Check out &lt;a href=&#34;https://walkerke.github.io/services/&#34;&gt;the Services page&lt;/a&gt; for information on how we can get started.&lt;/p&gt;
 
 
 
