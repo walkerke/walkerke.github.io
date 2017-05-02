@@ -2,126 +2,131 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://walkerke.github.io/</loc>
+    <loc>/</loc>
+    <lastmod>2017-05-02T08:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2017/05/tigris-v05/</loc>
+    <lastmod>2017-05-02T08:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2017/02/rodeo-arcpro/</loc>
     <lastmod>2017-02-23T04:26:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2017/02/rodeo-arcpro/</loc>
-    <lastmod>2017-02-23T04:26:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://walkerke.github.io/2017/02/sage-math-cloud/</loc>
+    <loc>/2017/02/sage-math-cloud/</loc>
     <lastmod>2017-02-09T09:26:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2017/01/sha-2017/</loc>
+    <loc>/2017/01/sha-2017/</loc>
     <lastmod>2017-01-09T08:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2016/12/spatial-pipelines/</loc>
+    <loc>/2016/12/spatial-pipelines/</loc>
     <lastmod>2016-12-27T06:15:14+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2016/12/rmd-dropdowns/</loc>
+    <loc>/2016/12/rmd-dropdowns/</loc>
     <lastmod>2016-12-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</loc>
+    <loc>/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</loc>
     <lastmod>2016-07-27T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</loc>
+    <loc>/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</loc>
     <lastmod>2016-06-29T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2016/06/interactive-flow-visualization-in-r/</loc>
+    <loc>/2016/06/interactive-flow-visualization-in-r/</loc>
     <lastmod>2016-06-26T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</loc>
+    <loc>/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</loc>
     <lastmod>2016-05-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</loc>
+    <loc>/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</loc>
     <lastmod>2016-01-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2015/12/acs14lite/</loc>
+    <loc>/2015/12/acs14lite/</loc>
     <lastmod>2015-12-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2015/12/roads-tigris/</loc>
+    <loc>/2015/12/roads-tigris/</loc>
     <lastmod>2015-12-03T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2015/05/obesity-squares/</loc>
+    <loc>/2015/05/obesity-squares/</loc>
     <lastmod>2015-05-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2015/03/custom_tiles/</loc>
+    <loc>/2015/03/custom_tiles/</loc>
     <lastmod>2015-03-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2015/02/mapping-religious-adherence-in-the-us-with-cartodb/</loc>
+    <loc>/2015/02/mapping-religious-adherence-in-the-us-with-cartodb/</loc>
     <lastmod>2015-02-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</loc>
+    <loc>/2014/12/charting-time-series-data-with-dygraphs-in-r-and-python/</loc>
     <lastmod>2014-12-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2014/12/using-slidify-to-teach-with-interactive-content/</loc>
+    <loc>/2014/12/using-slidify-to-teach-with-interactive-content/</loc>
     <lastmod>2014-12-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2014/10/russia-lex/</loc>
+    <loc>/2014/10/russia-lex/</loc>
     <lastmod>2014-10-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2014/08/un-projections/</loc>
+    <loc>/2014/08/un-projections/</loc>
     <lastmod>2014-08-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2014/06/rcharts-pyramids/</loc>
+    <loc>/2014/06/rcharts-pyramids/</loc>
     <lastmod>2014-06-07T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2014/05/tourism-plotly/</loc>
+    <loc>/2014/05/tourism-plotly/</loc>
     <lastmod>2014-05-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/2014/01/visualizing-the-u.s.-hispanic-population-by-state/</loc>
+    <loc>/2014/01/visualizing-the-u.s.-hispanic-population-by-state/</loc>
     <lastmod>2014-01-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/about/</loc>
+    <loc>/about/</loc>
   </url>
   
   <url>
-    <loc>https://walkerke.github.io/services/</loc>
+    <loc>/services/</loc>
   </url>
   
 </urlset>

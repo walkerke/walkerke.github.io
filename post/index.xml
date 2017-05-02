@@ -2,22 +2,91 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Post-rsses on Kyle Walker</title>
-    <link>https://walkerke.github.io/post/index.xml</link>
+    <link>/post/index.xml</link>
     <description>Recent content in Post-rsses on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2017 Kyle Walker</copyright>
-    <lastBuildDate>Thu, 23 Feb 2017 04:26:00 +0000</lastBuildDate>
-    <atom:link href="https://walkerke.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 02 May 2017 08:00:00 +0000</lastBuildDate>
+    <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>New in the tigris package: simple features support and historic shapefiles</title>
+      <link>/2017/05/tigris-v05/</link>
+      <pubDate>Tue, 02 May 2017 08:00:00 +0000</pubDate>
+      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
+      <guid>/2017/05/tigris-v05/</guid>
+      <description>&lt;!-- BLOGDOWN-BODY-BEFORE
+
+/BLOGDOWN-BODY-BEFORE --&gt;
+
+&lt;p&gt;I am excited to announce that &lt;strong&gt;tigris&lt;/strong&gt; 0.5 is now on CRAN. This is a major release that has been in the works for several months. Get it with &lt;code&gt;install.packages(&amp;quot;tigris&amp;quot;)&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;One major new feature is support for the simple features data model via the &lt;a href=&#34;https://github.com/edzer/sfr&#34;&gt;sf R package&lt;/a&gt;. &lt;strong&gt;sf&lt;/strong&gt; allows for the representation of spatial objects in R like data frames, but with a list-column containing feature geometry. This has multiple advantages, as objects of class &lt;code&gt;sf&lt;/code&gt; accept &lt;strong&gt;tidyverse&lt;/strong&gt; functions for data wrangling and are much faster to work with. For &lt;strong&gt;tigris&lt;/strong&gt;, this means that large objects like Census blocks or national railroads are much more usable in R.&lt;/p&gt;
+&lt;p&gt;To return an object of class &lt;code&gt;sf&lt;/code&gt; via &lt;strong&gt;tigris&lt;/strong&gt;, either supply the argument &lt;code&gt;class = &amp;quot;sf&amp;quot;&lt;/code&gt; or set this globally in your R session with &lt;code&gt;options(tigris_class = &amp;quot;sf&amp;quot;)&lt;/code&gt;. For example:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tigris)
+
+options(tigris_class = &amp;quot;sf&amp;quot;)
+
+co &amp;lt;- counties(cb = TRUE)
+
+head(co)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Simple feature collection with 6 features and 9 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: -88.47323 ymin: 31.18113 xmax: -85.04931 ymax: 33.00682
+## epsg (SRID):    4269
+## proj4string:    +proj=longlat +datum=NAD83 +no_defs
+##   STATEFP COUNTYFP COUNTYNS       AFFGEOID GEOID    NAME LSAD      ALAND
+## 1      01      005 00161528 0500000US01005 01005 Barbour   06 2291820706
+## 2      01      023 00161537 0500000US01023 01023 Choctaw   06 2365954971
+## 3      01      035 00161543 0500000US01035 01035 Conecuh   06 2201896058
+## 4      01      051 00161551 0500000US01051 01051  Elmore   06 1601876535
+## 5      01      065 00161558 0500000US01065 01065    Hale   06 1667804583
+## 6      01      109 00161581 0500000US01109 01109    Pike   06 1740741211
+##     AWATER                       geometry
+## 1 50864677 MULTIPOLYGON(((-85.748032 3...
+## 2 19059247 MULTIPOLYGON(((-88.473227 3...
+## 3  6643480 MULTIPOLYGON(((-87.427204 3...
+## 4 99850740 MULTIPOLYGON(((-86.413335 3...
+## 5 32525874 MULTIPOLYGON(((-87.870464 3...
+## 6  2336975 MULTIPOLYGON(((-86.199408 3...&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;geo_join&lt;/code&gt; and &lt;code&gt;rbind_tigris&lt;/code&gt; still work with objects of class &lt;code&gt;sf&lt;/code&gt;; however, you can use the &lt;code&gt;*_join&lt;/code&gt; functions from the tidyverse as well.&lt;/p&gt;
+&lt;p&gt;The second major new feature is support for historic shapefiles going back to 1990. Historical data are available for the &lt;code&gt;states()&lt;/code&gt;, &lt;code&gt;counties()&lt;/code&gt;, &lt;code&gt;tracts()&lt;/code&gt;, and &lt;code&gt;block_groups()&lt;/code&gt; functions, and I’ve re-factored much of &lt;strong&gt;tigris&lt;/strong&gt;’s code to easily accommodate other geographies if requested by users.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(purrr)
+
+options(tigris_class = &amp;quot;sp&amp;quot;)
+
+par(mfrow = c(1, 3))
+
+walk(c(1990, 2000, 2010), function(year) {
+  plot(tracts(&amp;quot;TX&amp;quot;, &amp;quot;Denton&amp;quot;, cb = TRUE, year = year), 
+       main = paste0(&amp;quot;Census tracts in Denton County, &amp;quot;, 
+                     as.character(year)))
+})&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;#####../content/post/tigris-v05_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;768&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;My motivation for these updates is twofold. First, I’m working on a new package called &lt;strong&gt;tidycensus&lt;/strong&gt; that will integrate &lt;strong&gt;tigris&lt;/strong&gt; with the decennial Census and American Community Survey APIs. This package will allow R users to return integrated spatial and demographic datasets as &lt;code&gt;sf&lt;/code&gt; objects in one function call, and will be designed to work seamlessly within the tidyverse. Second, I’m starting a book project this summer called &lt;em&gt;Analyzing the US Census with R&lt;/em&gt;. The book will cover Census data acquisition and wrangling; spatial modeling with Census data; and working with Census microdata from the &lt;a href=&#34;https://www.ipums.org/&#34;&gt;Integrated Public Use Microdata Series&lt;/a&gt;, all within R. Look for updates on both projects in this space!&lt;/p&gt;
+
+
+
+&lt;!-- BLOGDOWN-HEAD
+
+
+
+
+
+
+/BLOGDOWN-HEAD --&gt;
+</description>
+    </item>
     
     <item>
       <title>How to use the Rodeo IDE with ArcGIS Pro</title>
-      <link>https://walkerke.github.io/2017/02/rodeo-arcpro/</link>
+      <link>/2017/02/rodeo-arcpro/</link>
       <pubDate>Thu, 23 Feb 2017 04:26:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2017/02/rodeo-arcpro/</guid>
+      <guid>/2017/02/rodeo-arcpro/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -47,10 +116,10 @@
     
     <item>
       <title>Why I teach with SageMathCloud</title>
-      <link>https://walkerke.github.io/2017/02/sage-math-cloud/</link>
+      <link>/2017/02/sage-math-cloud/</link>
       <pubDate>Thu, 09 Feb 2017 09:26:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2017/02/sage-math-cloud/</guid>
+      <guid>/2017/02/sage-math-cloud/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -91,10 +160,10 @@
     
     <item>
       <title>GIS workshop at the 2017 Society for Historical Archaeology Conference</title>
-      <link>https://walkerke.github.io/2017/01/sha-2017/</link>
+      <link>/2017/01/sha-2017/</link>
       <pubDate>Mon, 09 Jan 2017 08:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2017/01/sha-2017/</guid>
+      <guid>/2017/01/sha-2017/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -126,10 +195,10 @@
     
     <item>
       <title>Spatial analysis pipelines with simple features in R</title>
-      <link>https://walkerke.github.io/2016/12/spatial-pipelines/</link>
+      <link>/2016/12/spatial-pipelines/</link>
       <pubDate>Tue, 27 Dec 2016 06:15:14 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2016/12/spatial-pipelines/</guid>
+      <guid>/2016/12/spatial-pipelines/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -261,10 +330,10 @@ table(visits)&lt;/code&gt;&lt;/pre&gt;
     
     <item>
       <title>Dropdown menus in R Markdown with bsselectR</title>
-      <link>https://walkerke.github.io/2016/12/rmd-dropdowns/</link>
+      <link>/2016/12/rmd-dropdowns/</link>
       <pubDate>Thu, 15 Dec 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2016/12/rmd-dropdowns/</guid>
+      <guid>/2016/12/rmd-dropdowns/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -376,10 +445,10 @@ bsselect(state_plots, type = &amp;quot;img&amp;quot;, selected = &amp;quot;Orego
     
     <item>
       <title>Spatial neighbors in R - an interactive illustration</title>
-      <link>https://walkerke.github.io/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</link>
+      <link>/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</link>
       <pubDate>Wed, 27 Jul 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</guid>
+      <guid>/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -435,10 +504,10 @@ bsselect(state_plots, type = &amp;quot;img&amp;quot;, selected = &amp;quot;Orego
     
     <item>
       <title>Reproducing the Washington Post housing price maps with R and ggplot2</title>
-      <link>https://walkerke.github.io/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</link>
+      <link>/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</link>
       <pubDate>Wed, 29 Jun 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</guid>
+      <guid>/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -592,10 +661,10 @@ ggplot() +
     
     <item>
       <title>Interactive flow visualization in R</title>
-      <link>https://walkerke.github.io/2016/06/interactive-flow-visualization-in-r/</link>
+      <link>/2016/06/interactive-flow-visualization-in-r/</link>
       <pubDate>Sun, 26 Jun 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2016/06/interactive-flow-visualization-in-r/</guid>
+      <guid>/2016/06/interactive-flow-visualization-in-r/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -801,10 +870,10 @@ globejs(arcsLwd = weights, arcs = arcs, arcsColor = df4$colors)&lt;/code&gt;&lt;
     
     <item>
       <title>Using a new Mapbox Studio map in an R Leaflet project</title>
-      <link>https://walkerke.github.io/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</link>
+      <link>/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</link>
       <pubDate>Wed, 18 May 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</guid>
+      <guid>/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -877,10 +946,10 @@ leaflet(df) %&amp;gt;%
     
     <item>
       <title>Visualizing international demographic indicators with idbr and Plotly</title>
-      <link>https://walkerke.github.io/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</link>
+      <link>/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</link>
       <pubDate>Fri, 29 Jan 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</guid>
+      <guid>/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</guid>
       <description>&lt;p&gt;It&amp;rsquo;s been a while since I last posted here - but I&amp;rsquo;ve been working on a new R package that I&amp;rsquo;m quite excited about, and I thought this would be the right place to post.  My new package, &lt;strong&gt;idbr&lt;/strong&gt;, is an R interface to the &lt;a href=&#34;http://www.census.gov/data/developers/data-sets/international-database.html&#34;&gt;United States Census Bureau&amp;rsquo;s International Data Base API&lt;/a&gt;.  The IDB includes a host of international demographic indicators - including historical data and projections to 2050.  I use IDB data all of the time for my teaching - and &lt;strong&gt;idbr&lt;/strong&gt; makes the process of getting the data much easier!  While this product uses the Census Bureau Data API, it is not endorsed or certified by the Census Bureau.&lt;/p&gt;
 
 &lt;p&gt;Install from CRAN with the following command:&lt;/p&gt;
@@ -1028,10 +1097,10 @@ shinyApp(ui = ui, server = server)
     
     <item>
       <title>acs14lite: A lightweight R interface to the 2010-2014 ACS API</title>
-      <link>https://walkerke.github.io/2015/12/acs14lite/</link>
+      <link>/2015/12/acs14lite/</link>
       <pubDate>Sat, 12 Dec 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2015/12/acs14lite/</guid>
+      <guid>/2015/12/acs14lite/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -1143,10 +1212,10 @@ r2cartodb(la_tracts2, &amp;#39;la_poverty&amp;#39;)
     
     <item>
       <title>Fetching roads data in R with tigris</title>
-      <link>https://walkerke.github.io/2015/12/roads-tigris/</link>
+      <link>/2015/12/roads-tigris/</link>
       <pubDate>Thu, 03 Dec 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2015/12/roads-tigris/</guid>
+      <guid>/2015/12/roads-tigris/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -1192,10 +1261,10 @@ geojson_write(rt1, file = &amp;#39;route1.geojson&amp;#39;)&lt;/code&gt;&lt;/pre
     
     <item>
       <title>Obesity by state, 2013: a CartoDB state squares experiment</title>
-      <link>https://walkerke.github.io/2015/05/obesity-squares/</link>
+      <link>/2015/05/obesity-squares/</link>
       <pubDate>Sat, 09 May 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2015/05/obesity-squares/</guid>
+      <guid>/2015/05/obesity-squares/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -1263,10 +1332,10 @@ FROM obesity_squares&lt;/code&gt;&lt;/pre&gt;
     
     <item>
       <title>Using custom tiles in an RStudio Leaflet map</title>
-      <link>https://walkerke.github.io/2015/03/custom_tiles/</link>
+      <link>/2015/03/custom_tiles/</link>
       <pubDate>Tue, 10 Mar 2015 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2015/03/custom_tiles/</guid>
+      <guid>/2015/03/custom_tiles/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -1382,89 +1451,6 @@ leaflet() %&amp;gt;%
 
 
 /BLOGDOWN-HEAD --&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Mapping religious adherence in the US with CartoDB</title>
-      <link>https://walkerke.github.io/2015/02/mapping-religious-adherence-in-the-us-with-cartodb/</link>
-      <pubDate>Thu, 26 Feb 2015 00:00:00 +0000</pubDate>
-      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2015/02/mapping-religious-adherence-in-the-us-with-cartodb/</guid>
-      <description>&lt;p&gt;Before coming to TCU, I worked as a data analyst for the &lt;a href=&#34;https://www.cpg.org/&#34;&gt;Church Pension Group&lt;/a&gt;, which manages the retirement funds and provides other financial services for the Episcopal Church.  I was part of a small research group that completed both internal and public-facing studies using the company&amp;rsquo;s data.  &lt;a href=&#34;https://www.cpg.org/global/research/reports-statistics/&#34;&gt;You can take a look at some of the studies I worked on here&lt;/a&gt;.  While I was at CPG, I developed an interest in the sociology of religion, as changing rates of religious adherence were of critical importance to CPG&amp;rsquo;s work, as they impact the overall viability of parishes (and in turn the fiscal health of the Church).  During this time, data for the &lt;a href=&#34;http://www.rcms2010.org/&#34;&gt;2010 US Religion Census (or Religious Congregations and Membership Study, abbreviated as RCMS)&lt;/a&gt; started to become available.  As the US Census does not ask questions about religion, researchers interested in studying religion must turn to other data sources like these.&lt;/p&gt;
-
-&lt;p&gt;I never had the opportunity to really dig into this dataset while at CPG, as I left for my current position at TCU shortly afterward.  However, as I teach about the geography of religious adherence (defined here as the proportion of the population actively practicing a religion) in my World Regional Geography course, I took the opportunity to dive back into the data.  I was inspired by &lt;a href=&#34;http://www.glenmary.org/rcms2010/&#34;&gt;this map from the Glenmary Research Center&lt;/a&gt; which maps the top religious family by county in the United States.  This map is excellent, but I wanted an interactive version that I could explore with my students in class (and that they could explore outside of class).  However, I did really like the bivariate cartographic technique they used to present the data (&lt;a href=&#34;http://www.joshuastevens.net/cartography/make-a-bivariate-choropleth-map/&#34;&gt;see this post from Joshua Stevens for a great overview of bivariate mapping&lt;/a&gt;).  In this instance, the top religious group in each county is assigned a color; then, the intensity of the color is related to the adherence percentage for that group.  This makes sense; if two counties have Catholic as their top group, but one has an adherence of 75 percent as opposed to 20 percent for the other, they should not be represented the same way.&lt;/p&gt;
-
-&lt;p&gt;There are many other examples of this type of cartographic approach.  Some excellent examples have come from &lt;a href=&#34;https://twitter.com/SR_spatial&#34;&gt;Steven Romalewski&lt;/a&gt; and CUNY&amp;rsquo;s Center for Urban Research, where they have mapped &lt;a href=&#34;http://www.urbanresearchmaps.org/comparinator/pluralitymap.htm&#34;&gt;demographic change&lt;/a&gt; and &lt;a href=&#34;http://www.electionatlas.nyc/maps.html#!interactive&#34;&gt;election results&lt;/a&gt;.  I use the demographic map in my teaching every semester to discuss issues of gentrification and demographic inversion in metropolitan areas.  In the CUNY maps, the qualitative color of a feature represents the most prevalent group (e.g. race) and then the intensity of the hue represents its relative value (the percentage represented by that racial group).&lt;/p&gt;
-
-&lt;p&gt;A related approach is &lt;strong&gt;value-by-alpha&lt;/strong&gt;, which works in a similar way in that the color of a feature represents one attribute, and its opacity represents an equalizing attribute, like total population.  You can read more about &lt;a href=&#34;https://twitter.com/awoodruff&#34;&gt;Andy Woodruff&amp;rsquo;s&lt;/a&gt; fine work on the topic &lt;a href=&#34;http://andywoodruff.com/blog/how-to-make-a-value-by-alpha-map/&#34;&gt;here&lt;/a&gt;, &lt;a href=&#34;http://andywoodruff.com/blog/value-by-alpha-maps/&#34;&gt;here&lt;/a&gt;, and &lt;a href=&#34;http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3173776/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;I borrow from these approaches to map religious adherence by county using &lt;a href=&#34;http://cartodb.com/&#34;&gt;CartoDB&lt;/a&gt;, a phenomenal web-based platform for creating interactive maps.  CartoDB&amp;rsquo;s functionality ranges from the creation of simple maps with a user-friendly web UI to actual GIS functionality using its PostGIS backend with spatial SQL.  Here is the map I created; below, I&amp;rsquo;ll explain how I did it!  Use the arrows button in the upper left to pop the map out to full screen; &lt;a href=&#34;http://kwalkertcu.cartodb.com/viz/dfe2d3b2-a0da-11e4-a315-0e4fddd5de28/embed_map&#34;&gt;click here if you&amp;rsquo;d like a direct link to the map.&lt;/a&gt;&lt;/p&gt;
-
-&lt;iframe width=&#39;100%&#39; height=&#39;600&#39; frameborder=&#39;0&#39; src=&#39;http://kwalkertcu.cartodb.com/viz/dfe2d3b2-a0da-11e4-a315-0e4fddd5de28/embed_map&#39; allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen&gt;&lt;/iframe&gt;
-
-&lt;p&gt;The map shows the top religious adherence group by county, with some key differences from the Glenmary map; I classified the data as Catholic, Evangelical Protestant, Latter-Day Saints (Mormon), Mainline Protestant, and Black Protestant.  No other major category was the top group in the lower 48 states plus DC.  I used R to process the data; I won&amp;rsquo;t go into detail about that here, but you can &lt;a href=&#34;https://github.com/walkerke/teaching-with-datavis/blob/master/religion/religion2.R&#34;&gt;view the code in my GitHub repository&lt;/a&gt;.  The whole process can be reproduced by &lt;a href=&#34;https://github.com/walkerke/teaching-with-datavis/tree/master/religion&#34;&gt;cloning the repo&lt;/a&gt;, running the script, and zipping up the new shapefile &lt;code&gt;cty_religion&lt;/code&gt; for uploading to CartoDB.&lt;/p&gt;
-
-&lt;p&gt;Uploading your data to CartoDB is straightforward: once your data are in the right format (in this instance, in the form of a zipped shapefile), just sign in and drag and drop!  Once your data have loaded, CartoDB includes a number of &amp;ldquo;wizards&amp;rdquo; you can use to style your data in a very user-friendly way.  For more complex visualizations, however, you can use &lt;a href=&#34;https://www.mapbox.com/tilemill/docs/manual/carto/&#34;&gt;CartoCSS&lt;/a&gt;.  CartoCSS, which is also used by MapBox Studio (another new favorite of mine), is a CSS-like syntax for styling map data.  It also makes bivariate visualizations possible.  To style the map, I grabbed some colors from &lt;a href=&#34;http://colorbrewer2.org/&#34;&gt;ColorBrewer&lt;/a&gt; and used the following syntax:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;#cty_religion {
-   line-color: #FFF;
-   line-width: 1;
-   line-opacity: 1;
-}
-
-#cty_religion[religion=&amp;quot;Evangelical&amp;quot;] {
-   polygon-fill: #e41a1c;
-}
-#cty_religion[religion=&amp;quot;Catholic&amp;quot;] {
-   polygon-fill: #377eb8;
-}
-#cty_religion[religion=&amp;quot;Mainline&amp;quot;] {
-   polygon-fill: #4daf4a;
-}
-#cty_religion[religion=&amp;quot;LDS&amp;quot;] {
-   polygon-fill: #984ea3;
-}
-#cty_religion[religion=&amp;quot;African-American&amp;quot;] {
-   polygon-fill: #ff7f00;
-}
-
-#cty_religion[percent &amp;gt;= 0] {
-  polygon-opacity: 0.2; 
-}
-#cty_religion[percent &amp;gt;= 20] {
-  polygon-opacity: 0.4;
-}
-#cty_religion[percent &amp;gt;= 30] {
-  polygon-opacity: 0.6;
-}
-#cty_religion[percent &amp;gt;= 40] {
-  polygon-opacity: 0.8;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The &lt;code&gt;polygon-fill&lt;/code&gt; method is used to style my data by religious category with colors; the &lt;code&gt;polygon-opacity&lt;/code&gt; method then adjusts the opacity of the features, which then blend with the light-gray CartoDB basemap to show relative intensity.  I used, roughly, a quantile classification scheme with four bins (with some slight rounding to 20, 30, and 40) for this.  The map, I feel, shows clear trends in religious adherence in the US.  The South is the Evangelical center of the country; Catholicism is more prevalent along the US/Mexico border and in the Northeast, Utah is a Mormon stronghold, and Mainline Protestantism predominates in the Upper Midwest.   The bivariate approach also gives the viewer a sense of the relative religiosity of different places; whereas Utah and the Southeast appear to have much stronger adherence to their top religious groups, the opacity of features in the Northwest suggests lower religiosity there (or at least no group that is significant numbers-wise).&lt;/p&gt;
-
-&lt;p&gt;There is a lot more I&amp;rsquo;d like to do with this map; here are some ideas:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;I&amp;rsquo;ve restricted this to the lower 48 states plus DC; Alaska and Hawaii should be added.&lt;br /&gt;&lt;/li&gt;
-&lt;li&gt;I&amp;rsquo;d like a better legend that shows variation in intensity as well as hue; I experimented with this a little but couldn&amp;rsquo;t quite get anything satisfactory working.&lt;br /&gt;&lt;/li&gt;
-&lt;li&gt;It would be great to have an interactive chart appear upon clicking each county that shows the overall distribution of each group; this is beyond my current CartoDB.js skills but something to consider for a future iteration.&lt;br /&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;If you have any comments or questions, please let me know!&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Thanks to:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Steven Romalewski and the CUNY Center for Urban Research for their innovative approaches to bivariate mapping&lt;/li&gt;
-&lt;li&gt;Andy Woodruff and others for resources on the value-by-alpha technique&lt;/li&gt;
-&lt;li&gt;CartoDB&lt;/li&gt;
-&lt;li&gt;The &lt;a href=&#34;http://www.thearda.com/&#34;&gt;Association of Religion Data Archives&lt;/a&gt; for providing free access to the RCMS data&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.nhgis.org&#34;&gt;NHGIS&lt;/a&gt; at the University of Minnesota for the spatial data&lt;/li&gt;
-&lt;li&gt;The Glenmary Research Center for inspiring this map&lt;/li&gt;
-&lt;/ul&gt;
 </description>
     </item>
     
