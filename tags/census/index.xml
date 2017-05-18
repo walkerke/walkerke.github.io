@@ -2,21 +2,173 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kyle Walker</title>
-    <link>https://walkerke.github.io/tags/census/index.xml</link>
+    <link>/tags/census/index.xml</link>
     <description>Recent content on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2017 Kyle Walker</copyright>
-    <atom:link href="https://walkerke.github.io/tags/census/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/census/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Generating metropolitan subsets of Census data with R and tigris</title>
+      <link>/2017/05/tigris-metros/</link>
+      <pubDate>Thu, 18 May 2017 08:00:00 +0000</pubDate>
+      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
+      <guid>/2017/05/tigris-metros/</guid>
+      <description>&lt;!-- BLOGDOWN-BODY-BEFORE
+
+/BLOGDOWN-BODY-BEFORE --&gt;
+
+&lt;p&gt;&lt;strong&gt;Need help working with Census data in your project? Contact me at &lt;a href=&#34;mailto:kwalkerdata@gmail.com&#34;&gt;kwalkerdata@gmail.com&lt;/a&gt; to discuss consulting support or a training workshop!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Commonly, studies that use US Census data study topics at the scale of the metropolitan area. However, subsetting Census geographic data by metropolitan area is not always straightforward. Commonly, such a workflow for Census tracts might look something like:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Manually downloading Census tract shapefiles (often available by state);&lt;/li&gt;
+&lt;li&gt;Looking up the counties in a given metropolitan area, along with their FIPS codes;&lt;/li&gt;
+&lt;li&gt;Subsetting the data by those FIPS codes.&lt;br /&gt;
+&lt;/li&gt;
+&lt;li&gt;Repeating the process for each state included in the metropolitan area and then merging the result (if tracts are obtained by state).&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This task - which can be tedious - is well-suited for R and the &lt;strong&gt;tigris&lt;/strong&gt; package. R, by way of the &lt;strong&gt;sf&lt;/strong&gt; package, has powerful functionality for spatial subsetting. Further, with a little custom code, we can set up a framework for rapidly retrieving Census tracts for any metropolitan area we want. To get started, let’s load the required packages and set options to cache data from &lt;strong&gt;tigris&lt;/strong&gt; and load the data as &lt;strong&gt;sf&lt;/strong&gt; objects.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tigris)
+library(sf)
+library(tidyverse)
+options(tigris_class = &amp;quot;sf&amp;quot;)
+options(tigris_use_cache = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let’s say we want to obtain Census tracts for the Portland, Oregon metropolitan area, which includes areas in both Oregon and Washington. We can fetch Census tracts for Oregon and Washington and combine them with the &lt;code&gt;rbind_tigris&lt;/code&gt; function.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;orwa &amp;lt;- rbind_tigris(
+  tracts(&amp;quot;OR&amp;quot;, cb = TRUE), 
+  tracts(&amp;quot;WA&amp;quot;, cb = TRUE)
+)
+
+ggplot(orwa) + geom_sf()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=https://walkerke.github.io/img/2017/tigris-metros/f1.png style=&#34;width: 85%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We can then subset these tracts spatially by locating the boundary of the Portland metropolitan area available in the &lt;code&gt;core_based_statistical_areas&lt;/code&gt; function. Use the &lt;code&gt;View&lt;/code&gt; function in RStudio and browse the dataset if you are unsure of how to format the string used to filter the data.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cb &amp;lt;- core_based_statistical_areas(cb = TRUE)
+
+pdx &amp;lt;- filter(cb, grepl(&amp;quot;Portland-Vancouver&amp;quot;, NAME))
+
+ggplot(pdx) + geom_sf()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=https://walkerke.github.io/img/2017/tigris-metros/f2.png style=&#34;width: 85%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The simplest way to do spatial subsetting in &lt;strong&gt;sf&lt;/strong&gt; is by indexing the data you’d like to subset by the spatial overlay. This will return all tracts that intersect the metropolitan area.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;p1 &amp;lt;- orwa[pdx,]
+
+ggplot() + 
+  geom_sf(data = p1) + 
+  geom_sf(data = pdx, fill = NA, color = &amp;quot;red&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=https://walkerke.github.io/img/2017/tigris-metros/f3.png style=&#34;width: 85%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We notice a problem here - we’ve returned all tracts within the metropolitan area, but also those outside it that touch the metropolitan area’s boundary. Fortunately, &lt;strong&gt;sf&lt;/strong&gt; includes a suite of methods for spatial overlay. We’ll use the &lt;code&gt;st_within&lt;/code&gt; method to identify those tracts &lt;em&gt;within&lt;/em&gt; the boundary of the metropolitan area. Further, as the Census Bureau designs its shapefiles to align cleanly, we shouldn’t have any spatial overlay problems here.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;w1 &amp;lt;- st_within(orwa, pdx)
+
+print(length(w1))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 2282&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;print(w1[1:5])&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [[1]]
+## integer(0)
+## 
+## [[2]]
+## integer(0)
+## 
+## [[3]]
+## integer(0)
+## 
+## [[4]]
+## integer(0)
+## 
+## [[5]]
+## [1] 1&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We see that the object &lt;code&gt;w1&lt;/code&gt; is a list with the same length as our &lt;code&gt;orwa&lt;/code&gt; data frame. Values either are length-0 integers - representing tracts that are not within the metro area - or &lt;code&gt;1&lt;/code&gt;, representing tracts that are. In turn, we can use &lt;strong&gt;purrr&lt;/strong&gt; to convert this to a logical vector and subset our data accordingly.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;w2 &amp;lt;- map_lgl(w1, function(x) {
+  if (length(x) == 1) {
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+})
+
+p2 &amp;lt;- orwa[w2,]
+
+ggplot() + 
+  geom_sf(data = p2) + 
+  geom_sf(data = pdx, fill = NA, color = &amp;quot;red&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=https://walkerke.github.io/img/2017/tigris-metros/f4.png style=&#34;width: 85%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Perfect! Now, let’s say you want to make this extensible to other metropolitan areas on-demand. We’ll need a function that does the following:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Takes a metropolitan area as input, and detects the states in which the metro area is located;&lt;/li&gt;
+&lt;li&gt;Retrieves tracts for those states;&lt;/li&gt;
+&lt;li&gt;Identifies the tracts located within the metro area’s boundary.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Here’s how to do it:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;metro_tracts &amp;lt;- function(metro_name) {
+  
+  # First, identify which states intersect the metro area using the
+  # `states` function in tigris
+  st &amp;lt;- states(cb = TRUE)
+  cb &amp;lt;- core_based_statistical_areas(cb = TRUE)
+  metro &amp;lt;- filter(cb, grepl(metro_name, NAME))
+  
+  stcodes &amp;lt;- st[metro,]$STATEFP
+  
+  # Then, fetch the tracts, using rbind_tigris if there is more
+  # than one state
+  if (length(stcodes) &amp;gt; 1) {
+    tr &amp;lt;- rbind_tigris(
+      map(stcodes, function(x) {
+        tracts(x, cb = TRUE)
+      })
+    )
+  } else {
+    tr &amp;lt;- tracts(x, cb = TRUE)
+  }
+  
+  # Now, find out which tracts are within the metro area
+  within &amp;lt;- st_within(tr, metro)
+  
+  within_lgl &amp;lt;- map_lgl(within, function(x) {
+    if (length(x) == 1) {
+      return(TRUE)
+    } else {
+      return(FALSE)
+    }
+  })
+  
+  # Finally, subset and return the output
+  output &amp;lt;- tr[within_lgl,]
+  
+  return(output)
+  
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let’s try it out! Here’s Chicago:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;chi &amp;lt;- metro_tracts(&amp;quot;Chicago&amp;quot;)
+
+ggplot(chi) + geom_sf()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=https://walkerke.github.io/img/2017/tigris-metros/f5.png style=&#34;width: 85%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;And here’s Boston:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;bos &amp;lt;- metro_tracts(&amp;quot;Boston&amp;quot;)
+
+ggplot(bos) + geom_sf()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=https://walkerke.github.io/img/2017/tigris-metros/f6.png style=&#34;width: 85%&#34;&gt;&lt;/p&gt;
+
+
+
+&lt;!-- BLOGDOWN-HEAD
+
+
+
+
+
+
+/BLOGDOWN-HEAD --&gt;
+</description>
+    </item>
     
     <item>
       <title>New in the tigris package: simple features support and historic shapefiles</title>
-      <link>https://walkerke.github.io/2017/05/tigris-v05/</link>
+      <link>/2017/05/tigris-v05/</link>
       <pubDate>Tue, 02 May 2017 08:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2017/05/tigris-v05/</guid>
+      <guid>/2017/05/tigris-v05/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;

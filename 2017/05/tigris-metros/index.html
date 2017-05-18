@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Generating metropolitan subsets of Census data with R and tigris  &middot; Kyle Walker</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="r, census, tigris, ">
+
+
+<meta property="og:title" content="Generating metropolitan subsets of Census data with R and tigris  &middot; Kyle Walker ">
+<meta property="og:site_name" content="Kyle Walker"/>
+<meta property="og:url" content="/2017/05/tigris-metros/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="2017-05-18T08:00:00Z" />
+<meta property="og:article:modified_time" content="2017-05-18T08:00:00Z" />
+
+  
+    
+<meta property="og:article:tag" content="r">
+    
+<meta property="og:article:tag" content="census">
+    
+<meta property="og:article:tag" content="tigris">
+    
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@kyle_e_walker" />
+<meta name="twitter:creator" content="@kyle_e_walker" />
+<meta name="twitter:title" content="Generating metropolitan subsets of Census data with R and tigris" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="/2017/05/tigris-metros/" />
+<meta name="twitter:domain" content="/">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Generating metropolitan subsets of Census data with R and tigris",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "2017-05-18",
+    "description": "",
+    "wordCount":  759 
+  }
+</script>
+
+
+
+<link rel="canonical" href="../../../2017/05/tigris-metros/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../touch-icon-144-precomposed.png">
+<link href="../../../favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="../../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../../css/style.css">
+<link rel="stylesheet" href="../../../css/highlight/zenburn.css">
+
+  <!DOCTYPE HTML>
+<style>
+  
+  .main_wrapper>.main_header {
+    background-color: #035004;
+    color: #fff;
+  }
+  
+  .main_wrapper>.main_content .label:hover,
+  .main_wrapper>.main_content .navigation a:hover,
+  .main_wrapper>.main_content .pagination a:hover,
+  .main_wrapper>.main_content .readlink a:hover,
+  .main_wrapper>.main_content h2 a:hover,
+  .main_wrapper>.main_header a:hover {
+    background-color: #035004;
+    color: #fff;
+    text-decoration: none; 
+}
+
+  a {
+    color: #1a730f; 
+  }
+  
+  a:active, a:focus, a:hover {
+    color: #035004;
+}
+  
+</style>
+
+
+
+
+
+
+
+</head>
+<body class="map[name:superhero]">
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="../../../">
+  Kyle Walker
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Writing about visualization, demographics, dashboards, and spatial data science. <br/><br/>Interested in learning more?  Hire me for a workshop or to consult on your next project.  See the Services page for more details.
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="../../../about">About</a>
+
+<a href="../../../post" title="Show list of posts">Posts</a>
+
+<a href="../../../tags" title="Show list of tags">Tags</a>
+
+<a href="../../../services">Services</a>
+
+<a href="https://www.r-bloggers.com/">R-Bloggers</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+<a id="contact-link-email" class="contact_link" href="mailto:kwalkerdata@gmail.com">
+  <span class="fa fa-envelope-square"></span><span>email</span></a>
+
+
+
+<a id="contact-link-github" class="contact_link" href="https://github.com/walkerke">
+  <span class="fa fa-github-square"></span><span>github</span></a>
+
+
+
+
+
+<a id="contact-link-linkedin" class="contact_link" href="https://www.linkedin.com/in/walkerke">
+  <span class="fa fa-linkedin-square"></span><span>linkedin</span></a>
+
+
+
+
+
+
+
+<a id="contact-link-twitter" class="contact_link" href="https://twitter.com/kyle_e_walker">
+  <span class="fa fa-twitter-square"></span><span>twitter</span></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1>Generating metropolitan subsets of Census data with R and tigris
+</h1>
+
+  <div class="metas">
+<time datetime="2017-05-18">18 May, 2017</time>
+
+
+  
+    &middot; by Kyle Walker
+  
+  &middot; Read in about 4 min
+  &middot; (759 Words)
+  <br>
+  
+<a class="label" href="../../../tags/r">r</a>
+
+<a class="label" href="../../../tags/census">census</a>
+
+<a class="label" href="../../../tags/tigris">tigris</a>
+
+
+
+</div>
+
+</header>
+
+  <div class="container content">
+
+
+<p><strong>Need help working with Census data in your project? Contact me at <a href="mailto:kwalkerdata@gmail.com">kwalkerdata@gmail.com</a> to discuss consulting support or a training workshop!</strong></p>
+<p>Commonly, studies that use US Census data study topics at the scale of the metropolitan area. However, subsetting Census geographic data by metropolitan area is not always straightforward. Commonly, such a workflow for Census tracts might look something like:</p>
+<ol style="list-style-type: decimal">
+<li>Manually downloading Census tract shapefiles (often available by state);</li>
+<li>Looking up the counties in a given metropolitan area, along with their FIPS codes;</li>
+<li>Subsetting the data by those FIPS codes.<br />
+</li>
+<li>Repeating the process for each state included in the metropolitan area and then merging the result (if tracts are obtained by state).</li>
+</ol>
+<p>This task - which can be tedious - is well-suited for R and the <strong>tigris</strong> package. R, by way of the <strong>sf</strong> package, has powerful functionality for spatial subsetting. Further, with a little custom code, we can set up a framework for rapidly retrieving Census tracts for any metropolitan area we want. To get started, let’s load the required packages and set options to cache data from <strong>tigris</strong> and load the data as <strong>sf</strong> objects.</p>
+<pre class="r"><code>library(tigris)
+library(sf)
+library(tidyverse)
+options(tigris_class = &quot;sf&quot;)
+options(tigris_use_cache = TRUE)</code></pre>
+<p>Let’s say we want to obtain Census tracts for the Portland, Oregon metropolitan area, which includes areas in both Oregon and Washington. We can fetch Census tracts for Oregon and Washington and combine them with the <code>rbind_tigris</code> function.</p>
+<pre class="r"><code>orwa &lt;- rbind_tigris(
+  tracts(&quot;OR&quot;, cb = TRUE), 
+  tracts(&quot;WA&quot;, cb = TRUE)
+)
+
+ggplot(orwa) + geom_sf()</code></pre>
+<p><img src=https://walkerke.github.io/img/2017/tigris-metros/f1.png style="width: 85%"></p>
+<p>We can then subset these tracts spatially by locating the boundary of the Portland metropolitan area available in the <code>core_based_statistical_areas</code> function. Use the <code>View</code> function in RStudio and browse the dataset if you are unsure of how to format the string used to filter the data.</p>
+<pre class="r"><code>cb &lt;- core_based_statistical_areas(cb = TRUE)
+
+pdx &lt;- filter(cb, grepl(&quot;Portland-Vancouver&quot;, NAME))
+
+ggplot(pdx) + geom_sf()</code></pre>
+<p><img src=https://walkerke.github.io/img/2017/tigris-metros/f2.png style="width: 85%"></p>
+<p>The simplest way to do spatial subsetting in <strong>sf</strong> is by indexing the data you’d like to subset by the spatial overlay. This will return all tracts that intersect the metropolitan area.</p>
+<pre class="r"><code>p1 &lt;- orwa[pdx,]
+
+ggplot() + 
+  geom_sf(data = p1) + 
+  geom_sf(data = pdx, fill = NA, color = &quot;red&quot;)</code></pre>
+<p><img src=https://walkerke.github.io/img/2017/tigris-metros/f3.png style="width: 85%"></p>
+<p>We notice a problem here - we’ve returned all tracts within the metropolitan area, but also those outside it that touch the metropolitan area’s boundary. Fortunately, <strong>sf</strong> includes a suite of methods for spatial overlay. We’ll use the <code>st_within</code> method to identify those tracts <em>within</em> the boundary of the metropolitan area. Further, as the Census Bureau designs its shapefiles to align cleanly, we shouldn’t have any spatial overlay problems here.</p>
+<pre class="r"><code>w1 &lt;- st_within(orwa, pdx)
+
+print(length(w1))</code></pre>
+<pre><code>## [1] 2282</code></pre>
+<pre class="r"><code>print(w1[1:5])</code></pre>
+<pre><code>## [[1]]
+## integer(0)
+## 
+## [[2]]
+## integer(0)
+## 
+## [[3]]
+## integer(0)
+## 
+## [[4]]
+## integer(0)
+## 
+## [[5]]
+## [1] 1</code></pre>
+<p>We see that the object <code>w1</code> is a list with the same length as our <code>orwa</code> data frame. Values either are length-0 integers - representing tracts that are not within the metro area - or <code>1</code>, representing tracts that are. In turn, we can use <strong>purrr</strong> to convert this to a logical vector and subset our data accordingly.</p>
+<pre class="r"><code>w2 &lt;- map_lgl(w1, function(x) {
+  if (length(x) == 1) {
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+})
+
+p2 &lt;- orwa[w2,]
+
+ggplot() + 
+  geom_sf(data = p2) + 
+  geom_sf(data = pdx, fill = NA, color = &quot;red&quot;)</code></pre>
+<p><img src=https://walkerke.github.io/img/2017/tigris-metros/f4.png style="width: 85%"></p>
+<p>Perfect! Now, let’s say you want to make this extensible to other metropolitan areas on-demand. We’ll need a function that does the following:</p>
+<ol style="list-style-type: decimal">
+<li>Takes a metropolitan area as input, and detects the states in which the metro area is located;</li>
+<li>Retrieves tracts for those states;</li>
+<li>Identifies the tracts located within the metro area’s boundary.</li>
+</ol>
+<p>Here’s how to do it:</p>
+<pre class="r"><code>metro_tracts &lt;- function(metro_name) {
+  
+  # First, identify which states intersect the metro area using the
+  # `states` function in tigris
+  st &lt;- states(cb = TRUE)
+  cb &lt;- core_based_statistical_areas(cb = TRUE)
+  metro &lt;- filter(cb, grepl(metro_name, NAME))
+  
+  stcodes &lt;- st[metro,]$STATEFP
+  
+  # Then, fetch the tracts, using rbind_tigris if there is more
+  # than one state
+  if (length(stcodes) &gt; 1) {
+    tr &lt;- rbind_tigris(
+      map(stcodes, function(x) {
+        tracts(x, cb = TRUE)
+      })
+    )
+  } else {
+    tr &lt;- tracts(x, cb = TRUE)
+  }
+  
+  # Now, find out which tracts are within the metro area
+  within &lt;- st_within(tr, metro)
+  
+  within_lgl &lt;- map_lgl(within, function(x) {
+    if (length(x) == 1) {
+      return(TRUE)
+    } else {
+      return(FALSE)
+    }
+  })
+  
+  # Finally, subset and return the output
+  output &lt;- tr[within_lgl,]
+  
+  return(output)
+  
+}</code></pre>
+<p>Let’s try it out! Here’s Chicago:</p>
+<pre class="r"><code>chi &lt;- metro_tracts(&quot;Chicago&quot;)
+
+ggplot(chi) + geom_sf()</code></pre>
+<p><img src=https://walkerke.github.io/img/2017/tigris-metros/f5.png style="width: 85%"></p>
+<p>And here’s Boston:</p>
+<pre class="r"><code>bos &lt;- metro_tracts(&quot;Boston&quot;)
+
+ggplot(bos) + geom_sf()</code></pre>
+<p><img src=https://walkerke.github.io/img/2017/tigris-metros/f6.png style="width: 85%"></p>
+
+
+
+
+</div>
+
+
+  <footer class="container">
+  <div class="container navigation no-print">
+  <h2>Navigation</h2>
+  
+  
+
+    
+    <a class="prev" href="../../../2017/05/tigris-v05/" title="New in the tigris package: simple features support and historic shapefiles">
+      Previous
+    </a>
+    
+
+    
+
+  
+
+
+</div>
+
+  
+
+</footer>
+
+</article>
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+
+</div>
+
+
+  
+<div class="container copyright">
+  
+  &copy; 2017 Kyle Walker
+
+
+</div>
+
+
+</div>
+
+</footer>
+
+    </main>
+    
+<script type="text/javascript">
+  (function() {
+    
+    
+    if (window.location.hostname == "localhost")
+      return;
+
+    var dsq = document.createElement('script'); dsq.async = true; dsq.type = 'text/javascript';
+    dsq.src = '//your_disqus_shortname.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+
+<script src="../../../js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51388803-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+    
+  </body>
+</html>
+

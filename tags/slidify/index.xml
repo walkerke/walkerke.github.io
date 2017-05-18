@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kyle Walker</title>
-    <link>https://walkerke.github.io/tags/slidify/index.xml</link>
+    <link>/tags/slidify/index.xml</link>
     <description>Recent content on Kyle Walker</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2017 Kyle Walker</copyright>
-    <atom:link href="https://walkerke.github.io/tags/slidify/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/slidify/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Using Slidify to teach with interactive content</title>
-      <link>https://walkerke.github.io/2014/12/using-slidify-to-teach-with-interactive-content/</link>
+      <link>/2014/12/using-slidify-to-teach-with-interactive-content/</link>
       <pubDate>Tue, 02 Dec 2014 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2014/12/using-slidify-to-teach-with-interactive-content/</guid>
+      <guid>/2014/12/using-slidify-to-teach-with-interactive-content/</guid>
       <description>
 
 &lt;p&gt;I frequently come across criticisms of PowerPoint as a presentation tool, which is interesting to me given the ubiquity of its use across industries.  When I worked as a data analyst prior to coming to TCU, I frequently prepared PowerPoints using a company template for my boss&amp;rsquo;s presentations or for talks of my own.  In academia, we have considerable freedom in how we can communicate information; however, PowerPoint is still widely used in the classroom and is everywhere at professional conferences.&lt;/p&gt;
