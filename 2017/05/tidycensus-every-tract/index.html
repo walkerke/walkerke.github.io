@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Getting data for every Census tract in the US with purrr and tidycensus  &middot; KYLE WALKER DATA</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="r, census, tidycensus, ">
+
+
+<meta property="og:title" content="Getting data for every Census tract in the US with purrr and tidycensus  &middot; KYLE WALKER DATA ">
+<meta property="og:site_name" content="KYLE WALKER DATA"/>
+<meta property="og:url" content="/2017/05/tidycensus-every-tract/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="2017-05-31T08:00:00Z" />
+<meta property="og:article:modified_time" content="2017-05-31T08:00:00Z" />
+
+  
+    
+<meta property="og:article:tag" content="r">
+    
+<meta property="og:article:tag" content="census">
+    
+<meta property="og:article:tag" content="tidycensus">
+    
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@kyle_e_walker" />
+<meta name="twitter:creator" content="@kyle_e_walker" />
+<meta name="twitter:title" content="Getting data for every Census tract in the US with purrr and tidycensus" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="/2017/05/tidycensus-every-tract/" />
+<meta name="twitter:domain" content="/">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Getting data for every Census tract in the US with purrr and tidycensus",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "2017-05-31",
+    "description": "",
+    "wordCount":  661 
+  }
+</script>
+
+
+
+<link rel="canonical" href="../../../2017/05/tidycensus-every-tract/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../touch-icon-144-precomposed.png">
+<link href="../../../favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="../../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../../css/style.css">
+<link rel="stylesheet" href="../../../css/highlight/zenburn.css">
+
+  <!DOCTYPE HTML>
+<style>
+  
+  .main_wrapper>.main_header {
+    background-color: #035004;
+    color: #fff;
+  }
+  
+  .main_wrapper>.main_content .label:hover,
+  .main_wrapper>.main_content .navigation a:hover,
+  .main_wrapper>.main_content .pagination a:hover,
+  .main_wrapper>.main_content .readlink a:hover,
+  .main_wrapper>.main_content h2 a:hover,
+  .main_wrapper>.main_header a:hover {
+    background-color: #035004;
+    color: #fff;
+    text-decoration: none; 
+}
+
+  a {
+    color: #1a730f; 
+  }
+  
+  a:active, a:focus, a:hover {
+    color: #035004;
+}
+  
+</style>
+
+
+
+
+
+
+
+</head>
+<body class="map[name:superhero]">
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="../../../">
+  KYLE WALKER DATA
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Writing about visualization, demographics, dashboards, and spatial data science. <br/><br/>Interested in learning more?  Hire me for a workshop or to consult on your next project.  See the Services page for more details.
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="../../../about">About</a>
+
+<a href="../../../post" title="Show list of posts">Posts</a>
+
+<a href="../../../tags" title="Show list of tags">Tags</a>
+
+<a href="../../../services">Services</a>
+
+<a href="https://www.r-bloggers.com/">R-Bloggers</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+<a id="contact-link-email" class="contact_link" href="mailto:kwalkerdata@gmail.com">
+  <span class="fa fa-envelope-square"></span><span>email</span></a>
+
+
+
+<a id="contact-link-github" class="contact_link" href="https://github.com/walkerke">
+  <span class="fa fa-github-square"></span><span>github</span></a>
+
+
+
+
+
+<a id="contact-link-linkedin" class="contact_link" href="https://www.linkedin.com/in/walkerke">
+  <span class="fa fa-linkedin-square"></span><span>linkedin</span></a>
+
+
+
+
+
+
+
+<a id="contact-link-twitter" class="contact_link" href="https://twitter.com/kyle_e_walker">
+  <span class="fa fa-twitter-square"></span><span>twitter</span></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1>Getting data for every Census tract in the US with purrr and tidycensus
+</h1>
+
+  <div class="metas">
+<time datetime="2017-05-31">31 May, 2017</time>
+
+
+  
+    &middot; by Kyle Walker
+  
+  &middot; Read in about 4 min
+  &middot; (661 Words)
+  <br>
+  
+<a class="label" href="../../../tags/r">r</a>
+
+<a class="label" href="../../../tags/census">census</a>
+
+<a class="label" href="../../../tags/tidycensus">tidycensus</a>
+
+
+
+</div>
+
+</header>
+
+  <div class="container content">
+
+
+<p><strong>Interested in more tips on working with Census data? <a href="http://eepurl.com/cPGKZD">Click here to join my email list!</a></strong></p>
+<p>Last week, I published the development version of my new R package, <strong>tidycensus</strong>. You can read through the documentation and some examples at <a href="https://walkerke.github.io/tidycensus/" class="uri">https://walkerke.github.io/tidycensus/</a>. I’m working on getting the package CRAN-ready with better error handling; in the meantime, I’m sharing a few examples to demonstrate its functionality.</p>
+<p>If you are working on a national project that includes demographic data as a component, you might be interested in acquiring Census tract data for the entire United States. However, Census tract data are commonly available by state (with the exception of <a href="http://www.nhgis.org">NHGIS</a>, which is a wonderful resource), meaning that an analyst would have to spend time piecing the data together.</p>
+<p><strong>tidycensus</strong> solves this problem directly within R with help from the <strong>purrr</strong> package, a member of the tidyverse. In <strong>tidycensus</strong>, there is a built-in data frame named <code>fips_codes</code> that includes US state and county IDs; <strong>tidycensus</strong> uses this data frame to handle translations between state/county names and FIPS codes. However, this data frame can also be used to generate a vector of state codes to be fed to the <code>map_df</code> function in <strong>purrr</strong>. As such, this is all it takes to get a tibble of total population estimates for all US Census tracts from the 2011-2015 ACS:</p>
+<pre class="r"><code>library(tidycensus)
+library(purrr)
+# Un-comment below and set your API key
+# census_api_key(&quot;YOUR KEY GOES HERE&quot;)
+us &lt;- unique(fips_codes$state)[1:51]
+
+totalpop &lt;- map_df(us, function(x) {
+  get_acs(geography = &quot;tract&quot;, variables = &quot;B01003_001&quot;, 
+          state = x)
+})
+
+str(totalpop)</code></pre>
+<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    73056 obs. of  5 variables:
+##  $ GEOID   : chr  &quot;01001020100&quot; &quot;01001020200&quot; &quot;01001020300&quot; &quot;01001020400&quot; ...
+##  $ NAME    : chr  &quot;Census Tract 201, Autauga County, Alabama&quot; &quot;Census Tract 202, Autauga County, Alabama&quot; &quot;Census Tract 203, Autauga County, Alabama&quot; &quot;Census Tract 204, Autauga County, Alabama&quot; ...
+##  $ variable: chr  &quot;B01003_001&quot; &quot;B01003_001&quot; &quot;B01003_001&quot; &quot;B01003_001&quot; ...
+##  $ estimate: num  1948 2156 2968 4423 10763 ...
+##  $ moe     : num  203 268 404 493 624 478 436 281 1000 535 ...</code></pre>
+<p>Get any ACS or decennial Census data in this way.</p>
+<p>However - what if you also want tract geometry for mapping? This only requires a few small modifications. <code>map_df</code> in <strong>purrr</strong> uses the <code>bind_rows</code> function under the hood, which doesn’t work with simple features objects (yet). However, <strong>sf</strong> does have an <code>rbind</code> method that works for <code>sf</code> objects and can be fed to <strong>purrr</strong>’s <code>reduce</code> function.</p>
+<pre class="r"><code>library(sf)
+options(tigris_use_cache = TRUE)
+
+totalpop_sf &lt;- reduce(
+  map(us, function(x) {
+    get_acs(geography = &quot;tract&quot;, variables = &quot;B01003_001&quot;, 
+            state = x, geometry = TRUE)
+  }), 
+  rbind
+)
+
+str(totalpop_sf)</code></pre>
+<pre><code>## Classes &#39;sf&#39; and &#39;data.frame&#39;:   72843 obs. of  6 variables:
+##  $ GEOID   : chr  &quot;01003010500&quot; &quot;01003011501&quot; &quot;01009050500&quot; &quot;01015981901&quot; ...
+##  $ NAME    : chr  &quot;Census Tract 105, Baldwin County, Alabama&quot; &quot;Census Tract 115.01, Baldwin County, Alabama&quot; &quot;Census Tract 505, Blount County, Alabama&quot; &quot;Census Tract 9819.01, Calhoun County, Alabama&quot; ...
+##  $ variable: chr  &quot;B01003_001&quot; &quot;B01003_001&quot; &quot;B01003_001&quot; &quot;B01003_001&quot; ...
+##  $ estimate: num  5321 5771 7007 4 1607 ...
+##  $ moe     : num  452 825 556 6 235 309 506 386 425 310 ...
+##  $ geometry:sfc_GEOMETRY of length 72843; first list element: List of 1
+##   ..$ :List of 1
+##   .. ..$ : num [1:55, 1:2] -87.8 -87.8 -87.8 -87.8 -87.8 ...
+##   ..- attr(*, &quot;class&quot;)= chr  &quot;XY&quot; &quot;MULTIPOLYGON&quot; &quot;sfg&quot;
+##  - attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA
+##   ..- attr(*, &quot;names&quot;)= chr  &quot;GEOID&quot; &quot;NAME&quot; &quot;variable&quot; &quot;estimate&quot; ...
+##  - attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;</code></pre>
+<p>By declaring <code>geometry = TRUE</code>, <strong>tidycensus</strong> fetches tract feature geometry using the <strong>tigris</strong> package and merges it to the ACS data automatically for you. I recommend using the caching feature in the <strong>tigris</strong> package if you plan to use this workflow multiple times. You might note the discrepancy in tracts between the geometry-enabled and regular data frames; this is due to the removal of some water-only tracts in the cartographic boundary shapefiles used by <strong>tidycensus</strong>.</p>
+
+
+
+
+</div>
+
+
+  <footer class="container">
+  <div class="container navigation no-print">
+  <h2>Navigation</h2>
+  
+  
+
+    
+    <a class="prev" href="../../../2017/05/tigris-metros/" title="Generating metropolitan subsets of Census data with R and tigris">
+      Previous
+    </a>
+    
+
+    
+
+  
+
+
+</div>
+
+  
+
+</footer>
+
+</article>
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+
+</div>
+
+
+  
+<div class="container copyright">
+  
+  &copy; 2017 Kyle Walker
+
+
+</div>
+
+
+</div>
+
+</footer>
+
+    </main>
+    
+<script type="text/javascript">
+  (function() {
+    
+    
+    if (window.location.hostname == "localhost")
+      return;
+
+    var dsq = document.createElement('script'); dsq.async = true; dsq.type = 'text/javascript';
+    dsq.src = '//your_disqus_shortname.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+
+<script src="../../../js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51388803-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+    
+  </body>
+</html>
+

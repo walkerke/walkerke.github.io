@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>KYLE WALKER DATA</title>
+    <link>/tags/tidycensus/index.xml</link>
+    <description>Recent content on KYLE WALKER DATA</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
+    <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
+    <copyright>(c) 2017 Kyle Walker</copyright>
+    <atom:link href="/tags/tidycensus/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Getting data for every Census tract in the US with purrr and tidycensus</title>
+      <link>/2017/05/tidycensus-every-tract/</link>
+      <pubDate>Wed, 31 May 2017 08:00:00 +0000</pubDate>
+      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
+      <guid>/2017/05/tidycensus-every-tract/</guid>
+      <description>&lt;!-- BLOGDOWN-BODY-BEFORE
+
+/BLOGDOWN-BODY-BEFORE --&gt;
+
+&lt;p&gt;&lt;strong&gt;Interested in more tips on working with Census data? &lt;a href=&#34;http://eepurl.com/cPGKZD&#34;&gt;Click here to join my email list!&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Last week, I published the development version of my new R package, &lt;strong&gt;tidycensus&lt;/strong&gt;. You can read through the documentation and some examples at &lt;a href=&#34;https://walkerke.github.io/tidycensus/&#34; class=&#34;uri&#34;&gt;https://walkerke.github.io/tidycensus/&lt;/a&gt;. I’m working on getting the package CRAN-ready with better error handling; in the meantime, I’m sharing a few examples to demonstrate its functionality.&lt;/p&gt;
+&lt;p&gt;If you are working on a national project that includes demographic data as a component, you might be interested in acquiring Census tract data for the entire United States. However, Census tract data are commonly available by state (with the exception of &lt;a href=&#34;http://www.nhgis.org&#34;&gt;NHGIS&lt;/a&gt;, which is a wonderful resource), meaning that an analyst would have to spend time piecing the data together.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;tidycensus&lt;/strong&gt; solves this problem directly within R with help from the &lt;strong&gt;purrr&lt;/strong&gt; package, a member of the tidyverse. In &lt;strong&gt;tidycensus&lt;/strong&gt;, there is a built-in data frame named &lt;code&gt;fips_codes&lt;/code&gt; that includes US state and county IDs; &lt;strong&gt;tidycensus&lt;/strong&gt; uses this data frame to handle translations between state/county names and FIPS codes. However, this data frame can also be used to generate a vector of state codes to be fed to the &lt;code&gt;map_df&lt;/code&gt; function in &lt;strong&gt;purrr&lt;/strong&gt;. As such, this is all it takes to get a tibble of total population estimates for all US Census tracts from the 2011-2015 ACS:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidycensus)
+library(purrr)
+# Un-comment below and set your API key
+# census_api_key(&amp;quot;YOUR KEY GOES HERE&amp;quot;)
+us &amp;lt;- unique(fips_codes$state)[1:51]
+
+totalpop &amp;lt;- map_df(us, function(x) {
+  get_acs(geography = &amp;quot;tract&amp;quot;, variables = &amp;quot;B01003_001&amp;quot;, 
+          state = x)
+})
+
+str(totalpop)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Classes &amp;#39;tbl_df&amp;#39;, &amp;#39;tbl&amp;#39; and &amp;#39;data.frame&amp;#39;:    73056 obs. of  5 variables:
+##  $ GEOID   : chr  &amp;quot;01001020100&amp;quot; &amp;quot;01001020200&amp;quot; &amp;quot;01001020300&amp;quot; &amp;quot;01001020400&amp;quot; ...
+##  $ NAME    : chr  &amp;quot;Census Tract 201, Autauga County, Alabama&amp;quot; &amp;quot;Census Tract 202, Autauga County, Alabama&amp;quot; &amp;quot;Census Tract 203, Autauga County, Alabama&amp;quot; &amp;quot;Census Tract 204, Autauga County, Alabama&amp;quot; ...
+##  $ variable: chr  &amp;quot;B01003_001&amp;quot; &amp;quot;B01003_001&amp;quot; &amp;quot;B01003_001&amp;quot; &amp;quot;B01003_001&amp;quot; ...
+##  $ estimate: num  1948 2156 2968 4423 10763 ...
+##  $ moe     : num  203 268 404 493 624 478 436 281 1000 535 ...&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Get any ACS or decennial Census data in this way.&lt;/p&gt;
+&lt;p&gt;However - what if you also want tract geometry for mapping? This only requires a few small modifications. &lt;code&gt;map_df&lt;/code&gt; in &lt;strong&gt;purrr&lt;/strong&gt; uses the &lt;code&gt;bind_rows&lt;/code&gt; function under the hood, which doesn’t work with simple features objects (yet). However, &lt;strong&gt;sf&lt;/strong&gt; does have an &lt;code&gt;rbind&lt;/code&gt; method that works for &lt;code&gt;sf&lt;/code&gt; objects and can be fed to &lt;strong&gt;purrr&lt;/strong&gt;’s &lt;code&gt;reduce&lt;/code&gt; function.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(sf)
+options(tigris_use_cache = TRUE)
+
+totalpop_sf &amp;lt;- reduce(
+  map(us, function(x) {
+    get_acs(geography = &amp;quot;tract&amp;quot;, variables = &amp;quot;B01003_001&amp;quot;, 
+            state = x, geometry = TRUE)
+  }), 
+  rbind
+)
+
+str(totalpop_sf)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Classes &amp;#39;sf&amp;#39; and &amp;#39;data.frame&amp;#39;:   72843 obs. of  6 variables:
+##  $ GEOID   : chr  &amp;quot;01003010500&amp;quot; &amp;quot;01003011501&amp;quot; &amp;quot;01009050500&amp;quot; &amp;quot;01015981901&amp;quot; ...
+##  $ NAME    : chr  &amp;quot;Census Tract 105, Baldwin County, Alabama&amp;quot; &amp;quot;Census Tract 115.01, Baldwin County, Alabama&amp;quot; &amp;quot;Census Tract 505, Blount County, Alabama&amp;quot; &amp;quot;Census Tract 9819.01, Calhoun County, Alabama&amp;quot; ...
+##  $ variable: chr  &amp;quot;B01003_001&amp;quot; &amp;quot;B01003_001&amp;quot; &amp;quot;B01003_001&amp;quot; &amp;quot;B01003_001&amp;quot; ...
+##  $ estimate: num  5321 5771 7007 4 1607 ...
+##  $ moe     : num  452 825 556 6 235 309 506 386 425 310 ...
+##  $ geometry:sfc_GEOMETRY of length 72843; first list element: List of 1
+##   ..$ :List of 1
+##   .. ..$ : num [1:55, 1:2] -87.8 -87.8 -87.8 -87.8 -87.8 ...
+##   ..- attr(*, &amp;quot;class&amp;quot;)= chr  &amp;quot;XY&amp;quot; &amp;quot;MULTIPOLYGON&amp;quot; &amp;quot;sfg&amp;quot;
+##  - attr(*, &amp;quot;agr&amp;quot;)= Factor w/ 3 levels &amp;quot;constant&amp;quot;,&amp;quot;aggregate&amp;quot;,..: NA NA NA NA NA
+##   ..- attr(*, &amp;quot;names&amp;quot;)= chr  &amp;quot;GEOID&amp;quot; &amp;quot;NAME&amp;quot; &amp;quot;variable&amp;quot; &amp;quot;estimate&amp;quot; ...
+##  - attr(*, &amp;quot;sf_column&amp;quot;)= chr &amp;quot;geometry&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;By declaring &lt;code&gt;geometry = TRUE&lt;/code&gt;, &lt;strong&gt;tidycensus&lt;/strong&gt; fetches tract feature geometry using the &lt;strong&gt;tigris&lt;/strong&gt; package and merges it to the ACS data automatically for you. I recommend using the caching feature in the &lt;strong&gt;tigris&lt;/strong&gt; package if you plan to use this workflow multiple times. You might note the discrepancy in tracts between the geometry-enabled and regular data frames; this is due to the removal of some water-only tracts in the cartographic boundary shapefiles used by &lt;strong&gt;tidycensus&lt;/strong&gt;.&lt;/p&gt;
+
+
+
+&lt;!-- BLOGDOWN-HEAD
+
+
+
+
+
+
+/BLOGDOWN-HEAD --&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
