@@ -1,0 +1,86 @@
+---
+title: "Compare US metropolitan area characteristics in R with tidycensus and tigris"
+author: "Kyle Walker"
+date: 2017-06-25T08:00:00
+tags: ["r", "census", "tidycensus", "tigris"]
+slug: comparing-metros
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, out.width = "100%")
+library(tidycensus)
+census_api_key("5ed58a5745802102fb83d4eec5d1f7326f65ffab")
+```
+
+* Interested in more tips on working with Census data? [Click here to join my email list!](http://eepurl.com/cPGKZD)
+* Want to implement this in your organization? Contact me at kwalkerdata@gmail.com to discuss a training or consulting partnership.  
+
+As I've discussed [in a previous post](https://walkerke.github.io/2017/05/tigris-metros/), practioners commonly analyze demographic or economic topics at the scale of the metropolitan area.  Since I wrote that post, I've released the [tidycensus](https://walkerke.github.io/tidycensus) package, giving R users access to linked Census geometry and attributes in a single function call.  This makes metropolitan area analysis even faster, with help from the __tigris__ and __sf__ packages.    
+
+First, we load up some packages and set some options.  
+
+
+```{r}
+library(tidycensus)
+library(tidyverse)
+library(tigris)
+library(sf)
+options(tigris_class = "sf")
+options(tigris_use_cache = TRUE)
+# census_api_key("YOUR KEY HERE")
+```
+
+
+Let's say you are an analyst who wants to compare the distribution of median gross rent by Census tract for three West Coast metropolitan areas: Seattle, Portland, and San Francisco-Oakland.  We'll get data from the 2011-2015 American Community Survey's Data Profile, using variable `DP04_0134`.  As this requires data for multiple states, we'll use a new feature in tidycensus that allows us to supply a vector of states to the `state` parameter in `get_acs()` for Census tracts, improving on the approach I outlined [in my previous post](http://walkerke.github.io/2017/05/tidycensus-every-tract/).  
+
+```{r}
+rent <- get_acs(geography = "tract", variables = "DP04_0134", 
+                state = c("WA", "OR", "CA"), geometry = TRUE)
+
+head(rent)
+
+```
+
+
+We now have median gross rent information for all Census tracts in Washington, Oregon, and California.  Subsetting this to our desired metropolitan areas only takes a couple steps.  First, we use the tigris package to obtain metropolitan area boundaries with the `core_based_statistical_areas()` function, taking care to set `cb = TRUE` as this is the default geometry used by tidycensus, and subset by ID for our desired metros.  Next, we use an inner spatial join with sf's `st_join()` function to subset for the specific tracts we need.  
+
+```{r}
+metros <- core_based_statistical_areas(cb = TRUE) %>%
+  filter(GEOID %in% c("38900", "41860", "42660")) %>%
+  select(metro_name = NAME)
+
+wc_rent <- st_join(rent, metros, join = st_within, 
+                   left = FALSE) 
+
+head(wc_rent)
+
+```
+
+Tracts are identified by metropolitan area, with a new column, `metro_name`, that includes the metropolitan area name.  
+
+Exploratory analysis by metropolitan area is now straightforward.  We can look at faceted histograms of median gross rent by Census tract by metro area with __ggplot2__: 
+
+```{r}
+ggplot(wc_rent, aes(x = estimate)) + 
+  geom_histogram() + 
+  facet_wrap(~metro_name)
+
+```
+
+As we have feature geometry as well, we can make faceted maps with `geom_sf()`, found in the development version of ggplot2.  Be sure to set `scales = "free"` and `theme(aspect.ratio = 1)` if you want this to work correctly.   
+
+```{r, fig.width = 10, fig.height = 4}
+library(viridis)
+
+ggplot(wc_rent, aes(fill = estimate, color = estimate)) + 
+  geom_sf() + 
+  coord_sf(crs = 26910) + 
+  facet_wrap(~metro_name, scales = "free", nrow = 1) + 
+  theme_minimal() + 
+  theme(aspect.ratio = 1) + 
+  scale_fill_viridis() + 
+  scale_color_viridis()
+  
+```
+
+

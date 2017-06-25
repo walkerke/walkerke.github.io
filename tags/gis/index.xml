@@ -2,34 +2,36 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>KYLE WALKER DATA</title>
-    <link>/tags/gis/index.xml</link>
+    <link>https://walkerke.github.io/tags/gis/index.xml</link>
     <description>Recent content on KYLE WALKER DATA</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2017 Kyle Walker</copyright>
-    <atom:link href="/tags/gis/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://walkerke.github.io/tags/gis/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>How to use the Rodeo IDE with ArcGIS Pro</title>
-      <link>/2017/02/rodeo-arcpro/</link>
-      <pubDate>Thu, 23 Feb 2017 04:26:00 +0000</pubDate>
+      <title>GIS workshop at the 2017 Society for Historical Archaeology Conference</title>
+      <link>https://walkerke.github.io/2017/01/sha-2017/</link>
+      <pubDate>Mon, 09 Jan 2017 08:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2017/02/rodeo-arcpro/</guid>
+      <guid>https://walkerke.github.io/2017/01/sha-2017/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
 
-&lt;p&gt;Recently, I had a need to automate some GIS operations using &lt;a href=&#34;https://pro.arcgis.com/en/pro-app/&#34;&gt;ArcGIS Pro&lt;/a&gt; and the &lt;a href=&#34;http://pro.arcgis.com/en/pro-app/arcpy/get-started/what-is-arcpy-.htm&#34;&gt;ArcPy Python site package&lt;/a&gt;. As of version 1.3, ArcGIS Pro ships with Anaconda as its Python installation, which makes it easier to work with ArcGIS as part of a broader data science workflow. I wanted to do my work in my Python IDE of choice, &lt;a href=&#34;http://rodeo.yhat.com/&#34;&gt;Yhat’s Rodeo&lt;/a&gt;; however, this didn’t work out of the box. I’m sharing the process I used to connect Rodeo to ArcGIS Pro’s Anaconda Python 3.&lt;/p&gt;
-&lt;p&gt;For IDEs to access ArcGIS Pro licensing regardless of whether or not you have an internet connection, you’ll need to enable offline access. Click the &lt;strong&gt;Projects&lt;/strong&gt; tab in ArcGIS Pro, then choose the &lt;strong&gt;Settings&lt;/strong&gt; option; scroll down and check the appropriate box.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://walkerke.github.io/img/blog/arcpro1.PNG&#34;&gt;&lt;/p&gt;
-&lt;p&gt;Next, click the &lt;strong&gt;Python&lt;/strong&gt; option from the menu on the left. From here, search for the &lt;strong&gt;jupyter&lt;/strong&gt; package and install it, which should install Jupyter and its associated libraries. This step is necessary to get Rodeo to work with ArcGIS Pro.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://walkerke.github.io/img/blog/arcpro2.PNG&#34;&gt;&lt;/p&gt;
-&lt;p&gt;Now, launch your Rodeo application, and click &lt;strong&gt;Rodeo &amp;gt; Preferences&lt;/strong&gt; to switch its &lt;a href=&#34;http://rodeo.yhat.com/docs/#using-conda-environments&#34;&gt;conda environment&lt;/a&gt;. Click the &lt;strong&gt;Python&lt;/strong&gt; tab, and change your Python Command by navigating to the Python executable associated with the &lt;strong&gt;arcgispro-py3&lt;/strong&gt; conda environment; you can find it where ArcGIS Pro is installed on your machine in &lt;code&gt;ArcGIS\Pro\bin\Python\envs\arcgispro-py3\&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://walkerke.github.io/img/blog/arcpro3.PNG&#34;&gt;&lt;/p&gt;
-&lt;p&gt;Click OK, import &lt;strong&gt;arcpy&lt;/strong&gt;, and write scripts to automate ArcGIS as usual!&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://walkerke.github.io/img/blog/arcpro4.PNG&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Last week, I had the opportunity to lead a Geographic Information Systems workshop at the &lt;a href=&#34;https://sha.org/conferences/&#34;&gt;2017 Society for Historical Archaeology Conference&lt;/a&gt;. During the day-long workshop, I introduced participants to a wide variety of key GIS concepts, and taught them how to apply those concepts to a series of historical topics. During the workshop, we used ArcGIS (ArcMap and ArcScene) as well as CARTO.&lt;/p&gt;
+&lt;p&gt;By the end of the day, students had learned how to interactively map Civil War battle sites &lt;a href=&#34;https://archive.org/details/CivilWarBattleSummariesOfMajorBattles&#34;&gt;from the National Park Service&lt;/a&gt; in CARTO that can be filtered with a time slider widget, as in the embedded map below:&lt;/p&gt;
+&lt;iframe width=&#34;100%&#34; height=&#34;520&#34; frameborder=&#34;0&#34; src=&#34;https://kwalkertcu.carto.com/builder/0820b9bc-d2c4-11e6-b3ec-0e3ebc282e83/embed&#34; allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen&gt;
+&lt;/iframe&gt;
+&lt;p&gt;In ArcMap, they learned how to explore immigration data from the 1880 US Census (available from &lt;a href=&#34;http://www.nhgis.org&#34;&gt;NHGIS&lt;/a&gt;) and visualize the data with dot-density and choropleth maps, as in the example below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://walkerke.github.io/extras/images/immigration.PNG&#34; style=&#34;width: 100%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;They also learned some of the spatial analysis functionality of ArcMap, including buffers, spatial joins, and kernel density visualization. To do this, we used the classic John Snow cholera dataset, made available by the &lt;a href=&#34;http://guides.library.yale.edu/GIS/gisworkshoparchive&#34;&gt;Yale University Libraries&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://walkerke.github.io/extras/images/snow_density.PNG&#34; style=&#34;width: 100%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We also covered the basics of digital elevation models (DEMs). Students learned about surface analysis concepts such as slope, hillshading, and viewsheds, and produced a three-dimensional display of a historical topographic map by draping it over a DEM in ArcScene. Data for this unit came from &lt;a href=&#34;https://tnris.org/data-catalog/entry/txdot-texas-historic-overlay/&#34;&gt;TNRIS&lt;/a&gt; and &lt;a href=&#34;https://nationalmap.gov/3DEP/&#34;&gt;USGS&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://walkerke.github.io/extras/images/blanco_scene.gif&#34; style=&#34;width: 100%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;All slides and data for the workshop &lt;a href=&#34;https://github.com/walkerke/sha2017&#34;&gt;are available on GitHub&lt;/a&gt;. If you are interested in a similar workshop for your organization, please contact me at &lt;a href=&#34;mailto:kwalkerdata@gmail.com&#34;&gt;kwalkerdata@gmail.com&lt;/a&gt;, and let’s discuss!&lt;/p&gt;
 
 
 

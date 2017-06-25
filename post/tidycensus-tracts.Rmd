@@ -23,8 +23,10 @@ __tidycensus__ solves this problem directly within R with help from the __purrr_
 ```{r}
 library(tidycensus)
 library(purrr)
+
 # Un-comment below and set your API key
 # census_api_key("YOUR KEY GOES HERE")
+
 us <- unique(fips_codes$state)[1:51]
 
 totalpop <- map_df(us, function(x) {

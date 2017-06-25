@@ -19,7 +19,7 @@
 
 <meta property="og:title" content="Getting data for every Census tract in the US with purrr and tidycensus  &middot; KYLE WALKER DATA ">
 <meta property="og:site_name" content="KYLE WALKER DATA"/>
-<meta property="og:url" content="/2017/05/tidycensus-every-tract/" />
+<meta property="og:url" content="https://walkerke.github.io/2017/05/tidycensus-every-tract/" />
 <meta property="og:locale" content="en-us">
 
 
@@ -44,8 +44,8 @@
 <meta name="twitter:creator" content="@kyle_e_walker" />
 <meta name="twitter:title" content="Getting data for every Census tract in the US with purrr and tidycensus" />
 <meta name="twitter:description" content="" />
-<meta name="twitter:url" content="/2017/05/tidycensus-every-tract/" />
-<meta name="twitter:domain" content="/">
+<meta name="twitter:url" content="https://walkerke.github.io/2017/05/tidycensus-every-tract/" />
+<meta name="twitter:domain" content="https://walkerke.github.io/">
   
 
 <script type="application/ld+json">
@@ -65,10 +65,10 @@
 
 
 
-<link rel="canonical" href="../../../2017/05/tidycensus-every-tract/" />
+<link rel="canonical" href="https://walkerke.github.io/2017/05/tidycensus-every-tract/" />
 
-<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../touch-icon-144-precomposed.png">
-<link href="../../../favicon.png" rel="icon">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://walkerke.github.io/touch-icon-144-precomposed.png">
+<link href="https://walkerke.github.io/favicon.png" rel="icon">
 
 <meta name="generator" content="Hugo 0.17" />
 
@@ -78,9 +78,9 @@
 <![endif]-->
 
 <link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="../../../css/font-awesome.min.css">
-<link rel="stylesheet" href="../../../css/style.css">
-<link rel="stylesheet" href="../../../css/highlight/zenburn.css">
+<link rel="stylesheet" href="https://walkerke.github.io/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://walkerke.github.io/css/style.css">
+<link rel="stylesheet" href="https://walkerke.github.io/css/highlight/zenburn.css">
 
   <!DOCTYPE HTML>
 <style>
@@ -123,7 +123,7 @@
     <header id="main-header" class="container main_header">
   <div class="container brand">
   <div class="container title h1-like">
-  <a class="baselink" href="../../../">
+  <a class="baselink" href="https://walkerke.github.io/">
   KYLE WALKER DATA
 
 </a>
@@ -146,13 +146,13 @@
 
 
   
-<a href="../../../about">About</a>
+<a href="https://walkerke.github.io/about">About</a>
 
-<a href="../../../post" title="Show list of posts">Posts</a>
+<a href="https://walkerke.github.io/post" title="Show list of posts">Posts</a>
 
-<a href="../../../tags" title="Show list of tags">Tags</a>
+<a href="https://walkerke.github.io/tags" title="Show list of tags">Tags</a>
 
-<a href="../../../services">Services</a>
+<a href="https://walkerke.github.io/services">Services</a>
 
 <a href="https://www.r-bloggers.com/">R-Bloggers</a>
 
@@ -221,11 +221,11 @@
   &middot; (661 Words)
   <br>
   
-<a class="label" href="../../../tags/r">r</a>
+<a class="label" href="https://walkerke.github.io/tags/r">r</a>
 
-<a class="label" href="../../../tags/census">census</a>
+<a class="label" href="https://walkerke.github.io/tags/census">census</a>
 
-<a class="label" href="../../../tags/tidycensus">tidycensus</a>
+<a class="label" href="https://walkerke.github.io/tags/tidycensus">tidycensus</a>
 
 
 
@@ -242,8 +242,10 @@
 <p><strong>tidycensus</strong> solves this problem directly within R with help from the <strong>purrr</strong> package, a member of the tidyverse. In <strong>tidycensus</strong>, there is a built-in data frame named <code>fips_codes</code> that includes US state and county IDs; <strong>tidycensus</strong> uses this data frame to handle translations between state/county names and FIPS codes. However, this data frame can also be used to generate a vector of state codes to be fed to the <code>map_df</code> function in <strong>purrr</strong>. As such, this is all it takes to get a tibble of total population estimates for all US Census tracts from the 2011-2015 ACS:</p>
 <pre class="r"><code>library(tidycensus)
 library(purrr)
+
 # Un-comment below and set your API key
 # census_api_key(&quot;YOUR KEY GOES HERE&quot;)
+
 us &lt;- unique(fips_codes$state)[1:51]
 
 totalpop &lt;- map_df(us, function(x) {
@@ -300,11 +302,15 @@ str(totalpop_sf)</code></pre>
   
 
     
-    <a class="prev" href="../../../2017/05/tigris-metros/" title="Generating metropolitan subsets of Census data with R and tigris">
+    <a class="prev" href="https://walkerke.github.io/2017/05/tigris-metros/" title="Generating metropolitan subsets of Census data with R and tigris">
       Previous
     </a>
     
 
+    
+    <a class="next" href="https://walkerke.github.io/2017/06/comparing-metros/" title="Compare US metropolitan area characteristics in R with tidycensus and tigris">
+      Next
+    </a>
     
 
   
@@ -365,7 +371,7 @@ str(totalpop_sf)</code></pre>
 
 
 
-<script src="../../../js/highlight.pack.js"></script>
+<script src="https://walkerke.github.io/js/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
 
