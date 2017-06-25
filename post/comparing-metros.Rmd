@@ -15,7 +15,7 @@ census_api_key("5ed58a5745802102fb83d4eec5d1f7326f65ffab")
 * Interested in more tips on working with Census data? [Click here to join my email list!](http://eepurl.com/cPGKZD)
 * Want to implement this in your organization? Contact me at kwalkerdata@gmail.com to discuss a training or consulting partnership.  
 
-As I've discussed [in a previous post](https://walkerke.github.io/2017/05/tigris-metros/), practioners commonly analyze demographic or economic topics at the scale of the metropolitan area.  Since I wrote that post, I've released the [tidycensus](https://walkerke.github.io/tidycensus) package, giving R users access to linked Census geometry and attributes in a single function call.  This makes metropolitan area analysis even faster, with help from the __tigris__ and __sf__ packages.    
+As I've discussed [in a previous post](https://walkerke.github.io/2017/05/tigris-metros/), practitioners commonly analyze demographic or economic topics at the scale of the metropolitan area.  Since I wrote that post, I've released the [tidycensus](https://walkerke.github.io/tidycensus) package, giving R users access to linked Census geometry and attributes in a single function call.  This makes metropolitan area analysis even faster, with help from the __tigris__ and __sf__ packages.    
 
 First, we load up some packages and set some options.  
 
