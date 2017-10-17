@@ -2,22 +2,140 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Post-rsses on KYLE WALKER DATA</title>
-    <link>https://walkerke.github.io/post/index.xml</link>
+    <link>/post/index.xml</link>
     <description>Recent content in Post-rsses on KYLE WALKER DATA</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2017 Kyle Walker</copyright>
-    <lastBuildDate>Sun, 25 Jun 2017 08:00:00 +0000</lastBuildDate>
-    <atom:link href="https://walkerke.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 17 Oct 2017 08:00:00 +0000</lastBuildDate>
+    <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Geo-faceted population pyramids with tidycensus 0.3</title>
+      <link>/2017/10/geofacted-pyramids/</link>
+      <pubDate>Tue, 17 Oct 2017 08:00:00 +0000</pubDate>
+      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
+      <guid>/2017/10/geofacted-pyramids/</guid>
+      <description>&lt;!-- BLOGDOWN-BODY-BEFORE
+
+/BLOGDOWN-BODY-BEFORE --&gt;
+
+&lt;p&gt;Version 0.3 of &lt;a href=&#34;https://walkerke.github.io/tidycensus/&#34;&gt;the tidycensus R package&lt;/a&gt; is now available on CRAN. The big change in this new release is the ability to fetch entire tables of Census or ACS data without having to construct a list of variable names. The table prefix should be passed to the new &lt;code&gt;table&lt;/code&gt; parameter in the &lt;code&gt;get_decennial()&lt;/code&gt; or &lt;code&gt;get_acs()&lt;/code&gt; functions to work.&lt;/p&gt;
+&lt;p&gt;I’d like to illustrate this below by showing you how to create faceted population pyramids with the &lt;a href=&#34;https://hafen.github.io/geofacet/&#34;&gt;geofacet R package&lt;/a&gt;, a package that allows you to create faceted ggplot2 plots in a way that represents the geographic position of the plot data.&lt;/p&gt;
+&lt;p&gt;To get started, let’s get data on age and sex - required to create population pyramids - using the new &lt;code&gt;table&lt;/code&gt; parameter in tidycensus.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidycensus)
+library(tidyverse)
+library(stringr)
+
+# If not installed, install your Census API key with `census_api_key(&amp;quot;KEY&amp;quot;, install = TRUE)`
+
+age &amp;lt;- get_decennial(geography = &amp;quot;state&amp;quot;, table = &amp;quot;P012&amp;quot;, summary_var = &amp;quot;P0010001&amp;quot;) %&amp;gt;%
+  mutate(variable = str_replace(variable, &amp;quot;P01200&amp;quot;, &amp;quot;&amp;quot;)) %&amp;gt;%
+  filter(!variable %in% c(&amp;quot;01&amp;quot;, &amp;quot;02&amp;quot;, &amp;quot;26&amp;quot;)) %&amp;gt;%
+  arrange(NAME, variable)
+
+head(age)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 5
+##   GEOID    NAME variable  value summary_value
+##   &amp;lt;chr&amp;gt;   &amp;lt;chr&amp;gt;    &amp;lt;chr&amp;gt;  &amp;lt;dbl&amp;gt;         &amp;lt;dbl&amp;gt;
+## 1    01 Alabama       03 155265       4779736
+## 2    01 Alabama       04 157340       4779736
+## 3    01 Alabama       05 163417       4779736
+## 4    01 Alabama       06 102627       4779736
+## 5    01 Alabama       07  72524       4779736
+## 6    01 Alabama       08  36159       4779736&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I’ve fetched all age and sex data from Census 2010 table P012, then removed three variables in the table, representing total population, total male population, and total female population, respectively.&lt;/p&gt;
+&lt;p&gt;I now do some data wrangling to get group percentages by state for 5-year age bands, as the Census data by default returns some age bands that are more refined than 5 years. I define my desired age categories, calculate a group sum and then percentage, and then set all male values to negative to display them on the left-hand side of the population pyramids.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;agegroups &amp;lt;- c(&amp;quot;0-4&amp;quot;, &amp;quot;5-9&amp;quot;, &amp;quot;10-14&amp;quot;, &amp;quot;15-19&amp;quot;, &amp;quot;15-19&amp;quot;, &amp;quot;20-24&amp;quot;, &amp;quot;20-24&amp;quot;, 
+               &amp;quot;20-24&amp;quot;, &amp;quot;25-29&amp;quot;, &amp;quot;30-34&amp;quot;, &amp;quot;35-39&amp;quot;, &amp;quot;40-44&amp;quot;, &amp;quot;45-49&amp;quot;, &amp;quot;50-54&amp;quot;, 
+               &amp;quot;55-59&amp;quot;, &amp;quot;60-64&amp;quot;, &amp;quot;60-64&amp;quot;, &amp;quot;65-69&amp;quot;, &amp;quot;65-69&amp;quot;, &amp;quot;70-74&amp;quot;, &amp;quot;75-79&amp;quot;, 
+               &amp;quot;80-84&amp;quot;, &amp;quot;85+&amp;quot;)
+
+agesex &amp;lt;- c(paste(&amp;quot;Male&amp;quot;, agegroups), 
+            paste(&amp;quot;Female&amp;quot;, agegroups))
+
+age$group &amp;lt;- rep(agesex, length(unique(age$NAME)))
+
+age2 &amp;lt;- age %&amp;gt;%
+  group_by(NAME, group) %&amp;gt;%
+  mutate(group_est = sum(value)) %&amp;gt;%
+  distinct(NAME, group, .keep_all = TRUE) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  mutate(percent = 100 * (group_est / summary_value)) %&amp;gt;%
+  select(name = NAME, group, percent) %&amp;gt;%
+  separate(group, into = c(&amp;quot;sex&amp;quot;, &amp;quot;age&amp;quot;), sep = &amp;quot; &amp;quot;) %&amp;gt;%
+  mutate(age = factor(age, levels = unique(age)), 
+         percent = ifelse(sex == &amp;quot;Female&amp;quot;, percent, -percent)) 
+
+head(age2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 4
+##      name   sex    age   percent
+##     &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;fctr&amp;gt;     &amp;lt;dbl&amp;gt;
+## 1 Alabama  Male    0-4 -3.248401
+## 2 Alabama  Male    5-9 -3.291814
+## 3 Alabama  Male  10-14 -3.418955
+## 4 Alabama  Male  15-19 -3.664449
+## 5 Alabama  Male  20-24 -3.504796
+## 6 Alabama  Male  25-29 -3.215994&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I now can create a geofaceted plot with ggplot2. The population pyramids are back-to-back bar charts categorized by sex, and the &lt;code&gt;facet_geo()&lt;/code&gt; function in the &lt;strong&gt;geofacet&lt;/strong&gt; package puts the plots in geographically appropriate positions.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(geofacet)
+library(extrafont)
+
+xlabs = c(&amp;quot;0-4&amp;quot; = &amp;quot;0-4&amp;quot;, &amp;quot;5-9&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;10-14&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;15-19&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;20-24&amp;quot; = &amp;quot;&amp;quot;, 
+          &amp;quot;25-29&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;30-34&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;35-39&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;40-44&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;45-49&amp;quot; = &amp;quot;&amp;quot;, 
+          &amp;quot;50-54&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;55-59&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;60-64&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;65-69&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;70-74&amp;quot; = &amp;quot;&amp;quot;, 
+          &amp;quot;75-79&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;80-84&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;85+&amp;quot; = &amp;quot;85+&amp;quot;)
+
+ggplot(data = age2, aes(x = age, y = percent, fill = sex)) +
+  geom_bar(stat = &amp;quot;identity&amp;quot;, width = 1) + 
+  scale_y_continuous(breaks=c(-5, 0, 5),labels=c(&amp;quot;5%&amp;quot;, &amp;quot;0%&amp;quot;, &amp;quot;5%&amp;quot;)) + 
+  coord_flip() + 
+  theme_minimal(base_family = &amp;quot;Tahoma&amp;quot;) + 
+  scale_x_discrete(labels = xlabs) + 
+  scale_fill_manual(values = c(&amp;quot;red&amp;quot;, &amp;quot;navy&amp;quot;)) + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        strip.text.x = element_text(size = 6)) + 
+  labs(x = &amp;quot;&amp;quot;, y = &amp;quot;&amp;quot;, fill = &amp;quot;&amp;quot;, 
+       title = &amp;quot;Demographic structure of US states&amp;quot;, 
+       caption = &amp;quot;Data source: 2010 US Census, tidycensus R package.  Chart by @kyle_e_walker.&amp;quot;) + 
+  facet_geo(~ name, grid = &amp;quot;us_state_grid2&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;img src=&#34;https://walkerke.github.io/img/pyramids.png&#34; style=&#34;width:100%&#34;
+
+Many states look quite similar, though there are a few notable outliers.  These include high-fertility states like Utah and Idaho, reflected in their proportionally larger young populations, as well as DC&#39;s urban profile with a sizeable population of residents in their 20s and 30s.  
+
+Within-state differences are perhaps more interesting; I&#39;m in the process of creating these types of graphs at the county level by state and posting them to Twitter as I go, like the example below: 
+
+&lt;blockquote class=&#34;twitter-tweet&#34; data-lang=&#34;en&#34;&gt;
+&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;
+Comparative population pyramids for Arizona counties, with &lt;a href=&#34;https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#rstats&lt;/a&gt; code to reproduce/modify: &lt;a href=&#34;https://t.co/Ac1ZrFeUwe&#34;&gt;https://t.co/Ac1ZrFeUwe&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/tidycensus?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#tidycensus&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/geofacet?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#geofacet&lt;/a&gt; &lt;a href=&#34;https://t.co/hvSu4rhZ5Q&#34;&gt;pic.twitter.com/hvSu4rhZ5Q&lt;/a&gt;
+&lt;/p&gt;
+— Kyle Walker (&lt;span class=&#34;citation&#34;&gt;@kyle_e_walker&lt;/span&gt;) &lt;a href=&#34;https://twitter.com/kyle_e_walker/status/919997361417359360?ref_src=twsrc%5Etfw&#34;&gt;October 16, 2017&lt;/a&gt;
+&lt;/blockquote&gt;
+&lt;script async src=&#34;//platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;
+&lt;p&gt;I’ll be creating a website that eventually will show the demographic structure of counties across the US, and tweeting the results as I progress.&lt;/p&gt;
+
+
+
+&lt;!-- BLOGDOWN-HEAD
+
+
+
+
+
+
+/BLOGDOWN-HEAD --&gt;
+</description>
+    </item>
     
     <item>
       <title>Compare US metropolitan area characteristics in R with tidycensus and tigris</title>
-      <link>https://walkerke.github.io/2017/06/comparing-metros/</link>
+      <link>/2017/06/comparing-metros/</link>
       <pubDate>Sun, 25 Jun 2017 08:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2017/06/comparing-metros/</guid>
+      <guid>/2017/06/comparing-metros/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -46,17 +164,20 @@ head(rent)&lt;/code&gt;&lt;/pre&gt;
 ## bbox:           xmin: -124.7625 ymin: 45.99541 xmax: -116.916 ymax: 48.35451
 ## epsg (SRID):    4269
 ## proj4string:    +proj=longlat +datum=NAD83 +no_defs
-## # A tibble: 6 x 6
 ##         GEOID                                         NAME  variable
-##         &amp;lt;chr&amp;gt;                                        &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt;
 ## 1 53003960100 Census Tract 9601, Asotin County, Washington DP04_0134
 ## 2 53005011100  Census Tract 111, Benton County, Washington DP04_0134
 ## 3 53007960500 Census Tract 9605, Chelan County, Washington DP04_0134
 ## 4 53007961000 Census Tract 9610, Chelan County, Washington DP04_0134
 ## 5 53009000200   Census Tract 2, Clallam County, Washington DP04_0134
 ## 6 53009000600   Census Tract 6, Clallam County, Washington DP04_0134
-## # ... with 3 more variables: estimate &amp;lt;dbl&amp;gt;, moe &amp;lt;dbl&amp;gt;,
-## #   geometry &amp;lt;simple_feature&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+##   estimate moe                       geometry
+## 1      812  71 MULTIPOLYGON(((-117.4801304...
+## 2      856  71 MULTIPOLYGON(((-119.16317 4...
+## 3      623 209 MULTIPOLYGON(((-120.952691 ...
+## 4      742 102 MULTIPOLYGON(((-120.329494 ...
+## 5      680 174 MULTIPOLYGON(((-124.108725 ...
+## 6      824 217 MULTIPOLYGON(((-124.294457 ...&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;We now have median gross rent information for all Census tracts in Washington, Oregon, and California. Subsetting this to our desired metropolitan areas only takes a couple steps. First, we use the tigris package to obtain metropolitan area boundaries with the &lt;code&gt;core_based_statistical_areas()&lt;/code&gt; function, taking care to set &lt;code&gt;cb = TRUE&lt;/code&gt; as this is the default geometry used by tidycensus, and subset by ID for our desired metros. Next, we use an inner spatial join with sf’s &lt;code&gt;st_join()&lt;/code&gt; function to subset for the specific tracts we need.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;metros &amp;lt;- core_based_statistical_areas(cb = TRUE) %&amp;gt;%
   filter(GEOID %in% c(&amp;quot;38900&amp;quot;, &amp;quot;41860&amp;quot;, &amp;quot;42660&amp;quot;)) %&amp;gt;%
@@ -127,10 +248,10 @@ ggplot(wc_rent, aes(fill = estimate, color = estimate)) +
     
     <item>
       <title>Getting data for every Census tract in the US with purrr and tidycensus</title>
-      <link>https://walkerke.github.io/2017/05/tidycensus-every-tract/</link>
+      <link>/2017/05/tidycensus-every-tract/</link>
       <pubDate>Wed, 31 May 2017 08:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2017/05/tidycensus-every-tract/</guid>
+      <guid>/2017/05/tidycensus-every-tract/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -203,10 +324,10 @@ str(totalpop_sf)&lt;/code&gt;&lt;/pre&gt;
     
     <item>
       <title>Generating metropolitan subsets of Census data with R and tigris</title>
-      <link>https://walkerke.github.io/2017/05/tigris-metros/</link>
+      <link>/2017/05/tigris-metros/</link>
       <pubDate>Thu, 18 May 2017 08:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2017/05/tigris-metros/</guid>
+      <guid>/2017/05/tigris-metros/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -355,10 +476,10 @@ ggplot(bos) + geom_sf()&lt;/code&gt;&lt;/pre&gt;
     
     <item>
       <title>New in the tigris package: simple features support and historic shapefiles</title>
-      <link>https://walkerke.github.io/2017/05/tigris-v05/</link>
+      <link>/2017/05/tigris-v05/</link>
       <pubDate>Tue, 02 May 2017 08:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2017/05/tigris-v05/</guid>
+      <guid>/2017/05/tigris-v05/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -425,10 +546,10 @@ walk(c(1990, 2000, 2010), function(year) {
     
     <item>
       <title>How to use the Rodeo IDE with ArcGIS Pro</title>
-      <link>https://walkerke.github.io/2017/02/rodeo-arcpro/</link>
+      <link>/2017/02/rodeo-arcpro/</link>
       <pubDate>Thu, 23 Feb 2017 04:26:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2017/02/rodeo-arcpro/</guid>
+      <guid>/2017/02/rodeo-arcpro/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -458,10 +579,10 @@ walk(c(1990, 2000, 2010), function(year) {
     
     <item>
       <title>Why I teach with SageMathCloud</title>
-      <link>https://walkerke.github.io/2017/02/sage-math-cloud/</link>
+      <link>/2017/02/sage-math-cloud/</link>
       <pubDate>Thu, 09 Feb 2017 09:26:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2017/02/sage-math-cloud/</guid>
+      <guid>/2017/02/sage-math-cloud/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -502,10 +623,10 @@ walk(c(1990, 2000, 2010), function(year) {
     
     <item>
       <title>GIS workshop at the 2017 Society for Historical Archaeology Conference</title>
-      <link>https://walkerke.github.io/2017/01/sha-2017/</link>
+      <link>/2017/01/sha-2017/</link>
       <pubDate>Mon, 09 Jan 2017 08:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2017/01/sha-2017/</guid>
+      <guid>/2017/01/sha-2017/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -537,10 +658,10 @@ walk(c(1990, 2000, 2010), function(year) {
     
     <item>
       <title>Spatial analysis pipelines with simple features in R</title>
-      <link>https://walkerke.github.io/2016/12/spatial-pipelines/</link>
+      <link>/2016/12/spatial-pipelines/</link>
       <pubDate>Tue, 27 Dec 2016 06:15:14 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2016/12/spatial-pipelines/</guid>
+      <guid>/2016/12/spatial-pipelines/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -672,10 +793,10 @@ table(visits)&lt;/code&gt;&lt;/pre&gt;
     
     <item>
       <title>Dropdown menus in R Markdown with bsselectR</title>
-      <link>https://walkerke.github.io/2016/12/rmd-dropdowns/</link>
+      <link>/2016/12/rmd-dropdowns/</link>
       <pubDate>Thu, 15 Dec 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2016/12/rmd-dropdowns/</guid>
+      <guid>/2016/12/rmd-dropdowns/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -787,10 +908,10 @@ bsselect(state_plots, type = &amp;quot;img&amp;quot;, selected = &amp;quot;Orego
     
     <item>
       <title>Spatial neighbors in R - an interactive illustration</title>
-      <link>https://walkerke.github.io/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</link>
+      <link>/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</link>
       <pubDate>Wed, 27 Jul 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</guid>
+      <guid>/2016/07/spatial-neighbors-in-r---an-interactive-illustration/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -846,10 +967,10 @@ bsselect(state_plots, type = &amp;quot;img&amp;quot;, selected = &amp;quot;Orego
     
     <item>
       <title>Reproducing the Washington Post housing price maps with R and ggplot2</title>
-      <link>https://walkerke.github.io/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</link>
+      <link>/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</link>
       <pubDate>Wed, 29 Jun 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</guid>
+      <guid>/2016/06/reproducing-the-washington-post-housing-price-maps-with-r-and-ggplot2/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -1003,10 +1124,10 @@ ggplot() +
     
     <item>
       <title>Interactive flow visualization in R</title>
-      <link>https://walkerke.github.io/2016/06/interactive-flow-visualization-in-r/</link>
+      <link>/2016/06/interactive-flow-visualization-in-r/</link>
       <pubDate>Sun, 26 Jun 2016 21:13:14 -0500</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2016/06/interactive-flow-visualization-in-r/</guid>
+      <guid>/2016/06/interactive-flow-visualization-in-r/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -1212,10 +1333,10 @@ globejs(arcsLwd = weights, arcs = arcs, arcsColor = df4$colors)&lt;/code&gt;&lt;
     
     <item>
       <title>Using a new Mapbox Studio map in an R Leaflet project</title>
-      <link>https://walkerke.github.io/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</link>
+      <link>/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</link>
       <pubDate>Wed, 18 May 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</guid>
+      <guid>/2016/05/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -1288,10 +1409,10 @@ leaflet(df) %&amp;gt;%
     
     <item>
       <title>Visualizing international demographic indicators with idbr and Plotly</title>
-      <link>https://walkerke.github.io/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</link>
+      <link>/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</link>
       <pubDate>Fri, 29 Jan 2016 00:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</guid>
+      <guid>/2016/01/visualizing-international-demographic-indicators-with-idbr-and-plotly/</guid>
       <description>&lt;p&gt;It&amp;rsquo;s been a while since I last posted here - but I&amp;rsquo;ve been working on a new R package that I&amp;rsquo;m quite excited about, and I thought this would be the right place to post.  My new package, &lt;strong&gt;idbr&lt;/strong&gt;, is an R interface to the &lt;a href=&#34;http://www.census.gov/data/developers/data-sets/international-database.html&#34;&gt;United States Census Bureau&amp;rsquo;s International Data Base API&lt;/a&gt;.  The IDB includes a host of international demographic indicators - including historical data and projections to 2050.  I use IDB data all of the time for my teaching - and &lt;strong&gt;idbr&lt;/strong&gt; makes the process of getting the data much easier!  While this product uses the Census Bureau Data API, it is not endorsed or certified by the Census Bureau.&lt;/p&gt;
 
 &lt;p&gt;Install from CRAN with the following command:&lt;/p&gt;
@@ -1434,121 +1555,6 @@ shinyApp(ui = ui, server = server)
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;iframe src=&#34;https://walkerke.shinyapps.io/idbr_dumbbell/&#34; frameborder = &#34;0&#34; scrolling = &#34;no&#34; width = &#34;800&#34; height = &#34;500&#34;&gt;&lt;/iframe&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>acs14lite: A lightweight R interface to the 2010-2014 ACS API</title>
-      <link>https://walkerke.github.io/2015/12/acs14lite/</link>
-      <pubDate>Sat, 12 Dec 2015 00:00:00 +0000</pubDate>
-      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2015/12/acs14lite/</guid>
-      <description>&lt;!-- BLOGDOWN-BODY-BEFORE
-
-/BLOGDOWN-BODY-BEFORE --&gt;
-
-&lt;p&gt;I use data from the US Census Bureau’s American Community Survey all of the time. I also use R all of the time. Naturally, this means that I often use ACS data in R - which is pertinent given last week’s release of the new 2010-2014 ACS estimates. I wanted easy access to the data to facilitate my on-going research on demographic trends in US metros, and work at the TCU Center for Urban Studies; as such, I wrote a small R package to provide quick access to the data, &lt;strong&gt;acs14lite&lt;/strong&gt; (&lt;a href=&#34;https://github.com/walkerke/acs14lite&#34; class=&#34;uri&#34;&gt;https://github.com/walkerke/acs14lite&lt;/a&gt;). This is not intended to be comparable to, or a replacement for, the existing ACS package in R; it is more for my personal convenience, but I thought it might be useful to others as well. This is mostly going to be a side project for me, so I don’t have plans for a CRAN submission at this time.&lt;/p&gt;
-&lt;p&gt;Install from GitHub with the following command in R:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;devtools::install_github(&amp;#39;walkerke/acs14lite&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Accessing the US Census Bureau’s API requires an API key, which you can get from here: &lt;a href=&#34;http://api.census.gov/data/key_signup.html&#34; class=&#34;uri&#34;&gt;http://api.census.gov/data/key_signup.html&lt;/a&gt;. You can then set it globally in your &lt;strong&gt;acs14lite&lt;/strong&gt; session:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(acs14lite)
-
-set_api_key(&amp;#39;your API key here&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;There is one main function in the package: &lt;code&gt;acs14&lt;/code&gt;. From here, you can request data for the following geographies: the entire US, regions, divisions, states, counties, Census tracts, and Census block groups. These are the geographies that I generally use, and I don’t have plans at the moment to add more; I would welcome pull requests, however.&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;acs14&lt;/code&gt; function has the following parameters:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;api_key&lt;/code&gt;: If you’ve set your API key already with &lt;code&gt;set_api_key&lt;/code&gt;, you don’t need to provide this.&lt;br /&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;geography&lt;/code&gt;: One of ‘us’ (the default), ‘region’, ‘division’, ‘state’, ‘county’, ‘tract’, or ‘block group’.&lt;br /&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;variable&lt;/code&gt;: A character string representing the Census variable name you want, or a vector of multiple variable names. Defaults to ‘B01001_001E’, which is total population. You can use the ACS package to look for variable names with its &lt;code&gt;acs.lookup&lt;/code&gt; function; remember to add &lt;code&gt;E&lt;/code&gt; for estimate and &lt;code&gt;M&lt;/code&gt; for margin of error to the end of your variable name.&lt;br /&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;state&lt;/code&gt;: The name of the state for which you want data; applicable to counties, tracts, and block groups.&lt;br /&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;county&lt;/code&gt;: The name of the county for which you want data: applicable to tracts and block groups.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;The function returns an R data frame with the data you want for your requested geography.&lt;/p&gt;
-&lt;p&gt;Additionally, I’ve written a few functions to help users work with margins of error in the ACS. Margins of error for the raw data are provided from the API; however, we often calculate new variables based on the ACS estimates, which in turn will have their own respective margins of error. I’ve used the guidelines in Appendix 3 here: &lt;a href=&#34;https://www.census.gov/content/dam/Census/library/publications/2008/acs/ACSGeneralHandbook.pdf&#34; class=&#34;uri&#34;&gt;https://www.census.gov/content/dam/Census/library/publications/2008/acs/ACSGeneralHandbook.pdf&lt;/a&gt; to write the following functions:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;moe_sum&lt;/code&gt;: calculates a margin of error for a derived sum of ACS estimates&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;moe_prop&lt;/code&gt;: calculates a margin of error for a proportion&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;moe_ratio&lt;/code&gt;: calculates a margin of error for a ratio&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;moe_product&lt;/code&gt;: calculates a margin of error for a product&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Below, I provide a couple examples of how you can use the package.&lt;/p&gt;
-&lt;div id=&#34;interactive-dot-plot-of-income-by-county-in-wyoming-with-plotly&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;Interactive dot plot of income by county in Wyoming with Plotly&lt;/h3&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(ggplot2)
-library(plotly)
-library(dplyr)
-
-wy_income &amp;lt;- acs14(geography = &amp;#39;county&amp;#39;, variable = c(&amp;#39;B19013_001E&amp;#39;, &amp;#39;B19013_001M&amp;#39;), state = &amp;#39;WY&amp;#39;)
-
-wy2 &amp;lt;- wy_income %&amp;gt;%
-  mutate(name = gsub(&amp;quot; County, Wyoming&amp;quot;, &amp;quot;&amp;quot;, wy_income$NAME),
-         low = B19013_001E - B19013_001M,
-         high = B19013_001E + B19013_001M) %&amp;gt;%
-  select(name, low, high, estimate = B19013_001E) %&amp;gt;%
-  arrange(desc(estimate))
-
-g &amp;lt;- ggplot(wy2, aes(x = estimate, y = reorder(name, estimate))) +
-  geom_point() +
-  geom_errorbarh(aes(xmin = low, xmax = high)) +
-  xlab(&amp;quot;Median household income, 2010-2014 ACS estimate&amp;quot;) +
-  ylab(&amp;quot;&amp;quot;)
-
-
-ggplotly(g) %&amp;gt;% layout(margin = list(l = 120))&lt;/code&gt;&lt;/pre&gt;
-&lt;div id=&#34;htmlwidget-157e4ec89d5ecd4c57fc&#34; style=&#34;width:672px;height:480px;&#34; class=&#34;plotly html-widget&#34;&gt;&lt;/div&gt;
-&lt;script type=&#34;application/json&#34; data-for=&#34;htmlwidget-157e4ec89d5ecd4c57fc&#34;&gt;{&#34;x&#34;:{&#34;data&#34;:[{&#34;x&#34;:[78609,78578,73572,69448,66530,61820,58795,58324,56933,56769,56708,56318,56158,56015,53920,52432,51749,45696,45385,45287,42298,41299,39567],&#34;y&#34;:[23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1],&#34;text&#34;:[&#34;estimate: 78609&lt;br&gt;reorder(name, estimate): Campbell&#34;,&#34;estimate: 78578&lt;br&gt;reorder(name, estimate): Sublette&#34;,&#34;estimate: 73572&lt;br&gt;reorder(name, estimate): Teton&#34;,&#34;estimate: 69448&lt;br&gt;reorder(name, estimate): Sweetwater&#34;,&#34;estimate: 66530&lt;br&gt;reorder(name, estimate): Lincoln&#34;,&#34;estimate: 61820&lt;br&gt;reorder(name, estimate): Converse&#34;,&#34;estimate: 58795&lt;br&gt;reorder(name, estimate): Crook&#34;,&#34;estimate: 58324&lt;br&gt;reorder(name, estimate): Laramie&#34;,&#34;estimate: 56933&lt;br&gt;reorder(name, estimate): Carbon&#34;,&#34;estimate: 56769&lt;br&gt;reorder(name, estimate): Natrona&#34;,&#34;estimate: 56708&lt;br&gt;reorder(name, estimate): Johnson&#34;,&#34;estimate: 56318&lt;br&gt;reorder(name, estimate): Park&#34;,&#34;estimate: 56158&lt;br&gt;reorder(name, estimate): Uinta&#34;,&#34;estimate: 56015&lt;br&gt;reorder(name, estimate): Sheridan&#34;,&#34;estimate: 53920&lt;br&gt;reorder(name, estimate): Weston&#34;,&#34;estimate: 52432&lt;br&gt;reorder(name, estimate): Big Horn&#34;,&#34;estimate: 51749&lt;br&gt;reorder(name, estimate): Fremont&#34;,&#34;estimate: 45696&lt;br&gt;reorder(name, estimate): Washakie&#34;,&#34;estimate: 45385&lt;br&gt;reorder(name, estimate): Hot Springs&#34;,&#34;estimate: 45287&lt;br&gt;reorder(name, estimate): Goshen&#34;,&#34;estimate: 42298&lt;br&gt;reorder(name, estimate): Albany&#34;,&#34;estimate: 41299&lt;br&gt;reorder(name, estimate): Platte&#34;,&#34;estimate: 39567&lt;br&gt;reorder(name, estimate): Niobrara&#34;],&#34;type&#34;:&#34;scatter&#34;,&#34;mode&#34;:&#34;markers&#34;,&#34;marker&#34;:{&#34;autocolorscale&#34;:false,&#34;color&#34;:&#34;rgba(0,0,0,1)&#34;,&#34;opacity&#34;:1,&#34;size&#34;:5.66929133858268,&#34;symbol&#34;:&#34;circle&#34;,&#34;line&#34;:{&#34;width&#34;:1.88976377952756,&#34;color&#34;:&#34;rgba(0,0,0,1)&#34;}},&#34;hoveron&#34;:&#34;points&#34;,&#34;showlegend&#34;:false,&#34;xaxis&#34;:&#34;x&#34;,&#34;yaxis&#34;:&#34;y&#34;,&#34;hoverinfo&#34;:&#34;text&#34;,&#34;name&#34;:&#34;&#34;,&#34;frame&#34;:null},{&#34;x&#34;:[78609,78578,73572,69448,66530,61820,58795,58324,56933,56769,56708,56318,56158,56015,53920,52432,51749,45696,45385,45287,42298,41299,39567],&#34;y&#34;:[23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1],&#34;text&#34;:[&#34;low: 74245&lt;br&gt;high: 82973&lt;br&gt;estimate: 78609&lt;br&gt;reorder(name, estimate): Campbell&#34;,&#34;low: 70168&lt;br&gt;high: 86988&lt;br&gt;estimate: 78578&lt;br&gt;reorder(name, estimate): Sublette&#34;,&#34;low: 68136&lt;br&gt;high: 79008&lt;br&gt;estimate: 73572&lt;br&gt;reorder(name, estimate): Teton&#34;,&#34;low: 64524&lt;br&gt;high: 74372&lt;br&gt;estimate: 69448&lt;br&gt;reorder(name, estimate): Sweetwater&#34;,&#34;low: 61942&lt;br&gt;high: 71118&lt;br&gt;estimate: 66530&lt;br&gt;reorder(name, estimate): Lincoln&#34;,&#34;low: 57413&lt;br&gt;high: 66227&lt;br&gt;estimate: 61820&lt;br&gt;reorder(name, estimate): Converse&#34;,&#34;low: 53788&lt;br&gt;high: 63802&lt;br&gt;estimate: 58795&lt;br&gt;reorder(name, estimate): Crook&#34;,&#34;low: 56404&lt;br&gt;high: 60244&lt;br&gt;estimate: 58324&lt;br&gt;reorder(name, estimate): Laramie&#34;,&#34;low: 52684&lt;br&gt;high: 61182&lt;br&gt;estimate: 56933&lt;br&gt;reorder(name, estimate): Carbon&#34;,&#34;low: 54633&lt;br&gt;high: 58905&lt;br&gt;estimate: 56769&lt;br&gt;reorder(name, estimate): Natrona&#34;,&#34;low: 49564&lt;br&gt;high: 63852&lt;br&gt;estimate: 56708&lt;br&gt;reorder(name, estimate): Johnson&#34;,&#34;low: 52814&lt;br&gt;high: 59822&lt;br&gt;estimate: 56318&lt;br&gt;reorder(name, estimate): Park&#34;,&#34;low: 51891&lt;br&gt;high: 60425&lt;br&gt;estimate: 56158&lt;br&gt;reorder(name, estimate): Uinta&#34;,&#34;low: 53253&lt;br&gt;high: 58777&lt;br&gt;estimate: 56015&lt;br&gt;reorder(name, estimate): Sheridan&#34;,&#34;low: 48799&lt;br&gt;high: 59041&lt;br&gt;estimate: 53920&lt;br&gt;reorder(name, estimate): Weston&#34;,&#34;low: 48995&lt;br&gt;high: 55869&lt;br&gt;estimate: 52432&lt;br&gt;reorder(name, estimate): Big Horn&#34;,&#34;low: 49275&lt;br&gt;high: 54223&lt;br&gt;estimate: 51749&lt;br&gt;reorder(name, estimate): Fremont&#34;,&#34;low: 40712&lt;br&gt;high: 50680&lt;br&gt;estimate: 45696&lt;br&gt;reorder(name, estimate): Washakie&#34;,&#34;low: 38642&lt;br&gt;high: 52128&lt;br&gt;estimate: 45385&lt;br&gt;reorder(name, estimate): Hot Springs&#34;,&#34;low: 40769&lt;br&gt;high: 49805&lt;br&gt;estimate: 45287&lt;br&gt;reorder(name, estimate): Goshen&#34;,&#34;low: 39329&lt;br&gt;high: 45267&lt;br&gt;estimate: 42298&lt;br&gt;reorder(name, estimate): Albany&#34;,&#34;low: 34195&lt;br&gt;high: 48403&lt;br&gt;estimate: 41299&lt;br&gt;reorder(name, estimate): Platte&#34;,&#34;low: 31279&lt;br&gt;high: 47855&lt;br&gt;estimate: 39567&lt;br&gt;reorder(name, estimate): Niobrara&#34;],&#34;type&#34;:&#34;scatter&#34;,&#34;mode&#34;:&#34;lines&#34;,&#34;opacity&#34;:1,&#34;line&#34;:{&#34;color&#34;:&#34;transparent&#34;},&#34;error_x&#34;:{&#34;array&#34;:[4364,8410,5436,4924,4588,4407,5007,1920,4249,2136,7144,3504,4267,2762,5121,3437,2474,4984,6743,4518,2969,7104,8288],&#34;arrayminus&#34;:[4364,8410,5436,4924,4588,4407,5007,1920,4249,2136,7144,3504,4267,2762,5121,3437,2474,4984,6743,4518,2969,7104,8288],&#34;type&#34;:&#34;data&#34;,&#34;width&#34;:6.20689655172412,&#34;symmetric&#34;:false,&#34;color&#34;:&#34;rgba(0,0,0,1)&#34;},&#34;showlegend&#34;:false,&#34;xaxis&#34;:&#34;x&#34;,&#34;yaxis&#34;:&#34;y&#34;,&#34;hoverinfo&#34;:&#34;text&#34;,&#34;name&#34;:&#34;&#34;,&#34;frame&#34;:null}],&#34;layout&#34;:{&#34;margin&#34;:{&#34;t&#34;:26.2283105022831,&#34;r&#34;:7.30593607305936,&#34;b&#34;:40.1826484018265,&#34;l&#34;:120},&#34;plot_bgcolor&#34;:&#34;rgba(235,235,235,1)&#34;,&#34;paper_bgcolor&#34;:&#34;rgba(255,255,255,1)&#34;,&#34;font&#34;:{&#34;color&#34;:&#34;rgba(0,0,0,1)&#34;,&#34;family&#34;:&#34;&#34;,&#34;size&#34;:14.6118721461187},&#34;xaxis&#34;:{&#34;domain&#34;:[0,1],&#34;type&#34;:&#34;linear&#34;,&#34;autorange&#34;:false,&#34;tickmode&#34;:&#34;array&#34;,&#34;range&#34;:[28493.55,89773.45],&#34;ticktext&#34;:[&#34;30000&#34;,&#34;40000&#34;,&#34;50000&#34;,&#34;60000&#34;,&#34;70000&#34;,&#34;80000&#34;],&#34;tickvals&#34;:[30000,40000,50000,60000,70000,80000],&#34;ticks&#34;:&#34;outside&#34;,&#34;tickcolor&#34;:&#34;rgba(51,51,51,1)&#34;,&#34;ticklen&#34;:3.65296803652968,&#34;tickwidth&#34;:0.66417600664176,&#34;showticklabels&#34;:true,&#34;tickfont&#34;:{&#34;color&#34;:&#34;rgba(77,77,77,1)&#34;,&#34;family&#34;:&#34;&#34;,&#34;size&#34;:11.689497716895},&#34;tickangle&#34;:-0,&#34;showline&#34;:false,&#34;linecolor&#34;:null,&#34;linewidth&#34;:0,&#34;showgrid&#34;:true,&#34;gridcolor&#34;:&#34;rgba(255,255,255,1)&#34;,&#34;gridwidth&#34;:0.66417600664176,&#34;zeroline&#34;:false,&#34;anchor&#34;:&#34;y&#34;,&#34;title&#34;:&#34;Median household income, 2010-2014 ACS estimate&#34;,&#34;titlefont&#34;:{&#34;color&#34;:&#34;rgba(0,0,0,1)&#34;,&#34;family&#34;:&#34;&#34;,&#34;size&#34;:14.6118721461187},&#34;hoverformat&#34;:&#34;.2f&#34;},&#34;yaxis&#34;:{&#34;domain&#34;:[0,1],&#34;type&#34;:&#34;linear&#34;,&#34;autorange&#34;:false,&#34;tickmode&#34;:&#34;array&#34;,&#34;range&#34;:[0.4,23.6],&#34;ticktext&#34;:[&#34;Niobrara&#34;,&#34;Platte&#34;,&#34;Albany&#34;,&#34;Goshen&#34;,&#34;Hot Springs&#34;,&#34;Washakie&#34;,&#34;Fremont&#34;,&#34;Big Horn&#34;,&#34;Weston&#34;,&#34;Sheridan&#34;,&#34;Uinta&#34;,&#34;Park&#34;,&#34;Johnson&#34;,&#34;Natrona&#34;,&#34;Carbon&#34;,&#34;Laramie&#34;,&#34;Crook&#34;,&#34;Converse&#34;,&#34;Lincoln&#34;,&#34;Sweetwater&#34;,&#34;Teton&#34;,&#34;Sublette&#34;,&#34;Campbell&#34;],&#34;tickvals&#34;:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],&#34;ticks&#34;:&#34;outside&#34;,&#34;tickcolor&#34;:&#34;rgba(51,51,51,1)&#34;,&#34;ticklen&#34;:3.65296803652968,&#34;tickwidth&#34;:0.66417600664176,&#34;showticklabels&#34;:true,&#34;tickfont&#34;:{&#34;color&#34;:&#34;rgba(77,77,77,1)&#34;,&#34;family&#34;:&#34;&#34;,&#34;size&#34;:11.689497716895},&#34;tickangle&#34;:-0,&#34;showline&#34;:false,&#34;linecolor&#34;:null,&#34;linewidth&#34;:0,&#34;showgrid&#34;:true,&#34;gridcolor&#34;:&#34;rgba(255,255,255,1)&#34;,&#34;gridwidth&#34;:0.66417600664176,&#34;zeroline&#34;:false,&#34;anchor&#34;:&#34;x&#34;,&#34;title&#34;:&#34;&#34;,&#34;titlefont&#34;:{&#34;color&#34;:&#34;rgba(0,0,0,1)&#34;,&#34;family&#34;:&#34;&#34;,&#34;size&#34;:14.6118721461187},&#34;hoverformat&#34;:&#34;.2f&#34;},&#34;shapes&#34;:[{&#34;type&#34;:&#34;rect&#34;,&#34;fillcolor&#34;:null,&#34;line&#34;:{&#34;color&#34;:null,&#34;width&#34;:0,&#34;linetype&#34;:[]},&#34;yref&#34;:&#34;paper&#34;,&#34;xref&#34;:&#34;paper&#34;,&#34;x0&#34;:0,&#34;x1&#34;:1,&#34;y0&#34;:0,&#34;y1&#34;:1}],&#34;showlegend&#34;:false,&#34;legend&#34;:{&#34;bgcolor&#34;:&#34;rgba(255,255,255,1)&#34;,&#34;bordercolor&#34;:&#34;transparent&#34;,&#34;borderwidth&#34;:1.88976377952756,&#34;font&#34;:{&#34;color&#34;:&#34;rgba(0,0,0,1)&#34;,&#34;family&#34;:&#34;&#34;,&#34;size&#34;:11.689497716895}},&#34;hovermode&#34;:&#34;closest&#34;,&#34;dragmode&#34;:&#34;zoom&#34;},&#34;config&#34;:{&#34;doubleClick&#34;:&#34;reset&#34;,&#34;modeBarButtonsToAdd&#34;:[{&#34;name&#34;:&#34;Collaborate&#34;,&#34;icon&#34;:{&#34;width&#34;:1000,&#34;ascent&#34;:500,&#34;descent&#34;:-50,&#34;path&#34;:&#34;M487 375c7-10 9-23 5-36l-79-259c-3-12-11-23-22-31-11-8-22-12-35-12l-263 0c-15 0-29 5-43 15-13 10-23 23-28 37-5 13-5 25-1 37 0 0 0 3 1 7 1 5 1 8 1 11 0 2 0 4-1 6 0 3-1 5-1 6 1 2 2 4 3 6 1 2 2 4 4 6 2 3 4 5 5 7 5 7 9 16 13 26 4 10 7 19 9 26 0 2 0 5 0 9-1 4-1 6 0 8 0 2 2 5 4 8 3 3 5 5 5 7 4 6 8 15 12 26 4 11 7 19 7 26 1 1 0 4 0 9-1 4-1 7 0 8 1 2 3 5 6 8 4 4 6 6 6 7 4 5 8 13 13 24 4 11 7 20 7 28 1 1 0 4 0 7-1 3-1 6-1 7 0 2 1 4 3 6 1 1 3 4 5 6 2 3 3 5 5 6 1 2 3 5 4 9 2 3 3 7 5 10 1 3 2 6 4 10 2 4 4 7 6 9 2 3 4 5 7 7 3 2 7 3 11 3 3 0 8 0 13-1l0-1c7 2 12 2 14 2l218 0c14 0 25-5 32-16 8-10 10-23 6-37l-79-259c-7-22-13-37-20-43-7-7-19-10-37-10l-248 0c-5 0-9-2-11-5-2-3-2-7 0-12 4-13 18-20 41-20l264 0c5 0 10 2 16 5 5 3 8 6 10 11l85 282c2 5 2 10 2 17 7-3 13-7 17-13z m-304 0c-1-3-1-5 0-7 1-1 3-2 6-2l174 0c2 0 4 1 7 2 2 2 4 4 5 7l6 18c0 3 0 5-1 7-1 1-3 2-6 2l-173 0c-3 0-5-1-8-2-2-2-4-4-4-7z m-24-73c-1-3-1-5 0-7 2-2 3-2 6-2l174 0c2 0 5 0 7 2 3 2 4 4 5 7l6 18c1 2 0 5-1 6-1 2-3 3-5 3l-174 0c-3 0-5-1-7-3-3-1-4-4-5-6z&#34;},&#34;click&#34;:&#34;function(gd) { \n        // is this being viewed in RStudio?\n        if (location.search == &#39;?viewer_pane=1&#39;) {\n          alert(&#39;To learn about plotly for collaboration, visit:\\n https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html&#39;);\n        } else {\n          window.open(&#39;https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html&#39;, &#39;_blank&#39;);\n        }\n      }&#34;}],&#34;modeBarButtonsToRemove&#34;:[&#34;sendDataToCloud&#34;]},&#34;source&#34;:&#34;A&#34;,&#34;highlight&#34;:{&#34;on&#34;:&#34;plotly_selected&#34;,&#34;off&#34;:&#34;plotly_relayout&#34;,&#34;persistent&#34;:false,&#34;dynamic&#34;:false,&#34;color&#34;:null,&#34;selectize&#34;:false,&#34;defaultValues&#34;:null,&#34;opacityDim&#34;:0.2,&#34;hoverinfo&#34;:null,&#34;showInLegend&#34;:false},&#34;base_url&#34;:&#34;https://plot.ly&#34;},&#34;evals&#34;:[&#34;config.modeBarButtonsToAdd.0.click&#34;],&#34;jsHooks&#34;:{&#34;render&#34;:[{&#34;code&#34;:&#34;function(el, x) { \n    var ctConfig = crosstalk.var(&#39;plotlyCrosstalkOpts&#39;).set({\&#34;on\&#34;:\&#34;plotly_selected\&#34;,\&#34;off\&#34;:\&#34;plotly_relayout\&#34;,\&#34;persistent\&#34;:false,\&#34;dynamic\&#34;:false,\&#34;color\&#34;:{},\&#34;selectize\&#34;:false,\&#34;defaultValues\&#34;:{},\&#34;opacityDim\&#34;:0.2,\&#34;hoverinfo\&#34;:{},\&#34;showInLegend\&#34;:false}); \n  }&#34;,&#34;data&#34;:null}]}}&lt;/script&gt;
-&lt;/div&gt;
-&lt;div id=&#34;interactive-map-of-poverty-in-los-angeles-county-by-census-tract-with-cartodb-and-the-tigris-package&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;Interactive map of poverty in Los Angeles County by Census tract with CartoDB and the &lt;strong&gt;tigris&lt;/strong&gt; package&lt;/h3&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tigris)
-library(CartoDB) # devtools::install_github(&amp;quot;becarioprecario/cartodb-r/CartoDB&amp;quot;, dep = TRUE)
-library(rgdal)
-
-la_poverty &amp;lt;- acs14(geography = &amp;#39;tract&amp;#39;, state = &amp;#39;CA&amp;#39;, county = &amp;#39;Los Angeles&amp;#39;,
-                    variable = c(&amp;#39;B17001_001E&amp;#39;, &amp;#39;B17001_001M&amp;#39;, &amp;#39;B17001_002E&amp;#39;, &amp;#39;B17001_002M&amp;#39;))
-
-la2 &amp;lt;- la_poverty %&amp;gt;%
-  mutate(geoid = paste0(state, county, tract),
-         pctpov = round(100 * (B17001_002E / B17001_001E), 1),
-         moepov = round(100 * (moe_prop(B17001_002E, B17001_001E, B17001_002M, B17001_001M)), 1)) %&amp;gt;%
-  select(geoid, pctpov, moepov)
-
-cdb_name &amp;lt;- &amp;#39;your CartoDB username here&amp;#39;
-cdb_key &amp;lt;- &amp;#39;your CartoDB API key here&amp;#39;
-
-cartodb(cdb_name, cdb_key)
-
-la_tracts &amp;lt;- tracts(&amp;#39;CA&amp;#39;, &amp;#39;Los Angeles&amp;#39;, cb = TRUE)
-
-la_tracts2 &amp;lt;- geo_join(la_tracts, la2, &amp;quot;GEOID&amp;quot;, &amp;quot;geoid&amp;quot;)
-
-r2cartodb(la_tracts2, &amp;#39;la_poverty&amp;#39;)
-
-# Now, head to your CartoDB account to style your map!&lt;/code&gt;&lt;/pre&gt;
-&lt;iframe width=&#34;100%&#34; height=&#34;520&#34; frameborder=&#34;0&#34; src=&#34;https://kwalkertcu.cartodb.com/viz/2d99c916-a293-11e5-835d-0e5db1731f59/embed_map&#34; allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen&gt;
-&lt;/iframe&gt;
-&lt;/div&gt;
-
-
-
-&lt;!-- BLOGDOWN-HEAD
-
-&lt;script src=&#34;#####../content/post/acs14lite_files/htmlwidgets-0.8/htmlwidgets.js&#34;&gt;&lt;/script&gt;
-&lt;link href=&#34;#####../content/post/acs14lite_files/plotlyjs-1.18.1/plotly-htmlwidgets.css&#34; rel=&#34;stylesheet&#34; /&gt;
-&lt;script src=&#34;#####../content/post/acs14lite_files/plotlyjs-1.18.1/plotly-latest.min.js&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;#####../content/post/acs14lite_files/plotly-binding-4.5.5.9000/plotly.js&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;#####../content/post/acs14lite_files/jquery-1.11.3/jquery.min.js&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;#####../content/post/acs14lite_files/crosstalk-0.2/js/crosstalk.js&#34;&gt;&lt;/script&gt;
-
-
-
-
-
-/BLOGDOWN-HEAD --&gt;
 </description>
     </item>
     

@@ -2,21 +2,139 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>KYLE WALKER DATA</title>
-    <link>https://walkerke.github.io/tags/tidycensus/index.xml</link>
+    <link>/tags/tidycensus/index.xml</link>
     <description>Recent content on KYLE WALKER DATA</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
     <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
     <copyright>(c) 2017 Kyle Walker</copyright>
-    <atom:link href="https://walkerke.github.io/tags/tidycensus/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/tidycensus/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Geo-faceted population pyramids with tidycensus 0.3</title>
+      <link>/2017/10/geofacted-pyramids/</link>
+      <pubDate>Tue, 17 Oct 2017 08:00:00 +0000</pubDate>
+      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
+      <guid>/2017/10/geofacted-pyramids/</guid>
+      <description>&lt;!-- BLOGDOWN-BODY-BEFORE
+
+/BLOGDOWN-BODY-BEFORE --&gt;
+
+&lt;p&gt;Version 0.3 of &lt;a href=&#34;https://walkerke.github.io/tidycensus/&#34;&gt;the tidycensus R package&lt;/a&gt; is now available on CRAN. The big change in this new release is the ability to fetch entire tables of Census or ACS data without having to construct a list of variable names. The table prefix should be passed to the new &lt;code&gt;table&lt;/code&gt; parameter in the &lt;code&gt;get_decennial()&lt;/code&gt; or &lt;code&gt;get_acs()&lt;/code&gt; functions to work.&lt;/p&gt;
+&lt;p&gt;I’d like to illustrate this below by showing you how to create faceted population pyramids with the &lt;a href=&#34;https://hafen.github.io/geofacet/&#34;&gt;geofacet R package&lt;/a&gt;, a package that allows you to create faceted ggplot2 plots in a way that represents the geographic position of the plot data.&lt;/p&gt;
+&lt;p&gt;To get started, let’s get data on age and sex - required to create population pyramids - using the new &lt;code&gt;table&lt;/code&gt; parameter in tidycensus.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidycensus)
+library(tidyverse)
+library(stringr)
+
+# If not installed, install your Census API key with `census_api_key(&amp;quot;KEY&amp;quot;, install = TRUE)`
+
+age &amp;lt;- get_decennial(geography = &amp;quot;state&amp;quot;, table = &amp;quot;P012&amp;quot;, summary_var = &amp;quot;P0010001&amp;quot;) %&amp;gt;%
+  mutate(variable = str_replace(variable, &amp;quot;P01200&amp;quot;, &amp;quot;&amp;quot;)) %&amp;gt;%
+  filter(!variable %in% c(&amp;quot;01&amp;quot;, &amp;quot;02&amp;quot;, &amp;quot;26&amp;quot;)) %&amp;gt;%
+  arrange(NAME, variable)
+
+head(age)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 5
+##   GEOID    NAME variable  value summary_value
+##   &amp;lt;chr&amp;gt;   &amp;lt;chr&amp;gt;    &amp;lt;chr&amp;gt;  &amp;lt;dbl&amp;gt;         &amp;lt;dbl&amp;gt;
+## 1    01 Alabama       03 155265       4779736
+## 2    01 Alabama       04 157340       4779736
+## 3    01 Alabama       05 163417       4779736
+## 4    01 Alabama       06 102627       4779736
+## 5    01 Alabama       07  72524       4779736
+## 6    01 Alabama       08  36159       4779736&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I’ve fetched all age and sex data from Census 2010 table P012, then removed three variables in the table, representing total population, total male population, and total female population, respectively.&lt;/p&gt;
+&lt;p&gt;I now do some data wrangling to get group percentages by state for 5-year age bands, as the Census data by default returns some age bands that are more refined than 5 years. I define my desired age categories, calculate a group sum and then percentage, and then set all male values to negative to display them on the left-hand side of the population pyramids.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;agegroups &amp;lt;- c(&amp;quot;0-4&amp;quot;, &amp;quot;5-9&amp;quot;, &amp;quot;10-14&amp;quot;, &amp;quot;15-19&amp;quot;, &amp;quot;15-19&amp;quot;, &amp;quot;20-24&amp;quot;, &amp;quot;20-24&amp;quot;, 
+               &amp;quot;20-24&amp;quot;, &amp;quot;25-29&amp;quot;, &amp;quot;30-34&amp;quot;, &amp;quot;35-39&amp;quot;, &amp;quot;40-44&amp;quot;, &amp;quot;45-49&amp;quot;, &amp;quot;50-54&amp;quot;, 
+               &amp;quot;55-59&amp;quot;, &amp;quot;60-64&amp;quot;, &amp;quot;60-64&amp;quot;, &amp;quot;65-69&amp;quot;, &amp;quot;65-69&amp;quot;, &amp;quot;70-74&amp;quot;, &amp;quot;75-79&amp;quot;, 
+               &amp;quot;80-84&amp;quot;, &amp;quot;85+&amp;quot;)
+
+agesex &amp;lt;- c(paste(&amp;quot;Male&amp;quot;, agegroups), 
+            paste(&amp;quot;Female&amp;quot;, agegroups))
+
+age$group &amp;lt;- rep(agesex, length(unique(age$NAME)))
+
+age2 &amp;lt;- age %&amp;gt;%
+  group_by(NAME, group) %&amp;gt;%
+  mutate(group_est = sum(value)) %&amp;gt;%
+  distinct(NAME, group, .keep_all = TRUE) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  mutate(percent = 100 * (group_est / summary_value)) %&amp;gt;%
+  select(name = NAME, group, percent) %&amp;gt;%
+  separate(group, into = c(&amp;quot;sex&amp;quot;, &amp;quot;age&amp;quot;), sep = &amp;quot; &amp;quot;) %&amp;gt;%
+  mutate(age = factor(age, levels = unique(age)), 
+         percent = ifelse(sex == &amp;quot;Female&amp;quot;, percent, -percent)) 
+
+head(age2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 4
+##      name   sex    age   percent
+##     &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;fctr&amp;gt;     &amp;lt;dbl&amp;gt;
+## 1 Alabama  Male    0-4 -3.248401
+## 2 Alabama  Male    5-9 -3.291814
+## 3 Alabama  Male  10-14 -3.418955
+## 4 Alabama  Male  15-19 -3.664449
+## 5 Alabama  Male  20-24 -3.504796
+## 6 Alabama  Male  25-29 -3.215994&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I now can create a geofaceted plot with ggplot2. The population pyramids are back-to-back bar charts categorized by sex, and the &lt;code&gt;facet_geo()&lt;/code&gt; function in the &lt;strong&gt;geofacet&lt;/strong&gt; package puts the plots in geographically appropriate positions.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(geofacet)
+library(extrafont)
+
+xlabs = c(&amp;quot;0-4&amp;quot; = &amp;quot;0-4&amp;quot;, &amp;quot;5-9&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;10-14&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;15-19&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;20-24&amp;quot; = &amp;quot;&amp;quot;, 
+          &amp;quot;25-29&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;30-34&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;35-39&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;40-44&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;45-49&amp;quot; = &amp;quot;&amp;quot;, 
+          &amp;quot;50-54&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;55-59&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;60-64&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;65-69&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;70-74&amp;quot; = &amp;quot;&amp;quot;, 
+          &amp;quot;75-79&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;80-84&amp;quot; = &amp;quot;&amp;quot;, &amp;quot;85+&amp;quot; = &amp;quot;85+&amp;quot;)
+
+ggplot(data = age2, aes(x = age, y = percent, fill = sex)) +
+  geom_bar(stat = &amp;quot;identity&amp;quot;, width = 1) + 
+  scale_y_continuous(breaks=c(-5, 0, 5),labels=c(&amp;quot;5%&amp;quot;, &amp;quot;0%&amp;quot;, &amp;quot;5%&amp;quot;)) + 
+  coord_flip() + 
+  theme_minimal(base_family = &amp;quot;Tahoma&amp;quot;) + 
+  scale_x_discrete(labels = xlabs) + 
+  scale_fill_manual(values = c(&amp;quot;red&amp;quot;, &amp;quot;navy&amp;quot;)) + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        strip.text.x = element_text(size = 6)) + 
+  labs(x = &amp;quot;&amp;quot;, y = &amp;quot;&amp;quot;, fill = &amp;quot;&amp;quot;, 
+       title = &amp;quot;Demographic structure of US states&amp;quot;, 
+       caption = &amp;quot;Data source: 2010 US Census, tidycensus R package.  Chart by @kyle_e_walker.&amp;quot;) + 
+  facet_geo(~ name, grid = &amp;quot;us_state_grid2&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;img src=&#34;https://walkerke.github.io/img/pyramids.png&#34; style=&#34;width:100%&#34;
+
+Many states look quite similar, though there are a few notable outliers.  These include high-fertility states like Utah and Idaho, reflected in their proportionally larger young populations, as well as DC&#39;s urban profile with a sizeable population of residents in their 20s and 30s.  
+
+Within-state differences are perhaps more interesting; I&#39;m in the process of creating these types of graphs at the county level by state and posting them to Twitter as I go, like the example below: 
+
+&lt;blockquote class=&#34;twitter-tweet&#34; data-lang=&#34;en&#34;&gt;
+&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;
+Comparative population pyramids for Arizona counties, with &lt;a href=&#34;https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#rstats&lt;/a&gt; code to reproduce/modify: &lt;a href=&#34;https://t.co/Ac1ZrFeUwe&#34;&gt;https://t.co/Ac1ZrFeUwe&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/tidycensus?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#tidycensus&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/geofacet?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#geofacet&lt;/a&gt; &lt;a href=&#34;https://t.co/hvSu4rhZ5Q&#34;&gt;pic.twitter.com/hvSu4rhZ5Q&lt;/a&gt;
+&lt;/p&gt;
+— Kyle Walker (&lt;span class=&#34;citation&#34;&gt;@kyle_e_walker&lt;/span&gt;) &lt;a href=&#34;https://twitter.com/kyle_e_walker/status/919997361417359360?ref_src=twsrc%5Etfw&#34;&gt;October 16, 2017&lt;/a&gt;
+&lt;/blockquote&gt;
+&lt;script async src=&#34;//platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;
+&lt;p&gt;I’ll be creating a website that eventually will show the demographic structure of counties across the US, and tweeting the results as I progress.&lt;/p&gt;
+
+
+
+&lt;!-- BLOGDOWN-HEAD
+
+
+
+
+
+
+/BLOGDOWN-HEAD --&gt;
+</description>
+    </item>
     
     <item>
       <title>Compare US metropolitan area characteristics in R with tidycensus and tigris</title>
-      <link>https://walkerke.github.io/2017/06/comparing-metros/</link>
+      <link>/2017/06/comparing-metros/</link>
       <pubDate>Sun, 25 Jun 2017 08:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2017/06/comparing-metros/</guid>
+      <guid>/2017/06/comparing-metros/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -45,17 +163,20 @@ head(rent)&lt;/code&gt;&lt;/pre&gt;
 ## bbox:           xmin: -124.7625 ymin: 45.99541 xmax: -116.916 ymax: 48.35451
 ## epsg (SRID):    4269
 ## proj4string:    +proj=longlat +datum=NAD83 +no_defs
-## # A tibble: 6 x 6
 ##         GEOID                                         NAME  variable
-##         &amp;lt;chr&amp;gt;                                        &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt;
 ## 1 53003960100 Census Tract 9601, Asotin County, Washington DP04_0134
 ## 2 53005011100  Census Tract 111, Benton County, Washington DP04_0134
 ## 3 53007960500 Census Tract 9605, Chelan County, Washington DP04_0134
 ## 4 53007961000 Census Tract 9610, Chelan County, Washington DP04_0134
 ## 5 53009000200   Census Tract 2, Clallam County, Washington DP04_0134
 ## 6 53009000600   Census Tract 6, Clallam County, Washington DP04_0134
-## # ... with 3 more variables: estimate &amp;lt;dbl&amp;gt;, moe &amp;lt;dbl&amp;gt;,
-## #   geometry &amp;lt;simple_feature&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+##   estimate moe                       geometry
+## 1      812  71 MULTIPOLYGON(((-117.4801304...
+## 2      856  71 MULTIPOLYGON(((-119.16317 4...
+## 3      623 209 MULTIPOLYGON(((-120.952691 ...
+## 4      742 102 MULTIPOLYGON(((-120.329494 ...
+## 5      680 174 MULTIPOLYGON(((-124.108725 ...
+## 6      824 217 MULTIPOLYGON(((-124.294457 ...&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;We now have median gross rent information for all Census tracts in Washington, Oregon, and California. Subsetting this to our desired metropolitan areas only takes a couple steps. First, we use the tigris package to obtain metropolitan area boundaries with the &lt;code&gt;core_based_statistical_areas()&lt;/code&gt; function, taking care to set &lt;code&gt;cb = TRUE&lt;/code&gt; as this is the default geometry used by tidycensus, and subset by ID for our desired metros. Next, we use an inner spatial join with sf’s &lt;code&gt;st_join()&lt;/code&gt; function to subset for the specific tracts we need.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;metros &amp;lt;- core_based_statistical_areas(cb = TRUE) %&amp;gt;%
   filter(GEOID %in% c(&amp;quot;38900&amp;quot;, &amp;quot;41860&amp;quot;, &amp;quot;42660&amp;quot;)) %&amp;gt;%
@@ -126,10 +247,10 @@ ggplot(wc_rent, aes(fill = estimate, color = estimate)) +
     
     <item>
       <title>Getting data for every Census tract in the US with purrr and tidycensus</title>
-      <link>https://walkerke.github.io/2017/05/tidycensus-every-tract/</link>
+      <link>/2017/05/tidycensus-every-tract/</link>
       <pubDate>Wed, 31 May 2017 08:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>https://walkerke.github.io/2017/05/tidycensus-every-tract/</guid>
+      <guid>/2017/05/tidycensus-every-tract/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
