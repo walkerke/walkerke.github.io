@@ -3,7 +3,7 @@ title: "Geo-faceted population pyramids with tidycensus 0.3"
 author: "Kyle Walker"
 date: 2017-10-17T08:00:00
 tags: ["r", "census", "tidycensus"]
-slug: geofacted-pyramids
+slug: geofaceted-pyramids
 ---
 
 ```{r setup, include=FALSE}
@@ -82,15 +82,15 @@ ggplot(data = age2, aes(x = age, y = percent, fill = sex)) +
   scale_x_discrete(labels = xlabs) + 
   scale_fill_manual(values = c("red", "navy")) + 
   theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
+        panel.grid.minor = element_blank(),
         strip.text.x = element_text(size = 6)) + 
   labs(x = "", y = "", fill = "", 
        title = "Demographic structure of US states", 
        caption = "Data source: 2010 US Census, tidycensus R package.  Chart by @kyle_e_walker.") + 
-  facet_geo(~ name, grid = "us_state_grid2") 
+  facet_geo(~ name, grid = "us_state_grid2", move_axes = TRUE) 
 ```
 
-<img src="https://walkerke.github.io/img/pyramids.png" style="width:100%"
+<img src="https://walkerke.github.io/img/pyramids.png" style="width:100%">
 
 Many states look quite similar, though there are a few notable outliers.  These include high-fertility states like Utah and Idaho, reflected in their proportionally larger young populations, as well as DC's urban profile with a sizeable population of residents in their 20s and 30s.  
 
@@ -99,4 +99,4 @@ Within-state differences are perhaps more interesting; I'm in the process of cre
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Comparative population pyramids for Arizona counties, with <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> code to reproduce/modify: <a href="https://t.co/Ac1ZrFeUwe">https://t.co/Ac1ZrFeUwe</a> <a href="https://twitter.com/hashtag/tidycensus?src=hash&amp;ref_src=twsrc%5Etfw">#tidycensus</a> <a href="https://twitter.com/hashtag/geofacet?src=hash&amp;ref_src=twsrc%5Etfw">#geofacet</a> <a href="https://t.co/hvSu4rhZ5Q">pic.twitter.com/hvSu4rhZ5Q</a></p>&mdash; Kyle Walker (@kyle_e_walker) <a href="https://twitter.com/kyle_e_walker/status/919997361417359360?ref_src=twsrc%5Etfw">October 16, 2017</a></blockquote>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-I'll be creating a website that eventually will show the demographic structure of counties across the US, and tweeting the results as I progress.  
+I'll be creating a website that eventually will show the demographic structure of counties across the US.  

@@ -13,10 +13,10 @@
     
     <item>
       <title>Geo-faceted population pyramids with tidycensus 0.3</title>
-      <link>/2017/10/geofacted-pyramids/</link>
+      <link>/2017/10/geofaceted-pyramids/</link>
       <pubDate>Tue, 17 Oct 2017 08:00:00 +0000</pubDate>
       <author>kwalkerdata@gmail.com (Kyle Walker)</author>
-      <guid>/2017/10/geofacted-pyramids/</guid>
+      <guid>/2017/10/geofaceted-pyramids/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -95,18 +95,15 @@ ggplot(data = age2, aes(x = age, y = percent, fill = sex)) +
   scale_x_discrete(labels = xlabs) + 
   scale_fill_manual(values = c(&amp;quot;red&amp;quot;, &amp;quot;navy&amp;quot;)) + 
   theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
+        panel.grid.minor = element_blank(),
         strip.text.x = element_text(size = 6)) + 
   labs(x = &amp;quot;&amp;quot;, y = &amp;quot;&amp;quot;, fill = &amp;quot;&amp;quot;, 
        title = &amp;quot;Demographic structure of US states&amp;quot;, 
        caption = &amp;quot;Data source: 2010 US Census, tidycensus R package.  Chart by @kyle_e_walker.&amp;quot;) + 
-  facet_geo(~ name, grid = &amp;quot;us_state_grid2&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
-&lt;img src=&#34;https://walkerke.github.io/img/pyramids.png&#34; style=&#34;width:100%&#34;
-
-Many states look quite similar, though there are a few notable outliers.  These include high-fertility states like Utah and Idaho, reflected in their proportionally larger young populations, as well as DC&#39;s urban profile with a sizeable population of residents in their 20s and 30s.  
-
-Within-state differences are perhaps more interesting; I&#39;m in the process of creating these types of graphs at the county level by state and posting them to Twitter as I go, like the example below: 
-
+  facet_geo(~ name, grid = &amp;quot;us_state_grid2&amp;quot;, move_axes = TRUE) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://walkerke.github.io/img/pyramids.png&#34; style=&#34;width:100%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Many states look quite similar, though there are a few notable outliers. These include high-fertility states like Utah and Idaho, reflected in their proportionally larger young populations, as well as DC’s urban profile with a sizeable population of residents in their 20s and 30s.&lt;/p&gt;
+&lt;p&gt;Within-state differences are perhaps more interesting; I’m in the process of creating these types of graphs at the county level by state and posting them to Twitter as I go, like the example below:&lt;/p&gt;
 &lt;blockquote class=&#34;twitter-tweet&#34; data-lang=&#34;en&#34;&gt;
 &lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;
 Comparative population pyramids for Arizona counties, with &lt;a href=&#34;https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#rstats&lt;/a&gt; code to reproduce/modify: &lt;a href=&#34;https://t.co/Ac1ZrFeUwe&#34;&gt;https://t.co/Ac1ZrFeUwe&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/tidycensus?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#tidycensus&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/geofacet?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#geofacet&lt;/a&gt; &lt;a href=&#34;https://t.co/hvSu4rhZ5Q&#34;&gt;pic.twitter.com/hvSu4rhZ5Q&lt;/a&gt;
@@ -114,7 +111,7 @@ Comparative population pyramids for Arizona counties, with &lt;a href=&#34;https
 — Kyle Walker (&lt;span class=&#34;citation&#34;&gt;@kyle_e_walker&lt;/span&gt;) &lt;a href=&#34;https://twitter.com/kyle_e_walker/status/919997361417359360?ref_src=twsrc%5Etfw&#34;&gt;October 16, 2017&lt;/a&gt;
 &lt;/blockquote&gt;
 &lt;script async src=&#34;//platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;
-&lt;p&gt;I’ll be creating a website that eventually will show the demographic structure of counties across the US, and tweeting the results as I progress.&lt;/p&gt;
+&lt;p&gt;I’ll be creating a website that eventually will show the demographic structure of counties across the US.&lt;/p&gt;
 
 
 
