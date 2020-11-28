@@ -1,0 +1,40 @@
+---
+title: "Kyle Walker"
+image: "headshot.png"
+links:
+  - LinkedIn: "https://www.linkedin.com/in/walkerke/"
+  - Twitter: "https://twitter.com/kyle_e_walker"
+  - GitHub: "https://github.com/walkerke"
+  - Email: "mailto:kyle@walker-data.com"
+output:
+  postcards::trestles
+---
+ 
+Welcome!  I'm Kyle Walker, and here is some information about my current work: 
+
+* I'm an R developer actively working on the following packages: 
+  * [tidycensus](https://github.com/walkerke/tidycensus), which helps R users get demographic & spatial data from the US Census Bureau ready-to-go for use in their analyses;
+  * [tigris](https://github.com/walkerke/tigris), which downloads US Census Bureau spatial data and loads it directly into R as simple features objects;
+  * [mapboxapi](https://github.com/walkerke/mapboxapi), an R interface to [Mapbox web services](https://docs.mapbox.com/api/).  Use the package to optimize routes, draw isochrones, read and write vector tiles, use custom Mapbox maps in Leaflet projects, and more;
+  * [crsuggest](https://github.com/walkerke/crsuggest), which gives R users projected coordinate system suggestions for their spatial datasets.  
+* I'm an [academic](http://personal.tcu.edu/kylewalker/) researching [data science](https://link.springer.com/article/10.1007/s40980-018-0042-7) and [visualization tools for spatial demography](http://personal.tcu.edu/kylewalker/immigrant-america/#11/41.8643/-87.6307).  I'm currently teaching courses in [exploratory data analysis with Python](https://github.com/walkerke/geog30323) and [introductory Urban Studies](https://github.com/walkerke/urbanslides). 
+* I am Director of Research at a boutique data science and strategy firm, where we use cutting-edge geospatial & machine learning methods to improve companies' business outcomes.  
+* I also take on small consulting projects through my personal firm, Walker Data, where I help clients learn R for their personal and professional projects.  
+
+If you are interested in working with me, send me a note at <kyle@walker-data.com> and let's discuss your idea!
+
+<style>
+a {
+  color: #1a730f; 
+}
+
+
+element.style {
+}
+
+.btn-outline-dark:hover {
+    color: #fff;
+    background-color: #1a730f;
+    border-color: #343a40;
+}
+</style>
