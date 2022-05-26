@@ -24,7 +24,7 @@ Welcome!  I'm Kyle Walker, a spatial data science researcher, educator, and cons
   * [crsuggest](https://github.com/walkerke/crsuggest), which gives R users projected coordinate system suggestions for their spatial datasets.  
 * I'm an [academic](http://personal.tcu.edu/kylewalker/) researching [data science](https://magazine.tcu.edu/fall-2021/kyle-walker-open-source-mapping-tools/) and [visualization tools for spatial demography](http://personal.tcu.edu/kylewalker/immigrant-america/#11/41.8643/-87.6307).  I'm currently teaching courses in [exploratory data analysis with Python](https://walker-data.com/geog30323) and [introductory Urban Studies](https://github.com/walkerke/urbanslides).  
 * I am Director of Research at a [boutique data science and strategy firm](https://www.linnaean.co/), where we use cutting-edge geospatial & machine learning methods to improve companies' business outcomes.  
-* I also take on small consulting projects through my personal firm, Walker Data, where I help clients learn R for their personal and professional projects.  
+* I also consult through my personal firm, Walker Data, where I work with individual clients and organizations to integrate tools like tidycensus into their workflows and to learn R and spatial data analysis. 
 
 If you are interested in working with me, send me a note at <kyle@walker-data.com> and let's discuss your idea!
 
