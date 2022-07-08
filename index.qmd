@@ -17,7 +17,7 @@ Welcome to Walker Data, the data science consulting website of Kyle Walker.  Ple
   <div class="card-column">
     <div class="card">
       <a href=about.html><img src=img/chicago.png style="max-height: 200px"></a>
-      <p>Expert demographics and data science advisory</p>
+      <p>Expert demographics, Census, and data science advisory</p>
     </div>
   </div>
   <div class="card-column">
