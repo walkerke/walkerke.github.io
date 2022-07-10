@@ -4,7 +4,10 @@ project:
 
 website:
   title: "WALKER DATA"
+  description: "GIS, demographics, and data science consulting"
+  site-url: https://walker-data.com
   twitter-card: true
+  favicon: favicon.png
   navbar:
     right:
       - about.qmd
