@@ -1,7 +1,6 @@
 ---
-title: "Walker Data"
+title: "GIS, demographics, and data science consulting"
 page-layout: full
-description: "GIS, demographics, and data science consulting"
 toc: false
 ---
 
