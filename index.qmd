@@ -12,6 +12,15 @@ Welcome to Walker Data, the data science consulting website of Kyle Walker.  Ple
 - Training in the R and Python programming languages
 
 ```{=html}
+<!-- Calendly badge widget begin -->
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+<script type="text/javascript">window.onload = function() { Calendly.initBadgeWidget({ url: 'https://calendly.com/kylewalker/intro-call', text: 'Schedule an introductory call', color: '#1a730f', textColor: '#ffffff', branding: false }); }</script>
+<!-- Calendly badge widget end -->
+```
+
+
+```{=html}
 <div class="card-row">
   <div class="card-column">
     <div class="card">
