@@ -3,7 +3,7 @@ title: "Exploratory spatial data analysis with Python"
 author: "Kyle Walker"
 date: "2022-12-20"
 categories: [python, gis, data science]
-image: "image.png"
+image: image.png
 editor: 
   markdown: 
     wrap: 72

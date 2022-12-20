@@ -9,7 +9,7 @@
 <link>https://walker-data.com/blog.html</link>
 <atom:link href="https://walker-data.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>GIS, demographics, and data science consulting</description>
-<generator>quarto-1.2.269</generator>
+<generator>quarto-1.2.280</generator>
 <lastBuildDate>Tue, 20 Dec 2022 06:00:00 GMT</lastBuildDate>
 <item>
   <title>Exploratory spatial data analysis with Python</title>
