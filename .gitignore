@@ -208,6 +208,8 @@ pip-log.txt
 .coverage
 .tox
 
+scratch/
+
 #Translations
 *.mo
 
