@@ -11,6 +11,15 @@
   font-family: Raleway;
 }
 
+.quarto-title-banner {
+  background-color: #bfbfbd;
+  color: #1a730f;
+}
+
+a {
+  color: #1a730f;
+}
+
 * {
   box-sizing: border-box;
 }

@@ -10,7 +10,10 @@ website:
   favicon: favicon.png
   navbar:
     right:
-      - about.qmd
+      - text: About
+        href: about.qmd
+      - text: Blog
+        href: blog.qmd
       - icon: github
         href: https://github.com/walkerke
       - icon: twitter

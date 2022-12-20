@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>WALKER DATA - About</title>
+<title>WALKER DATA – blog</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,9 +31,12 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-listing/list.min.js"></script>
+<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
@@ -58,16 +61,42 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit"
   }
 }</script>
+<script>
 
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-reading-time','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
-<meta name="twitter:title" content="WALKER DATA - About">
-<meta name="twitter:description" content="I’m Kyle Walker, a spatial data science researcher, educator, and consultant. Here is some information about my current work:">
-<meta name="twitter:image" content="https://walker-data.com/photo.jpeg">
-<meta name="twitter:card" content="summary_large_image">
-</head>
+<link rel="alternate" type="application/rss+xml" title="WALKER DATA" href="blog.xml"></head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -84,11 +113,11 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./about.html" aria-current="page">
+    <a class="nav-link" href="./about.html">
  <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./blog.html">
+    <a class="nav-link active" href="./blog.html" aria-current="page">
  <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item compact">
@@ -108,72 +137,88 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(1)</span></div><div class="category" data-category="data science">data science <span class="quarto-category-count">(1)</span></div><div class="category" data-category="gis">gis <span class="quarto-category-count">(1)</span></div><div class="category" data-category="python">python <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
-<div class="quarto-about-trestles">
-  <div class="about-entity">
-    <img src="photo.jpeg" class="about-image
-  rounded " style="width: 20em;">
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">About</h1>
-</div>
-<div class="quarto-title-meta">
-  </div>
-</header>
-    <div class="about-links">
-  <a href="https://twitter.com/kyle_e_walker" class="about-link">
-    <i class="bi bi-twitter"></i>
-     <span class="about-link-text">Twitter</span>
-  </a>
-  <a href="https://linkedin.com/walkerke" class="about-link">
-    <i class="bi bi-linkedin"></i>
-     <span class="about-link-text">LinkedIn</span>
-  </a>
-  <a href="https://github.com/walkerke" class="about-link">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">Github</span>
-  </a>
-</div>
-  </div>
-  <div class="about-contents"><main class="content" id="quarto-document-content">
-<p>I’m Kyle Walker, a spatial data science researcher, educator, and consultant. Here is some information about my current work:</p>
-<ul>
-<li>I am the author of the book <a href="https://walker-data.com/census-r/">Analyzing US Census Data: Methods, Maps, and Models in R</a>, which is free to read online and is forthcoming with CRC Press in 2022.<br>
-</li>
-<li>I’m an R developer actively working on the following packages:
-<ul>
-<li><a href="https://github.com/walkerke/tidycensus">tidycensus</a>, which helps R users get demographic &amp; spatial data from the US Census Bureau ready-to-go for use in their analyses;</li>
-<li><a href="https://github.com/walkerke/tigris">tigris</a>, which downloads US Census Bureau spatial data and loads it directly into R as simple features objects;</li>
-<li><a href="https://github.com/walkerke/mapboxapi">mapboxapi</a>, an R interface to <a href="https://docs.mapbox.com/api/">Mapbox web services</a>. Use the package to optimize routes, draw isochrones, read and write vector tiles, use custom Mapbox maps in Leaflet projects, and more;</li>
-<li><a href="https://github.com/walkerke/crsuggest">crsuggest</a>, which gives R users projected coordinate system suggestions for their spatial datasets.<br>
-</li>
-</ul></li>
-<li>I’m an <a href="http://personal.tcu.edu/kylewalker/">academic</a> researching <a href="https://magazine.tcu.edu/fall-2021/kyle-walker-open-source-mapping-tools/">data science</a> and <a href="http://personal.tcu.edu/kylewalker/immigrant-america/#11/41.8643/-87.6307">visualization tools for spatial demography</a>. I’m currently teaching courses in <a href="https://walker-data.com/geog30323">exploratory data analysis with Python</a> and <a href="https://github.com/walkerke/urbanslides">introductory Urban Studies</a>.<br>
-</li>
-<li>I am Director of Research at a <a href="https://www.linnaean.co/">boutique data science and strategy firm</a>, where we use cutting-edge geospatial &amp; machine learning methods to improve companies’ business outcomes.<br>
-</li>
-<li>I also consult through my personal firm, Walker Data, where I work with individual clients and organizations to integrate tools like tidycensus into their workflows and to learn R and spatial data analysis.</li>
-</ul>
-<p>If you are interested in working with me, send me a note at <a href="mailto:kyle@walker-data.com" class="email">kyle@walker-data.com</a> and let’s discuss your idea!</p>
-<style>
- a {
-   color: #1a730f; 
- }
- .btn-outline-dark:hover {
-     color: #fff;
-     background-color: #1a730f;
-     border-color: #343a40;
- }
-</style>
+<main class="content column-page-left" id="quarto-document-content">
 
 
-</main></div>
+
+
+
+
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="listing-actions-group">
+   <div class="input-group input-group-sm quarto-listing-sort">
+     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
+     <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
+       <option value="" disabled="" selected="" hidden="">Order By</option>
+       <option value="index" data-direction="asc">Default</option>
+         <option value="listing-title" data-direction="asc">
+          Title
+        </option>
+         <option value="listing-date-sort" data-direction="asc">
+          Date - Oldest
+        </option>
+         <option value="listing-date-sort" data-direction="desc">
+          Date - Newest
+        </option>
+     </select>
+  </div>
+    <div class="input-group input-group-sm quarto-listing-filter">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" class="search form-control" placeholder="Filter">
+    </div>
 </div>
- <!-- /main -->
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-categories="python,gis,data science" data-listing-date-sort="1671516000000" data-listing-file-modified-sort="1671541579160" data-listing-reading-time-sort="9.825">
+<div class="body">
+<a href="./posts/esda-with-python/index.html">
+<h3 class="no-anchor listing-title">
+Exploratory spatial data analysis with Python
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('python'); return false;">
+python
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('gis'); return false;">
+gis
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('data science'); return false;">
+data science
+</div>
+</div>
+<a href="./posts/esda-with-python/index.html">
+<div class="listing-description">
+In early 2023, the print copy of my book <em>Analyzing US Census Data: Methods, Maps, and Models in R</em> will be available for purchase. The response to the free online version of the book has been fantastic thus far. One question I commonly get asked, however, is…
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/esda-with-python/index.html">
+<div class="listing-date">
+Dec 20, 2022
+</div>
+<div class="listing-reading-time">
+9 min
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -194,6 +239,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
   const clipboard = new window.ClipboardJS('.code-copy-button', {
     target: function(trigger) {
       return trigger.previousElementSibling;

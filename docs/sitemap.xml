@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://walker-data.com/blog.html</loc>
+    <lastmod>2022-12-20T13:06:22.984Z</lastmod>
+  </url>
+  <url>
     <loc>https://walker-data.com/index.html</loc>
-    <lastmod>2022-08-19T20:51:54.760Z</lastmod>
+    <lastmod>2022-12-20T13:06:23.420Z</lastmod>
   </url>
   <url>
-    <loc>https://walker-data.com/posts/post-with-code/index.html</loc>
-    <lastmod>2022-07-11T21:00:08.903Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/welcome/index.html</loc>
-    <lastmod>2022-07-11T21:00:09.131Z</lastmod>
+    <loc>https://walker-data.com/posts/esda-with-python/index.html</loc>
+    <lastmod>2022-12-20T13:06:24.972Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/about.html</loc>
-    <lastmod>2022-08-19T20:50:55.521Z</lastmod>
+    <lastmod>2022-12-20T13:06:25.404Z</lastmod>
   </url>
 </urlset>
