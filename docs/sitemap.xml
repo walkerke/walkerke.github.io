@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://walker-data.com/blog.html</loc>
-    <lastmod>2022-12-20T15:37:15.267Z</lastmod>
+    <lastmod>2023-01-10T20:25:15.727Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/index.html</loc>
@@ -15,5 +15,9 @@
   <url>
     <loc>https://walker-data.com/about.html</loc>
     <lastmod>2022-12-20T15:37:17.535Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/lodes-commutes/index.html</loc>
+    <lastmod>2023-01-10T20:25:15.307Z</lastmod>
   </url>
 </urlset>

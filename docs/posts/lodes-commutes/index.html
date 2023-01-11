@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kyle Walker">
+<meta name="dcterms.date" content="2023-01-10">
+
+<title>WALKER DATA - Analyzing labor markets in Python with LODES data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta name="twitter:title" content="WALKER DATA - Analyzing labor markets in Python with LODES data">
+<meta name="twitter:description" content="In Chapter 11 of my book Analyzing US Census Data, I explore a sampling of the variety of government datasets that are available for the United States.">
+<meta name="twitter:image" content="https://walker-data.com/posts/lodes-commutes/image.png">
+<meta name="twitter:image-height" content="480">
+<meta name="twitter:image-width" content="452">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">WALKER DATA</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/walkerke"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/kyle_e_walker"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#acquiring-and-wrangling-lodes-data" id="toc-acquiring-and-wrangling-lodes-data" class="nav-link active" data-scroll-target="#acquiring-and-wrangling-lodes-data">Acquiring and wrangling LODES data</a></li>
+  <li><a href="#mapping-commute-flows-to-apple-headquarters" id="toc-mapping-commute-flows-to-apple-headquarters" class="nav-link" data-scroll-target="#mapping-commute-flows-to-apple-headquarters">Mapping commute flows to Apple headquarters</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Analyzing labor markets in Python with LODES data</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">python</div>
+    <div class="quarto-category">gis</div>
+    <div class="quarto-category">data science</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kyle Walker </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 10, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>In <a href="https://walker-data.com/census-r/other-census-and-government-data-resources.html">Chapter 11 of my book <em>Analyzing US Census Data</em></a>, I explore a sampling of the variety of government datasets that are available for the United States. One of the most useful of these datasets is <a href="https://lehd.ces.census.gov/data/">LODES (LEHD Origin-Destination Employment Statistics)</a>. LODES is a synthetic dataset that represents, down to the Census block level, job counts by workplace and residence as well as the flows between them.</p>
+<p>Given that LODES data are tabulated at the Census block level, analysts will often want to merge the data to Census geographic data like what is accessible in the <a href="https://walker-data.com/pygris/"><strong>pygris</strong> package</a>. <strong>pygris</strong> includes a function, <code>get_lodes()</code>, that is modeled after the excellent <strong>lehdr</strong> R package by <a href="https://github.com/jamgreen/lehdr">Jamaal Green, Dillon Mahmoudi, and Liming Wang</a>.</p>
+<p>This post will illustrate how to analyze the origins of commuters to the Census tract containing Apple’s headquarters in Cupertino, CA. In doing so, I’ll highlight some of the data wrangling utilities in <strong>pandas</strong> that allow for the use of method chaining, and show how to merge data to <strong>pygris</strong> shapes for mapping. The corresponding section in <em>Analyzing US Census Data</em> to this post is “<a href="https://walker-data.com/census-r/other-census-and-government-data-resources.html#analyzing-labor-markets-with-lehdr">Analyzing labor markets with lehdr</a>.”</p>
+<section id="acquiring-and-wrangling-lodes-data" class="level2">
+<h2 class="anchored" data-anchor-id="acquiring-and-wrangling-lodes-data">Acquiring and wrangling LODES data</h2>
+<p>To get started, let’s import the functions and modules we need and give <code>get_lodes()</code> a try. <code>get_lodes()</code> requires specifying a state (as state abbreviation) and year; we are getting data for California in 2019, the most recent year currently available. The argument <code>lodes_type = "od"</code> tells <strong>pygris</strong> to get origin-destination flows data, and <code>cache = True</code> will download the dataset (which is nearly 100MB) to a local cache directory for faster use in the future.</p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pygris <span class="im">import</span> tracts </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pygris.data <span class="im">import</span> get_lodes</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>ca_lodes_od <span class="op">=</span> get_lodes(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    state <span class="op">=</span> <span class="st">"CA"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    year <span class="op">=</span> <span class="dv">2019</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    lodes_type <span class="op">=</span> <span class="st">"od"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    cache <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>ca_lodes_od.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>w_geocode</th>
+      <th>h_geocode</th>
+      <th>S000</th>
+      <th>SA01</th>
+      <th>SA02</th>
+      <th>SA03</th>
+      <th>SE01</th>
+      <th>SE02</th>
+      <th>SE03</th>
+      <th>SI01</th>
+      <th>SI02</th>
+      <th>SI03</th>
+      <th>createdate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>060014001001007</td>
+      <td>060014001001044</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>20211018</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>060014001001007</td>
+      <td>060014001001060</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>20211018</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>060014001001007</td>
+      <td>060014038002002</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>20211018</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>060014001001007</td>
+      <td>060014041021003</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>20211018</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>060014001001007</td>
+      <td>060014042002012</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>20211018</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>The loaded dataset, which has nearly 16 million rows, represents synthetic origin-destination flows from Census block to Census block in California in 2019. Columns represent the <a href="https://walker-data.com/census-r/an-introduction-to-tidycensus.html#understanding-geoids">Census block GEOIDs</a> for both workplace and residence, as well as job counts for flows between them. <code>S000</code> represents all jobs; <a href="https://lehd.ces.census.gov/data/lodes/LODES7/LODESTechDoc7.5.pdf">see the LODES documentation for how other breakouts are defined</a>.</p>
+<p>16 million rows is a lot of data to deal with all at once, so we’ll want to do some targeted data wrangling to make this more manageable. We’ll do so using a <em>method chain</em>, which is my preferred way to do data wrangling in Python given that I come from an R / tidyverse background. The code takes the full origin-destination dataset, rolls it up to the Census tract level, then returns (by Census tract) the number of commuters to Apple’s Census tract in Cupertino.</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>apple <span class="op">=</span> (</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    ca_lodes_od</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    .assign(w_tract <span class="op">=</span> ca_lodes_od[<span class="st">'w_geocode'</span>].<span class="bu">str</span>.<span class="bu">slice</span>(stop <span class="op">=</span> <span class="dv">11</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>            h_tract <span class="op">=</span> ca_lodes_od[<span class="st">'h_geocode'</span>].<span class="bu">str</span>.<span class="bu">slice</span>(stop <span class="op">=</span> <span class="dv">11</span>))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    .query(<span class="st">'w_tract == "06085508102"'</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">'h_tract'</span>, as_index <span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    .agg({<span class="st">'S000'</span>: <span class="bu">sum</span>})</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    .rename({<span class="st">'S000'</span>: <span class="st">'apple_workers'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>apple.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>h_tract</th>
+      <th>apple_workers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>06001400100</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>06001400200</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>06001400300</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>06001400400</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>06001400500</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Let’s step through how we did this:</p>
+<ul>
+<li>The <code>.assign()</code> method is used to calculate two new Census tract columns. A great thing about Census GEOIDs is that child geographies (like Census blocks) contain information about parent geographies. In turn, we can calculate Census tract GEOIDs by slicing block GEOIDs for the first 11 characters.<br>
+</li>
+<li><code>.query()</code> is used to subset our data. We only want rows representing commuters to the Apple campus (or the area around it), so we query for that specific tract ID.</li>
+<li>Next, we’ll roll up our data to the tract level. We’ll first group the data by home Census tract with <code>.groupby()</code>, then calculate group sums with <code>.agg()</code>.<br>
+</li>
+<li>Finally, we use a dictionary passed to <code>.rename()</code> to give the jobs column a more interpretable name.</li>
+</ul>
+<p>Next, we’ll repeat this process to tabulate the <em>total number of workers</em> by home Census tract to be used as a denominator. After that, we can merge the Apple-area commuters dataset back in, and calculate a rate per 1000. Note the <code>lambda</code> notation used in the final step of the method chain: this allows us to refer to the dataset that is being created by the chain.</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>apple_commuters <span class="op">=</span> (</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    ca_lodes_od</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    .assign(h_tract <span class="op">=</span> ca_lodes_od[<span class="st">'h_geocode'</span>].<span class="bu">str</span>.<span class="bu">slice</span>(stop <span class="op">=</span> <span class="dv">11</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">'h_tract'</span>, as_index <span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    .agg({<span class="st">'S000'</span>: <span class="bu">sum</span>})</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    .rename({<span class="st">'S000'</span>: <span class="st">'total_workers'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    .merge(apple, on <span class="op">=</span> <span class="st">'h_tract'</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    .assign(apple_per_1000 <span class="op">=</span> <span class="kw">lambda</span> x: <span class="dv">1000</span> <span class="op">*</span> (x[<span class="st">'apple_workers'</span>] <span class="op">/</span> x[<span class="st">'total_workers'</span>]))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>apple_commuters.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>h_tract</th>
+      <th>total_workers</th>
+      <th>apple_workers</th>
+      <th>apple_per_1000</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>06001400100</td>
+      <td>1412</td>
+      <td>3</td>
+      <td>2.124646</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>06001400200</td>
+      <td>1095</td>
+      <td>3</td>
+      <td>2.739726</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>06001400300</td>
+      <td>2650</td>
+      <td>3</td>
+      <td>1.132075</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>06001400400</td>
+      <td>2341</td>
+      <td>2</td>
+      <td>0.854336</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>06001400500</td>
+      <td>2147</td>
+      <td>4</td>
+      <td>1.863065</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="mapping-commute-flows-to-apple-headquarters" class="level2">
+<h2 class="anchored" data-anchor-id="mapping-commute-flows-to-apple-headquarters">Mapping commute flows to Apple headquarters</h2>
+<p>The main purpose of the <strong>pygris</strong> package is to make the acquisition of US Census Bureau spatial data easy for Python users. Given that we have aggregated our data at the Census tract level, we can use the <code>tracts()</code> function to grab Census tract shapes for six counties in the San Francisco Bay Area. We’ll use the Cartographic Boundary shapefiles with <code>cb = True</code> to exclude most water area, and make sure to specify <code>year = 2019</code> to match the 2019 LODES data.</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>bay_tracts <span class="op">=</span> tracts(state <span class="op">=</span> <span class="st">"CA"</span>, cb <span class="op">=</span> <span class="va">True</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                    county <span class="op">=</span> [<span class="st">"San Francisco"</span>, <span class="st">"Alameda"</span>, <span class="st">"San Mateo"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"Santa Clara"</span>, <span class="st">"Marin"</span>, <span class="st">"Contra Costa"</span>], </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                    year <span class="op">=</span> <span class="dv">2019</span>, cache <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                    </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>bay_tracts.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Using FIPS code '06' for input 'CA'</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Using FIPS code '075' for input 'San Francisco'
+Using FIPS code '001' for input 'Alameda'
+Using FIPS code '081' for input 'San Mateo'
+Using FIPS code '085' for input 'Santa Clara'
+Using FIPS code '041' for input 'Marin'
+Using FIPS code '013' for input 'Contra Costa'</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>&lt;AxesSubplot:&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-5-output-4.png" width="435" height="411"></p>
+</div>
+</div>
+<p>With our tracts in hand, we use the <code>.merge()</code> method to merge the tabulated LODES data to the Census tract shapes, then make a plot with <strong>geopandas</strong>’ plotting functionality.</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>apple_bay <span class="op">=</span> bay_tracts.merge(apple_commuters, left_on <span class="op">=</span> <span class="st">"GEOID"</span>, right_on <span class="op">=</span> <span class="st">"h_tract"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>apple_bay.plot(column <span class="op">=</span> <span class="st">'apple_per_1000'</span>, legend <span class="op">=</span> <span class="va">True</span>, </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>               cmap <span class="op">=</span> <span class="st">"cividis"</span>, figsize <span class="op">=</span> (<span class="dv">8</span>, <span class="dv">8</span>), </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>               k <span class="op">=</span> <span class="dv">7</span>, scheme <span class="op">=</span> <span class="st">"naturalbreaks"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>               legend_kwds <span class="op">=</span> {<span class="st">"loc"</span>: <span class="st">"lower left"</span>})</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Apple-area commuters (rate per 1000 total commuters)</span><span class="ch">\n</span><span class="st">2019 LODES data, Bay Area Census tracts"</span>, fontsize <span class="op">=</span> <span class="dv">12</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plt.gca()</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-6-output-1.png" width="614" height="648"></p>
+</div>
+</div>
+<p>Commuters to Apple’s tract tend to be concentrated around that tract; however, several neighborhoods in San Francisco proper send dozens of commuters per 1000 total commuters south to Cupertino.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

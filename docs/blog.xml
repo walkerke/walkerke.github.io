@@ -10,7 +10,337 @@
 <atom:link href="https://walker-data.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>GIS, demographics, and data science consulting</description>
 <generator>quarto-1.2.280</generator>
-<lastBuildDate>Tue, 20 Dec 2022 06:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 10 Jan 2023 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>Analyzing labor markets in Python with LODES data</title>
+  <dc:creator>Kyle Walker</dc:creator>
+  <link>https://walker-data.com/posts/lodes-commutes/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<p>In <a href="https://walker-data.com/census-r/other-census-and-government-data-resources.html">Chapter 11 of my book <em>Analyzing US Census Data</em></a>, I explore a sampling of the variety of government datasets that are available for the United States. One of the most useful of these datasets is <a href="https://lehd.ces.census.gov/data/">LODES (LEHD Origin-Destination Employment Statistics)</a>. LODES is a synthetic dataset that represents, down to the Census block level, job counts by workplace and residence as well as the flows between them.</p>
+<p>Given that LODES data are tabulated at the Census block level, analysts will often want to merge the data to Census geographic data like what is accessible in the <a href="https://walker-data.com/pygris/"><strong>pygris</strong> package</a>. <strong>pygris</strong> includes a function, <code>get_lodes()</code>, that is modeled after the excellent <strong>lehdr</strong> R package by <a href="https://github.com/jamgreen/lehdr">Jamaal Green, Dillon Mahmoudi, and Liming Wang</a>.</p>
+<p>This post will illustrate how to analyze the origins of commuters to the Census tract containing Apple’s headquarters in Cupertino, CA. In doing so, I’ll highlight some of the data wrangling utilities in <strong>pandas</strong> that allow for the use of method chaining, and show how to merge data to <strong>pygris</strong> shapes for mapping. The corresponding section in <em>Analyzing US Census Data</em> to this post is “<a href="https://walker-data.com/census-r/other-census-and-government-data-resources.html#analyzing-labor-markets-with-lehdr">Analyzing labor markets with lehdr</a>.”</p>
+<section id="acquiring-and-wrangling-lodes-data" class="level2">
+<h2 class="anchored" data-anchor-id="acquiring-and-wrangling-lodes-data">Acquiring and wrangling LODES data</h2>
+<p>To get started, let’s import the functions and modules we need and give <code>get_lodes()</code> a try. <code>get_lodes()</code> requires specifying a state (as state abbreviation) and year; we are getting data for California in 2019, the most recent year currently available. The argument <code>lodes_type = "od"</code> tells <strong>pygris</strong> to get origin-destination flows data, and <code>cache = True</code> will download the dataset (which is nearly 100MB) to a local cache directory for faster use in the future.</p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;">from</span> pygris <span class="im" style="color: #00769E;">import</span> tracts </span>
+<span id="cb1-2"><span class="im" style="color: #00769E;">from</span> pygris.data <span class="im" style="color: #00769E;">import</span> get_lodes</span>
+<span id="cb1-3"><span class="im" style="color: #00769E;">import</span> matplotlib.pyplot <span class="im" style="color: #00769E;">as</span> plt</span>
+<span id="cb1-4"></span>
+<span id="cb1-5">ca_lodes_od <span class="op" style="color: #5E5E5E;">=</span> get_lodes(</span>
+<span id="cb1-6">    state <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"CA"</span>,</span>
+<span id="cb1-7">    year <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">2019</span>,</span>
+<span id="cb1-8">    lodes_type <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"od"</span>,</span>
+<span id="cb1-9">    cache <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span></span>
+<span id="cb1-10">)</span>
+<span id="cb1-11"></span>
+<span id="cb1-12">ca_lodes_od.head()</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>w_geocode</th>
+      <th>h_geocode</th>
+      <th>S000</th>
+      <th>SA01</th>
+      <th>SA02</th>
+      <th>SA03</th>
+      <th>SE01</th>
+      <th>SE02</th>
+      <th>SE03</th>
+      <th>SI01</th>
+      <th>SI02</th>
+      <th>SI03</th>
+      <th>createdate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>060014001001007</td>
+      <td>060014001001044</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>20211018</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>060014001001007</td>
+      <td>060014001001060</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>20211018</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>060014001001007</td>
+      <td>060014038002002</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>20211018</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>060014001001007</td>
+      <td>060014041021003</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>20211018</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>060014001001007</td>
+      <td>060014042002012</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>20211018</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>The loaded dataset, which has nearly 16 million rows, represents synthetic origin-destination flows from Census block to Census block in California in 2019. Columns represent the <a href="https://walker-data.com/census-r/an-introduction-to-tidycensus.html#understanding-geoids">Census block GEOIDs</a> for both workplace and residence, as well as job counts for flows between them. <code>S000</code> represents all jobs; <a href="https://lehd.ces.census.gov/data/lodes/LODES7/LODESTechDoc7.5.pdf">see the LODES documentation for how other breakouts are defined</a>.</p>
+<p>16 million rows is a lot of data to deal with all at once, so we’ll want to do some targeted data wrangling to make this more manageable. We’ll do so using a <em>method chain</em>, which is my preferred way to do data wrangling in Python given that I come from an R / tidyverse background. The code takes the full origin-destination dataset, rolls it up to the Census tract level, then returns (by Census tract) the number of commuters to Apple’s Census tract in Cupertino.</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1">apple <span class="op" style="color: #5E5E5E;">=</span> (</span>
+<span id="cb2-2">    ca_lodes_od</span>
+<span id="cb2-3">    .assign(w_tract <span class="op" style="color: #5E5E5E;">=</span> ca_lodes_od[<span class="st" style="color: #20794D;">'w_geocode'</span>].<span class="bu" style="color: null;">str</span>.<span class="bu" style="color: null;">slice</span>(stop <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">11</span>),</span>
+<span id="cb2-4">            h_tract <span class="op" style="color: #5E5E5E;">=</span> ca_lodes_od[<span class="st" style="color: #20794D;">'h_geocode'</span>].<span class="bu" style="color: null;">str</span>.<span class="bu" style="color: null;">slice</span>(stop <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">11</span>))</span>
+<span id="cb2-5">    .query(<span class="st" style="color: #20794D;">'w_tract == "06085508102"'</span>)</span>
+<span id="cb2-6">    .groupby(<span class="st" style="color: #20794D;">'h_tract'</span>, as_index <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">False</span>)</span>
+<span id="cb2-7">    .agg({<span class="st" style="color: #20794D;">'S000'</span>: <span class="bu" style="color: null;">sum</span>})</span>
+<span id="cb2-8">    .rename({<span class="st" style="color: #20794D;">'S000'</span>: <span class="st" style="color: #20794D;">'apple_workers'</span>}, axis <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb2-9">)</span>
+<span id="cb2-10"></span>
+<span id="cb2-11">apple.head()</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>h_tract</th>
+      <th>apple_workers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>06001400100</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>06001400200</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>06001400300</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>06001400400</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>06001400500</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Let’s step through how we did this:</p>
+<ul>
+<li>The <code>.assign()</code> method is used to calculate two new Census tract columns. A great thing about Census GEOIDs is that child geographies (like Census blocks) contain information about parent geographies. In turn, we can calculate Census tract GEOIDs by slicing block GEOIDs for the first 11 characters.<br>
+</li>
+<li><code>.query()</code> is used to subset our data. We only want rows representing commuters to the Apple campus (or the area around it), so we query for that specific tract ID.</li>
+<li>Next, we’ll roll up our data to the tract level. We’ll first group the data by home Census tract with <code>.groupby()</code>, then calculate group sums with <code>.agg()</code>.<br>
+</li>
+<li>Finally, we use a dictionary passed to <code>.rename()</code> to give the jobs column a more interpretable name.</li>
+</ul>
+<p>Next, we’ll repeat this process to tabulate the <em>total number of workers</em> by home Census tract to be used as a denominator. After that, we can merge the Apple-area commuters dataset back in, and calculate a rate per 1000. Note the <code>lambda</code> notation used in the final step of the method chain: this allows us to refer to the dataset that is being created by the chain.</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1">apple_commuters <span class="op" style="color: #5E5E5E;">=</span> (</span>
+<span id="cb3-2">    ca_lodes_od</span>
+<span id="cb3-3">    .assign(h_tract <span class="op" style="color: #5E5E5E;">=</span> ca_lodes_od[<span class="st" style="color: #20794D;">'h_geocode'</span>].<span class="bu" style="color: null;">str</span>.<span class="bu" style="color: null;">slice</span>(stop <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">11</span>))</span>
+<span id="cb3-4">    .groupby(<span class="st" style="color: #20794D;">'h_tract'</span>, as_index <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">False</span>)</span>
+<span id="cb3-5">    .agg({<span class="st" style="color: #20794D;">'S000'</span>: <span class="bu" style="color: null;">sum</span>})</span>
+<span id="cb3-6">    .rename({<span class="st" style="color: #20794D;">'S000'</span>: <span class="st" style="color: #20794D;">'total_workers'</span>}, axis <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb3-7">    .merge(apple, on <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">'h_tract'</span>)</span>
+<span id="cb3-8">    .assign(apple_per_1000 <span class="op" style="color: #5E5E5E;">=</span> <span class="kw" style="color: #003B4F;">lambda</span> x: <span class="dv" style="color: #AD0000;">1000</span> <span class="op" style="color: #5E5E5E;">*</span> (x[<span class="st" style="color: #20794D;">'apple_workers'</span>] <span class="op" style="color: #5E5E5E;">/</span> x[<span class="st" style="color: #20794D;">'total_workers'</span>]))</span>
+<span id="cb3-9">)</span>
+<span id="cb3-10"></span>
+<span id="cb3-11">apple_commuters.head()</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>h_tract</th>
+      <th>total_workers</th>
+      <th>apple_workers</th>
+      <th>apple_per_1000</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>06001400100</td>
+      <td>1412</td>
+      <td>3</td>
+      <td>2.124646</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>06001400200</td>
+      <td>1095</td>
+      <td>3</td>
+      <td>2.739726</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>06001400300</td>
+      <td>2650</td>
+      <td>3</td>
+      <td>1.132075</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>06001400400</td>
+      <td>2341</td>
+      <td>2</td>
+      <td>0.854336</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>06001400500</td>
+      <td>2147</td>
+      <td>4</td>
+      <td>1.863065</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="mapping-commute-flows-to-apple-headquarters" class="level2">
+<h2 class="anchored" data-anchor-id="mapping-commute-flows-to-apple-headquarters">Mapping commute flows to Apple headquarters</h2>
+<p>The main purpose of the <strong>pygris</strong> package is to make the acquisition of US Census Bureau spatial data easy for Python users. Given that we have aggregated our data at the Census tract level, we can use the <code>tracts()</code> function to grab Census tract shapes for six counties in the San Francisco Bay Area. We’ll use the Cartographic Boundary shapefiles with <code>cb = True</code> to exclude most water area, and make sure to specify <code>year = 2019</code> to match the 2019 LODES data.</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">bay_tracts <span class="op" style="color: #5E5E5E;">=</span> tracts(state <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"CA"</span>, cb <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>,</span>
+<span id="cb4-2">                    county <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"San Francisco"</span>, <span class="st" style="color: #20794D;">"Alameda"</span>, <span class="st" style="color: #20794D;">"San Mateo"</span>,</span>
+<span id="cb4-3">                              <span class="st" style="color: #20794D;">"Santa Clara"</span>, <span class="st" style="color: #20794D;">"Marin"</span>, <span class="st" style="color: #20794D;">"Contra Costa"</span>], </span>
+<span id="cb4-4">                    year <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">2019</span>, cache <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>)</span>
+<span id="cb4-5">                    </span>
+<span id="cb4-6">bay_tracts.plot()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Using FIPS code '06' for input 'CA'</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Using FIPS code '075' for input 'San Francisco'
+Using FIPS code '001' for input 'Alameda'
+Using FIPS code '081' for input 'San Mateo'
+Using FIPS code '085' for input 'Santa Clara'
+Using FIPS code '041' for input 'Marin'
+Using FIPS code '013' for input 'Contra Costa'</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>&lt;AxesSubplot:&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="https://walker-data.com/posts/lodes-commutes/index_files/figure-html/cell-5-output-4.png" width="435" height="411"></p>
+</div>
+</div>
+<p>With our tracts in hand, we use the <code>.merge()</code> method to merge the tabulated LODES data to the Census tract shapes, then make a plot with <strong>geopandas</strong>’ plotting functionality.</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">apple_bay <span class="op" style="color: #5E5E5E;">=</span> bay_tracts.merge(apple_commuters, left_on <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"GEOID"</span>, right_on <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"h_tract"</span>)</span>
+<span id="cb8-2"></span>
+<span id="cb8-3">apple_bay.plot(column <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">'apple_per_1000'</span>, legend <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>, </span>
+<span id="cb8-4">               cmap <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"cividis"</span>, figsize <span class="op" style="color: #5E5E5E;">=</span> (<span class="dv" style="color: #AD0000;">8</span>, <span class="dv" style="color: #AD0000;">8</span>), </span>
+<span id="cb8-5">               k <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">7</span>, scheme <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"naturalbreaks"</span>,</span>
+<span id="cb8-6">               legend_kwds <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"loc"</span>: <span class="st" style="color: #20794D;">"lower left"</span>})</span>
+<span id="cb8-7"></span>
+<span id="cb8-8">plt.title(<span class="st" style="color: #20794D;">"Apple-area commuters (rate per 1000 total commuters)</span><span class="ch" style="color: #20794D;">\n</span><span class="st" style="color: #20794D;">2019 LODES data, Bay Area Census tracts"</span>, fontsize <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">12</span>)</span>
+<span id="cb8-9"></span>
+<span id="cb8-10">ax <span class="op" style="color: #5E5E5E;">=</span> plt.gca()</span>
+<span id="cb8-11"></span>
+<span id="cb8-12">ax.set_axis_off()</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="https://walker-data.com/posts/lodes-commutes/index_files/figure-html/cell-6-output-1.png" width="614" height="648"></p>
+</div>
+</div>
+<p>Commuters to Apple’s tract tend to be concentrated around that tract; however, several neighborhoods in San Francisco proper send dozens of commuters per 1000 total commuters south to Cupertino.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>python</category>
+  <category>gis</category>
+  <category>data science</category>
+  <guid>https://walker-data.com/posts/lodes-commutes/index.html</guid>
+  <pubDate>Tue, 10 Jan 2023 06:00:00 GMT</pubDate>
+  <media:content url="https://walker-data.com/posts/lodes-commutes/image.png" medium="image" type="image/png" height="153" width="144"/>
+</item>
 <item>
   <title>Exploratory spatial data analysis with Python</title>
   <dc:creator>Kyle Walker</dc:creator>
