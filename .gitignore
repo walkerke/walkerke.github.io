@@ -216,5 +216,6 @@ scratch/
 #Mr Developer
 .mr.developer.cfg
 .Rproj.user
+.Rhistory
 
 /.quarto/
