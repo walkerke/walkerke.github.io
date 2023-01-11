@@ -1,7 +1,7 @@
 ---
 title: "Analyzing labor markets in Python with LODES data"
 author: "Kyle Walker"
-date: "2023-01-10"
+date: "2023-01-11"
 categories: [python, gis, data science]
 image: image.png
 editor: 
@@ -147,11 +147,15 @@ bay_tracts.plot()
 ```
 
 With our tracts in hand, we use the `.merge()` method to merge the
-tabulated LODES data to the Census tract shapes, then make a plot with
-**geopandas**' plotting functionality.
+tabulated LODES data to the Census tract shapes, [then make a map with
+**geopandas**' plotting
+functionality](https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.plot.html).
 
 ```{python}
-apple_bay = bay_tracts.merge(apple_commuters, left_on = "GEOID", right_on = "h_tract")
+apple_bay = bay_tracts.merge(apple_commuters, left_on = "GEOID", right_on = "h_tract",
+                             how = "left")
+
+apple_bay.fillna(0, inplace = True)
 
 apple_bay.plot(column = 'apple_per_1000', legend = True, 
                cmap = "cividis", figsize = (8, 8), 
@@ -168,3 +172,41 @@ ax.set_axis_off()
 Commuters to Apple's tract tend to be concentrated around that tract;
 however, several neighborhoods in San Francisco proper send dozens of
 commuters per 1000 total commuters south to Cupertino.
+
+This is where the LODES section of my book chapter ends; however, a
+static map like this can be difficult to interpret for those less
+familiar with the Bay Area. The **geopandas** `.explore()` method can
+make this map interactive for exploration without much more code. We'll
+also use the built-in Census geocoding interface in **pygris** to add a
+marker where Apple Park's visitors center is located.
+
+```{python}
+from pygris.geocode import geocode
+
+apple_bay_sub = apple_bay.filter(['GEOID', 'total_workers',
+                                  'apple_workers', 'apple_per_1000',
+                                  'geometry'])
+
+visitor_center = geocode("10600 N Tantau Ave, Cupertino, CA 95014",
+                         as_gdf = True)
+
+m = apple_bay_sub.explore(column = "apple_per_1000", cmap = "cividis",
+                          k = 7, scheme = "naturalbreaks", popup = True, 
+                          tooltip = False,                   
+                          tiles = "CartoDB positron", 
+                          style_kwds = {"weight": 0.5},
+                          legend_kwds = {"caption": "Apple-area commuters per 1000",
+                                          "colorbar": False},
+                          popup_kwds = {"aliases": ['Census tract', 'Total workers',
+                                                    'Apple-area commuters', 'Rate per 1000']})
+
+visitor_center.explore(m = m, marker_type = "marker", tooltip = False)      
+
+
+```
+
+If you've found this post useful, follow along on
+[Twitter](https://twitter.com/kyle_e_walker),
+[LinkedIn](https://www.linkedin.com/in/walkerke/), or subscribe to my
+newsletter for more examples of how to translate topics from my book to
+Python in advance of the book's release next month!
