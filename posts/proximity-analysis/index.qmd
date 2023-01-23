@@ -1,7 +1,7 @@
 ---
 title: "Distance and proximity analysis in Python"
 author: "Kyle Walker"
-date: "2023-01-24"
+date: "2023-01-23"
 categories: [python, gis, data science, navigation]
 image: image.png
 editor: 
