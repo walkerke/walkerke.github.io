@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/proximity-analysis/index.html",
       "/posts/lodes-commutes/index.html",
       "/posts/esda-with-python/index.html"
     ]
