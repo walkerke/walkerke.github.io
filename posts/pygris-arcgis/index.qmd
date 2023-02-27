@@ -27,7 +27,7 @@ This post was tested on ArcGIS Pro version 3.1.
 ## Setting up a new conda environment
 
 ArcGIS Pro ships with **conda**, a popular package manager for
-scientific Python. The default conda environment used by ArcGIs Pro is
+scientific Python. The default conda environment used by ArcGIS Pro is
 called `arcgispro-py3`, which has many of the most popular Python
 libraries for scientific computing and all the Python libraries needed
 for ArcGIS Pro installed. While this handles many use-cases within
