@@ -114,10 +114,10 @@ nyc_erase = erase_water(nyc_merged, area_threshold = 0.9)
 
 In a typical Python workflow, we might map our data with the `.plot()`
 method. We can do this directly in the notebook within ArcGIS Pro (note
-that we need `%matplotlib inline` and to use `plt.show()`:major reason
-for linking pygris with ArcGIS Pro, however, is to gain access to ArcGIS
-Pro's rich cartographic functionality. This will require a couple extra
-steps.
+that we need `%matplotlib inline` and to use `plt.show()` to get this to
+work in an ArcGIS notebook). A major reason for linking pygris with
+ArcGIS Pro, however, is to gain access to ArcGIS Pro's rich cartographic
+functionality. This will require a couple extra steps.
 
 We'll need to use the `GeoAccessor` class, which lives inside the ArcGIS
 API for Python. `GeoAccessor` allows us to interact with Pandas
