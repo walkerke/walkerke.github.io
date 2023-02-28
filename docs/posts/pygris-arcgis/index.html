@@ -130,8 +130,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <meta name="twitter:title" content="WALKER DATA - Using your favorite Python packages in ArcGIS Pro">
 <meta name="twitter:description" content="Last week, I gave a workshop on working with geographic data in Python with the University of Michigan’s Social Science Data Analysis Network.">
 <meta name="twitter:image" content="https://walker-data.com/posts\pygris-arcgis\image.png">
-<meta name="twitter:image-height" content="993">
-<meta name="twitter:image-width" content="1910">
+<meta name="twitter:image-height" content="1000">
+<meta name="twitter:image-width" content="1908">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -243,7 +243,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="images/paste-B078EE21.png" class="img-fluid"></p>
 <p>Launch a new project (mine is called <code>pygris-blog</code>), then launch a new ArcGIS Python Notebook by clicking <strong>Insert &gt; New Notebook</strong>. I’ve organized my panes from left to right to show Contents, Notebook, Map, then Catalog.</p>
 <p><img src="images/paste-C1304794.png" class="img-fluid"></p>
-<p>You should now be able to start using pygris and any other of your favorite Python packages (that are installed) in ArcGIS just as you would in a regular Jupyter notebook. I’m running the following code from last week’s workshop to grab 2017-2021 ACS data on the percent of the population age 25+ with a bachelor’s degree for New York City and erasing water area from Census tracts obtained with pygris.</p>
+<p>You should now be able to start using pygris and any other of your favorite Python packages (that are installed) in ArcGIS just as you would in a regular Jupyter notebook. I’m running the following code from last week’s workshop to grab 2017-2021 ACS data on the percent of the population age 25+ with a bachelor’s degree for New York City and erasing water area from Census tracts obtained with pygris. Note that I’m using a coordinate reference system in <code>.to_crs()</code> appropriate for New York City, “NAD83(2011) / New York Long Island” which has the EPSG code 6538. Your project may require a different CRS for your area.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pygris <span class="im">import</span> tracts</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pygris.utils <span class="im">import</span> erase_water</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pygris.data <span class="im">import</span> get_census</span>
@@ -252,7 +252,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Kings"</span>, <span class="st">"Queens"</span>]</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>nyc_tracts <span class="op">=</span> tracts(state <span class="op">=</span> <span class="st">"NY"</span>, county <span class="op">=</span> nyc_counties,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                    year <span class="op">=</span> <span class="dv">2021</span>, cache <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                    year <span class="op">=</span> <span class="dv">2021</span>, cache <span class="op">=</span> <span class="va">True</span>).to_crs(<span class="dv">6538</span>)</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>ny_college <span class="op">=</span> get_census(dataset <span class="op">=</span> <span class="st">"acs/acs5/profile"</span>,</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                        variables <span class="op">=</span> <span class="st">"DP02_0068PE"</span>,</span>
@@ -281,7 +281,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>nyc_arcgis.spatial.to_featureclass(out_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>In the Catalog pane, navigate to your project geodatabase. The new feature class (I’ve called mine <code>nyc_tract_education</code> should now be written there. Drag and drop it onto your map, and start exploring and mapping with ArcGIS’s cartography tools!</p>
-<p><img src="images/paste-263C51C5.png" class="img-fluid"></p>
+<p><img src="images/paste-5B03C98B.png" class="img-fluid"></p>
 
 
 </section>

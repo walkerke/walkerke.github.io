@@ -83,7 +83,10 @@ favorite Python packages (that are installed) in ArcGIS just as you
 would in a regular Jupyter notebook. I'm running the following code from
 last week's workshop to grab 2017-2021 ACS data on the percent of the
 population age 25+ with a bachelor's degree for New York City and
-erasing water area from Census tracts obtained with pygris.
+erasing water area from Census tracts obtained with pygris. Note that
+I'm using a coordinate reference system in `.to_crs()` appropriate for
+New York City, "NAD83(2011) / New York Long Island" which has the EPSG
+code 6538. Your project may require a different CRS for your area.
 
 ``` python
 from pygris import tracts
@@ -94,7 +97,7 @@ nyc_counties = ["New York", "Bronx", "Richmond",
                 "Kings", "Queens"]
 
 nyc_tracts = tracts(state = "NY", county = nyc_counties,
-                    year = 2021, cache = True)
+                    year = 2021, cache = True).to_crs(6538)
 
 ny_college = get_census(dataset = "acs/acs5/profile",
                         variables = "DP02_0068PE",
@@ -153,4 +156,4 @@ feature class (I've called mine `nyc_tract_education` should now be
 written there. Drag and drop it onto your map, and start exploring and
 mapping with ArcGIS's cartography tools!
 
-![](images/paste-263C51C5.png)
+![](images/paste-5B03C98B.png)
