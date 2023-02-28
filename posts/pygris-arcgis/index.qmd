@@ -132,8 +132,6 @@ need to update the package if you have an older version.
 ``` python
 from arcgis.features import GeoAccessor
 
-nyc_proj = nyc_erase.to_crs(6538)
-
 nyc_arcgis = GeoAccessor.from_geodataframe(nyc_proj, column_name = "geometry")
 ```
 
