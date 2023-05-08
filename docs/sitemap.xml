@@ -2,30 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://walker-data.com/blog.html</loc>
-    <lastmod>2023-02-28T14:07:10.045Z</lastmod>
+    <lastmod>2023-05-08T19:32:21.934Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/index.html</loc>
-    <lastmod>2022-12-20T15:37:15.639Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/esda-with-python/index.html</loc>
-    <lastmod>2022-12-20T15:37:17.163Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/about.html</loc>
-    <lastmod>2022-12-20T15:37:17.535Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/lodes-commutes/index.html</loc>
-    <lastmod>2023-01-11T16:39:46.715Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/proximity-analysis/index.html</loc>
-    <lastmod>2023-01-23T20:53:32.910Z</lastmod>
+    <lastmod>2023-05-08T19:32:17.922Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/posts/pygris-arcgis/index.html</loc>
-    <lastmod>2023-02-28T14:07:09.503Z</lastmod>
+    <lastmod>2023-05-08T19:12:07.079Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/lodes-commutes/index.html</loc>
+    <lastmod>2023-05-08T19:12:08.055Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/proximity-analysis/index.html</loc>
+    <lastmod>2023-05-08T19:32:24.602Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/esda-with-python/index.html</loc>
+    <lastmod>2023-05-08T19:12:10.111Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/about.html</loc>
+    <lastmod>2023-05-08T19:12:10.515Z</lastmod>
   </url>
 </urlset>

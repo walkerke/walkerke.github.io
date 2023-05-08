@@ -18,7 +18,7 @@ Similar to the section in my book, this post will cover how to calculate proximi
 
 To get started, we'll need to acquire and format data on both Census tracts and hospitals.  We can get Census tract boundaries for South Dakota using [my __pygris__ package](https://walker-data.com/pygris/); we'll then use the [`.to_crs()`](https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.to_crs.html) method to transform to an appropriate projected coordinate reference system for the area.  
 
-The hospitals can be read in directly from the US Department of Homeland Security's [Homeland Infrastructure Foundation-Level Data (HIFLD) portal](https://hifld-geoplatform.opendata.arcgis.com/datasets/hospitals/explore?location=36.729510%2C-96.551840%2C4.98).  HIFLD includes open, frequently-updated datasets on "critical infrastructure" such as schools, pharmacies, and health care facilities.  After reading in the file, we subset the data using a regular expression and `.str.contains()` to include only Level I and Level II trauma centers, and drop any duplicated records.    
+The hospitals can be downloaded from the US Department of Homeland Security's [Homeland Infrastructure Foundation-Level Data (HIFLD) portal](https://hifld-geoplatform.opendata.arcgis.com/datasets/hospitals/explore?location=36.729510%2C-96.551840%2C4.98).  HIFLD includes open, frequently-updated datasets on "critical infrastructure" such as schools, pharmacies, and health care facilities.  After reading in the downloaded file, we subset the data using a regular expression and `.str.contains()` to include only Level I and Level II trauma centers, and drop any duplicated records.    
 
 ```{python}
 import geopandas as gp
@@ -29,10 +29,8 @@ sd_tracts = tracts("SD", cb = True,
                    year = 2021, 
                    cache = True).to_crs(6571)
 
-hospital_url = "https://opendata.arcgis.com/api/v3/datasets/6ac5e325468c4cb9b905f1728d6fbf0f_0/downloads/data?format=geojson&spatialRefId=4326"
 
-
-hospitals = gp.read_file(hospital_url).to_crs(6571)
+hospitals = gp.read_file('Hospitals.geojson').to_crs(6571)
 
 trauma = hospitals.loc[hospitals['TRAUMA'].str.contains("LEVEL I\\b|LEVEL II\\b|RTH|RTC")]
 

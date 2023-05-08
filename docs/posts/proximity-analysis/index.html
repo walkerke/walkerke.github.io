@@ -236,7 +236,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="getting-and-formatting-location-data" class="level2">
 <h2 class="anchored" data-anchor-id="getting-and-formatting-location-data">Getting and formatting location data</h2>
 <p>To get started, we’ll need to acquire and format data on both Census tracts and hospitals. We can get Census tract boundaries for South Dakota using <a href="https://walker-data.com/pygris/">my <strong>pygris</strong> package</a>; we’ll then use the <a href="https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.to_crs.html"><code>.to_crs()</code></a> method to transform to an appropriate projected coordinate reference system for the area.</p>
-<p>The hospitals can be read in directly from the US Department of Homeland Security’s <a href="https://hifld-geoplatform.opendata.arcgis.com/datasets/hospitals/explore?location=36.729510%2C-96.551840%2C4.98">Homeland Infrastructure Foundation-Level Data (HIFLD) portal</a>. HIFLD includes open, frequently-updated datasets on “critical infrastructure” such as schools, pharmacies, and health care facilities. After reading in the file, we subset the data using a regular expression and <code>.str.contains()</code> to include only Level I and Level II trauma centers, and drop any duplicated records.</p>
+<p>The hospitals can be downloaded from the US Department of Homeland Security’s <a href="https://hifld-geoplatform.opendata.arcgis.com/datasets/hospitals/explore?location=36.729510%2C-96.551840%2C4.98">Homeland Infrastructure Foundation-Level Data (HIFLD) portal</a>. HIFLD includes open, frequently-updated datasets on “critical infrastructure” such as schools, pharmacies, and health care facilities. After reading in the downloaded file, we subset the data using a regular expression and <code>.str.contains()</code> to include only Level I and Level II trauma centers, and drop any duplicated records.</p>
 <div class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pygris <span class="im">import</span> tracts</span>
@@ -246,14 +246,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                   year <span class="op">=</span> <span class="dv">2021</span>, </span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                   cache <span class="op">=</span> <span class="va">True</span>).to_crs(<span class="dv">6571</span>)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>hospital_url <span class="op">=</span> <span class="st">"https://opendata.arcgis.com/api/v3/datasets/6ac5e325468c4cb9b905f1728d6fbf0f_0/downloads/data?format=geojson&amp;spatialRefId=4326"</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>hospitals <span class="op">=</span> gp.read_file(<span class="st">'Hospitals.geojson'</span>).to_crs(<span class="dv">6571</span>)</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>hospitals <span class="op">=</span> gp.read_file(hospital_url).to_crs(<span class="dv">6571</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>trauma <span class="op">=</span> hospitals.loc[hospitals[<span class="st">'TRAUMA'</span>].<span class="bu">str</span>.contains(<span class="st">"LEVEL I</span><span class="ch">\\</span><span class="st">b|LEVEL II</span><span class="ch">\\</span><span class="st">b|RTH|RTC"</span>)]</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>trauma <span class="op">=</span> hospitals.loc[hospitals[<span class="st">'TRAUMA'</span>].<span class="bu">str</span>.contains(<span class="st">"LEVEL I</span><span class="ch">\\</span><span class="st">b|LEVEL II</span><span class="ch">\\</span><span class="st">b|RTH|RTC"</span>)]</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>trauma <span class="op">=</span> trauma.drop_duplicates([<span class="st">'ID'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>trauma <span class="op">=</span> trauma.drop_duplicates([<span class="st">'ID'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Using FIPS code '46' for input 'SD'</code></pre>
 </div>
@@ -306,13 +304,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <thead>
     <tr>
       <th></th>
-      <th>2354</th>
-      <th>4440</th>
-      <th>4441</th>
-      <th>4452</th>
-      <th>5386</th>
-      <th>5387</th>
-      <th>5388</th>
+      <th>2321</th>
+      <th>4488</th>
+      <th>4489</th>
+      <th>4500</th>
+      <th>5453</th>
+      <th>5454</th>
+      <th>5455</th>
     </tr>
   </thead>
   <tbody>
@@ -460,53 +458,53 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <tbody>
     <tr>
       <th>0</th>
-      <td>7655.6</td>
-      <td>22608.1</td>
-      <td>22453.5</td>
-      <td>11990.2</td>
-      <td>20608.3</td>
-      <td>3551.9</td>
-      <td>3372.8</td>
+      <td>7888.9</td>
+      <td>22103.4</td>
+      <td>22233.8</td>
+      <td>11812.5</td>
+      <td>19938.0</td>
+      <td>3821.1</td>
+      <td>3672.0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>14506.5</td>
-      <td>15091.9</td>
-      <td>14937.3</td>
-      <td>12641.5</td>
-      <td>17750.0</td>
-      <td>10402.8</td>
-      <td>10223.7</td>
+      <td>14748.0</td>
+      <td>14480.9</td>
+      <td>14611.3</td>
+      <td>12718.5</td>
+      <td>17358.1</td>
+      <td>10649.7</td>
+      <td>10531.1</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>10142.4</td>
-      <td>18571.4</td>
-      <td>18416.8</td>
-      <td>7929.9</td>
-      <td>22452.9</td>
-      <td>6038.7</td>
-      <td>5859.6</td>
+      <td>10251.6</td>
+      <td>18023.1</td>
+      <td>18153.5</td>
+      <td>7747.9</td>
+      <td>22173.1</td>
+      <td>6183.8</td>
+      <td>6034.7</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>8893.4</td>
-      <td>21252.0</td>
-      <td>21097.4</td>
-      <td>16127.0</td>
-      <td>16477.4</td>
-      <td>4759.1</td>
-      <td>4610.6</td>
+      <td>8646.7</td>
+      <td>20428.2</td>
+      <td>20558.6</td>
+      <td>15953.4</td>
+      <td>15610.0</td>
+      <td>4548.4</td>
+      <td>4429.8</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>27875.8</td>
-      <td>17600.7</td>
-      <td>17660.6</td>
-      <td>28882.6</td>
-      <td>3978.8</td>
-      <td>23741.5</td>
-      <td>23593.0</td>
+      <td>26589.6</td>
+      <td>17174.6</td>
+      <td>17177.2</td>
+      <td>27658.8</td>
+      <td>3819.9</td>
+      <td>22491.3</td>
+      <td>22372.7</td>
     </tr>
   </tbody>
 </table>
