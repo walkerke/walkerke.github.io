@@ -1,0 +1,57 @@
+---
+title: "Workshops"
+---
+
+Keep an eye out for the following upcoming online workshops in June 2023: 
+
+Workshop 1: __Analyzing the New 2020 Decennial Census Data__
+
+In this workshop, you'll learn how to analyze the 2020 Decennial Census's Demographic and Housing Characteristics file using R and the tidycensus R package.  Topics covered will include brand-new functionality in tidycensus to acquire and process data from the 2020 DHC file to help you analyze the data right away.  You'll gain experience with the tidyverse ecosystem of tools to reveal insights in the new data, and you'll learn how to create stunning data visualizations to communicate those insights.  
+
+Workshop 2: __Mapping and Spatial Analysis with the 2020 Decennial Census__
+
+Maps are powerful tools for communicating insights in the 2020 DHC data.  In this workshop, you'll learn how to use R and tidycensus to get spatial Census data seamlessly, and visualize the new data with a range of cartographic tools.  You'll also learn all about Census geography and how to perform powerful spatial analyses with 2020 Census data.  
+
+For updates on these workshops and more data analysis content, subscribe to the Walker Data mailing list:
+
+```{=html}
+<!-- Begin MailChimp Signup Form -->
+<link href="https://cdn-images.mailchimp.com/embedcode/slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+/* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup">
+<form action="https://github.us15.list-manage.com/subscribe/post?u=1829a68a5eda3d301119fdcd6&amp;id=c4a53d2961" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+<div id="mc_embed_signup_scroll">
+
+<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_1829a68a5eda3d301119fdcd6_c4a53d2961" tabindex="-1" value=""></div>
+<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+</div>
+</form>
+</div>
+
+
+<!--End mc_embed_signup-->
+```
+
+
+
+__WALKER DATA__ also offers custom data science workshops that can be tailored to the needs of your organization.  Please reach out to <kyle@walker-data.com> to discuss!
+
+
+
+<style>
+ a {
+   color: #1a730f; 
+ }
+
+ .btn-outline-dark:hover {
+     color: #fff;
+     background-color: #1a730f;
+     border-color: #343a40;
+ }
+</style>

@@ -11,3 +11,7 @@ Encoding: UTF-8
 
 RnwWeave: Sweave
 LaTeX: pdfLaTeX
+
+PythonType: conda
+PythonVersion: 3.10.5
+PythonPath: ~/anaconda3/envs/tigris/bin/python3.10

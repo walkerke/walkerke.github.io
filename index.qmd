@@ -36,7 +36,7 @@ Welcome to Walker Data, the data science consulting website of Kyle Walker.  Ple
   </div>
   <div class="card-column">
     <div class="card">
-      <a href=https://walker-data.com/tidycensus><img src=https://walker-data.com/tidycensus/logo.png style="max-height: 200px"></a>
+      <a href=https://walker-data.com/workshops/><img src=https://walker-data.com/tidycensus/logo.png style="max-height: 200px"></a>
       <p>R and GIS training from the developer of the tidycensus R package</p>
     </div>
   </div>

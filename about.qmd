@@ -1,8 +1,7 @@
 ---
 title: "About"
-image: photo.jpeg
 about:
-  template: trestles
+  template: marquee
   links:
     - icon: twitter
       text: Twitter
@@ -16,19 +15,28 @@ about:
 
 ---
 
-I'm Kyle Walker, a spatial data science researcher, educator, and consultant.  Here is some information about my current work: 
+__WALKER DATA__ is a consultancy helping clients solve a wide range of data science problems.  We specialize in the following areas: 
 
-* I am the author of the book [Analyzing US Census Data: Methods, Maps, and Models in R](https://walker-data.com/census-r/), which is free to read online and is forthcoming with CRC Press in 2022.  
-* I'm an R developer actively working on the following packages: 
-  * [tidycensus](https://github.com/walkerke/tidycensus), which helps R users get demographic & spatial data from the US Census Bureau ready-to-go for use in their analyses;
-  * [tigris](https://github.com/walkerke/tigris), which downloads US Census Bureau spatial data and loads it directly into R as simple features objects;
-  * [mapboxapi](https://github.com/walkerke/mapboxapi), an R interface to [Mapbox web services](https://docs.mapbox.com/api/).  Use the package to optimize routes, draw isochrones, read and write vector tiles, use custom Mapbox maps in Leaflet projects, and more;
-  * [crsuggest](https://github.com/walkerke/crsuggest), which gives R users projected coordinate system suggestions for their spatial datasets.  
-* I'm an [academic](http://personal.tcu.edu/kylewalker/) researching [data science](https://magazine.tcu.edu/fall-2021/kyle-walker-open-source-mapping-tools/) and [visualization tools for spatial demography](http://personal.tcu.edu/kylewalker/immigrant-america/#11/41.8643/-87.6307).  I'm currently teaching courses in [exploratory data analysis with Python](https://walker-data.com/geog30323) and [introductory Urban Studies](https://github.com/walkerke/urbanslides).  
-* I am Director of Research at a [boutique data science and strategy firm](https://www.linnaean.co/), where we use cutting-edge geospatial & machine learning methods to improve companies' business outcomes.  
-* I also consult through my personal firm, Walker Data, where I work with individual clients and organizations to integrate tools like tidycensus into their workflows and to learn R and spatial data analysis. 
+* Spatial data science and Geographic Information Systems (GIS)
+* Demographics and location intelligence
+* Predictive analytics and machine learning
+* Data visualization and dashboard development with tools like Shiny, Mapbox, and Tableau
+* Coaching and training for the R and Python programming languages.  
 
-If you are interested in working with me, send me a note at <kyle@walker-data.com> and let's discuss your idea!
+```{=html}
+<!-- Calendly link widget begin -->
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+<a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/kylewalker/intro-call'});return false;">Book a discovery call today!</a>
+<!-- Calendly link widget end -->
+```
+
+
+<br/>
+
+WALKER DATA is led by its principal, Kyle Walker, Ph.D.  Kyle is an internationally-recognized researcher, consultant, and software developer in the field of spatial data science, and was the 2022 recipient of the Spatial Data Scientist of the Year award from the software company CARTO.  He is the author of the book Analyzing US Census Data: Methods, Maps, and Models in R, and has published several popular software packages for spatial data science in R and Python that have been collectively downloaded over 1 million times. 
+
+Kyle also serves as Director of Research for the Linnaean Company, a data science and strategy firm helping companies with business and location intelligence solutions.  [Learn more about the Linnaean Company here](https://www.linnaean.co/).
 
 
 <style>

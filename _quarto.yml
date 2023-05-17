@@ -14,6 +14,8 @@ website:
         href: about.qmd
       - text: Blog
         href: blog.qmd
+      - text: Workshops
+        href: workshops.qmd
       - icon: github
         href: https://github.com/walkerke
       - icon: twitter
