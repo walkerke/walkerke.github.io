@@ -2,15 +2,41 @@
 title: "Workshops"
 ---
 
-Keep an eye out for the following upcoming online workshops in June 2023: 
+Register today for these upcoming online workshops: 
 
-Workshop 1: __Analyzing the New 2020 Decennial Census Data__
+Workshop 1: [__Analyzing the New 2020 Decennial Census Data__](https://www.eventbrite.com/e/access-and-analyze-the-new-2020-decennial-census-data-tickets-632022023887)
+
+June 14, 2023, 11:00am-1:30pm Central Time (US)
 
 In this workshop, you'll learn how to analyze the 2020 Decennial Census's Demographic and Housing Characteristics file using R and the tidycensus R package.  Topics covered will include brand-new functionality in tidycensus to acquire and process data from the 2020 DHC file to help you analyze the data right away.  You'll gain experience with the tidyverse ecosystem of tools to reveal insights in the new data, and you'll learn how to create stunning data visualizations to communicate those insights.  
 
-Workshop 2: __Mapping and Spatial Analysis with the 2020 Decennial Census__
+
+```{=html}
+<div class="center">
+    <a href="https://www.eventbrite.com/e/access-and-analyze-the-new-2020-decennial-census-data-tickets-632022023887"><button class="custom-button">Register here</button></a>
+</div>
+<br/>
+
+```
+
+Workshop 2: [__Mapping and Spatial Analysis with the 2020 Decennial Census__](https://www.eventbrite.com/e/mapping-and-spatial-analysis-with-the-2020-decennial-census-tickets-641300375687)
+
+June 21, 2023, 11:00am-1:30pm Central Time (US)
 
 Maps are powerful tools for communicating insights in the 2020 DHC data.  In this workshop, you'll learn how to use R and tidycensus to get spatial Census data seamlessly, and visualize the new data with a range of cartographic tools.  You'll also learn all about Census geography and how to perform powerful spatial analyses with 2020 Census data.  
+
+```{=html}
+<div class="center">
+    <a href="https://www.eventbrite.com/e/mapping-and-spatial-analysis-with-the-2020-decennial-census-tickets-641300375687"><button class="custom-button">Register here</button></a>
+</div>
+<br/>
+```
+
+
+Workshop participants get the following materials: 
+* Unlimited access to the workshop video
+* A custom tutorial on working with Census data not posted anywhere else
+* 30 minutes live Q&A with Kyle Walker, the developer of the tidycensus R package
 
 For updates on these workshops and more data analysis content, subscribe to the Walker Data mailing list:
 

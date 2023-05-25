@@ -72,3 +72,28 @@ body {
     max-width: 250px;
   }
 }
+
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-button {
+    font-size: 1em;
+    color: white;
+    background-color: #1a730f;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 50px;
+    text-align: center;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.custom-button:hover {
+    box-shadow: 0 0 3px #ffffff, 0 0 6px #ffffff, 0 0 9px #1a730f, 0 0 12px #1a730f;
+}
