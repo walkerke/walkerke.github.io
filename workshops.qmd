@@ -34,6 +34,7 @@ Maps are powerful tools for communicating insights in the 2020 DHC data.  In thi
 
 
 Workshop participants get the following materials: 
+
 * Unlimited access to the workshop video
 * A custom tutorial on working with Census data not posted anywhere else
 * 30 minutes live Q&A with Kyle Walker, the developer of the tidycensus R package
