@@ -6,7 +6,7 @@ Register today for these upcoming online workshops:
 
 Workshop 1: [__Access and Analyze the New 2020 Decennial Census Data__](https://www.eventbrite.com/e/access-and-analyze-the-new-2020-decennial-census-data-tickets-632022023887)
 
-June 14, 2023, 11:00am-1:30pm Central Time (US)
+Online; June 14, 2023, 11:00am-1:30pm Central Time (US)
 
 ::: {.column-margin}
 ![Population pyramid for Lane County, OR](img/image1.png)
@@ -29,7 +29,7 @@ In this workshop, you'll learn how to analyze the 2020 Decennial Census's Demogr
 
 Workshop 2: [__Mapping and Spatial Analysis with the 2020 Decennial Census__](https://www.eventbrite.com/e/mapping-and-spatial-analysis-with-the-2020-decennial-census-tickets-641300375687)
 
-June 21, 2023, 11:00am-1:30pm Central Time (US)
+Online; June 21, 2023, 11:00am-1:30pm Central Time (US)
 
 ::: {.column-margin}
 ![Map of same-sex households in San Francisco](img/image2.png)
