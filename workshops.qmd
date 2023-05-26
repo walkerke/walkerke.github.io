@@ -8,6 +8,10 @@ Workshop 1: [__Access and Analyze the New 2020 Decennial Census Data__](https://
 
 June 14, 2023, 11:00am-1:30pm Central Time (US)
 
+::: {.column-margin}
+![Population pyramid for Lane County, OR](img/image1.png)
+:::
+
 In this workshop, you'll learn how to analyze the 2020 Decennial Census's Demographic and Housing Characteristics file using R and the tidycensus R package.  Topics covered will include brand-new functionality in tidycensus to acquire and process data from the 2020 DHC file to help you analyze the data right away.  You'll gain experience with the tidyverse ecosystem of tools to reveal insights in the new data, and you'll learn how to create stunning data visualizations to communicate those insights.  
 
 
@@ -19,9 +23,17 @@ In this workshop, you'll learn how to analyze the 2020 Decennial Census's Demogr
 
 ```
 
+
+<br/>
+
+
 Workshop 2: [__Mapping and Spatial Analysis with the 2020 Decennial Census__](https://www.eventbrite.com/e/mapping-and-spatial-analysis-with-the-2020-decennial-census-tickets-641300375687)
 
 June 21, 2023, 11:00am-1:30pm Central Time (US)
+
+::: {.column-margin}
+![Map of same-sex households in San Francisco](img/image2.png)
+:::
 
 Maps are powerful tools for communicating insights in the 2020 DHC data.  In this workshop, you'll learn how to use R and tidycensus to get spatial Census data seamlessly, and visualize the new data with a range of cartographic tools.  You'll also learn all about Census geography and how to perform powerful spatial analyses with 2020 Census data.  
 
@@ -31,6 +43,8 @@ Maps are powerful tools for communicating insights in the 2020 DHC data.  In thi
 </div>
 <br/>
 ```
+
+<br/>
 
 
 Workshop participants get the following materials: 
