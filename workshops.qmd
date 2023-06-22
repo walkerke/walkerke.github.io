@@ -37,7 +37,7 @@ In this workshop, you'll learn how to analyze the 2020 Decennial Census's Demogr
 <br/>
 
 
-Workshop 2: [__Mapping and Spatial Analysis with the 2020 Decennial Census__](https://www.eventbrite.com/e/mapping-and-spatial-analysis-with-the-2020-decennial-census-tickets-641300375687)
+Workshop 2: __Mapping and Spatial Analysis with the 2020 Decennial Census__
 
 ::: {.column-margin}
 ![Map of same-sex households in San Francisco](img/image2.png)
