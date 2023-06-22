@@ -2,11 +2,21 @@
 title: "Workshops"
 ---
 
-Register today for these upcoming online workshops: 
+Learn all about using the new 2020 Decennial Census data with R and tidycensus in 5 hours of custom workshops.  You can purchase each workshop separately, or buy the workshop bundle and save $100!
 
-Workshop 1: [__Access and Analyze the New 2020 Decennial Census Data__](https://www.eventbrite.com/e/access-and-analyze-the-new-2020-decennial-census-data-tickets-632022023887)
+```{=html}
+<script src="https://gumroad.com/js/gumroad.js"></script>
 
-Online; June 14, 2023, 11:00am-1:30pm Central Time (US)
+<div class="center">
+    <a href="https://walkerdata.gumroad.com/l/census-workshop-bundle"><button class="custom-button">Buy the bundle on Gumroad</button></a>
+</div>
+<br/>
+
+```
+
+<br/>
+
+Workshop 1: __Access and Analyze the New 2020 Decennial Census Data__
 
 ::: {.column-margin}
 ![Population pyramid for Lane County, OR](img/image1.png)
@@ -17,7 +27,7 @@ In this workshop, you'll learn how to analyze the 2020 Decennial Census's Demogr
 
 ```{=html}
 <div class="center">
-    <a href="https://www.eventbrite.com/e/access-and-analyze-the-new-2020-decennial-census-data-tickets-632022023887"><button class="custom-button">Register here</button></a>
+    <a href="https://walkerdata.gumroad.com/l/analyze-2020-census"><button class="custom-button">Buy on Gumroad</button></a>
 </div>
 <br/>
 
@@ -29,8 +39,6 @@ In this workshop, you'll learn how to analyze the 2020 Decennial Census's Demogr
 
 Workshop 2: [__Mapping and Spatial Analysis with the 2020 Decennial Census__](https://www.eventbrite.com/e/mapping-and-spatial-analysis-with-the-2020-decennial-census-tickets-641300375687)
 
-Online; June 21, 2023, 11:00am-1:30pm Central Time (US)
-
 ::: {.column-margin}
 ![Map of same-sex households in San Francisco](img/image2.png)
 :::
@@ -39,7 +47,7 @@ Maps are powerful tools for communicating insights in the 2020 DHC data.  In thi
 
 ```{=html}
 <div class="center">
-    <a href="https://www.eventbrite.com/e/mapping-and-spatial-analysis-with-the-2020-decennial-census-tickets-641300375687"><button class="custom-button">Register here</button></a>
+    <a href="https://walkerdata.gumroad.com/l/mapping-2020-census"><button class="custom-button">Buy on Gumroad</button></a>
 </div>
 <br/>
 ```
@@ -47,11 +55,11 @@ Maps are powerful tools for communicating insights in the 2020 DHC data.  In thi
 <br/>
 
 
-Workshop participants get the following materials: 
+You get the following materials with your workshop purchase:
 
-* Unlimited access to the workshop video
-* A custom tutorial on working with Census data not posted anywhere else
-* 30 minutes live Q&A with Kyle Walker, the developer of the tidycensus R package
+* Unlimited access to the workshop videos
+
+* Custom tutorials on working with Census data not posted anywhere else
 
 For updates on these workshops and more data analysis content, subscribe to the Walker Data mailing list:
 
