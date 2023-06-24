@@ -21,7 +21,7 @@ __WALKER DATA__ is a consultancy helping clients solve a wide range of data scie
 * Demographics and location intelligence
 * Predictive analytics and machine learning
 * Data visualization and dashboard development with tools like Shiny, Mapbox, and Tableau
-* Coaching and training for the R and Python programming languages.  
+* Training and custom workshops to help your organization use R, Python, Census data, and GIS tools more effectively  
 
 ```{=html}
 <!-- Calendly link widget begin -->
