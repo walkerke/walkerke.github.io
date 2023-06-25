@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/census-regions/index.html",
       "/posts/lodes-2020/index.html",
       "/posts/pygris-arcgis/index.html",
       "/posts/proximity-analysis/index.html",

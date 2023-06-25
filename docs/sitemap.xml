@@ -2,15 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://walker-data.com/blog.html</loc>
-    <lastmod>2023-05-25T18:43:47.563Z</lastmod>
+    <lastmod>2023-06-25T15:34:47.786Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/index.html</loc>
-    <lastmod>2023-05-25T18:43:47.931Z</lastmod>
+    <lastmod>2023-06-24T23:03:17.110Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/workshops.html</loc>
-    <lastmod>2023-06-22T19:56:05.903Z</lastmod>
+    <lastmod>2023-06-24T17:40:03.310Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/posts/pygris-arcgis/index.html</loc>
@@ -35,5 +35,9 @@
   <url>
     <loc>https://walker-data.com/about.html</loc>
     <lastmod>2023-06-24T17:39:14.246Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/census-regions/index.html</loc>
+    <lastmod>2023-06-25T15:34:51.834Z</lastmod>
   </url>
 </urlset>
