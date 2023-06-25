@@ -116,6 +116,7 @@ regions = pygeoda.maxp_greedy(
 Thanks to the C++ back-end of pygeoda, the function is lightning-fast.  The function returns a `dict` object with information about the regionalization solution; we'll pluck the clusters out from it and assign it to our original GeoDataFrame as a column.  We'll then use a `dissolve()` operation to build new geographies from our regionalization solution, and calculate some derived statistics for those regions.  
 
 ```{python}
+#| warning: false
 delta_geo['region'] = regions.get('Clusters')
 
 delta_regions = delta_geo.dissolve(by = 'region', aggfunc = 'sum').reset_index()
