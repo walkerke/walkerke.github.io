@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://walker-data.com/blog.html</loc>
-    <lastmod>2023-06-25T15:46:01.793Z</lastmod>
+    <lastmod>2023-08-10T15:18:51.200Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/index.html</loc>
@@ -39,5 +39,9 @@
   <url>
     <loc>https://walker-data.com/posts/census-regions/index.html</loc>
     <lastmod>2023-06-25T15:46:06.129Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/python-isochrones/index.html</loc>
+    <lastmod>2023-08-10T15:18:50.664Z</lastmod>
   </url>
 </urlset>
