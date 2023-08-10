@@ -2,7 +2,7 @@
 title: "Travel-time isochrones with Mapbox, Python, and GeoPandas"
 author: "Kyle Walker"
 date: "2023-08-10"
-categories: [python, gis, data science]
+categories: [python, gis, data science, navigation]
 image: image.png
 editor: 
   markdown: 
