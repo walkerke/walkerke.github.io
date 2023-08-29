@@ -1,6 +1,23 @@
 ---
 title: "Workshops"
+format: 
+  html: 
+    toc: true
 ---
+
+__WALKER DATA__ offers custom data science workshops tailored to the needs of your organization as well as online workshops available for purchase.  Here are some comments from workshop participants: 
+
+> One thing that really stood out was how you shared your own workflow through real-life examples. Seeing the direct application of tidycensus to our day-to-day tasks was a game-changer. It's safe to say that we're all feeling a lot more confident about integrating these techniques into our work.
+
+> Your assistance in streamlining some of our existing workflows was a huge bonus. It's not just the "how-to" that's valuable, but also the practical insights you provided.
+
+> Your excitement about the whole topic was infectious. It's not easy to keep a group engaged all day, but you nailed it. Your enthusiasm made a huge difference.
+
+Reach out to <kyle@walker-data.com> to discuss your workshop needs!
+
+Previously-recorded workshops can be purchased from the links below.  
+
+## 2020 Census workshops
 
 Learn all about using the new 2020 Decennial Census data with R and tidycensus in 5 hours of custom workshops.  You can purchase each workshop separately, or buy the workshop bundle and save $100!
 
@@ -89,7 +106,7 @@ We recommend moving this block and the preceding CSS link to the HEAD of your HT
 
 
 
-__WALKER DATA__ also offers custom data science workshops that can be tailored to the needs of your organization.  Please reach out to <kyle@walker-data.com> to discuss!
+
 
 
 

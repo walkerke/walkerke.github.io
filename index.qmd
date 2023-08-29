@@ -4,12 +4,14 @@ page-layout: full
 toc: false
 ---
 
-Welcome to Walker Data, the data science consulting website of Kyle Walker.  Please reach out to <kyle@walker-data.com> for consulting assistance with the following topics:
+__WALKER DATA__ is a data science consultancy specializing in geospatial and demographic data support for your business.  
+
+Please reach out to <kyle@walker-data.com> for consulting assistance with the following topics:
 
 - Demographic analysis / Census data
 - Business and location intelligence
 - Geographic Information Systems (GIS) and spatial data science
-- Training in the R and Python programming languages
+- Custom data science workshops, including training in the R and Python programming languages
 
 ```{=html}
 <!-- Calendly badge widget begin -->
