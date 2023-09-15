@@ -5,7 +5,55 @@ format:
     toc: true
 ---
 
-__WALKER DATA__ offers custom data science workshops tailored to the needs of your organization as well as online workshops available for purchase.  Here are some comments from workshop participants: 
+__WALKER DATA__ offers custom data science workshops tailored to the needs of your organization as well as online workshops available for purchase.  
+
+__Check out our upcoming workshops in October 2023__: 
+
+__Workshop 1: Getting Started With Geographic Information Systems in R__
+
+::: {.column-margin}
+![Census data from R shown in ArcGIS Pro](img/arcgis.jpeg)
+:::
+
+Wednesday, October 4, 2023, 11:00am-1:30pm Central Time (US)
+
+```{=html}
+<div class="center">
+    <a href="https://www.eventbrite.com/e/getting-started-with-geographic-information-systems-in-r-registration-717200314447"><button class="custom-button">REGISTER HERE</button></a>
+</div>
+<br/>
+<br/>
+<br/>
+
+```
+
+
+
+In this 2.5 hour workshop, you will gain the skills you need to get started with Geographic Information Systems using the R programming language. You'll learn the fundamentals of doing GIS in R, gain experience with R's powerful toolset for spatial data analysis, and learn how to connect R to desktop GIS tools like ArcGIS and QGIS.
+
+__Workshop 2: Interactive Mapping with R__
+
+Wednesday, October 11, 2023, 11:00am-1:30pm Central Time (US)
+
+::: {.column-margin}
+![A linked interactive map and chart with ggiraph - no Shiny required!](img/linked_brushing_724.gif)
+:::
+
+```{=html}
+<div class="center">
+    <a href="https://www.eventbrite.com/e/interactive-mapping-with-r-registration-717251587807"><button class="custom-button">REGISTER HERE</button></a>
+</div>
+<br/>
+<br/>
+<br/>
+
+```
+
+
+
+In this workshop, you will learn how to make elegant interactive maps with minimal code using the R programming language. You'll gain experience with a range of libraries for interactive mapping in R; learn how to customize and share interactive maps; and dynamically link maps and charts using R.
+
+### See what our workshop participants are saying!
 
 > One thing that really stood out was how you shared your own workflow through real-life examples. Seeing the direct application of tidycensus to our day-to-day tasks was a game-changer. It's safe to say that we're all feeling a lot more confident about integrating these techniques into our work.
 

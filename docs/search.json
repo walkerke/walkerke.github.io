@@ -18,7 +18,7 @@
     "href": "workshops.html",
     "title": "Workshops",
     "section": "",
-    "text": "WALKER DATA offers custom data science workshops tailored to the needs of your organization as well as online workshops available for purchase. Here are some comments from workshop participants:\nReach out to kyle@walker-data.com to discuss your workshop needs!\nPreviously-recorded workshops can be purchased from the links below."
+    "text": "WALKER DATA offers custom data science workshops tailored to the needs of your organization as well as online workshops available for purchase.\nCheck out our upcoming workshops in October 2023:\nWorkshop 1: Getting Started With Geographic Information Systems in R\nWednesday, October 4, 2023, 11:00am-1:30pm Central Time (US)\nIn this 2.5 hour workshop, you will gain the skills you need to get started with Geographic Information Systems using the R programming language. You’ll learn the fundamentals of doing GIS in R, gain experience with R’s powerful toolset for spatial data analysis, and learn how to connect R to desktop GIS tools like ArcGIS and QGIS.\nWorkshop 2: Interactive Mapping with R\nWednesday, October 11, 2023, 11:00am-1:30pm Central Time (US)\nIn this workshop, you will learn how to make elegant interactive maps with minimal code using the R programming language. You’ll gain experience with a range of libraries for interactive mapping in R; learn how to customize and share interactive maps; and dynamically link maps and charts using R."
   },
   {
     "objectID": "workshops.html#census-workshops",
