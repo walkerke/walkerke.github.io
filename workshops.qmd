@@ -56,8 +56,6 @@ In this 2.5 hour workshop, you will gain the skills you need to get started with
 
 __Workshop 2: Interactive Mapping with R__
 
-Wednesday, October 11, 2023, 11:00am-1:30pm Central Time (US)
-
 ::: {.column-margin}
 ![A linked interactive map and chart with ggiraph - no Shiny required!](img/linked_brushing_724.gif)
 :::
