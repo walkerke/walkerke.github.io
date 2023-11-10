@@ -5,6 +5,24 @@
 
 .navbar-dark {
     background-color: #1a730f;
+    color: white !important;
+  
+}
+
+#gis-demographics-and-data-science-consulting > h2 {
+  text-align: center;
+}
+
+#quarto-header > nav > div > div.navbar-brand-container > a > span {
+  color: white !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: white !important;
+}
+
+.navbar #quarto-search.type-overlay .aa-Autocomplete svg.aa-SubmitIcon {
+  color: white !important;
 }
 
 .navbar-title {

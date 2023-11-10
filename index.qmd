@@ -1,8 +1,15 @@
 ---
-title: "GIS, demographics, and data science consulting"
 page-layout: full
 toc: false
 ---
+
+```{=html}
+<center>
+  <img src="img/Logo with chart.png" style="width: 400px; display: block; margin: auto;">
+</center>
+```
+
+## GIS, Demographics, and Data Science Consulting
 
 __WALKER DATA__ is a data science consultancy specializing in geospatial and demographic data support for your business.  
 

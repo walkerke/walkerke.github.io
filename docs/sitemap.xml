@@ -2,46 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://walker-data.com/blog.html</loc>
-    <lastmod>2023-09-15T13:30:09.210Z</lastmod>
+    <lastmod>2023-11-10T14:47:14.497Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/index.html</loc>
-    <lastmod>2023-08-29T17:06:58.246Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/workshops.html</loc>
-    <lastmod>2023-10-24T13:02:32.895Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/pygris-arcgis/index.html</loc>
-    <lastmod>2023-08-29T17:06:59.106Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/lodes-commutes/index.html</loc>
-    <lastmod>2023-08-29T17:07:00.174Z</lastmod>
+    <lastmod>2023-11-10T14:57:43.174Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/posts/proximity-analysis/index.html</loc>
-    <lastmod>2023-08-29T17:07:00.910Z</lastmod>
+    <lastmod>2023-11-10T14:47:13.163Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/pygris-arcgis/index.html</loc>
+    <lastmod>2023-11-10T14:47:11.218Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/posts/python-isochrones/index.html</loc>
-    <lastmod>2023-08-29T17:07:01.606Z</lastmod>
+    <lastmod>2023-11-10T14:47:10.505Z</lastmod>
   </url>
   <url>
-    <loc>https://walker-data.com/posts/esda-with-python/index.html</loc>
-    <lastmod>2023-08-29T17:07:03.194Z</lastmod>
+    <loc>https://walker-data.com/posts/lodes-commutes/index.html</loc>
+    <lastmod>2023-11-10T14:47:08.795Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/posts/census-regions/index.html</loc>
-    <lastmod>2023-08-29T17:07:04.574Z</lastmod>
+    <lastmod>2023-11-10T14:47:09.885Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/posts/lodes-2020/index.html</loc>
-    <lastmod>2023-08-29T17:07:05.102Z</lastmod>
+    <lastmod>2023-11-10T14:47:10.878Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/esda-with-python/index.html</loc>
+    <lastmod>2023-11-10T14:47:12.363Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/workshops.html</loc>
+    <lastmod>2023-11-10T14:47:13.467Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/about.html</loc>
-    <lastmod>2023-09-15T13:30:06.938Z</lastmod>
+    <lastmod>2023-11-10T14:47:13.943Z</lastmod>
   </url>
 </urlset>
