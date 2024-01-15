@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://walker-data.com/blog.html</loc>
-    <lastmod>2023-11-10T14:47:14.497Z</lastmod>
+    <lastmod>2024-01-15T20:43:20.624Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/index.html</loc>
@@ -43,5 +43,13 @@
   <url>
     <loc>https://walker-data.com/about.html</loc>
     <lastmod>2023-11-10T14:47:13.943Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/indexed-mapping/index.html</loc>
+    <lastmod>2024-01-13T22:31:29.093Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/iterative-mapping/index.html</loc>
+    <lastmod>2024-01-15T20:31:17.465Z</lastmod>
   </url>
 </urlset>

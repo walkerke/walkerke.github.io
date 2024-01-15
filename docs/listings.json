@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/iterative-mapping/index.html",
       "/posts/python-isochrones/index.html",
       "/posts/census-regions/index.html",
       "/posts/lodes-2020/index.html",
