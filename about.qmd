@@ -8,7 +8,7 @@ about:
       href: https://twitter.com/kyle_e_walker
     - icon: linkedin
       text: LinkedIn
-      href: https://linkedin.com/walkerke
+      href: https://www.linkedin.com/in/walkerke/
     - icon: github
       text: Github
       href: https://github.com/walkerke

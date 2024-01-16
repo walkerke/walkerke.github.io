@@ -1,0 +1,13 @@
+{
+  "listing": "/blog.html",
+  "items": [
+    "/posts/iterative-mapping/index.html",
+    "/posts/python-isochrones/index.html",
+    "/posts/census-regions/index.html",
+    "/posts/lodes-2020/index.html",
+    "/posts/pygris-arcgis/index.html",
+    "/posts/proximity-analysis/index.html",
+    "/posts/lodes-commutes/index.html",
+    "/posts/esda-with-python/index.html"
+  ]
+}

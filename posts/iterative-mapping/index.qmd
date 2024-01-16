@@ -4,6 +4,9 @@ author: "Kyle Walker"
 date: "2024-01-15"
 categories: [r, gis, data science, census]
 image: image.png
+filters: 
+  - lightbox
+lightbox: auto
 editor: 
   markdown: 
     wrap: 72
