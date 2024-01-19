@@ -1,0 +1,45 @@
+---
+title: "New in the tigris package: simple features support and historic shapefiles"
+author: "Kyle Walker"
+date: 2017-05-02T08:00:00
+tags: ["r", "census", "tigris"]
+slug: tigris-v05
+---
+
+I am excited to announce that [__tigris__](https://github.com/walkerke/tigris) 0.5 is now on CRAN.  This is a major release that has been in the works for several months.  Get it with `install.packages("tigris")`.  
+
+One major new feature is support for the simple features data model via the [sf R package](https://github.com/edzer/sfr).  __sf__ allows for the representation of spatial objects in R like data frames, but with a list-column containing feature geometry.  This has multiple advantages, as objects of class `sf` accept __tidyverse__ functions for data wrangling and are much faster to work with.  For __tigris__, this means that large objects like Census blocks or national railroads are much more usable in R.  
+
+To return an object of class `sf` via __tigris__, either supply the argument `class = "sf"` or set this globally in your R session with `options(tigris_class = "sf")`.  For example: 
+
+```{r, message = FALSE, warning = FALSE}
+library(tigris)
+
+options(tigris_class = "sf")
+
+co <- counties(cb = TRUE)
+
+head(co)
+```
+
+`geo_join` and `rbind_tigris` still work with objects of class `sf`; however, you can use the `*_join` functions from the tidyverse as well.  
+
+The second major new feature is support for historic shapefiles going back to 1990.  Historical data are available for the `states`, `counties`, `tracts`, and `block_groups` functions, and I've re-factored much of __tigris__'s code to easily accommodate other geographies if requested by users.  
+
+```{r, message = FALSE, warning = FALSE, fig.height = 3, fig.width = 8}
+library(purrr)
+
+options(tigris_class = "sp")
+
+par(mfrow = c(1, 3))
+
+walk(c(1990, 2000, 2010), function(year) {
+  plot(tracts("TX", "Denton", cb = TRUE, year = year), 
+       main = paste0("Census tracts in Denton County, ", 
+                     as.character(year)))
+})
+```
+
+My motivation for these updates is twofold.  First, I'm working on a new package called __tidycensus__ that will integrate __tigris__ with the decennial Census and American Community Survey APIs.  This package will allow R users to return integrated spatial and demographic datasets as `sf` objects in one function call, and will be designed to work seamlessly within the tidyverse.  Second, I'm starting a book project this summer called _Analyzing the US Census with R_.  The book will cover Census data acquisition and wrangling; spatial modeling with Census data; and working with Census microdata from the [Integrated Public Use Microdata Series](https://www.ipums.org/), all within R.  Look for updates on both projects in this space!
+
+If you are interested in supporting the development of these projects, I encourage you to hire me for a workshop on these topics or to consult on your next project.  Check out [the Services page](https://walkerke.github.io/services/) for information on how we can get started.  

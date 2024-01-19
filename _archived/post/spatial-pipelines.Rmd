@@ -1,0 +1,163 @@
+---
+title: "Spatial analysis pipelines with simple features in R"
+author: "Kyle Walker"
+date: 2016-12-27T06:15:14
+slug: spatial-pipelines
+tags: ["R"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, eval = FALSE)
+```
+
+In November, the new [simple features package for R __sf__](https://cran.r-project.org/web/packages/sf/index.html) hit CRAN.  The package is like __rgdal__, __sp__, and __rgeos__ rolled into one, is much faster, and allows for data processing with dplyr verbs!  Also, as `sf` objects are represented in a much simpler way than `sp` objects, it allows for spatial analysis in R within [__magrittr__](https://cran.r-project.org/web/packages/magrittr/index.html) pipelines.
+
+This post showcases some of this functionality in a simulated spatial analysis workflow, in which an analyst wants to determine whether customers have visited a point of interest (POI) based on GPS tracking data.  In this hypothetical example, we'll assess whether visitors to midtown Manhattan have walked through Bryant Park.  
+
+Let’s take a single visitor who spent an entire day strolling around Midtown Manhattan, and left 100 GPS traces from her phone:
+
+```{r load-data}
+library(leaflet)
+library(sf)
+library(sp)
+library(TSP)
+library(magrittr)
+
+set.seed(1983)
+
+long <- sample(seq(-73.9995, -73.9688, 0.0001), 100, replace = TRUE)
+lat <- sample(seq(40.7483, 40.7646, 0.0001), 100, replace = TRUE)
+
+df <- data.frame(long, lat, id = 1:100)
+
+leaflet(df) %>%
+  addTiles() %>%
+  addMarkers()
+```
+
+<iframe src="https://walkerke.github.io/extras/blog/midtown_points.html" frameborder="0" scrolling="no" width="100%" height="400"></iframe>
+
+A real-world example would have time-stamped data, allowing for a more realistic path.  We'll construct a hypothetical path by solving for the [Hamiltonian Path](https://en.wikipedia.org/wiki/Hamiltonian_path) with the R package [__TSP__](https://cran.r-project.org/web/packages/TSP/) to simulate this (acknowledging that this hypothetical path will go through buildings).  
+
+```{r solve-tsp}
+path <- df[,1:2] %>%
+  dist() %>%
+  TSP() %>%
+  insert_dummy(label = "cut") %>%
+  solve_TSP(method = "nearest_insertion") %>%
+  cut_tour(cut = "cut") 
+
+df2 <- df[match(path, df$id), ] 
+
+```
+
+Now that we've ordered our GPS traces correctly, we can generate a path with a simple features pipeline.  We convert the ordered points to a matrix; generate a line with `st_linestring()`; create a simple feature collection object with `st_sfc()`; then transform to a projected coordinate system with `st_transform()`.  
+
+```{r create-lines}
+lines <- df2[,1:2] %>%
+  as.matrix() %>%
+  st_linestring() %>%
+  st_sfc(crs = 4326) %>%
+  st_transform(crs = 32618)
+```
+
+We first specify the CRS as the WGS 1984 geographic coordinate system, then transform to UTM Zone 18N as we want a projected coordinate system for planar geometric operations.  Let's take a look at our lines:  
+
+```{r show-lines}
+lines_map <- lines %>%
+  st_transform(crs = 4326) %>%
+  as("Spatial") %>%
+  leaflet() %>%
+  addTiles() %>%
+  addPolylines()
+
+lines_map
+
+```
+
+<iframe src="https://walkerke.github.io/extras/blog/midtown_lines.html" frameborder="0" scrolling="no" width="100%" height="400"></iframe>
+
+Now, we need to see whether this path intersects Bryant Park.  A polygon representing the boundaries of Bryant Park would be ideal; however, let's say hypothetically that we only have XY coordinates for this point of interest.  As such, we can buffer the point by 100 meters to represent the approximate extent of the park.  
+
+```{r}
+bryant_buffer <- c(-73.983581, 40.753714) %>%
+  st_point() %>%
+  st_sfc(crs = 4326) %>%
+  st_transform(32618) %>%
+  st_buffer(dist = 100)
+
+buffer_for_map <- bryant_buffer %>%
+  st_transform(4326) %>%
+  as("Spatial")
+
+lines_map %>%
+  addPolygons(data = buffer_for_map)
+```
+
+<iframe src="https://walkerke.github.io/extras/blog/midtown_buffer.html" frameborder="0" scrolling="no" width="100%" height="400"></iframe>
+
+We have an approximation of the park's extent; we'll get some false positives here but this will work for purposes of illustration.  We can then use `st_intersects` to see if our lines intersect the buffer: 
+
+```{r}
+st_intersects(lines, bryant_buffer)
+```
+```{r, eval = TRUE, echo = FALSE}
+list(1)
+```
+
+The function returns `1`, which means that we do have an intersection.  Now, let's try testing this out over 1000 simulations, and see how many times a simulated sample of 1000 visitors walk through Bryant Park.  We first need to generate 1000 paths:  
+
+```{r}
+paths <- lapply(1:1000, function(x) {
+  
+  set.seed(x)
+  
+  long <- sample(seq(-73.9995, -73.9688, 0.0001), 100, replace = TRUE)
+  lat <- sample(seq(40.7483, 40.7646, 0.0001), 100, replace = TRUE)
+  df <- data.frame(long, lat, id = 1:100)
+  
+  path <- df[,1:2] %>%
+    dist(diag = FALSE) %>%
+    TSP() %>%
+    insert_dummy(label = "cut") %>%
+    solve_TSP(method = "nearest_insertion") %>%
+    cut_tour(cut = "cut") 
+  
+  df2 <- df[match(path, df$id), ] 
+  
+  lines <- df2[,1:2] %>%
+    as.matrix() %>%
+    st_linestring() %>%
+    st_sfc(crs = 4326) %>%
+    st_transform(32618)
+  
+  lines
+  
+})
+
+```
+
+We can now see how many visitors walked through Bryant Park: 
+
+```{r}
+visits <- unlist(
+  lapply(paths, function(x) {
+    y <- st_intersects(x, bryant_buffer)
+    if (length(y[[1]]) == 1) {
+      return(1)
+    } else {
+      return(0)
+    } 
+  })
+)
+
+table(visits)
+```
+
+```{r, echo = FALSE, eval = TRUE}
+table(c(rep(1, 665), rep(0, 335)))
+```
+
+665 of our 1000 visitors walked through Bryant Park.  
+
+This just scratches the surface of the spatial work that can be done in R with the __sf__ package.  In the future, I'll write more about the new `sf` class, which represents spatial objects much like data frames and in turn can accept dplyr verbs for data wrangling.  

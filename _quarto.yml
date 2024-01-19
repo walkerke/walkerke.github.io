@@ -1,0 +1,30 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "WALKER DATA"
+  description: "GIS, demographics, and data science consulting"
+  site-url: https://walker-data.com
+  twitter-card: true
+  favicon: favicon.png
+  navbar:
+    right:
+      - text: About
+        href: about.qmd
+      - text: Blog
+        href: blog.qmd
+      - text: Workshops
+        href: workshops.qmd
+      - icon: github
+        href: https://github.com/walkerke
+      - icon: twitter
+        href: https://twitter.com/kyle_e_walker
+format:
+  html:
+    theme: cosmo
+    max-width: 600px
+    css: styles.css
+
+
+

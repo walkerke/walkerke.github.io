@@ -1,0 +1,112 @@
+---
+title: 'acs14lite: A lightweight R interface to the 2010-2014 ACS API'
+author: "Kyle Walker"
+date: 2015-12-12
+slug: acs14lite
+tags: ["R"]
+---
+
+I use data from the US Census Bureau's American Community Survey all of the time.  I also use R all of the time.  Naturally, this means that I often use ACS data in R - which is pertinent given last week's release of the new 2010-2014 ACS estimates.  I wanted easy access to the data to facilitate my on-going research on demographic trends in US metros, and work at the TCU Center for Urban Studies; as such, I wrote a small R package to provide quick access to the data, __acs14lite__ (https://github.com/walkerke/acs14lite).  This is not intended to be comparable to, or a replacement for, the existing ACS package in R; it is more for my personal convenience, but I thought it might be useful to others as well.  This is mostly going to be a side project for me, so I don't have plans for a CRAN submission at this time.  
+
+Install from GitHub with the following command in R: 
+
+```{r, eval = FALSE}
+
+devtools::install_github('walkerke/acs14lite')
+
+```
+
+Accessing the US Census Bureau's API requires an API key, which you can get from here: http://api.census.gov/data/key_signup.html.  You can then set it globally in your __acs14lite__ session: 
+
+```{r, eval = FALSE}
+library(acs14lite)
+
+set_api_key('your API key here')
+
+```
+
+```{r, echo = FALSE}
+library(acs14lite)
+
+set_api_key("5ed58a5745802102fb83d4eec5d1f7326f65ffab")
+```
+
+There is one main function in the package: `acs14`.  From here, you can request data for the following geographies: the entire US, regions, divisions, states, counties, Census tracts, and Census block groups.  These are the geographies that I generally use, and I don't have plans at the moment to add more; I would welcome pull requests, however.  
+
+The `acs14` function has the following parameters: 
+
+* `api_key`: If you've set your API key already with `set_api_key`, you don't need to provide this.  
+* `geography`: One of 'us' (the default), 'region', 'division', 'state', 'county', 'tract', or 'block group'.  
+* `variable`: A character string representing the Census variable name you want, or a vector of multiple variable names.  Defaults to 'B01001_001E', which is total population.  You can use the ACS package to look for variable names with its `acs.lookup` function; remember to add `E` for estimate and `M` for margin of error to the end of your variable name.  
+* `state`: The name of the state for which you want data; applicable to counties, tracts, and block groups.  
+* `county`: The name of the county for which you want data: applicable to tracts and block groups.  
+
+The function returns an R data frame with the data you want for your requested geography.  
+
+Additionally, I've written a few functions to help users work with margins of error in the ACS.  Margins of error for the raw data are provided from the API; however, we often calculate new variables based on the ACS estimates, which in turn will have their own respective margins of error.  I've used the guidelines in Appendix 3 here: https://www.census.gov/content/dam/Census/library/publications/2008/acs/ACSGeneralHandbook.pdf to write the following functions: 
+
+* `moe_sum`: calculates a margin of error for a derived sum of ACS estimates
+* `moe_prop`: calculates a margin of error for a proportion
+* `moe_ratio`: calculates a margin of error for a ratio
+* `moe_product`: calculates a margin of error for a product
+
+Below, I provide a couple examples of how you can use the package.  
+
+### Interactive dot plot of income by county in Wyoming with Plotly
+
+```{r, warning = FALSE, message = FALSE}
+library(ggplot2)
+library(plotly)
+library(dplyr)
+
+wy_income <- acs14(geography = 'county', variable = c('B19013_001E', 'B19013_001M'), state = 'WY')
+
+wy2 <- wy_income %>%
+  mutate(name = gsub(" County, Wyoming", "", wy_income$NAME),
+         low = B19013_001E - B19013_001M,
+         high = B19013_001E + B19013_001M) %>%
+  select(name, low, high, estimate = B19013_001E) %>%
+  arrange(desc(estimate))
+
+g <- ggplot(wy2, aes(x = estimate, y = reorder(name, estimate))) +
+  geom_point() +
+  geom_errorbarh(aes(xmin = low, xmax = high)) +
+  xlab("Median household income, 2010-2014 ACS estimate") +
+  ylab("")
+
+
+ggplotly(g) %>% layout(margin = list(l = 120))
+```
+
+### Interactive map of poverty in Los Angeles County by Census tract with CartoDB and the __tigris__ package
+
+```{r, eval = FALSE}
+library(tigris)
+library(CartoDB) # devtools::install_github("becarioprecario/cartodb-r/CartoDB", dep = TRUE)
+library(rgdal)
+
+la_poverty <- acs14(geography = 'tract', state = 'CA', county = 'Los Angeles',
+                    variable = c('B17001_001E', 'B17001_001M', 'B17001_002E', 'B17001_002M'))
+
+la2 <- la_poverty %>%
+  mutate(geoid = paste0(state, county, tract),
+         pctpov = round(100 * (B17001_002E / B17001_001E), 1),
+         moepov = round(100 * (moe_prop(B17001_002E, B17001_001E, B17001_002M, B17001_001M)), 1)) %>%
+  select(geoid, pctpov, moepov)
+
+cdb_name <- 'your CartoDB username here'
+cdb_key <- 'your CartoDB API key here'
+
+cartodb(cdb_name, cdb_key)
+
+la_tracts <- tracts('CA', 'Los Angeles', cb = TRUE)
+
+la_tracts2 <- geo_join(la_tracts, la2, "GEOID", "geoid")
+
+r2cartodb(la_tracts2, 'la_poverty')
+
+# Now, head to your CartoDB account to style your map!
+```
+
+<iframe width="100%" height="520" frameborder="0" src="https://kwalkertcu.cartodb.com/viz/2d99c916-a293-11e5-835d-0e5db1731f59/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+

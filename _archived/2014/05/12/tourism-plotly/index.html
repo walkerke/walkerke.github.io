@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Visualizing the economics of tourism in the Pacific with Plotly  &middot; Kyle Walker</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="R, Plotly, ">
+
+
+<meta property="og:title" content="Visualizing the economics of tourism in the Pacific with Plotly  &middot; Kyle Walker ">
+<meta property="og:site_name" content="Kyle Walker"/>
+<meta property="og:url" content="http://walkerke.github.io/2014/05/12/tourism-plotly/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="2014-05-12T00:00:00Z" />
+<meta property="og:article:modified_time" content="2014-05-12T00:00:00Z" />
+
+  
+    
+<meta property="og:article:tag" content="R">
+    
+<meta property="og:article:tag" content="Plotly">
+    
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@kyle_e_walker" />
+<meta name="twitter:creator" content="@kyle_e_walker" />
+<meta name="twitter:title" content="Visualizing the economics of tourism in the Pacific with Plotly" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="http://walkerke.github.io/2014/05/12/tourism-plotly/" />
+<meta name="twitter:domain" content="http://walkerke.github.io">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Visualizing the economics of tourism in the Pacific with Plotly",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "2014-05-12",
+    "description": "",
+    "wordCount":  1426 
+  }
+</script>
+
+
+
+<link rel="canonical" href="http://walkerke.github.io/2014/05/12/tourism-plotly/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://walkerke.github.io/touch-icon-144-precomposed.png">
+<link href="http://walkerke.github.io/favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="http://walkerke.github.io/css/font-awesome.min.css">
+<link rel="stylesheet" href="http://walkerke.github.io/css/style.css">
+<link rel="stylesheet" href="http://walkerke.github.io/css/highlight/zenburn.css">
+
+  <!DOCTYPE HTML>
+<style>
+  
+  .main_wrapper>.main_header {
+    background-color: #035004;
+    color: #fff;
+  }
+  
+  .main_wrapper>.main_content .label:hover,
+  .main_wrapper>.main_content .navigation a:hover,
+  .main_wrapper>.main_content .pagination a:hover,
+  .main_wrapper>.main_content .readlink a:hover,
+  .main_wrapper>.main_content h2 a:hover,
+  .main_wrapper>.main_header a:hover {
+    background-color: #035004;
+    color: #fff;
+    text-decoration: none; 
+}
+
+  a {
+    color: #1a730f; 
+  }
+  
+  a:active, a:focus, a:hover {
+    color: #035004;
+}
+  
+</style>
+
+</head>
+<body class="map[name:superhero]">
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="http://walkerke.github.io">
+  Kyle Walker
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Writing about visualization, demographics, dashboards, and spatial data science.
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="http://walkerke.github.io/about">About</a>
+
+<a href="http://walkerke.github.io/post" title="Show list of posts">Posts</a>
+
+<a href="http://walkerke.github.io/tags" title="Show list of tags">Tags</a>
+
+<a href="http://walkerke.github.io/services">Services</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+<a id="contact-link-email" class="contact_link" href="mailto:kwalkerdata@gmail.com">
+  <span class="fa fa-envelope-square"></span><span>email</span></a>
+
+
+
+<a id="contact-link-github" class="contact_link" href="https://github.com/walkerke">
+  <span class="fa fa-github-square"></span><span>github</span></a>
+
+
+
+
+
+<a id="contact-link-linkedin" class="contact_link" href="https://www.linkedin.com/in/walkerke">
+  <span class="fa fa-linkedin-square"></span><span>linkedin</span></a>
+
+
+
+
+
+
+
+<a id="contact-link-twitter" class="contact_link" href="https://twitter.com/kyle_e_walker">
+  <span class="fa fa-twitter-square"></span><span>twitter</span></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1>Visualizing the economics of tourism in the Pacific with Plotly
+</h1>
+
+  <div class="metas">
+<time datetime="2014-05-12">12 May, 2014</time>
+
+
+  
+    &middot; by Kyle Walker
+  
+  &middot; Read in about 7 min
+  &middot; (1426 Words)
+  <br>
+  
+<a class="label" href="http://walkerke.github.io/tags/r">R</a>
+
+<a class="label" href="http://walkerke.github.io/tags/plotly">Plotly</a>
+
+
+
+</div>
+
+</header>
+
+  <div class="container content">
+  <p>Over the last month or so, I&rsquo;ve been working a lot with <a href="http://plot.ly">Plotly</a> to visualize data for my World Regional Geography course.  Plotly is a web-based service that allows for the creation of interactive, D3-based visualizations that can be easily shared.  Visualizations are deployed and hosted on Plotly&rsquo;s servers, so the service requires a connection to the internet to work.  One of the great things about Plotly is that it has APIs for popular data programming languages like <a href="http://plot.ly/r/">R</a>, <a href="http://plot.ly/python/">Python</a>, and <a href="http://plot.ly/julia/">Julia</a>.  I really got hooked on Plotly, however, when I learned about <code>ggplotly</code>, <a href="http://ropensci.org/blog/2014/04/17/plotly/">which allows you to convert <strong>ggplot2</strong> graphs in R to interactive Plotly charts with just a couple extra lines of code</a>.   I&rsquo;m going to go over an example of how I used <code>ggplotly</code> to assist with a discussion of the economic significance of tourism in the Pacific.</p>
+
+<hr />
+
+<p>In my final class of the semester, I focused on Oceania (defined as Australia, New Zealand, and Pacific Island nations).  In this class, I wanted to show students how small, relatively isolated countries in the Pacific can be acutely affected by larger global forces.  We focused on topics such as trash accumulation in the Pacific, sea level rise due to climate change, and the ways in which island countries are connected to the global economy.  As part of this, we discussed the role of tourism in Pacific Island economies.  To help illustrate this to my students, I sought out data on the tourist economies of these countries, which is freely available from the <a href="http://www.wttc.org/research/economic-data-search-tool/">World Travel &amp; Tourism Council&rsquo;s Economic Data Search Tool</a>.  To download the data, I followed these steps:</p>
+
+<ol>
+<li>For Step 1 of the search tool, I clicked <strong>Countries &gt; Oceania</strong>, then selected Fiji, Kiribati, Other Oceania, Solomon Islands, Tonga, and Vanuatu.<br /></li>
+<li>For Step 2, I selected &ldquo;Travel &amp; Tourism Total Contribution to GDP.&rdquo;  These figures include both tourism&rsquo;s direct contributions to GDP (e.g. GDP generated by hotels, airlines, etc.) and its indirect contributions to the economy; <a href="http://www.wttc.org/site_media/uploads/downloads/oceania2014.pdf">see this report for more details</a>.<br /></li>
+<li>For Step 3, I selected &ldquo;% share&rdquo; as my unit, as I was interested in the extent to which tourism figures in the overall constitution of these countries&rsquo; economies.<br /></li>
+<li>I chose the entire date range from 1988 to 2024 (projected), and clicked <strong>Submit</strong>.<br /></li>
+</ol>
+
+<p>The data can then be downloaded as an Excel file.  However, the Excel file is formatted in a way that resembles the HTML on the web page, and as such is not in the &ldquo;tidy&rdquo; format that is required for visualization in ggplot2.  As such, I saved the file as a CSV (which is available from my GitHub repository) and imported the data into R for some cleaning.</p>
+
+<hr />
+
+<p>The R code below shows one way to clean up data downloaded from the WTTC in this particular format (multiple countries, one variable).  I&rsquo;ve written a function, <code>tidy_WTTC</code>, that should work for any dataset in this form available from the WTTC.</p>
+
+<pre><code class="language-r"># Load packages and data
+
+library(reshape2)
+library(ggplot2)
+library(plotly)
+library(zoo)
+
+dat &lt;- read.csv('tourism.csv')
+
+## Define the &quot;tidy&quot; function and call it
+
+tidy_WTTC &lt;- function(df) {
+  
+  start &lt;- df[7, 2]
+  end &lt;- df[7, ncol(df)]
+  
+  df &lt;- df[8:nrow(df), ]
+  
+  nms &lt;- c(&quot;country&quot;, paste0(&quot;y&quot;, seq(start, end, 1)))
+  
+  names(df) &lt;- nms
+  
+  df &lt;- na.locf(df, fromLast = TRUE)
+    
+  df &lt;- df[seq(1, nrow(df), 2), ]
+  
+  df.melt &lt;- melt(df, id.vars = &quot;country&quot;, value.name=&quot;value&quot;, variable.name = &quot;year&quot;)
+  
+  df.melt$year &lt;- as.numeric(gsub(&quot;y&quot;, &quot;&quot;, df.melt$year))
+  
+  df.melt$value &lt;- as.numeric(df.melt$value)
+  
+  df.melt
+}
+
+tidy_dat &lt;- tidy_WTTC(dat)
+
+</code></pre>
+
+<p>A few notes about the above code.  To do anything with Plotly in R, it is necessary to use the <strong>plotly</strong> R package, <a href="https://github.com/ropensci/plotly">which is available from rOpenSci&rsquo;s repository on GitHub</a>.  As such, it must be installed first using the <strong>devtools</strong> package with the command <code>install_github(&quot;ropensci/plotly&quot;)</code>.</p>
+
+<p>I&rsquo;d also like to explain the function in brief.  I&rsquo;ve set it up to handle data downloads from the WTTC, provided that a) you&rsquo;ve chosen a group of countries and one variable, and b) you&rsquo;ve saved the Excel download as a CSV.  Given the structure of the WTTC data, the function will detect the years you&rsquo;ve chosen for your download and re-format the data accordingly.  Next, I use the <code>na.locf</code> function from the <strong>zoo</strong> package to resolve the fact that country names are on one row in the original data file, with corresponding values on the next row; this fills in NAs with their correct values.  I then remove the unnecessary rows, and then reshape and reformat the data for visualization with <strong>ggplot2</strong>.</p>
+
+<p>The data are now ready for plotting with <strong>ggplot2</strong>, and can then be converted to an interactive Plotly chart.  The code below shows how to get this done.</p>
+
+<pre><code class="language-r">## Create the ggplot, initialize the plotly object, and convert the ggplot to plotly
+
+t1 &lt;- ggplot(tidy_dat, aes(x = year, y = value, color = country)) + 
+  geom_line(size = 2) + 
+  scale_color_brewer(palette = &quot;Set1&quot;) + 
+  labs(list(x = &quot;Year&quot;, 
+            y = &quot;Total contribution of tourism to GDP (percent)&quot;, 
+            title = &quot;Total contribution of tourism to GDP (percent), select Pacific Island countries.  Data source: WTTC&quot;))
+
+py &lt;- plotly(&quot;YOUR USERNAME HERE&quot;, &quot;YOUR API KEY HERE&quot;)
+
+py$ggplotly(t1)
+
+</code></pre>
+
+<p>The <strong>ggplot2</strong> code is fairly straightforward; I&rsquo;m making a basic line chart with minimal customization.  After creating the ggplot, the last two lines of code are all that are necessary to create an interactive chart with Plotly.  You will need to sign up for a Plotly account and get an API key to get this to work; fill in your own username and password where instructed to initialize the Plotly interface object, which I&rsquo;ve called <code>py</code>.  Finally, the <code>py$ggplotly(t1)</code> command converts the ggplot <code>t1</code> into an interactive chart, which should appear in your browser.  If everything has worked correctly, you&rsquo;ll get a chart that looks like the one below:</p>
+
+<p>(If the iframe is not showing up properly, <a href="http://plot.ly/~walkerke/52">click here</a> to access the chart)</p>
+
+<hr />
+
+<div class = "iframe container">
+<iframe src="https://plot.ly/~walkerke/52" id="igraph" width="850" height="600" seamless scrolling="no" frameBorder = "0"></iframe>
+</div>
+
+<hr />
+
+<p>I now have an interactive chart that contains a wealth of information about the tourist economies of select Pacific Island countries.  As the chart reveals, the economic significance of tourism figures differently from country to country in the Pacific.  In places like Vanuatu and Fiji, tourism is a large component of the local economy and is projected to increase in importance.  In contrast, tourism is less prominent in places like Tonga, which relies heavily on remittances from Tongans living abroad; this example is familiar to my students, <a href="http://www.star-telegram.com/2013/12/31/5453055/in-euless-tongans-usher-in-the.html">as there is a large Tongan community living in cities very near to TCU</a>.</p>
+
+<p>By default, Plotly embeds several options for interacting with the chart.  The user can click and drag on the chart itself to zoom in to particular areas; with a time series chart, this can be useful if the user wants to highlight a particular period of time in the graph.  Additionally, tooltips appear on hover that give direct access to the data informing the chart.  More interactivity is also available from the icons in the upper-right-hand corner of the chart, allowing users to zoom, pan, and change the desired tooltip display (all data series, or one at a time).</p>
+
+<p>Once the chart is published to your Plotly account, you can customize it even further using Plotly&rsquo;s web-based GUI.  In the above example, I moved the position of the legend manually using the GUI to maximize the space occupied by the data; you can also edit the chart&rsquo;s appearance, change the axis and chart titles, and add notes to the chart, among other options.</p>
+
+<p>Using <code>ggplotly</code> in this way has become a major part of my workflow in preparing interactive materials for my teaching.  Here are a sampling of other charts I&rsquo;ve prepared in this way:</p>
+
+<ul>
+<li><a href="https://plot.ly/~walkerke/12">Total fertility rates in South Asia by country, 1960-2011</a></li>
+<li><a href="https://plot.ly/~walkerke/21">Past and future population of Japan (projected)</a></li>
+<li><a href="https://plot.ly/~walkerke/30">GDP by country since 1970, major world economies</a></li>
+</ul>
+
+<p>More examples can be found at <a href="https://plot.ly/~walkerke">my Plotly page</a>, and I&rsquo;ll be posting the code for these visualizations to GitHub.  While <code>ggplotly</code> has worked great for me so far, it is still very early in development and only supports a limited number of chart types from <strong>ggplot2</strong> (<a href="http://aarongonzales.net/plotly_examples.html">see this post for details</a>).  In turn, you&rsquo;ll need to use Plotly&rsquo;s APIs to create the unavailable chart types, which I have just started to work with.  This summer, I&rsquo;m going to explore using Plotly as well using Python, <a href="http://nbviewer.ipython.org/github/plotly/python-user-guide/blob/master/s00_homepage/s00_homepage.ipynb">which has a well-developed API</a> and appears to work very well with the IPython Notebook.</p>
+
+<p>As always, please contact me at <a href="mailto:kyle.walker@tcu.edu">kyle.walker@tcu.edu</a> or get in touch with me on <a href="https://twitter.com/kyle_e_walker">Twitter</a> if you have any questions or feedback.</p>
+
+<p><strong>Thanks to:</strong></p>
+
+<ul>
+<li><a href="https://twitter.com/plotlygraphs">The Plotly team</a> for their amazing work;</li>
+<li><a href="https://twitter.com/WTTC">The World Travel and Tourism Council</a> for generously making their data publicly available.<br /></li>
+</ul>
+
+</div>
+
+
+  <footer class="container">
+  <div class="container navigation no-print">
+  <h2>Navigation</h2>
+  
+  
+
+    
+    <a class="prev" href="http://walkerke.github.io/2014/01/09/visualizing-the-u.s.-hispanic-population-by-state/" title="Visualizing the U.S. Hispanic population by state">
+      Previous
+    </a>
+    
+
+    
+    <a class="next" href="http://walkerke.github.io/2014/06/07/interactive-international-population-pyramids-with-r-rcharts/" title="Interactive international population pyramids with R, rCharts">
+      Next
+    </a>
+    
+
+  
+
+
+</div>
+
+  
+
+</footer>
+
+</article>
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+
+</div>
+
+
+  
+<div class="container copyright">
+  
+  &copy; 2016 Kyle Walker
+
+
+</div>
+
+
+</div>
+
+</footer>
+
+    </main>
+    
+<script type="text/javascript">
+  (function() {
+    
+    
+    if (window.location.hostname == "localhost")
+      return;
+
+    var dsq = document.createElement('script'); dsq.async = true; dsq.type = 'text/javascript';
+    dsq.src = '//your_disqus_shortname.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+
+<script src="http://walkerke.github.io/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+    
+  </body>
+</html>
+

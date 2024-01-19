@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>KYLE WALKER DATA</title>
+    <link>/tags/rcharts/index.xml</link>
+    <description>Recent content on KYLE WALKER DATA</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
+    <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
+    <copyright>(c) 2017 Kyle Walker</copyright>
+    <atom:link href="/tags/rcharts/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Life expectancy trends in the former USSR</title>
+      <link>/2014/10/russia-lex/</link>
+      <pubDate>Thu, 16 Oct 2014 00:00:00 +0000</pubDate>
+      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
+      <guid>/2014/10/russia-lex/</guid>
+      <description>&lt;p&gt;When covering Russia and the former republics of the USSR in World Regional Geography, a key part of my material addresses the issues that some of these countries have had in their transitions from centralized to market economies.  Some of these countries experienced dramatic demographic shifts after the dissolution of the USSR, including a noticeable decline in life expectancy.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;d been using some static Excel charts to illustrate life expectancy declines in Russia, Belarus, and Ukraine in previous courses.  However, I felt that an interactive solution would be preferable so that my students and I could explore the data in class over the course of our discussion.  I opted for &lt;a href=&#34;http://www.highcharts.com/&#34;&gt;Highcharts&lt;/a&gt;, through R and &lt;a href=&#34;http://rcharts.io&#34;&gt;rCharts&lt;/a&gt;, for the interactivity.  I then turned to &lt;a href=&#34;http://shiny.rstudio.com/&#34;&gt;Shiny&lt;/a&gt; from &lt;a href=&#34;http://www.rstudio.com/&#34;&gt;RStudio&lt;/a&gt; to put everything together.&lt;/p&gt;
+
+&lt;p&gt;Shiny is a framework that allows R users to turn analyses and visualizations into interactive applications.  Shiny can be run locally on your computer, or deployed to the web via the &lt;a href=&#34;https://www.shinyapps.io/&#34;&gt;ShinyApps.io&lt;/a&gt; hosting service, which is currently free.  The beauty of Shiny is that it allows you to explore your data interactively with a friendly web-based user interface without writing any JavaScript, and it lets R users create and deploy apps to be shared with non-R users who may nonetheless be interested in exploring a dataset or visualization. &lt;a href=&#34;http://shiny.rstudio.com/gallery/&#34;&gt;You can see RStudio&amp;rsquo;s gallery of examples here.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;To get started, I acquired data from &lt;a href=&#34;http://www.mortality.org/&#34;&gt;The Human Mortality Database&lt;/a&gt;, (HMD) a project of UC Berkeley and the Max Planck Institute.  The HMD prefers that users not re-distribute the data, so if you&amp;rsquo;d like to reproduce this chart, you&amp;rsquo;ll need to download the data yourself.  However, the service is free (with registration) and relatively simple to use.  The HMD provides mortality data for 37 countries, including Russia, Belarus, and Ukraine. From the HMD, I downloaded the 1-year life expectancy at birth tables for these countries, and saved them to my working directory as delimited text files, naming them accordingly.  Once I did this, I used the code below to process the data into a suitable format for visualization.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;
+library(tidyr)
+library(dplyr)
+
+russia &amp;lt;- read.table(&#39;russia.txt&#39;, skip = 3)
+
+names(russia) &amp;lt;- c(&amp;quot;Year&amp;quot;, &amp;quot;Female&amp;quot;, &amp;quot;Male&amp;quot;, &amp;quot;Total&amp;quot;)
+
+russia$country &amp;lt;- &amp;quot;Russia&amp;quot;
+
+ukraine &amp;lt;- read.table(&#39;ukraine.txt&#39;, skip = 3)
+
+names(ukraine) &amp;lt;- c(&amp;quot;Year&amp;quot;, &amp;quot;Female&amp;quot;, &amp;quot;Male&amp;quot;, &amp;quot;Total&amp;quot;)
+
+ukraine$country &amp;lt;- &amp;quot;Ukraine&amp;quot;
+
+belarus &amp;lt;- read.table(&#39;belarus.txt&#39;, skip = 3)
+
+names(belarus) &amp;lt;- c(&amp;quot;Year&amp;quot;, &amp;quot;Female&amp;quot;, &amp;quot;Male&amp;quot;, &amp;quot;Total&amp;quot;)
+
+belarus$country &amp;lt;- &amp;quot;Belarus&amp;quot;
+
+dat &amp;lt;- rbind(russia, ukraine, belarus)
+
+dlong &amp;lt;- dat %&amp;gt;%
+  select(-Total) %&amp;gt;%
+  gather(Gender, lex, Female:Male)
+
+write.csv(dlong, &#39;data.csv&#39;)
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In a nutshell, the above code reads in each of the three text files, identifies the country the data correspond to, then combines them.  It then uses functions from the &lt;a href=&#34;http://cran.r-project.org/web/packages/dplyr/index.html&#34;&gt;dplyr&lt;/a&gt; and &lt;a href=&#34;http://cran.r-project.org/web/packages/tidyr/index.html&#34;&gt;tidyr&lt;/a&gt; packages to convert the data to &amp;ldquo;tidy&amp;rdquo; (long) format, which is what I want for visualization.  I then saved the data as a CSV and moved it to a new folder where I would create my Shiny app.&lt;/p&gt;
+
+&lt;p&gt;A Shiny app requires two files to run: &lt;strong&gt;server.R&lt;/strong&gt;, which specifies the data analysis/visualization to show, and &lt;strong&gt;ui.R&lt;/strong&gt;, in which you prepare the user interface.  An optional third file (which I haven&amp;rsquo;t used here), &lt;strong&gt;global.R&lt;/strong&gt;, can be used to read in data or do any background data preparation that you want to make available to both the server and UI scripts.  I largely adapted my server and UI code from &lt;a href=&#34;http://shiny.rstudio.com/tutorial/&#34;&gt;RStudio&amp;rsquo;s Shiny tutorials&lt;/a&gt; and &lt;a href=&#34;http://ramnathv.github.io/rChartsShiny/&#34;&gt;Ramnath Vaidyanathan&amp;rsquo;s tutorial on using rCharts with Shiny&lt;/a&gt;, with some help from StackOverflow as well.&lt;/p&gt;
+
+&lt;p&gt;I prepared the UI first with the code below.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;
+# ui.R
+
+library(rCharts)
+
+dat &amp;lt;- read.csv(&#39;data.csv&#39;)
+
+# Define UI 
+shinyUI(fluidPage(
+  
+  # Sidebar 
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(inputId = &amp;quot;country&amp;quot;, 
+                  label = &amp;quot;Select a country:&amp;quot;, 
+                  choices = c(&amp;quot;Russia&amp;quot;, &amp;quot;Belarus&amp;quot;, &amp;quot;Ukraine&amp;quot;), 
+                  selected = &amp;quot;Russia&amp;quot;), 
+      sliderInput(&amp;quot;range&amp;quot;,
+                  label = &amp;quot;Years to display:&amp;quot;,
+                  min = 1959,
+                  max = 2010,
+                  value = c(1959, 2010), 
+                  format = &amp;quot;0000&amp;quot;), 
+      helpText(&amp;quot;Data reflect the life expectancy &amp;quot;, 
+                &amp;quot;at birth from 1959 to 2010 &amp;quot;, 
+               &amp;quot;for men and women in Russia, &amp;quot;, 
+                &amp;quot;Belarus, and Ukraine.  Data are &amp;quot;, 
+               &amp;quot;obtained from the Human Mortality &amp;quot;, 
+                &amp;quot;Database, a project of &amp;quot;, 
+                &amp;quot; the University of California, &amp;quot;, 
+                &amp;quot;Berkeley (USA), and Max Planck &amp;quot;, 
+                &amp;quot;Institute for Demographic Research &amp;quot;, 
+                &amp;quot;(Germany). Data are available &amp;quot;, 
+                &amp;quot;at www.mortality.org or www.humanmortality.de &amp;quot;, 
+               &amp;quot;(downloaded on 14 Oct 2014).&amp;quot;)
+    ),
+    
+    # Show the plot 
+    mainPanel(
+      showOutput(&amp;quot;lexplot&amp;quot;, &amp;quot;highcharts&amp;quot;)
+    )
+  )
+))
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the &lt;strong&gt;ui.R&lt;/strong&gt; script, I define the parameters of the Shiny user interface.  I&amp;rsquo;ll have a drop-down menu to select the country of choice (Russia, Belarus, or Ukraine), as well as a time slider that allows the user to specify the years to show in the chart.  I then use the &lt;code&gt;showOutput&lt;/code&gt; function from rCharts in the &lt;code&gt;mainPanel&lt;/code&gt; call to tell Shiny to show my chart in the main area.&lt;/p&gt;
+
+&lt;p&gt;Next, I set up the server.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;
+# server.R
+
+library(rCharts)
+
+dat &amp;lt;- read.csv(&#39;data.csv&#39;)
+
+options(RCHART_WIDTH = 500)
+
+shinyServer(function(input, output) {
+  output$lexplot &amp;lt;- renderChart2({
+    selected &amp;lt;- input$country
+    country &amp;lt;- subset(dat, country == selected &amp;amp; Year %in% seq(input$range[1], input$range[2], 1))
+    h1 &amp;lt;- hPlot(
+      x = &amp;quot;Year&amp;quot;, 
+      y = &amp;quot;lex&amp;quot;, 
+      group = &amp;quot;Gender&amp;quot;, 
+      data = country, 
+      type = &amp;quot;line&amp;quot;)
+    
+    h1$colors(c(&amp;quot;red&amp;quot;, &amp;quot;blue&amp;quot;))
+    h1$yAxis(title = list(enabled = TRUE, text = &#39;Life expectancy at birth&#39;))
+    return(h1)
+  })
+})
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The key here to get this to work is to make sure that your &lt;strong&gt;server.R&lt;/strong&gt; and &lt;strong&gt;ui.R&lt;/strong&gt; scripts communicate correctly.  My UI takes an input that is dependent upon the country and years selected by the user, so I create a subsetted data frame, &lt;code&gt;country&lt;/code&gt;, within the &lt;code&gt;renderChart2&lt;/code&gt; function that will respond to that.  I then specify the parameters of the Highchart plot, and tell my &lt;code&gt;renderChart2&lt;/code&gt; function to return that plot and assign it to the &lt;code&gt;lexplot&lt;/code&gt; property of the output, which is what my user interface script will expect.&lt;/p&gt;
+
+&lt;p&gt;RStudio will know that you are creating a Shiny app (given the names of your scripts), so you can simply click the &lt;strong&gt;Run App&lt;/strong&gt; button to run your app locally, and then deploy it to ShinyApps if you&amp;rsquo;d like.  Now, let&amp;rsquo;s take a look at the result.  Click the image below to access the application (I&amp;rsquo;m trying to cut down on my usage for my ShinyApps.io free account).  Use the drop-down menu to select a country, and the time slider to specify a range of years to display.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://walkerke.shinyapps.io/lex_former_ussr/&#34;&gt;&lt;img src=http://walkerke.github.io/img/russia_shiny.PNG&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;I now have an application that allows me to seamlessly switch between countries, change years, and explore the data thanks to Highcharts&amp;rsquo; built-in interactivity.  The charts reveal key trends in life expectancy both pre- and post- USSR.  In Russia, for example, we see that life expectancy declines through the mid-20th century, then peaks in the 1980s, &lt;a href=&#34;http://www.rand.org/pubs/conf_proceedings/CF124/cf124.chap4.html&#34;&gt;which is attributed to Mikhail Gorbachev&amp;rsquo;s anti-alcohol campaign.&lt;/a&gt;  Life expectancy then falls dramatically around the time that the USSR dissolved.  For example, male life expectancy in 1994 in Russia was a little over 57, around 7.5 years less than its peak in 1987.  &lt;a href=&#34;http://www.ncbi.nlm.nih.gov/pubmed/9508159&#34;&gt;Studies have attributed this to a variety of factors, including alcohol abuse, poor nutrition and health behaviors, and problems with the health care system.&lt;/a&gt;  However, life expectancy improves in the late 2000s, &lt;a href=&#34;http://www.demographic-research.org/volumes/vol28/32/28-32.pdf&#34;&gt;in part due to declines in cardiovascular disease and homicides&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In class, I first presented the chart (which displays very nicely in a &lt;a href=&#34;http://ramnathv.github.io/slidify/&#34;&gt;Slidify&lt;/a&gt; presentation) and explored the data with my students.  I then showed my students the first segment from the documentary &lt;a href=&#34;https://www.youtube.com/watch?v=J1OyIJtjdpo&#34;&gt;Death of a Nation: Russia&lt;/a&gt; by Marcel Theroux which explores some of the underlying issues behind these demographic changes in more depth.  We then used the video to collectively think about some reasons for the decline of life expectancy in Russia after the fall of the USSR.  The video paired very nicely with the interactive Shiny app; the charts provided key visual demographic context, and the video then put faces to the data.&lt;/p&gt;
+
+&lt;p&gt;The app is fully reproducible (just make sure you download the data from &lt;a href=&#34;http://www.mortality.org&#34;&gt;the Human Mortality Database&lt;/a&gt; first) and you can find the code in its &lt;a href=&#34;https://github.com/walkerke/teaching-with-datavis/tree/master/russia-lex&#34;&gt;GitHub repository&lt;/a&gt;.  Feel free to use the app as you&amp;rsquo;d like, or modify the code as you wish to create your own apps!&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Thanks to:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The creators of the Human Mortality Database for making their data freely available&lt;/li&gt;
+&lt;li&gt;The &lt;a href=&#34;http://http://www.rstudio.com/&#34;&gt;RStudio&lt;/a&gt; team for Shiny and all its associated training materials&lt;/li&gt;
+&lt;li&gt;The developers of rCharts and Highcharts&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Interactive international population pyramids with R, rCharts</title>
+      <link>/2014/06/rcharts-pyramids/</link>
+      <pubDate>Sat, 07 Jun 2014 00:00:00 +0000</pubDate>
+      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
+      <guid>/2014/06/rcharts-pyramids/</guid>
+      <description>&lt;p&gt;I find population pyramids to be very effective teaching tools.  In short, a population pyramid is a type of chart that shows the population size of different age cohorts on the x-axis, with gender usually displayed back-to-back to create the shape of a &amp;ldquo;pyramid.&amp;rdquo;  It is used to illustrate a snapshot of the age and sex structure of a population, and can serve as a tool that aids in discussion of many thematic issues such as population growth, aging, and gender imbalance.  The visually appealing structure of the population pyramid also makes it easy to compare the population structures of different countries, which is why I like to use pyramids in my classes.  This is exemplified by &lt;a href=&#34;http://blogs.worldbank.org/futuredevelopment/end-population-pyramid&#34;&gt;this post from the World Bank&lt;/a&gt;, which shows how different &amp;ldquo;shapes&amp;rdquo; of the pyramid reflect different demographic contexts.&lt;/p&gt;
+
+&lt;p&gt;I was originally motivated to learn interactive visualization to produce interactive population pyramids.  My inspiration came from these examples from &lt;a href=&#34;http://vis.stanford.edu/jheer/d3/pyramid/shift.html&#34;&gt;Jeff Heer&lt;/a&gt; and &lt;a href=&#34;http://bl.ocks.org/mbostock/4062085&#34;&gt;Mike Bostock&lt;/a&gt;, which use data from the U.S. Census.  Since then, a number of other creative interactive population pyramid applications have gotten a lot of attention, such as &lt;a href=&#34;http://populationpyramid.net/&#34;&gt;this visualization from Martin De Wulf&lt;/a&gt;, and &lt;a href=&#34;http://www.nytimes.com/2014/05/13/upshot/a-changing-shape-in-americas-age-distribution.html?rref=upshot&amp;amp;_r=1&#34;&gt;this animated graphic from the Pew Research Center&lt;/a&gt;, referenced in &lt;em&gt;The New York Times&amp;rsquo;&lt;/em&gt; Upshot.&lt;/p&gt;
+
+&lt;p&gt;These are all great resources, but I wanted something both re-usable and customizable so that I could embed interactive pyramids for any country I needed in my slide decks for my World Regional Geography course.  To do this, I turned to the fantastic &lt;a href=&#34;http://www.census.gov/population/international/data/idb/informationGateway.php&#34;&gt;International Data Base from the US Census Bureau&lt;/a&gt; for data, and the amazing &lt;a href=&#34;http://rcharts.io&#34;&gt;rCharts&lt;/a&gt; to create the pyramids.  The Census Bureau&amp;rsquo;s International Data Base contains a tremendous amount of information about basic demographic characteristics of the world&amp;rsquo;s countries, and is easily downloaded; I&amp;rsquo;ve had students use it before to create their own population pyramids in Excel for class assignments.  However, as I wanted quick access to the data to in turn create interactive rCharts visualizations, I wrote a script, &lt;code&gt;rcharts_pyramids.R&lt;/code&gt;, that includes functions to scrape the Data Base website and produce an interactive pyramid with R within seconds.&lt;/p&gt;
+
+&lt;p&gt;Below, I&amp;rsquo;ll discuss how to use the script.  I&amp;rsquo;d like anyone to be able to use this, regardless of their background with R; as such, I&amp;rsquo;m going to go easy on the technical details.  I&amp;rsquo;ll follow up with another more code-heavy post, and &lt;a href=&#34;https://github.com/walkerke/teaching-with-datavis/blob/master/pyramids/rcharts_pyramids.R&#34;&gt;the code is available on GitHub here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;To get started, make sure you have the following R packages installed: &lt;strong&gt;XML&lt;/strong&gt;, &lt;strong&gt;reshape2&lt;/strong&gt;, &lt;strong&gt;rCharts&lt;/strong&gt;, and &lt;strong&gt;plyr&lt;/strong&gt;.  &lt;strong&gt;rCharts&lt;/strong&gt; is not on CRAN, so you&amp;rsquo;ll need to install it from GitHub with the &lt;strong&gt;devtools&lt;/strong&gt; package.  This script requires the &lt;code&gt;dev&lt;/code&gt; branch of &lt;strong&gt;rCharts&lt;/strong&gt;.  If you are just getting started with R, install the packages with the code below.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;install.packages(c(&#39;XML&#39;, &#39;reshape2&#39;, &#39;devtools&#39;, &#39;plyr&#39;))
+library(devtools)
+install_github(&#39;ramnathv/rCharts@dev&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once these packages are installed, you are ready to get started.  If you are using &lt;a href=&#34;http://www.rstudio.com/&#34;&gt;RStudio&lt;/a&gt; (which I strongly recommend), simply enter the following command into the R Console:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;source(&#39;https://raw.githubusercontent.com/walkerke/teaching-with-datavis/master/pyramids/rcharts_pyramids.R&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you are not using RStudio, use &lt;code&gt;source_url&lt;/code&gt; from the &lt;strong&gt;devtools&lt;/strong&gt; package instead of &lt;code&gt;source&lt;/code&gt;.  Alternatively, you can get the script from GitHub yourself and load it.&lt;/p&gt;
+
+&lt;p&gt;The script contains four functions: &lt;code&gt;getAgeTable&lt;/code&gt;, &lt;code&gt;dPyramid&lt;/code&gt;, &lt;code&gt;hPyramid&lt;/code&gt;, and &lt;code&gt;nPyramid&lt;/code&gt;.  &lt;code&gt;getAgeTable&lt;/code&gt; is a helper function that uses the &lt;strong&gt;XML&lt;/strong&gt; package to scrape data from the International Data Base and convert it into an R data frame.  I pull data from the category &amp;ldquo;Mid-year Population by Five Year Age Groups and Sex&amp;rdquo; to create the pyramids.  The other three functions are used to create population pyramids from the data with different JavaScript libraries available through &lt;strong&gt;rCharts&lt;/strong&gt;.  Each function has three parameters:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;country&lt;/code&gt; (required): the FIPS 10-4 country code for your country of interest.  You can find the codes from &lt;a href=&#34;http://en.wikipedia.org/wiki/List_of_FIPS_country_codes&#34;&gt;this Wikipedia page&lt;/a&gt;, or use the &lt;a href=&#34;https://github.com/vincentarelbundock/countrycode&#34;&gt;&lt;strong&gt;countrycode&lt;/strong&gt; R package&lt;/a&gt;.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;year&lt;/code&gt; (required): The year for which you want to make the pyramid.  The Data Base includes historical information going back to 1950, and projected counts up to 2050 &lt;a href=&#34;http://www.census.gov/population/international/data/idb/informationGateway.php&#34;&gt;see this link for the Census Bureau&amp;rsquo;s projection methodology&lt;/a&gt;.  Not all years are available for all countries, however.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;colors&lt;/code&gt; (optional): A vector of length 2 that contains the colors you want to use for your pyramid.  If you leave this argument blank, you&amp;rsquo;ll get the default colors for your pyramid.&lt;br /&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Now, let&amp;rsquo;s see how this works!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;The first example I&amp;rsquo;ll show you is &lt;code&gt;nPyramid&lt;/code&gt;, which uses the &lt;a href=&#34;http://nvd3.org/&#34;&gt;NVD3.js library&lt;/a&gt;, which is built on top of D3.  I&amp;rsquo;m going to create a population pyramid for Qatar in 2014.  I spend a fair amount of time talking about Qatar in my course, as it exemplifies many of the topics we cover such as economic inequality, energy and economic growth, and international labor migration.  In fact, &lt;a href=&#34;http://www.pewsocialtrends.org/2013/12/17/migration-tables/&#34;&gt;around three-quarters of Qatar&amp;rsquo;s population is foreign-born&lt;/a&gt;; further, &lt;a href=&#34;http://espn.go.com/video/clip?id=11019010&amp;amp;categoryid=2378529&#34;&gt;the conditions endured by migrant laborers in Qatar are attracting international attention in the run-up to the 2022 World Cup&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;To create the visualization, simply type the following command into your R console:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;nPyramid(&#39;QA&#39;, 2014, colors = c(&#39;darkred&#39;, &#39;silver&#39;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which produces the chart below. I have trouble with NVD3 in the RStudio viewer, so you may need to open it in a web browser if you are using RStudio.&lt;/p&gt;
+
+&lt;iframe src=&#34;http://walkerke.github.io/teaching-with-datavis/pyramids/qatar.html&#34; width=&#34;850&#34; height=&#34;400&#34; seamless scrolling=&#34;no&#34; frameBorder = &#34;0&#34;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;The pyramid is striking for the dramatic gender imbalance in Qatar introduced by the influx of foreign laborers to the country.  Males aged 30-34 number nearly 300,000; this is over four times the number of females in that age category, who number just over 70,000.  Admittedly, population pyramids like this can be problematic for making gender comparisons (&lt;a href=&#34;http://bl.ocks.org/mbostock/4062085&#34;&gt;Mike Bostock argues as much here&lt;/a&gt;), but this is allayed somewhat when using these pyramids interactively, as the visualizations produce a tooltip on hover that returns the precise population count for the age cohort, allowing for comparisons of the numbers.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;The next example comes from &lt;a href=&#34;http://www.highcharts.com/&#34;&gt;Highcharts&lt;/a&gt;, an interactive JavaScript charting library that includes many different examples and is very well-documented.  I&amp;rsquo;m going to use Highcharts here to create an interactive population pyramid for Japan in 2050 with the &lt;code&gt;hPyramid&lt;/code&gt; function.  In class, we discussed the &lt;a href=&#34;http://www.economist.com/news/asia/21603076-first-time-proper-debate-starting-about-immigration-incredible-shrinking-country?spc=scode&amp;amp;spv=xm&amp;amp;ah=9d7f7ab945510a56fa6d37c30b6f1709&#34;&gt;challenges Japan is facing as its population ages&lt;/a&gt;; this population pyramid provided important visual context.  To create the chart, use the code below:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;hPyramid(&#39;JA&#39;, 2050, colors = c(&#39;blue&#39;, &#39;red&#39;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;iframe src=&#34;http://walkerke.github.io/teaching-with-datavis/pyramids/japan2050.html&#34; width=&#34;850&#34; height=&#34;400&#34; seamless scrolling=&#34;no&#34; frameBorder = &#34;0&#34;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;Japan&amp;rsquo;s projected population structure in 2050 exemplifies an &amp;ldquo;inverted&amp;rdquo; population pyramid, with the oldest age cohorts comprising the largest proportions of the population, and the youngest the smallest.  There are many reasons why this is projected to happen in Japan, including high life expectancy, restrictive immigration policies, and declining marriage rates (contributing to low fertility levels).  In turn, Japan&amp;rsquo;s shrinking workforce will have to provide for an increasingly large elderly population, which is illustrated in the chart.  As with the NVD3 pyramid, the chart gives a tooltip on mouseover that returns specific population figures.  One of the most striking features of the pyramid this reveals is the population of female centenarians (people aged 100+), which is projected to exceed 1 million by 2050 as per the Census Bureau.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;The last example I&amp;rsquo;ll show you is &lt;code&gt;dPyramid&lt;/code&gt;, which uses the &lt;a href=&#34;http://dimplejs.org/&#34;&gt;DimpleJS&lt;/a&gt; library, built on top of D3.  &lt;code&gt;dPyramid&lt;/code&gt; works in much the same way as the other functions, but has the added bonus of being able to take advantage of Dimple&amp;rsquo;s &lt;code&gt;storyboard&lt;/code&gt; property, which facilitates the creation of temporal animations.  As such, &lt;code&gt;dPyramid&lt;/code&gt; accepts a vector of years for the &lt;code&gt;year&lt;/code&gt; parameter; if you choose multiple years instead of a single year, &lt;code&gt;dPyramid&lt;/code&gt; will give you a population pyramid that changes over time.  Here&amp;rsquo;s an example that shows the aging of Germany&amp;rsquo;s population between 2000 and 2050.  If you are new to R, the &lt;code&gt;seq&lt;/code&gt; function returns a sequence of numbers from argument 1 (in this case, the year 2000), to argument 2 (2050), in intervals of argument 3 (every 10 years).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dPyramid(&#39;GM&#39;, seq(2000, 2050, 10), colors = c(&#39;black&#39;, &#39;red&#39;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;iframe src=&#34;http://walkerke.github.io/teaching-with-datavis/pyramids/germany.html&#34; width=&#34;850&#34; height=&#34;425&#34; seamless scrolling=&#34;no&#34; frameBorder = &#34;0&#34;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;The animation does a compelling job of showing how Germany&amp;rsquo;s population is projected to both age and shrink in the years ahead.  Animation can also be used to provide demographic context to key historical circumstances I teach about in class.  For example, I covered the devastation wrought by the &lt;a href=&#34;http://www.aljazeera.com/indepth/features/2012/02/20122314155454169.html&#34;&gt;Khmer Rouge&lt;/a&gt; during the Cambodian genocide, and used the animated population pyramid below to illustrate the demographic impacts of the genocide. The chart covers 1974 to 1982, the time just before, during, and in the years following the Khmer Rouge.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dPyramid(&#39;CB&#39;, seq(1974, 1982, 1))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;iframe src=&#34;http://walkerke.github.io/teaching-with-datavis/pyramids/cambodia.html&#34; width=&#34;850&#34; height=&#34;425&#34; seamless scrolling=&#34;no&#34; frameBorder = &#34;0&#34;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;You can see how the bars shrink between 1975 and 1979, the years when Cambodia was ruled by the Khmer Rouge.  I could see the shock on some of my students&amp;rsquo; faces when I showed this to them - many of them were unfamiliar with the history of Cambodia and the Khmer Rouge.  The visualization shows an overall decline in population of around 900,000 between 1974 and 1979, which reflects official population numbers; this likely underestimates the scale of the atrocities in Cambodia (&lt;a href=&#34;http://www.yale.edu/gsp/publications/KiernanRevised1.pdf&#34;&gt;see the article linked here&lt;/a&gt;), as the actual losses may have been twice that.&lt;/p&gt;
+
+&lt;p&gt;To save any of your pyramids as a standalone HTML document, just assign your pyramid to a variable and use rCharts&amp;rsquo; &lt;code&gt;save&lt;/code&gt; option to save your chart, setting the &lt;code&gt;cdn&lt;/code&gt; parameter to &lt;code&gt;TRUE&lt;/code&gt;.  The code below provides an example of how to save the html file in your working directory.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;q1 &amp;lt;- nPyramid(&#39;QA&#39;, 2014, colors = c(&#39;darkred&#39;, &#39;silver&#39;))
+q1$save(&#39;qatar.html&#39;, cdn = TRUE)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;I&amp;rsquo;ve learned a lot about rCharts as I&amp;rsquo;ve put these together; my next post will cover how these charts are created.  In the meantime, have a look at the &lt;a href=&#34;https://github.com/walkerke/teaching-with-datavis/blob/master/pyramids/rcharts_pyramids.R&#34;&gt;code on GitHub&lt;/a&gt;; you are welcome to use and modify it as you please.  I&amp;rsquo;d love to hear your comments or feedback; you can contact me at &lt;a href=&#34;mailto:kyle.walker@tcu.edu&#34;&gt;kyle.walker@tcu.edu&lt;/a&gt; or get in touch with me on &lt;a href=&#34;https://twitter.com/kyle_e_walker&#34;&gt;Twitter&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Thanks to:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://twitter.com/ramnath_vaidya&#34;&gt;Ramnath Vaidyanathan&lt;/a&gt;, &lt;a href=&#34;https://twitter.com/timelyportfolio&#34;&gt;Timely Portfolio&lt;/a&gt;, and &lt;a href=&#34;https://twitter.com/jkiernander&#34;&gt;John Kiernander&lt;/a&gt; for their incredible contributions that make this all possible - and for helping me out with some Dimple formatting issues;&lt;/li&gt;
+&lt;li&gt;The authors of the NVD3, D3, and Highcharts JavaScript libraries;&lt;/li&gt;
+&lt;li&gt;The US Census Bureau for making the International Data Base such a valuable resource.&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Visualizing the U.S. Hispanic population by state</title>
+      <link>/2014/01/visualizing-the-u.s.-hispanic-population-by-state/</link>
+      <pubDate>Thu, 09 Jan 2014 00:00:00 +0000</pubDate>
+      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
+      <guid>/2014/01/visualizing-the-u.s.-hispanic-population-by-state/</guid>
+      <description>
+
+&lt;p&gt;Welcome! This is the first post of my effort to document my foray into developing interactive data visualizations for use in my teaching.  Hopefully these examples will be of use to some readers who are interested in creating their own visualizations.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ll first provide a bit of background.  I&amp;rsquo;m a geography professor at Texas Christian University in Fort Worth, and started getting interested in data visualization when putting together materials for a course I taught in population geography last spring.  Visuals are essential for social science instructors; however, it is not always easy to find publicly available images that are both effective and suitable for what you want to teach (I imagine many of you, like me, have gone on many a failed Google image search).  So, I started looking into developing my own materials.  I happened upon the incredible &lt;a href=&#34;http://d3js.org/&#34;&gt;D3 JavaScript library&lt;/a&gt; by Mike Bostock and the stunning graphics from the &lt;a href=&#34;http://www.healthmetricsandevaluation.org/tools/data-visualizations&#34;&gt;Institute for Health Metrics and Evaluation&lt;/a&gt; and was immediately blown away.  Interactive examples like &lt;a href=&#34;http://bl.ocks.org/mbostock/4062085&#34;&gt;this population pyramid&lt;/a&gt; can be very effective for conveying social science concepts.&lt;/p&gt;
+
+&lt;p&gt;As a relative newcomer to JavaScript, however, I looked into what other resources were available for creating these types of interactive visualizations, especially in languages I have more of a familiarity with (R and Python, specifically).  Thus far, I&amp;rsquo;ve been using the fantastic &lt;a href=&#34;http://rcharts.io/&#34;&gt;rCharts&lt;/a&gt; R package by Ramnath Vaidyanathan, which provides an R wrapper for several JavaScript charting libraries, and the the &lt;a href=&#34;http://cran.r-project.org/web/packages/googleVis/index.html&#34;&gt;googleVis&lt;/a&gt; package, which is an R interface for the Google Charts API, and among other things allows R users to create &lt;a href=&#34;http://www.gapminder.org/&#34;&gt;Hans Rosling-style motion charts.&lt;/a&gt;.  I&amp;rsquo;ve also started looking into tools like &lt;a href=&#34;https://plot.ly/&#34;&gt;plotly&lt;/a&gt;, which has both R and Python APIs, and hope to create my own D3 visualizations from scratch eventually.&lt;/p&gt;
+
+&lt;p&gt;When possible, my examples on this site will use open data/open source tools and will be available on GitHub, so that anyone interested can use and adapt these examples as they need.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;My first example is a visualization of the composition of Hispanic populations by state in the U.S., for the ten states with the largest Hispanic populations in 2010.   In my introductory geography course, I&amp;rsquo;m going to be soon discussing shifts in the racial &amp;amp; ethnic composition of the U.S.  Sometime between 2040 and 2050, non-Hispanic whites are projected to become a minority in the U.S., in large part due to continued growth of the Hispanic population.  However, I find that many discussions of this demographic shift in the media tend to homogenize the Hispanic population, which is not what I want to convey to my students; as such, I wanted to find a way to visualize its diversity.  I came across &lt;a href=&#34;http://www.pewhispanic.org/2012/09/06/population-distribution-of-hispanic-origin-groups-by-county/&#34;&gt;these interesting interactive maps from the Pew Research Center&lt;/a&gt;, and downloaded the data they made available to see what I might do with it.&lt;/p&gt;
+
+&lt;p&gt;The data made available by the Pew Research Center are in Excel format.  There are many libraries for reading Excel data into R, but they often are not straightforward to use, so I first opened the file in Excel and saved it as a CSV for ease of use.  In their original form, the data are not in a great format for visualization in R; as such, I needed to do some munging, with help from Hadley Wickham&amp;rsquo;s excellent packages.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# First, download the Excel file from the Pew Research Center, and save it as a CSV in your working directory
+
+library(stringr)
+library(plyr)
+library(rCharts)
+library(reshape2)
+
+dat &amp;lt;- read.csv(&amp;quot;all_counties_by_top_six_groups.csv&amp;quot;)
+
+keep &amp;lt;- seq(1, 25, 3)
+
+dat &amp;lt;- dat[,keep]
+
+nms &amp;lt;- c(&#39;Name&#39;, &#39;Total.Hisp&#39;, &#39;Mexican&#39;, &#39;Puerto.Rican&#39;, &#39;Cuban&#39;, &#39;Salvadoran&#39;, &#39;Dominican&#39;, &#39;Guatemalan&#39;, &#39;Other&#39;)
+
+names(dat) &amp;lt;- nms
+
+dat &amp;lt;- dat[-c(1:3),]
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The above code simply cleans up the data to shape it into a nicely formatted data frame, and subsets it to get the population counts that we need.  However, there are still some steps to take before the data can be visualized.  Given the original data format, R has read in all my numeric data as factors, which wouldn&amp;rsquo;t let me make the kinds of manipulations I needed to do to aggregate the data by state.  Such aggregation also required some string manipulation, so that I could identify which counts correspond to each state (given that the geographic identifiers in the data are presented as &amp;lsquo;County, State&amp;rsquo;).  The code that follows cleans up the data even further and aggregates each numeric column by state.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dat &amp;lt;- cbind(dat, ldply(str_split(dat$Name, &amp;quot;, &amp;quot;)))
+
+names(dat) &amp;lt;- c(nms, &#39;County&#39;, &#39;State&#39;)
+
+convCols &amp;lt;- 2:9
+
+dat[,convCols] &amp;lt;- apply(dat[,convCols], 2, function(x) as.numeric(as.character(gsub(&amp;quot;,&amp;quot;, &amp;quot;&amp;quot;, x))))
+
+sums &amp;lt;- ddply(dat, .(State), numcolwise(sum))
+
+sorteddf &amp;lt;- sums[order(-sums$Total.Hisp),][1:10,]
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I&amp;rsquo;ve now identified the 10 states with the largest Hispanic populations, and aggregated the different ancestry columns by state.  I now needed to decide how to visualize these data.  I elected to use the &lt;a href=&#34;http://dimplejs.org/&#34;&gt;dimple&lt;/a&gt; D3 library, which is available through rCharts.  My hope was to create something like &lt;a href=&#34;http://dimplejs.org/examples_viewer.html?id=bars_horizontal_stacked_100pct&#34;&gt;this horizontal 100% chart&lt;/a&gt;, which would allow direct comparison of the Hispanic population composition of these states.  Fortunately, rCharts makes this straightforward.  I first created a new data frame that held percentages instead of raw counts, reshaped it into a suitable format, and called rCharts&amp;rsquo; &lt;code&gt;dPlot&lt;/code&gt; function to create the chart.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;newdf &amp;lt;- data.frame(sorteddf$State)
+
+vals &amp;lt;- c(&#39;Mexican&#39;, &#39;Puerto.Rican&#39;, &#39;Cuban&#39;, &#39;Salvadoran&#39;, &#39;Dominican&#39;, &#39;Guatemalan&#39;, &#39;Other&#39;)
+
+for (v in vals) {
+  newdf[[v]] &amp;lt;- round(((sorteddf[[v]] / sorteddf$Total.Hisp) * 100), 1)
+}
+
+names(newdf) &amp;lt;- c(&#39;State&#39;, vals)
+
+df.melt &amp;lt;- melt(newdf, variable.name = &#39;Ancestry&#39;, value.name = &#39;Share&#39;)
+
+d1 &amp;lt;- dPlot(
+  x = &amp;quot;Share&amp;quot;, 
+  y = &amp;quot;State&amp;quot;, 
+  groups = &amp;quot;Ancestry&amp;quot;, 
+  data = df.melt, 
+  type = &#39;bar&#39;)
+
+#Here, set the chart options to tell rCharts how to format the visualization  
+d1$xAxis(type = &amp;quot;addPctAxis&amp;quot;)
+d1$yAxis(type = &amp;quot;addCategoryAxis&amp;quot;, orderRule = &amp;quot;State&amp;quot;)
+
+d1$legend( x = 60, y = 10, width = 700, height = 20, horizontalAlign = &amp;quot;left&amp;quot;, orderRule = &amp;quot;Ancestry&amp;quot;)
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Below, you can see the result:&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;iframe-src-http-bl-ocks-org-walkerke-raw-8300770-width-825-height-450-seamless-frameborder-0-iframe&#34;&gt;&lt;iframe src=&#34;http://bl.ocks.org/walkerke/raw/8300770/&#34; width=&#34;825&#34; height=&#34;450&#34; seamless frameBorder = &#34;0&#34;&gt;&lt;/iframe&gt;&lt;/h2&gt;
+
+&lt;p&gt;The plot has accomplished what I hoped - displaying the considerable diversity of the Hispanic population across different states in the U.S.  The key here to the chart is the interactivity; while I could have produced a static visualization just like this, each component of the chart provides a tooltip on hover that gives specific information about its content.  I now have a more interactive document that I can explore with my students.&lt;/p&gt;
+
+&lt;p&gt;As the chart reveals, Hispanics are generally of Mexican origin in several states, including my state of Texas, where 84% of Hispanics are of Mexican ancestry; this will be the frame of reference for my students.  However, I can show students how in other parts of the country, such as my old home of New York, &amp;lsquo;Hispanic&amp;rsquo; means something very different, as individuals of Mexican heritage only make up 13% of the state&amp;rsquo;s Hispanic population.  It is also interesting to see how the &amp;lsquo;Other&amp;rsquo; category varies by state.  In some states (New York, New Jersey, New Mexico, Florida), this category is very large.  The &lt;a href=&#34;http://www.pewhispanic.org/files/2012/06/The-10-Largest-Hispanic-Origin-Groups.pdf&#34;&gt;Pew Center report provides some additional information on this&lt;/a&gt;; for example, many Colombians, Hondurans, and Peruvians live in the Miami area, and Queens, NYC has a large Ecuadorian population.  In New Mexico, the data reflect the Spanish and Native American heritage of many Hispanics in the state.&lt;/p&gt;
+
+&lt;p&gt;There are still some improvements that could be made; for example, in some browsers, the y-axis title is partially hidden, which I need to look into further.  Also, in order to get the effects to work correctly, I had to modify the version of Dimple in the HTML to point to version 1.1.3 (rCharts is still on 1.1.1).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;To create this chart on your computer, follow these steps:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Visit the &lt;a href=&#34;http://www.pewhispanic.org/2012/09/06/population-distribution-of-hispanic-origin-groups-by-county/&#34;&gt;Pew Research Center site&lt;/a&gt;, download the Excel file they make available, and save it as a CSV in your working directory (don&amp;rsquo;t change the name, just the type).&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;Be sure that you have the following R packages installed: &lt;code&gt;stringr&lt;/code&gt;, &lt;code&gt;plyr&lt;/code&gt;, &lt;code&gt;rCharts&lt;/code&gt;, and &lt;code&gt;reshape2&lt;/code&gt;.  &lt;code&gt;rCharts&lt;/code&gt; is not yet on CRAN, so you&amp;rsquo;ll need to install it from GitHub with the &lt;code&gt;devtools&lt;/code&gt; package.  I use the &lt;code&gt;dev&lt;/code&gt; branch of rCharts, which has the latest updates; you can install this with the command, &lt;code&gt;devtools::install_github(&#39;rCharts&#39;, &#39;ramnathv&#39;, ref=&#39;dev&#39;)&lt;/code&gt;.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;Run the following command: &lt;code&gt;source(&amp;quot;https://raw.github.com/walkerke/teaching-with-datavis/master/hispanics-by-state.R&amp;quot;)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Type &lt;code&gt;d1&lt;/code&gt; in your console, and you&amp;rsquo;ll have your chart!&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Alternatively, feel free to grab the code from GitHub and modify it as you wish.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;d love to hear your feedback; you can send me an email at &lt;a href=&#34;mailto:kyle.walker@tcu.edu&#34;&gt;kyle.walker@tcu.edu&lt;/a&gt;, or connect with me on &lt;a href=&#34;https://twitter.com/kyle_e_walker&#34;&gt;Twitter&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Thanks to:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.pewhispanic.org/&#34;&gt;The Pew Research Center&amp;rsquo;s Hispanic Trends Project&lt;/a&gt; for making their data publicly available;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://twitter.com/ramnath_vaidya&#34;&gt;Ramnath Vaidyanathan&lt;/a&gt; and &lt;a href=&#34;https://twitter.com/timelyportfolio&#34;&gt;Timely Portfolio&lt;/a&gt; for their efforts and tutorials on rCharts;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://twitter.com/jkiernander&#34;&gt;John Kiernander&lt;/a&gt; for the DimpleJS library;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://twitter.com/hadleywickham&#34;&gt;Hadley Wickham&lt;/a&gt; and the &lt;a href=&#34;https://twitter.com/rstudioapp&#34;&gt;RStudio team&lt;/a&gt; for making R a much better place to work with data.&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

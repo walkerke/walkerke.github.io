@@ -1,0 +1,23 @@
+---
+title: "Trump vote by education by state"
+author: "Kyle Walker"
+date: "December 15, 2016"
+output: 
+  html_document: 
+    theme: spacelab
+---
+
+Use the drop-down menu below to explore county-level voting for President-Elect Donald Trump in 2016 by educational attainment by state.  
+
+```{r, echo = FALSE}
+library(stringr)
+library(bsselectR)
+
+state_plots <- paste0(list.files("plots", full.names = TRUE))
+names(state_plots) <- str_replace_all(state_plots, 
+                                      c("\\.png" = "", 
+                                        "plots/" = ""))
+
+bsselect(state_plots, type = "img", selected = "Oregon", 
+         live_search = TRUE, show_tick = TRUE)
+```

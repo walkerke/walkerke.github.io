@@ -1,0 +1,102 @@
+---
+title: "Geo-faceted population pyramids with tidycensus 0.3"
+author: "Kyle Walker"
+date: 2017-10-17T08:00:00
+tags: ["r", "census", "tidycensus"]
+slug: geofaceted-pyramids
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, out.width = "100%")
+library(tidycensus)
+census_api_key("5ed58a5745802102fb83d4eec5d1f7326f65ffab")
+```
+
+Version 0.3 of [the tidycensus R package](https://walkerke.github.io/tidycensus/) is now available on CRAN.  The big change in this new release is the ability to fetch entire tables of Census or ACS data without having to construct a list of variable names.  The table prefix should be passed to the new `table` parameter in the `get_decennial()` or `get_acs()` functions to work.  
+
+I'd like to illustrate this below by showing you how to create faceted population pyramids with the [geofacet R package](https://hafen.github.io/geofacet/), a package that allows you to create faceted ggplot2 plots in a way that represents the geographic position of the plot data.  
+
+To get started, let's get data on age and sex - required to create population pyramids - using the new `table` parameter in tidycensus.  
+
+```{r}
+library(tidycensus)
+library(tidyverse)
+library(stringr)
+
+# If not installed, install your Census API key with `census_api_key("KEY", install = TRUE)`
+
+age <- get_decennial(geography = "state", table = "P012", summary_var = "P0010001") %>%
+  mutate(variable = str_replace(variable, "P01200", "")) %>%
+  filter(!variable %in% c("01", "02", "26")) %>%
+  arrange(NAME, variable)
+
+head(age)
+
+```
+
+I've fetched all age and sex data from Census 2010 table P012, then removed three variables in the table, representing total population, total male population, and total female population, respectively.  
+
+I now do some data wrangling to get group percentages by state for 5-year age bands, as the Census data by default returns some age bands that are more refined than 5 years.  I define my desired age categories, calculate a group sum and then percentage, and then set all male values to negative to display them on the left-hand side of the population pyramids.  
+
+```{r}
+agegroups <- c("0-4", "5-9", "10-14", "15-19", "15-19", "20-24", "20-24", 
+               "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", 
+               "55-59", "60-64", "60-64", "65-69", "65-69", "70-74", "75-79", 
+               "80-84", "85+")
+
+agesex <- c(paste("Male", agegroups), 
+            paste("Female", agegroups))
+
+age$group <- rep(agesex, length(unique(age$NAME)))
+
+age2 <- age %>%
+  group_by(NAME, group) %>%
+  mutate(group_est = sum(value)) %>%
+  distinct(NAME, group, .keep_all = TRUE) %>%
+  ungroup() %>%
+  mutate(percent = 100 * (group_est / summary_value)) %>%
+  select(name = NAME, group, percent) %>%
+  separate(group, into = c("sex", "age"), sep = " ") %>%
+  mutate(age = factor(age, levels = unique(age)), 
+         percent = ifelse(sex == "Female", percent, -percent)) 
+
+head(age2)
+```
+
+I now can create a geofaceted plot with ggplot2.  The population pyramids are back-to-back bar charts categorized by sex, and the `facet_geo()` function in the __geofacet__ package puts the plots in geographically appropriate positions.  
+
+```{r, eval = FALSE}
+library(geofacet)
+library(extrafont)
+
+xlabs = c("0-4" = "0-4", "5-9" = "", "10-14" = "", "15-19" = "", "20-24" = "", 
+          "25-29" = "", "30-34" = "", "35-39" = "", "40-44" = "", "45-49" = "", 
+          "50-54" = "", "55-59" = "", "60-64" = "", "65-69" = "", "70-74" = "", 
+          "75-79" = "", "80-84" = "", "85+" = "85+")
+
+ggplot(data = age2, aes(x = age, y = percent, fill = sex)) +
+  geom_bar(stat = "identity", width = 1) + 
+  scale_y_continuous(breaks=c(-5, 0, 5),labels=c("5%", "0%", "5%")) + 
+  coord_flip() + 
+  theme_minimal(base_family = "Tahoma") + 
+  scale_x_discrete(labels = xlabs) + 
+  scale_fill_manual(values = c("red", "navy")) + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        strip.text.x = element_text(size = 6)) + 
+  labs(x = "", y = "", fill = "", 
+       title = "Demographic structure of US states", 
+       caption = "Data source: 2010 US Census, tidycensus R package.  Chart by @kyle_e_walker.") + 
+  facet_geo(~ name, grid = "us_state_grid2", move_axes = TRUE) 
+```
+
+<img src="https://walkerke.github.io/img/pyramids.png" style="width:100%">
+
+Many states look quite similar, though there are a few notable outliers.  These include high-fertility states like Utah and Idaho, reflected in their proportionally larger young populations, as well as DC's urban profile with a sizeable population of residents in their 20s and 30s.  
+
+Within-state differences are perhaps more interesting; I'm in the process of creating these types of graphs at the county level by state and posting them to Twitter as I go, like the example below: 
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Comparative population pyramids for Arizona counties, with <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> code to reproduce/modify: <a href="https://t.co/Ac1ZrFeUwe">https://t.co/Ac1ZrFeUwe</a> <a href="https://twitter.com/hashtag/tidycensus?src=hash&amp;ref_src=twsrc%5Etfw">#tidycensus</a> <a href="https://twitter.com/hashtag/geofacet?src=hash&amp;ref_src=twsrc%5Etfw">#geofacet</a> <a href="https://t.co/hvSu4rhZ5Q">pic.twitter.com/hvSu4rhZ5Q</a></p>&mdash; Kyle Walker (@kyle_e_walker) <a href="https://twitter.com/kyle_e_walker/status/919997361417359360?ref_src=twsrc%5Etfw">October 16, 2017</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+I'll be creating a website that eventually will show the demographic structure of counties across the US.  

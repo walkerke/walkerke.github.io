@@ -1,0 +1,30 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Walker Data",
+    "section": "",
+    "text": "Demographic analysis / Census data\nBusiness and location intelligence\nGeographic Information Systems (GIS) and spatial data science\nTraining in the R and Python programming languages\n\n\n  \n  \n    \n      \n      Expert demographics and data science advisory\n    \n  \n  \n    \n      \n      Sophisticated location intelligence solutions for your business\n    \n  \n  \n    \n      \n      R and GIS training from the developer of the tidycensus R package\n    \n  \n  \n    \n      \n      Read the book Analyzing US Census Data: Methods, Maps, and Models in R\n    \n  \n\n\n\n\n\nTo receive on-going updates from Walker Data, consider signing up for the Walker Data mailing list:"
+  },
+  {
+    "objectID": "posts/post-with-code/index.html",
+    "href": "posts/post-with-code/index.html",
+    "title": "Post With Code",
+    "section": "",
+    "text": "This is a post with executable code."
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "Since this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "I am the author of the book Analyzing US Census Data: Methods, Maps, and Models in R, which is free to read online and is forthcoming with CRC Press in 2022.\n\nI’m an R developer actively working on the following packages:\n\ntidycensus, which helps R users get demographic & spatial data from the US Census Bureau ready-to-go for use in their analyses;\ntigris, which downloads US Census Bureau spatial data and loads it directly into R as simple features objects;\nmapboxapi, an R interface to Mapbox web services. Use the package to optimize routes, draw isochrones, read and write vector tiles, use custom Mapbox maps in Leaflet projects, and more;\ncrsuggest, which gives R users projected coordinate system suggestions for their spatial datasets.\n\n\nI’m an academic researching data science and visualization tools for spatial demography. I’m currently teaching courses in exploratory data analysis with Python and introductory Urban Studies.\n\nI am Director of Research at a boutique data science and strategy firm, where we use cutting-edge geospatial & machine learning methods to improve companies’ business outcomes.\n\nI also consult through my personal firm, Walker Data, where I work with individual clients and organizations to integrate tools like tidycensus into their workflows and to learn R and spatial data analysis.\n\nIf you are interested in working with me, send me a note at kyle@walker-data.com and let’s discuss your idea!"
+  }
+]

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Visualizing international demographic indicators with idbr and Plotly  &middot; Kyle Walker</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="R, ">
+
+
+<meta property="og:title" content="Visualizing international demographic indicators with idbr and Plotly  &middot; Kyle Walker ">
+<meta property="og:site_name" content="Kyle Walker"/>
+<meta property="og:url" content="http://walkerke.github.io/2016/01/29/visualizing-international-demographic-indicators-with-idbr-and-plotly/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="2016-01-29T00:00:00Z" />
+<meta property="og:article:modified_time" content="2016-01-29T00:00:00Z" />
+
+  
+    
+<meta property="og:article:tag" content="R">
+    
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@kyle_e_walker" />
+<meta name="twitter:creator" content="@kyle_e_walker" />
+<meta name="twitter:title" content="Visualizing international demographic indicators with idbr and Plotly" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="http://walkerke.github.io/2016/01/29/visualizing-international-demographic-indicators-with-idbr-and-plotly/" />
+<meta name="twitter:domain" content="http://walkerke.github.io">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Visualizing international demographic indicators with idbr and Plotly",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "2016-01-29",
+    "description": "",
+    "wordCount":  704 
+  }
+</script>
+
+
+
+<link rel="canonical" href="http://walkerke.github.io/2016/01/29/visualizing-international-demographic-indicators-with-idbr-and-plotly/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://walkerke.github.io/touch-icon-144-precomposed.png">
+<link href="http://walkerke.github.io/favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="http://walkerke.github.io/css/font-awesome.min.css">
+<link rel="stylesheet" href="http://walkerke.github.io/css/style.css">
+<link rel="stylesheet" href="http://walkerke.github.io/css/highlight/zenburn.css">
+
+  <!DOCTYPE HTML>
+<style>
+  
+  .main_wrapper>.main_header {
+    background-color: #035004;
+    color: #fff;
+  }
+  
+  .main_wrapper>.main_content .label:hover,
+  .main_wrapper>.main_content .navigation a:hover,
+  .main_wrapper>.main_content .pagination a:hover,
+  .main_wrapper>.main_content .readlink a:hover,
+  .main_wrapper>.main_content h2 a:hover,
+  .main_wrapper>.main_header a:hover {
+    background-color: #035004;
+    color: #fff;
+    text-decoration: none; 
+}
+
+  a {
+    color: #1a730f; 
+  }
+  
+  a:active, a:focus, a:hover {
+    color: #035004;
+}
+  
+</style>
+
+</head>
+<body class="map[name:superhero]">
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="http://walkerke.github.io">
+  Kyle Walker
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Writing about visualization, demographics, dashboards, and spatial data science.
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="http://walkerke.github.io/about">About</a>
+
+<a href="http://walkerke.github.io/post" title="Show list of posts">Posts</a>
+
+<a href="http://walkerke.github.io/tags" title="Show list of tags">Tags</a>
+
+<a href="http://walkerke.github.io/services">Services</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+<a id="contact-link-email" class="contact_link" href="mailto:kwalkerdata@gmail.com">
+  <span class="fa fa-envelope-square"></span><span>email</span></a>
+
+
+
+<a id="contact-link-github" class="contact_link" href="https://github.com/walkerke">
+  <span class="fa fa-github-square"></span><span>github</span></a>
+
+
+
+
+
+<a id="contact-link-linkedin" class="contact_link" href="https://www.linkedin.com/in/walkerke">
+  <span class="fa fa-linkedin-square"></span><span>linkedin</span></a>
+
+
+
+
+
+
+
+<a id="contact-link-twitter" class="contact_link" href="https://twitter.com/kyle_e_walker">
+  <span class="fa fa-twitter-square"></span><span>twitter</span></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1>Visualizing international demographic indicators with idbr and Plotly
+</h1>
+
+  <div class="metas">
+<time datetime="2016-01-29">29 Jan, 2016</time>
+
+
+  
+    &middot; by Kyle Walker
+  
+  &middot; Read in about 4 min
+  &middot; (704 Words)
+  <br>
+  
+<a class="label" href="http://walkerke.github.io/tags/r">R</a>
+
+
+
+</div>
+
+</header>
+
+  <div class="container content">
+  <p>It&rsquo;s been a while since I last posted here - but I&rsquo;ve been working on a new R package that I&rsquo;m quite excited about, and I thought this would be the right place to post.  My new package, <strong>idbr</strong>, is an R interface to the <a href="http://www.census.gov/data/developers/data-sets/international-database.html">United States Census Bureau&rsquo;s International Data Base API</a>.  The IDB includes a host of international demographic indicators - including historical data and projections to 2050.  I use IDB data all of the time for my teaching - and <strong>idbr</strong> makes the process of getting the data much easier!  While this product uses the Census Bureau Data API, it is not endorsed or certified by the Census Bureau.</p>
+
+<p>Install from CRAN with the following command:</p>
+
+<pre><code class="language-r">install.packages('idbr')
+</code></pre>
+
+<p>To get started, you&rsquo;ll need a Census API key; this can be obtained from <a href="http://api.census.gov/data/key_signup.html">http://api.census.gov/data/key_signup.html</a> if you don&rsquo;t already have one.  Before downloading data, set your API key for your <strong>idbr</strong> session with the <code>set_api_key</code> function:</p>
+
+<pre><code class="language-r">library(idbr)
+
+idb_api_key('Your API key goes here')
+</code></pre>
+
+<p>There are two main functions in the <strong>idbr</strong> package.  <code>idb1</code> fetches population data by one-year age bands for one or more countries in one or more years, optionally by age ranges or by sex.  <code>idb5</code> has a lot more indicators available, including total fertility rate, life expectancy, and population by five-year age ranges.  To view all of the variables available in the <code>idb</code> function, call <code>idb_variables()</code>.  Groups of similar variables, termed <strong>concepts</strong>, can be fetched at once; see the available concepts with <code>idb_concepts()</code>.</p>
+
+<p>Below are some examples of how to use the package with Plotly&rsquo;s fantastic new R client.  Browse the code for <strong>idbr</strong> at <a href="https://github.com/walkerke/idbr">https://github.com/walkerke/idbr</a>, and please let me know if you have any feedback!</p>
+
+<p><strong>Please note</strong>: the embedded visualizations are crashing my browser on my mobile device, so I&rsquo;ve set it so they won&rsquo;t show up on phones.  To view the graphics, take a look at the post on your computer.</p>
+
+<p><strong>World map of infant mortality rates by country for 2016:</strong></p>
+
+<pre><code class="language-r">library(plotly)
+library(viridis)
+
+df &lt;- idb5(country = 'all', year = 2016, variable = 'IMR', country_name = TRUE)
+
+plot_ly(df, z = IMR, text = NAME, locations = NAME, locationmode = 'country names',
+        type = 'choropleth', colors = viridis(99), hoverinfo = 'text+z') %&gt;%
+  layout(title = 'Infant mortality rate (per 1000 live births), 2016', 
+         geo = list(projection = list(type = 'robinson')))
+</code></pre>
+
+<iframe src="http://personal.tcu.edu/kylewalker/r/imr.html" frameborder = "0" scrolling = "no" width = "800" height = "500"></iframe>
+
+<p><strong>Projected population pyramid of China in 2050:</strong></p>
+
+<pre><code class="language-r">library(dplyr)
+
+male &lt;- idb1('CH', 2050, sex = 'male') %&gt;%
+  mutate(POP = POP * -1,
+         SEX = 'Male')
+
+female &lt;- idb1('CH', 2050, sex = 'female') %&gt;%
+  mutate(SEX = 'Female')
+
+china &lt;- rbind(male, female) %&gt;%
+  mutate(abs_pop = abs(POP))
+
+plot_ly(china, x = POP, y = AGE, color = SEX, type = 'bar', orientation = 'h',
+        hoverinfo = 'y+text+name', text = abs_pop, colors = c('red', 'gold')) %&gt;%
+  layout(bargap = 0.1, barmode = 'overlay',
+         xaxis = list(tickmode = 'array', tickvals = c(-10000000, -5000000, 0, 5000000, 10000000),
+         ticktext = c('10M', '5M', '0', '5M', '10M')), 
+         title = 'Projected population structure of China, 2050')
+</code></pre>
+
+<iframe src="http://personal.tcu.edu/kylewalker/r/china.html" frameborder = "0" scrolling = "no" width = "800" height = "500"></iframe>
+
+<p><strong>Life expectancy at birth by sex compared in a Shiny app</strong></p>
+
+<p>First, get the data from <strong>idbr</strong> then save out (so you don&rsquo;t have to call the API each time):</p>
+
+<pre><code class="language-r"># setup.R
+
+library(idbr)
+
+idb_api_key(&quot;Your API key here&quot;)
+
+full &lt;- idb5(country = 'all', year = '2016', variables = c('E0_F', 'E0_M'), country_name = TRUE)
+
+save(full, file = 'idbr_data.rds')
+</code></pre>
+
+<p>Next, build the app:</p>
+
+<pre><code class="language-r"># app.R
+
+library(shiny)
+library(countrycode)
+library(plotly)
+library(dplyr)
+library(tidyr)
+
+load('idbr_data.rds')
+
+ui &lt;- fluidPage(
+
+  titlePanel(&quot;Life expectancy at birth by country and sex&quot;),
+
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(&quot;region&quot;,
+                  &quot;Select region to plot:&quot;,
+                  choices = sort(unique(countrycode_data$region)),
+                  selected = 'Northern Africa')
+    ),
+
+    mainPanel(
+      plotlyOutput(&quot;dumbbell&quot;)
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+
+  regiondf &lt;- reactive({
+
+    reg &lt;- countrycode_data[countrycode_data$region == input$region, ]
+
+    fips &lt;- reg$fips104
+
+    sub &lt;- full %&gt;%
+      filter(FIPS %in% fips) %&gt;%
+      rename(Male = E0_M, Female = E0_F) %&gt;%
+      arrange(Female)
+
+    sub
+
+  })
+
+  output$dumbbell &lt;- renderPlotly({
+
+    regiondf() %&gt;%
+      gather(Sex, value, Male, Female) %&gt;%
+      plot_ly(x = value, y = NAME, mode = 'lines',
+              group = NAME, showlegend = FALSE, line = list(color = 'gray'),
+              hovermode = FALSE, hoverinfo = 'none') %&gt;%
+      add_trace(x = value, y = NAME, color = Sex, mode = 'markers',
+              colors = c('darkred', 'navy'), marker = list(size = 10)) %&gt;%
+      layout(xaxis = list(title = 'Life expectancy at birth'),
+             yaxis = list(title = ''),
+             margin = list(l = 120))
+
+  })
+
+}
+
+shinyApp(ui = ui, server = server)
+</code></pre>
+
+<iframe src="https://walkerke.shinyapps.io/idbr_dumbbell/" frameborder = "0" scrolling = "no" width = "800" height = "500"></iframe>
+
+</div>
+
+
+  <footer class="container">
+  <div class="container navigation no-print">
+  <h2>Navigation</h2>
+  
+  
+
+    
+    <a class="prev" href="http://walkerke.github.io/2015/12/12/acs14lite/" title="acs14lite: A lightweight R interface to the 2010-2014 ACS API">
+      Previous
+    </a>
+    
+
+    
+    <a class="next" href="http://walkerke.github.io/2016/05/18/using-a-new-mapbox-studio-map-in-an-r-leaflet-project/" title="Using a new Mapbox Studio map in an R Leaflet project">
+      Next
+    </a>
+    
+
+  
+
+
+</div>
+
+  
+
+</footer>
+
+</article>
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+
+</div>
+
+
+  
+<div class="container copyright">
+  
+  &copy; 2016 Kyle Walker
+
+
+</div>
+
+
+</div>
+
+</footer>
+
+    </main>
+    
+<script type="text/javascript">
+  (function() {
+    
+    
+    if (window.location.hostname == "localhost")
+      return;
+
+    var dsq = document.createElement('script'); dsq.async = true; dsq.type = 'text/javascript';
+    dsq.src = '//your_disqus_shortname.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+
+<script src="http://walkerke.github.io/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+    
+  </body>
+</html>
+

@@ -1,0 +1,63 @@
+---
+title: "Using a new Mapbox Studio map in an R Leaflet project"
+author: "Kyle Walker, Texas Christian University"
+date: 2016-05-18
+tags: ["R", "Mapbox"]
+---
+
+[Mapbox](http://www.mapbox.com) recently announced that map styles designed in the new [Mapbox Studio](http://www.mapbox.com/studio) are now available as basemaps in other platforms, such as Tableau, CartoDB, and ArcGIS Online: https://www.mapbox.com/blog/use-studio-styles-in-gis-tools/.  Previously, this wasn't possible due to these tools' incompatibility with the GL-based vector tiles produced by Studio.  However, Mapbox now translates GL vector tiles to tiles that are compatible with these products, as well as Leaflet.js, with its Tiles API: https://www.mapbox.com/blog/mapbox-studio-tiles-static/.  This means that beautiful maps designed in Studio are accessible to R users as well!
+
+Let's say that you have some data you'd like to plot on a map: 
+
+```{r}
+
+library(sp)
+library(leaflet)
+
+df <- data.frame(longitude = runif(10, -97.365268, -97.356546), 
+                 latitude = runif(10, 32.706071, 32.712210))
+
+coordinates(df) <- ~longitude+latitude
+
+leaflet(df) %>% addMarkers() %>% addTiles()
+
+```
+
+There are many great basemaps that you could use in RStudio's Leaflet package to provide a visual reference for the data; however, let's say that you've designed a basemap in Mapbox Studio that you'd like to use yourself.  With a little extra code, you can get this done!
+
+One use case of Mapbox Studio is to create tiled basemaps from georeferenced TIFF images, like scanned-in and georeferenced paper maps.  I've uploaded an old georeferenced map of TCU (we have new construction constantly here!) to my Mapbox Studio account and published it already as a style.  I then navigate to the style in Mapbox Studio, and look for the "Share and Use" link, which takes me to this screen: 
+
+![](tcu_mapbox.png)
+
+
+Under "Develop with this style" I click "Leaflet" which gives me a URL to use my Mapbox Studio style in a Leaflet project.  I then head back to RStudio, where I can pass this string to the `urlTemplate` parameter in the `addTiles()` function.  I add an attribution (be sure to do this if you are using Mapbox tiles and/or a georeferenced image) and generate the map.  
+
+```{r}
+
+tcu_map <- "https://api.mapbox.com/styles/v1/kwalkertcu/ciod1uxb6001otbmfpbulvzgj/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoia3dhbGtlcnRjdSIsImEiOiJjaW9jenN1OGwwNGZsdjRrcWZnazh2OXVxIn0.QJrmnV9lJzdXHkH95ERdjw"
+
+map_attr <- "© <a href='https://www.mapbox.com/map-feedback/'>Mapbox</a> Basemap © <a href='http://www.tcu.edu'>Texas Christian University</a>"
+
+leaflet(df) %>% 
+  addMarkers() %>%
+  addTiles(urlTemplate = tcu_map, attribution = map_attr)
+
+```
+
+Please note: your map won't show up in the RStudio Viewer pane; pop it out to a web browser to view it. 
+
+Of course, Mapbox Studio can also be used to generate your own custom basemaps by styling OpenStreetMap data right in the application.  When I first demo Mapbox Studio in class, we quickly run through the various options to show how easy it is to style the OpenStreetMap data - and often make rather garish-looking maps for fun, like the basemap below! 
+
+```{r}
+
+ugly_map <- "https://api.mapbox.com/styles/v1/kwalkertcu/cijvq6bl0006o3slwlamsjawk/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoia3dhbGtlcnRjdSIsImEiOiJjaW9jenN1OGwwNGZsdjRrcWZnazh2OXVxIn0.QJrmnV9lJzdXHkH95ERdjw"
+
+mb_attribution <- "© <a href='https://www.mapbox.com/map-feedback/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"
+
+leaflet(df) %>% 
+  addMarkers() %>%
+  addTiles(urlTemplate = ugly_map, attribution = mb_attribution)
+
+```
+
+Though the above is purposely not a good example, Mapbox is capable of stunning customized cartography, which is available to R users in their cartography projects, Shiny applications, etc.  

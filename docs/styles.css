@@ -1,0 +1,117 @@
+/* css styles */
+
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+.navbar-dark {
+    background-color: #1a730f;
+    color: white !important;
+  
+}
+
+#gis-demographics-and-data-science-consulting > h2 {
+  text-align: center;
+}
+
+#quarto-header > nav > div > div.navbar-brand-container > a > span {
+  color: white !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: white !important;
+}
+
+.navbar #quarto-search.type-overlay .aa-Autocomplete svg.aa-SubmitIcon {
+  color: white !important;
+}
+
+.navbar-title {
+  font-family: Raleway;
+}
+
+.quarto-title-banner {
+  background-color: #bfbfbd;
+  color: #1a730f;
+}
+
+a {
+  color: #1a730f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Open Sans, Helvetica, sans-serif;
+}
+
+/* Float four columns side by side */
+.card-column {
+  float: left;
+  width: 25%;
+  padding: 0 10px;
+}
+
+/* Remove extra left and right margins, due to padding in columns */
+.card-row {margin: 0 -5px;}
+
+/* Clear floats after the columns */
+.card-row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the counter cards */
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+  padding: 16px;
+  text-align: center;
+  background-color: #ffffff;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px 0 rgb(26, 115, 15, 0.9); /* this adds the "card" effect */
+  padding: 16px;
+  text-align: center;
+  background-color: #ffffff;
+}
+
+/* Responsive columns - one column layout (vertical) on small screens */
+@media screen and (max-width: 1000px) {
+  .card-column {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+  }
+  
+  .card img {
+    max-width: 250px;
+  }
+}
+
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-button {
+    font-size: 1em;
+    color: white;
+    background-color: #1a730f;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 50px;
+    text-align: center;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.custom-button:hover {
+    box-shadow: 0 0 3px #ffffff, 0 0 6px #ffffff, 0 0 9px #1a730f, 0 0 12px #1a730f;
+}

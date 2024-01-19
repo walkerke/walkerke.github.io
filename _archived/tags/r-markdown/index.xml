@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>KYLE WALKER DATA</title>
+    <link>/tags/r-markdown/index.xml</link>
+    <description>Recent content on KYLE WALKER DATA</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <managingEditor>kwalkerdata@gmail.com (Kyle Walker)</managingEditor>
+    <webMaster>kwalkerdata@gmail.com (Kyle Walker)</webMaster>
+    <copyright>(c) 2017 Kyle Walker</copyright>
+    <atom:link href="/tags/r-markdown/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Dropdown menus in R Markdown with bsselectR</title>
+      <link>/2016/12/rmd-dropdowns/</link>
+      <pubDate>Thu, 15 Dec 2016 00:00:00 +0000</pubDate>
+      <author>kwalkerdata@gmail.com (Kyle Walker)</author>
+      <guid>/2016/12/rmd-dropdowns/</guid>
+      <description>&lt;!-- BLOGDOWN-BODY-BEFORE
+
+/BLOGDOWN-BODY-BEFORE --&gt;
+
+&lt;p&gt;I strongly believe that interactive reports, presentations, and scholarly articles are going to become much more prominent in the years ahead. Whereas a PDF article or presentation can often only show a limited aspect of a research project, interactive documents can allow a reader or presenter to explore project content in a much broader sense.&lt;/p&gt;
+&lt;p&gt;For dynamic research documents, an excellent option is to combine Shiny with R Markdown to generate a report that can execute R code from a Shiny server. However, not all interactive documents need the full power of Shiny. For example, I’m currently writing a report in which I’d like readers to be able to use drop-down menus to select charts to view. As I produced the charts in Python and saved them all to a folder, I don’t need Shiny to dynamically create the charts in the report.&lt;/p&gt;
+&lt;p&gt;To create the drop-down menu, I came across the &lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/&#34;&gt;bootstrap-select&lt;/a&gt; jQuery plugin. bootstrap-select adds Bootstrap’s dropdown.js and Bootstrap styling to re-style HTML &lt;code&gt;&amp;lt;select&amp;gt;&lt;/code&gt; menus, which makes it a nice fit for R Markdown documents that default to this styling. While writing out the raw HTML and JavaScript to accomplish this worked in R Markdown, I found this tedious, so I decided to author &lt;strong&gt;bsselectR&lt;/strong&gt;, an htmlwidget to do this automatically with R code. Many, many thanks are due to the developers of bootstrap-select for their hard work and excellent documentation.&lt;/p&gt;
+&lt;p&gt;bsselectR is not on CRAN, but you can install the development version from GitHub with &lt;code&gt;devtools::install_github(&amp;quot;walkerke/bsselectR&amp;quot;)&lt;/code&gt;. View the source code at &lt;a href=&#34;https://github.com/walkerke/bsselectR&#34; class=&#34;uri&#34;&gt;https://github.com/walkerke/bsselectR&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;At the moment, there is one main function in bsselectR, &lt;code&gt;bsselect&lt;/code&gt;, which will generate a bootstrap-select dropdown menu that allows you to interactively display text, images, or HTML documents as iframes. Pass a named vector of text or paths to images/HTML documents and specify the type as &lt;code&gt;&amp;quot;text&amp;quot;&lt;/code&gt;, &lt;code&gt;&amp;quot;img&amp;quot;&lt;/code&gt;, or &lt;code&gt;&amp;quot;iframe&amp;quot;&lt;/code&gt;, and &lt;code&gt;bsselect&lt;/code&gt; will return a drop-down menu. On a basic level, &lt;code&gt;bsselect&lt;/code&gt; can work outside of R Markdown, using the default Bootstrap styling. Let’s try a simple example:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(bsselectR)
+
+quotes &amp;lt;- c(&amp;quot;Look deep into nature, and then you will understand everything better.&amp;quot;, 
+            &amp;quot;A fool thinks himself to be wise, but a wise man knows himself to be a fool.&amp;quot;, 
+            &amp;quot;My mission in life is not merely to survive, but to thrive; and to do so with some passion, some compassion, some humor, and some style.&amp;quot;)
+
+names(quotes) &amp;lt;- c(&amp;quot;Einstein&amp;quot;, &amp;quot;Shakespeare&amp;quot;, &amp;quot;Angelou&amp;quot;)
+
+bsselect(quotes, type = &amp;quot;text&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;iframe src=&#34;https://walkerke.github.io/extras/quotes.html&#34; height=&#34;150&#34; width=&#34;750&#34; frameborder=&#34;0&#34; scrolling=&#34;no&#34;&gt;
+&lt;/iframe&gt;
+&lt;p&gt;Use the menu to flip through the three quotes.&lt;/p&gt;
+&lt;p&gt;A more practical example, however, would be the use of &lt;code&gt;bsselect&lt;/code&gt; in an R Markdown document where the user could flip through a number of plots that are stored in a subdirectory. Let’s take a recent, applied example: scatterplots of the relationship between the percentage vote for Donald Trump and the percentage of county residents with at least a bachelor’s degree by state.&lt;/p&gt;
+&lt;p&gt;We’ll get the election data from &lt;a href=&#34;https://github.com/mkearney/presidential_election_county_results_2016&#34;&gt;Mike Kearney’s open presidential election dataset&lt;/a&gt; (updated December 9, so there may be some undercounts) and education data from the ACS using my personal &lt;a href=&#34;https://github.com/walkerke/acs14lite&#34;&gt;acs14lite package&lt;/a&gt;. The following code will generate identical plots for each state, and save them in a subdirectory of my working directory named &lt;code&gt;plots&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+library(scales)
+library(acs14lite)
+
+votes16 &amp;lt;- read_csv(&amp;quot;https://raw.githubusercontent.com/mkearney/presidential_election_county_results_2016/master/pres.elect16.results.dec9.csv&amp;quot;)
+
+vars_to_get &amp;lt;- c(&amp;quot;B15002_001E&amp;quot;, &amp;quot;B15002_015E&amp;quot;, &amp;quot;B15002_016E&amp;quot;,  &amp;quot;B15002_017E&amp;quot;,  &amp;quot;B15002_018E&amp;quot;,
+                 &amp;quot;B15002_032E&amp;quot;,  &amp;quot;B15002_033E&amp;quot;,  &amp;quot;B15002_034E&amp;quot;,  &amp;quot;B15002_035E&amp;quot;, &amp;quot;B01001_001E&amp;quot;)
+
+educ &amp;lt;- acs14(api_key = &amp;quot;Your key goes here&amp;quot;, 
+              geography = &amp;quot;county&amp;quot;, variable = vars_to_get)
+
+educ &amp;lt;- educ %&amp;gt;%
+  mutate(pctba = (B15002_015E + B15002_016E + B15002_017E + B15002_018E + B15002_032E + 
+                    B15002_033E + B15002_034E + B15002_035E)  / B15002_001E, 
+         fips = paste0(state, county))
+
+state_match &amp;lt;- data.frame(state_name = state.name, st = state.abb)
+
+df &amp;lt;- votes16 %&amp;gt;%
+  mutate(fips = stringr::str_pad(fips, 5, &amp;quot;left&amp;quot;, &amp;quot;0&amp;quot;)) %&amp;gt;%
+  filter(cand == &amp;quot;Donald Trump&amp;quot;) %&amp;gt;%
+  inner_join(educ, by = &amp;quot;fips&amp;quot;) %&amp;gt;%
+  left_join(state_match, by = &amp;quot;st&amp;quot;)
+
+states &amp;lt;- as.character(sort(unique(df$state_name)))
+states &amp;lt;- states[!is.na(states)]
+states &amp;lt;- states[!states %in% c(&amp;quot;District of Columbia&amp;quot;, &amp;quot;Alaska&amp;quot;)]
+
+plots &amp;lt;- lapply(states, function(x) {
+  
+  state = filter(df, state_name == x)
+  
+  p &amp;lt;- ggplot(state, aes(x = pctba, 
+              y = pct)) +
+    geom_point(aes(size = B01001_001E), alpha = 0.5, color = &amp;quot;blue&amp;quot;) + 
+    geom_smooth(method = &amp;quot;lm&amp;quot;) + 
+    scale_y_continuous(labels = percent_format()) + 
+    scale_x_continuous(labels = percent_format()) + 
+    scale_size_continuous(labels = comma_format()) + 
+    theme_minimal() + 
+    labs(title = x, 
+         x = &amp;quot;Percent over age 25 with at least a bachelor&amp;#39;s degree&amp;quot;, 
+         y = &amp;quot;Percent voting Trump&amp;quot;, 
+         size = &amp;quot;Total population&amp;quot;, 
+         caption = &amp;quot;Data sources: Mike Kearney, 2010-2014 ACS&amp;quot;)
+  
+  p
+  
+})
+
+paths &amp;lt;- paste0(states, &amp;quot;.png&amp;quot;)
+
+pwalk(list(paths, plots), ggsave, path = &amp;quot;plots&amp;quot;, dpi = 300)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, the following code in an R Markdown document knit from my working directory will get me interactivity without Shiny! I’ve also set the selected option to “Oregon”, and the parameters &lt;code&gt;live_search&lt;/code&gt; and &lt;code&gt;show_tick&lt;/code&gt; to &lt;code&gt;TRUE&lt;/code&gt;, which allows for interactive searching of the drop-down menu and shows a check mark next to the selected option. The bootstrap-select dropdown adopts the theme of the R Markdown document, which in this case is &lt;code&gt;spacelab&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(stringr)
+library(bsselectR)
+
+state_plots &amp;lt;- paste0(list.files(&amp;quot;plots&amp;quot;, full.names = TRUE))
+names(state_plots) &amp;lt;- str_replace_all(state_plots, 
+                                      c(&amp;quot;\\.png&amp;quot; = &amp;quot;&amp;quot;, 
+                                        &amp;quot;plots/&amp;quot; = &amp;quot;&amp;quot;))
+
+bsselect(state_plots, type = &amp;quot;img&amp;quot;, selected = &amp;quot;Oregon&amp;quot;, 
+         live_search = TRUE, show_tick = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;iframe src=&#34;https://walkerke.github.io/extras/trump_by_education.html&#34; width=&#34;100%&#34; height=&#34;825&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34;&gt;
+&lt;/iframe&gt;
+&lt;p&gt;Publish your directory to your hosting service of choice, and you’ll have an interactive report to share like the one above.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;bsselect&lt;/code&gt; also works in other R Markdown documents, such as presentations! The example below shows a bsselectR dropdown in a &lt;a href=&#34;https://github.com/yihui/xaringan&#34;&gt;xaringan&lt;/a&gt; &lt;a href=&#34;https://remarkjs.com/#1&#34;&gt;remark.js&lt;/a&gt; presentation. To avoid CSS/JS conflicts, I’ve wrapped the call to &lt;code&gt;bsselect&lt;/code&gt; in bsselectR’s &lt;code&gt;as_iframe&lt;/code&gt; function, which will save out the widget and embed it as an iframe.&lt;/p&gt;
+&lt;iframe src=&#34;https://walkerke.github.io/extras/xaringan.html&#34; width=&#34;100%&#34; height=&#34;600&#34; frameborder=&#34;0&#34;&gt;
+&lt;/iframe&gt;
+&lt;p&gt;I’d welcome feedback and pull requests; I’ll be adding features to the package bit by bit in the time ahead.&lt;/p&gt;
+
+
+
+&lt;!-- BLOGDOWN-HEAD
+
+
+
+
+
+
+/BLOGDOWN-HEAD --&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

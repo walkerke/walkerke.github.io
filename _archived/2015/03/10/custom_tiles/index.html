@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Using custom tiles in an RStudio Leaflet map  &middot; Kyle Walker</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="">
+
+
+<meta property="og:title" content="Using custom tiles in an RStudio Leaflet map  &middot; Kyle Walker ">
+<meta property="og:site_name" content="Kyle Walker"/>
+<meta property="og:url" content="http://walkerke.github.io/2015/03/10/custom_tiles/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="2015-03-10T00:00:00Z" />
+<meta property="og:article:modified_time" content="2015-03-10T00:00:00Z" />
+
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@kyle_e_walker" />
+<meta name="twitter:creator" content="@kyle_e_walker" />
+<meta name="twitter:title" content="Using custom tiles in an RStudio Leaflet map" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="http://walkerke.github.io/2015/03/10/custom_tiles/" />
+<meta name="twitter:domain" content="http://walkerke.github.io">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Using custom tiles in an RStudio Leaflet map",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "2015-03-10",
+    "description": "",
+    "wordCount":  3310 
+  }
+</script>
+
+
+
+<link rel="canonical" href="http://walkerke.github.io/2015/03/10/custom_tiles/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://walkerke.github.io/touch-icon-144-precomposed.png">
+<link href="http://walkerke.github.io/favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="http://walkerke.github.io/css/font-awesome.min.css">
+<link rel="stylesheet" href="http://walkerke.github.io/css/style.css">
+<link rel="stylesheet" href="http://walkerke.github.io/css/highlight/zenburn.css">
+
+  <!DOCTYPE HTML>
+<style>
+  
+  .main_wrapper>.main_header {
+    background-color: #035004;
+    color: #fff;
+  }
+  
+  .main_wrapper>.main_content .label:hover,
+  .main_wrapper>.main_content .navigation a:hover,
+  .main_wrapper>.main_content .pagination a:hover,
+  .main_wrapper>.main_content .readlink a:hover,
+  .main_wrapper>.main_content h2 a:hover,
+  .main_wrapper>.main_header a:hover {
+    background-color: #035004;
+    color: #fff;
+    text-decoration: none; 
+}
+
+  a {
+    color: #1a730f; 
+  }
+  
+  a:active, a:focus, a:hover {
+    color: #035004;
+}
+  
+</style>
+
+
+<script src="../../../../rmarkdown-libs/htmlwidgets-0.8/htmlwidgets.js"></script>
+<script src="../../../../rmarkdown-libs/jquery-1.12.4/jquery.min.js"></script>
+<link href="../../../../rmarkdown-libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
+<script src="../../../../rmarkdown-libs/leaflet-0.7.7/leaflet.js"></script>
+<link href="../../../../rmarkdown-libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<link href="../../../../rmarkdown-libs/leaflet-label-0.2.2/leaflet.label.css" rel="stylesheet" />
+<script src="../../../../rmarkdown-libs/leaflet-label-0.2.2/leaflet.label.js"></script>
+<script src="../../../../rmarkdown-libs/Proj4Leaflet-0.7.2/proj4-compressed.js"></script>
+<script src="../../../../rmarkdown-libs/Proj4Leaflet-0.7.2/proj4leaflet.js"></script>
+<script src="../../../../rmarkdown-libs/leaflet-binding-1.0.2.9005/leaflet.js"></script>
+
+
+
+
+
+</head>
+<body class="map[name:superhero]">
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="http://walkerke.github.io">
+  Kyle Walker
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Writing about visualization, demographics, dashboards, and spatial data science.
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="http://walkerke.github.io/about">About</a>
+
+<a href="http://walkerke.github.io/post" title="Show list of posts">Posts</a>
+
+<a href="http://walkerke.github.io/tags" title="Show list of tags">Tags</a>
+
+<a href="http://walkerke.github.io/services">Services</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+<a id="contact-link-email" class="contact_link" href="mailto:kwalkerdata@gmail.com">
+  <span class="fa fa-envelope-square"></span><span>email</span></a>
+
+
+
+<a id="contact-link-github" class="contact_link" href="https://github.com/walkerke">
+  <span class="fa fa-github-square"></span><span>github</span></a>
+
+
+
+
+
+<a id="contact-link-linkedin" class="contact_link" href="https://www.linkedin.com/in/walkerke">
+  <span class="fa fa-linkedin-square"></span><span>linkedin</span></a>
+
+
+
+
+
+
+
+<a id="contact-link-twitter" class="contact_link" href="https://twitter.com/kyle_e_walker">
+  <span class="fa fa-twitter-square"></span><span>twitter</span></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1>Using custom tiles in an RStudio Leaflet map
+</h1>
+
+  <div class="metas">
+<time datetime="2015-03-10">10 Mar, 2015</time>
+
+
+  
+    &middot; by Kyle Walker
+  
+  &middot; Read in about 16 min
+  &middot; (3310 Words)
+  <br>
+  
+
+
+</div>
+
+</header>
+
+  <div class="container content">
+
+
+<ul>
+<li>Web: <a href="http://personal.tcu.edu/kylewalker" class="uri">http://personal.tcu.edu/kylewalker</a></li>
+<li>Twitter: <a href="https://twitter.com/kyle_e_walker" class="uri">https://twitter.com/kyle_e_walker</a></li>
+</ul>
+<p>Yesterday, I posted to Twitter an interactive map using the classic <a href="http://en.wikipedia.org/wiki/1854_Broad_Street_cholera_outbreak">John Snow Cholera dataset</a> and tiles made from Snow’s map, which attracted a fair share of interest.</p>
+<blockquote class="twitter-tweet" lang="en">
+<p>
+Interactive Snow cholera map w/<a href="https://twitter.com/LeafletJS"><span class="citation">@LeafletJS</span></a>, <a href="https://twitter.com/hashtag/rstats?src=hash">#rstats</a>, <a href="https://twitter.com/rstudio"><span class="citation">@rstudio</span></a>: <a href="http://t.co/vKYnx6lSxT">http://t.co/vKYnx6lSxT</a> Thx <a href="https://twitter.com/lincolnmullen"><span class="citation">@lincolnmullen</span></a> <a href="https://twitter.com/abresler"><span class="citation">@abresler</span></a> <a href="http://t.co/1zkq7UiyKr">pic.twitter.com/1zkq7UiyKr</a>
+</p>
+— Kyle Walker (<span class="citation">@kyle_e_walker</span>) <a href="https://twitter.com/kyle_e_walker/status/574925190280294400">March 9, 2015</a>
+</blockquote>
+<script async src="http://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>I was inspired to try this by <a href="https://twitter.com/lincolnmullen/status/573958380114604032">Lincoln Mullen’s tweet</a> that custom historical tiles could be used in an RStudio Leaflet map. Incidentally, I am teaching students in my <a href="http://personal.tcu.edu/kylewalker/assets/advancedgis.pdf">Advanced GIS course at TCU</a> about tiled mapping next week; I was (and still am) going to use MapBox Studio as an example, but I thought this might work as a compelling example as well, especially as I assigned my students a lab assignment earlier in the semester in which they made kernel density maps from the Snow data.</p>
+<p>Below, I’ll explain how I got this done. My data come from the <a href="http://guides.library.yale.edu/gisworkshoparchive">Yale University Library’s GIS Workshop Archive</a>, in which they generously make the John Snow data publicly available. However, the data are stored in an Esri File Geodatabase, for which there does not appear to be an open-source solution to get rasters out of yet; as such, I’ve placed the John Snow map image as a GeoTIFF and the deaths point data as a shapefile in <a href="https://github.com/walkerke/teaching-with-datavis/tree/master/snow_data">this GitHub repository</a>. The Snow map is already <strong>georectified</strong>, which means that it has been georeferenced to a coordinate system and exported as a geographic dataset. I’m not going to go over georeferencing here if you are working with a plain image; <a href="http://www.qgistutorials.com/en/docs/georeferencing_basics.html">you can read more about how to do that in QGIS here</a>.</p>
+<p>To get started, I needed to create <strong>tiles</strong> from my image. Modern web maps in the style of Google Maps employ tiled mapping to render basemaps quickly; <a href="https://www.e-education.psu.edu/geog585/node/706">you can read more about tiled mapping here</a>. In a nutshell, tiled maps are tessellations of 256px by 256px images that are referenced based on their zoom level and coordinates.</p>
+<p>To create tiles from my John Snow map image, I used the <a href="http://www.gdal.org/gdal2tiles.html">gdal2tiles</a> utility. gdal2tiles is a command-line tool available within the <a href="http://www.gdal.org/index.html">Geospatial Data Abstraction Library</a>, which is a suite of command-line functions for manipulating geographic data. Fortunately, if you have QGIS on your machine, you have GDAL installed. The easiest way to access it is to open the <strong>OSGeo4W Shell</strong> where your QGIS installation is located, which will give you access to the tools.</p>
+<p>In the OSGeo4W shell, I <code>cd</code> into my directory where my John Snow image is located and enter the following command:</p>
+<pre><code>gdal2tiles -s EPSG:32630 -z 14-18 snow.tif snow
+</code></pre>
+<p>The <code>-s</code> option refers to the input coordinate system of the georectified image; mine is in WGS84 UTM Zone 30N, which has the EPSG code of 32630. The <code>-z</code> option governs the zoom levels for which tiles will be generated; as my map covers a relatively small area, I’m sticking with zoom levels 14 to 18. I then specify an input image file (‘snow.tif’) and an output directory that I am calling <code>snow</code> which the function will create for me.</p>
+<p>After the tool is finished running, I have a directory, <code>snow</code>, that is populated with PNG images, organized by their zoom level and coordinates. My <code>snow</code> directory looks like this:</p>
+<pre><code>+---14
+|   +---8185
+|   \---8186
++---15
+|   +---16370
+|   +---16371
+|   \---16372
++---16
+|   +---32741
+|   +---32742
+|   +---32743
+|   \---32744
++---17
+|   +---65483
+|   +---65484
+|   +---65485
+|   +---65486
+|   +---65487
+|   \---65488
+\---18
+    +---130966
+    +---130967
+    +---130968
+    +---130969
+    +---130970
+    +---130971
+    +---130972
+    +---130973
+    +---130974
+    +---130975
+    +---130976
+    \---130977</code></pre>
+<p>I have a folder for each zoom level, organized into sub-folders that are designated by their tile X coordinates. Within each of these subfolders are PNG images, the tiles themselves, that are named by their tile Y coordinates. Here’s an example of a tile, “174980.png” at 18/130970/174980:</p>
+<div class="figure">
+<img src="https://dl.dropbox.com/s/3ift20yrw2lu9l2/174980.png" alt="tile image" />
+<p class="caption">tile image</p>
+</div>
+<p>Now, I need a place to host my tiles so they can be consumed by a web mapping API like Leaflet. To do this, I’ve created a <a href="https://github.com/walkerke/tiles">GitHub repository</a> and published the tiles using GitHub Pages, which is what I use to host <a href="http://walkerke.github.io/">my data visualization blog</a>.</p>
+<p>I’m now ready to create my map in RStudio! I’m just creating a basic map with the Snow map as a basemap, circles sized proportionately to the number of cholera deaths at a given location, and a pop-up on click that shows the number of deaths. The code below gets this done:</p>
+<pre class="r"><code>library(leaflet)
+library(rgdal)
+
+dir &lt;- getwd()
+
+deaths &lt;- readOGR(dir, &quot;deaths&quot;, verbose = FALSE)
+
+deathsxy &lt;- spTransform(deaths, CRS(&quot;+proj=longlat +datum=WGS84&quot;))
+
+circle_popup &lt;- paste0(&quot;&lt;strong&gt;Address: &lt;/strong&gt;&quot;, 
+                      deathsxy$Address, 
+                      &quot;&lt;br&gt;&lt;strong&gt;Number of deaths: &lt;/strong&gt;&quot;, 
+                      deathsxy$Num_Cases)
+
+leaflet() %&gt;%
+  setView(-0.1354223, 51.5135085, zoom = 17) %&gt;%
+  addTiles(urlTemplate = &quot;http://walkerke.github.io/tiles/snow/{z}/{x}/{y}.png&quot;,
+           attribution = &#39;Data source: &lt;a href=&quot;http://guides.library.yale.edu/gisworkshoparchive&quot;&gt;Yale University Library&lt;/a&gt;&#39;, 
+           options = tileOptions(minZoom = 15, maxZoom = 18, tms = TRUE)) %&gt;%
+  addCircles(data = deathsxy, 
+             radius = deathsxy$Num_Cases, 
+             popup = circle_popup, 
+             color = &quot;red&quot;, 
+             fillColor = &quot;red&quot;)</code></pre>
+<div id="htmlwidget-19e25d81ab996876e28f" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-19e25d81ab996876e28f">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[51.5135085,-0.1354223],17,[]],"calls":[{"method":"addTiles","args":["http://walkerke.github.io/tiles/snow/{z}/{x}/{y}.png",null,null,{"minZoom":15,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":true,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"Data source: <a href=\"http://guides.library.yale.edu/gisworkshoparchive\">Yale University Library\u003c/a>"}]},{"method":"addCircles","args":[[51.5132682725956,51.5112264703284,51.5112745863255,51.5135375739437,51.5129940085274,51.5135375739437,51.5150007224919,51.514097289573,51.5129399587116,51.5107735435767,51.5134559021069,51.5129399587116,51.5136756968671,51.5129084821928,51.512846654156,51.5134867568086,51.5130013336712,51.5128954917166,51.5132416406663,51.5133581859942,51.5129595477738,51.5130292799951,51.5133126481103,51.5135720417356,51.5137493480002,51.5136143786701,51.5137493480002,51.5136025362123,51.5131716526823,51.5132967290254,51.5126980983584,51.5135044762511,51.512382628148,51.5131716526823,51.51272820996,51.5131716526823,51.5133291111762,51.5133546145128,51.5131716526823,51.5136654412388,51.5138307478197,51.5133291111762,51.5136654412388,51.5129270294761,51.5134003615387,51.5129270294761,51.5124679923686,51.5133291111762,51.5136419893663,51.5134294910504,51.5119056499645,51.5124022492986,51.5124320506023,51.5133319964843,51.5124320506023,51.5134532298119,51.5147133027613,51.5124320506023,51.5155993890686,51.5131437924429,51.5134328878136,51.513277318845,51.5131437924429,51.513277318845,51.5130572742185,51.5122795055153,51.5131669243983,51.5147468717681,51.5131669243983,51.5117565641357,51.5130273418015,51.512429624491,51.5123837947107,51.5129242950007,51.512429624491,51.5131641798988,51.5127257024757,51.5129242950007,51.5134795659799,51.5131143041571,51.5134795659799,51.5123848924639,51.5134795659799,51.5127566457639,51.5139285572101,51.5135029697063,51.5131143041571,51.5126376274869,51.5122360011825,51.5131143041571,51.5126376274869,51.5122360011825,51.5148552581057,51.5134795659799,51.5125593035643,51.5144623453787,51.5146423271941,51.5131143041571,51.5126444683505,51.5132417827243,51.5125732197926,51.5144833405927,51.5133113617429,51.512686212296,51.514219004782,51.513363578263,51.513273112666,51.5149126171095,51.5127201935321,51.5141826656939,51.5139863239197,51.5133044425599,51.513363578263,51.5139667160922,51.5141826656939,51.5127541737813,51.5133044425599,51.5134072282123,51.5137013546435,51.5149852480966,51.5127399681399,51.5132758892271,51.5127946802809,51.5134182620143,51.5126059956005,51.5138558645383,51.5121993149545,51.5127946802809,51.5131059550382,51.5145195375448,51.5153368444994,51.5132978116866,51.5124922577855,51.512884545436,51.512175773779,51.5132978116866,51.5123785180716,51.5142421019587,51.5129994331187,51.5127927868225,51.512175773779,51.5145791333545,51.5134241966311,51.5123785180716,51.5130265924286,51.5142924569569,51.5145468979527,51.5130265924286,51.5134362166616,51.5135079407672,51.5139744497064,51.5128164217683,51.512175773779,51.5140232493418,51.5145724386848,51.5135414060833,51.5134558641653,51.512175773779,51.5139744497064,51.5128164217683,51.5129231939909,51.5148727243838,51.512175773779,51.5136207827258,51.5130020847125,51.5127685621495,51.5145979793903,51.5135010528146,51.5126919010474,51.5139744497064,51.512175773779,51.5128946410813,51.5140615489802,51.5136207827258,51.5130020847125,51.5126367346905,51.5119365816892,51.5128946410813,51.5141322901617,51.5136207827258,51.5130607719216,51.5140832099472,51.5125375227332,51.513302768943,51.5130707034959,51.512175773779,51.5151528693441,51.5136207827258,51.5141322901617,51.5130607719216,51.513302768943,51.512175773779,51.5131006504387,51.5131194589061,51.5144187278006,51.5125669774672,51.512175773779,51.5130707034959,51.5143019321237,51.5144764424424,51.5136207827258,51.5130694049414,51.5146865537992,51.5130694049414,51.5143429624019,51.5137460604985,51.5141322901617,51.5143429624019,51.5137460604985,51.5130694049414,51.5140990795752,51.515160465797,51.5121983044753,51.5141248197696,51.5139648197075,51.5130694049414,51.5135308607635,51.5120816316578,51.5141248197696,51.5122306953046,51.5135220181899,51.5136977409503,51.5151225626807,51.5128507547732,51.5134746726275,51.5136977409503,51.5139906802163,51.5131674331756,51.5135220181899,51.5131674331756,51.5120263954911,51.5128507547732,51.5119130802775,51.5131674331756,51.5135220181899,51.5154743639153,51.5138993695686,51.5125738949541,51.5125262048909,51.5120472244833,51.5128507547732,51.5134185319082,51.5119547277938,51.5135633385107,51.5139996832243,51.5144452438864,51.5125262048909,51.5148945094889,51.5137329165491,51.5125262048909,51.5125262048909,51.5133895397335,51.5137329165491,51.5144182103571,51.513345674672,51.5127460269985,51.5142291051963,51.5132582553176,51.5140282250632,51.5125830298143,51.5132145438271,51.5158698572933,51.5123988837444,51.51182450943,51.5158698572933,51.5120956884287,51.5141375583125,51.5131271235057,51.5133895397335,51.5121656719261,51.51249049903,51.5140493374926,51.5123988837444,51.5130834137767,51.5113031730874,51.5130397031031,51.514211473061,51.5140493374926,51.5129959933512,51.5138074805317,51.5145629510989,51.512908555341,51.5136611688803,51.5138298187667,51.5145629510989,51.5136321498828,51.5140457596707,51.5133129310739,51.5111022122093,51.5106486262242,51.5136835079802,51.5122856862094,51.5147053033099,51.5134725409891,51.5140457596707,51.5135732938695,51.5134934884964,51.5122013909444,51.5147053033099,51.5121482762331,51.5142348507297,51.5125792505113,51.5147053033099,51.5147053033099,51.5128597626343,51.5147053033099,51.5147053033099,51.512407429802,51.5125335767303,51.5147053033099,51.5147053033099,51.5131512956124,51.5145664836347,51.5145664836347,51.5116598396103,51.5131330920829,51.5131512956124,51.5132661169656,51.5130740972345,51.5111665277896,51.5110540005931,51.5134698142435],[-0.140033817392606,-0.1398745962866,-0.139916819721959,-0.139587436610826,-0.139681937115984,-0.139587436610826,-0.139478996683987,-0.139344201368187,-0.139205889024188,-0.13942101231898,-0.139186105765262,-0.139205889024188,-0.139319993238871,-0.139273610541439,-0.139256736444925,-0.139113287762434,-0.139085981362079,-0.139161576611661,-0.138967695983084,-0.139020901214451,-0.139028954361123,-0.138887122331153,-0.138971851269928,-0.138975241791896,-0.138812054853607,-0.138788726646699,-0.138812054853607,-0.138669172390474,-0.138564957230045,-0.138449817797943,-0.138394086614546,-0.138563304331448,-0.138601611800422,-0.138564957230045,-0.138320471195743,-0.138564957230045,-0.138171277686232,-0.138281655637221,-0.138564957230045,-0.138205453708496,-0.13823532199217,-0.138171277686232,-0.138205453708496,-0.13796576687914,-0.138143790319532,-0.13796576687914,-0.138151525668931,-0.138171277686232,-0.138089621521549,-0.138023327774542,-0.138022173578488,-0.138083019392778,-0.138009080643414,-0.137950143356602,-0.138009080643414,-0.137943920849703,-0.137810465704736,-0.138009080643414,-0.137694839359688,-0.137809483355143,-0.137928350003505,-0.137812164715689,-0.137809483355143,-0.137812164715689,-0.137743109924161,-0.137885343483366,-0.137729616127845,-0.13768599893817,-0.137729616127845,-0.137787717637097,-0.13772920318632,-0.137517898623935,-0.137469555569451,-0.137543615018975,-0.137517898623935,-0.137396763662038,-0.137482521024393,-0.137543615018975,-0.137298346453625,-0.137360192618513,-0.137298346453625,-0.137506477282433,-0.137298346453625,-0.137409801258895,-0.138314594232394,-0.137218683303818,-0.137360192618513,-0.13727805788102,-0.137241802844691,-0.137360192618513,-0.13727805788102,-0.137241802844691,-0.137183369709016,-0.137298346453625,-0.137231532711895,-0.137017118014696,-0.137041496368669,-0.137360192618513,-0.137007719420215,-0.136926526750725,-0.136986332394544,-0.136935737325466,-0.136902134868287,-0.13688513336724,-0.136850981066356,-0.136739958209335,-0.136829220101778,-0.136796503497615,-0.136784506179772,-0.136729595385193,-0.136688674465587,-0.136731914760825,-0.136739958209335,-0.136674998199873,-0.136729595385193,-0.136683878901207,-0.136731914760825,-0.136564001866628,-0.136489911399766,-0.136485080721236,-0.136541239260784,-0.136506171328023,-0.136564737155683,-0.136522090224345,-0.136466840892906,-0.136501645172958,-0.136581232960756,-0.136564737155683,-0.136376144928749,-0.136456550603619,-0.13632055440514,-0.136425429144538,-0.1363744580917,-0.136327573955781,-0.136018692070292,-0.136425429144538,-0.136282074416158,-0.136194929676063,-0.136287364873846,-0.136400344295713,-0.136018692070292,-0.136260435248647,-0.136295976754333,-0.136282074416158,-0.136210842288661,-0.136160099440723,-0.136165747989404,-0.136210842288661,-0.136254308733868,-0.136185892074431,-0.136003727921995,-0.136111647433025,-0.136018692070292,-0.136043872863244,-0.136081697181896,-0.136024858977376,-0.136158357066029,-0.136018692070292,-0.136003727921995,-0.136111647433025,-0.13611650015072,-0.136034123906094,-0.136018692070292,-0.135759530737467,-0.135977852599173,-0.135958204335329,-0.135997647721439,-0.135976169681245,-0.135983471360176,-0.136003727921995,-0.136018692070292,-0.136120999112947,-0.135890978744628,-0.135759530737467,-0.135977852599173,-0.135926960091828,-0.13586386248098,-0.136120999112947,-0.135694927601828,-0.135759530737467,-0.135794426114985,-0.135655672663753,-0.135826099241174,-0.135797329359472,-0.135570722930129,-0.136018692070292,-0.135834749770016,-0.135759530737467,-0.135694927601828,-0.135794426114985,-0.135797329359472,-0.136018692070292,-0.135623232975163,-0.135611002045904,-0.135671666444857,-0.135751801408739,-0.136018692070292,-0.135570722930129,-0.135578652404099,-0.13561930880416,-0.135759530737467,-0.135597562545342,-0.135457981350745,-0.135597562545342,-0.135513007677254,-0.13537711622136,-0.135694927601828,-0.135513007677254,-0.13537711622136,-0.135597562545342,-0.135412990440499,-0.135345782131964,-0.13547038563361,-0.135335209608203,-0.135297937882529,-0.135597562545342,-0.135367914559909,-0.135333130774639,-0.135335209608203,-0.135399314294558,-0.135133920529197,-0.135335500587908,-0.135220524768602,-0.134841048157466,-0.135089508254684,-0.135335500587908,-0.135220262099786,-0.135038436686543,-0.135133920529197,-0.135038436686543,-0.135145602601385,-0.134841048157466,-0.135097122626987,-0.135038436686543,-0.135133920529197,-0.134926307697047,-0.13497951207122,-0.13482842507813,-0.134784974021369,-0.134663543467989,-0.134841048157466,-0.13480556289069,-0.134836220776507,-0.134834053510399,-0.134858083868299,-0.134802213407581,-0.134784974021369,-0.134593622208416,-0.134673914457364,-0.134784974021369,-0.134784974021369,-0.134678910794948,-0.134673914457364,-0.13468228127087,-0.134640344896201,-0.134739798923405,-0.134629428611997,-0.134564300859671,-0.134565220068149,-0.134661355696275,-0.134526279061705,-0.134502055040525,-0.134465741840225,-0.134774010854723,-0.134502055040525,-0.134560242329173,-0.13444447830721,-0.134450235511616,-0.134678910794948,-0.134408526478784,-0.134457462274671,-0.134355559164563,-0.134465741840225,-0.134412213815881,-0.134474539164914,-0.134374190808963,-0.134513061215547,-0.134355559164563,-0.134336169256576,-0.134260125067158,-0.134287586825399,-0.134260143382997,-0.134155220462759,-0.134179676159136,-0.134287586825399,-0.134135466617583,-0.134200572507426,-0.133923373092379,-0.13416920303159,-0.134120753899745,-0.134074773149938,-0.134150075668264,-0.133756936581015,-0.134029420184636,-0.134200572507426,-0.134001034810787,-0.133948012581765,-0.134183353534006,-0.133756936581015,-0.133670770730307,-0.133314928702337,-0.134018472561015,-0.133756936581015,-0.133756936581015,-0.133920469318728,-0.133756936581015,-0.133756936581015,-0.133859451140866,-0.133575760069785,-0.133756936581015,-0.133756936581015,-0.133420584644798,-0.133179227184481,-0.133179227184481,-0.133236696227065,-0.133313046450014,-0.133420584644798,-0.132919720523873,-0.132529026023501,-0.132754953769301,-0.132691227016183,-0.138595098902119],[1,3,1,2,1,2,1,1,1,1,1,1,1,1,2,1,1,8,1,2,2,1,1,1,3,1,1,1,1,1,1,1,1,3,1,1,1,2,4,1,1,3,2,2,1,1,1,2,2,1,1,1,1,2,1,4,3,4,1,1,3,2,4,1,2,1,1,2,4,2,1,1,1,4,3,2,1,2,2,3,2,1,1,2,5,1,2,1,1,3,1,1,1,1,2,3,2,1,1,4,2,3,2,1,3,3,18,3,1,1,1,3,1,1,3,1,4,4,2,1,1,1,1,1,1,1,1,2,5,2,1,2,1,1,1,2,1,1,2,1,1,1,1,1,1,2,1,3,2,4,2,4,1,1,1,1,2,1,5,1,1,1,2,1,1,1,1,3,3,4,1,2,1,4,1,2,4,2,1,5,1,2,1,1,2,2,1,1,2,1,3,1,1,2,1,2,3,4,2,1,3,1,2,1,1,3,1,1,5,1,3,1,1,1,5,2,1,1,2,1,2,1,1,7,2,1,2,1,1,1,1,3,4,5,2,1,1,3,1,1,1,3,1,1,1,1,2,1,1,1,1,2,1,1,1,1,1,2,1,9,1,1,2,1,1,1,2,2,1,1,1,2,2,1,1,8,1,1,2,1,2,1,1,5,1,2,1,1,1,1,1,1,2,2,2,1,1,1,1,1,1,1,1,5,1,1,1,1,1,4,1,1,2,1,1,2,1,1,1,1,1,2],null,null,{"lineCap":null,"lineJoin":null,"clickable":true,"pointerEvents":null,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.2,"dashArray":null},["<strong>Address: \u003c/strong>29 Kingly Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>27 Heddon Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>31 Heddon Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>18 Fouberts Place<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>18 Kingly Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>18 Fouberts Place<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Ramillies Place<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>34 Carnaby Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>24 Ganton Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Heddon Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>33 Carnaby Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>24 Ganton Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>31 Carnaby Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Ganton Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>23 Ganton Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>29 Carnaby Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Ganton Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Kingly Court<br><strong>Number of deaths: \u003c/strong>8","<strong>Address: \u003c/strong>41 Carnaby Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>4 Marlbrough Court<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>13 Ganton Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Ganton Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>2 Marlbrough Court<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Lowndes Court<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>10 Newburgh Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>13 Newburgh Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>10 Newburgh Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>7 Newburgh Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Ganton Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>10 Ganton Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>48 Carnaby Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>2 Newburgh Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Kingly Court<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Ganton Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>10 Carnaby Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Ganton Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Ganton Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>6 Ganton Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Ganton Street<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>35 Marshall Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>18 Marshall Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Ganton Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>35 Marshall Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>70 Broadwick Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>4 Ganton Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>70 Broadwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>50 Carnaby Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Ganton Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>16 Marshall Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>37 Marshall Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Upper John Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>51 Carnaby Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Carnaby Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Marshall Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Carnaby Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>14 Marshall Street<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>5 Great Marlborough Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>1 Carnaby Street<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>40 Poland Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Marshall Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>10 Marshall Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>11 Marshall Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Marshall Street<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>11 Marshall Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>68 Broadwick Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>37 Beak Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>7 Marshall Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>4 Great Marlborough Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>7 Marshall Street<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>33 Golden Square<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>49 Marshall Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>39 Beak Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>38 Beak Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Marshall Street<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>39 Beak Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>1 Broadwick Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Marshall Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Marshall Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>9 Dufours Place<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>61 Broadwick Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>9 Dufours Place<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>7 Upper James Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>9 Dufours Place<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>2 Marshall Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>19 Marshall Street<br><strong>Number of deaths: \u003c/strong>5","<strong>Address: \u003c/strong>15 Dufours Place<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>61 Broadwick Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Marshall Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Upper James Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>61 Broadwick Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>1 Marshall Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Upper James Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>21 Poland Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>9 Dufours Place<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>51 Beak Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Poland Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>13 Poland Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>61 Broadwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>53 Beak Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>47 Broadwick Street<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>30 Bridle Lane<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>12 Poland Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>54 Broadwick Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>67 Beak Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>53 Poland Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>52 Broadwick Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>45 Broadwick Street<br><strong>Number of deaths: \u003c/strong>18","<strong>Address: \u003c/strong>17 Noel Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>69 Beak Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>9 Poland Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>55 Poland Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>43 Broadwick Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>52 Broadwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>57 Poland Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>9 Poland Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>71 Beak Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>43 Broadwick Street<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>50 Broadwick Street<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>59 Poland Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>19 Noel Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>48 Beak Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>51 Lexington Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>75 Beak Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>46 Broadwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>23 Great Pulteney Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>7 Poland Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>13 Bridle Lane<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>75 Beak Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>47 Lexington Street<br><strong>Number of deaths: \u003c/strong>5","<strong>Address: \u003c/strong>14 Darblay Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>48 Berwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Lexington Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>25 Great Pulteney Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>77 Beak Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Great Pulteney Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Lexington Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>27 Great Pulteney Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Portland Mews<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>43 Lexington Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Beak Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Great Pulteney Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>12 Darblay Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Broadwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>27 Great Pulteney Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>44 Lexington Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>9 Portland Mews<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>25 Darblay Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>44 Lexington Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>31 Broadwick Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>32 Broadwick Street<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>10 Livonia Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>27 Lexington Street<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>1 Great Pulteney Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Livonia Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>26 Darblay Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Broadwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>33 Broadwick Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Great Pulteney Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>10 Livonia Street<br><strong>Number of deaths: \u003c/strong>5","<strong>Address: \u003c/strong>27 Lexington Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>38 Lexington Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>70 Berwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Great Pulteney Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>30 Broadwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>7 Silver Place<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>36 Lexington Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>27 Darblay Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>16 Ingestre Place<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>1 Lexington Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>10 Livonia Street<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>1 Great Pulteney Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Silver Place<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>7 Portland Mews<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>30 Broadwick Street<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>7 Silver Place<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Lexington Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>35 Great Pulteney Street<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>1 Silver Place<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Livonia Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>30 Broadwick Street<br><strong>Number of deaths: \u003c/strong>5","<strong>Address: \u003c/strong>6 Silver Place<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>14 Livonia Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Lexington Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>14 Ingestre Place<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>2 Silver Place<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Great Pulteney Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>24 Hollen Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>30 Broadwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Livonia Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>6 Silver Place<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>14 Ingestre Place<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>1 Great Pulteney Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>12 Ingestre Place<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>5 Silver Place<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>77 Berwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>34 Lexington Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Great Pulteney Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>2 Silver Place<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>79 Berwick Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>34 Berwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>30 Broadwick Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>8 Ingestre Place<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>17 Wardour Mews<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>8 Ingestre Place<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>32 Berwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>20 Broadwick Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>1 Livonia Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>32 Berwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>20 Broadwick Street<br><strong>Number of deaths: \u003c/strong>5","<strong>Address: \u003c/strong>8 Ingestre Place<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>82 Berwick Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>183 Wardour Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Lexington Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Berwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>83 Berwick Street<br><strong>Number of deaths: \u003c/strong>5","<strong>Address: \u003c/strong>8 Ingestre Place<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Hopkins Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Lexington Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Berwick Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Lexington Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Kemp Court<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>13 Broadwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>172 Wardour Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>7 Ingestre Place<br><strong>Number of deaths: \u003c/strong>7","<strong>Address: \u003c/strong>1 Kemp Court<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>13 Broadwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>23 Berwick Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Hopkins Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Kemp Court<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Hopkins Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Lexington Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>7 Ingestre Place<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>1 Lexington Street<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>1 Hopkins Street<br><strong>Number of deaths: \u003c/strong>5","<strong>Address: \u003c/strong>1 Kemp Court<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>15 Hollen Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Broadwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Peter Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>20 Peter Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>28 Brewer Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>7 Ingestre Place<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>89 Berwick Street<br><strong>Number of deaths: \u003c/strong>3","<strong>Address: \u003c/strong>30 Brewer Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>18 Berwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>8 Broadwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>147 Wardour Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>20 Peter Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>2 Sheraton Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>3 Duck Lane<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>20 Peter Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>20 Peter Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>14 Berwick Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>3 Duck Lane<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>134 Wardour Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>13 Berwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Hopkins Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>145 Wardour Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>11 Berwick Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>7 Broadwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>5 Greens Court<br><strong>Number of deaths: \u003c/strong>9","<strong>Address: \u003c/strong>10 Berwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>4 Great Chapel Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>7 Greens Court<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>25 Great Windmill Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>4 Great Chapel Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>26 Brewer Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>122 Wardour Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>8 Berwick Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>14 Berwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>24 Brewer Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>6 Greens Court<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>116 Wardour Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>7 Greens Court<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>7 Berwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>14 Ham Yard<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>6 Berwick Street<br><strong>Number of deaths: \u003c/strong>8","<strong>Address: \u003c/strong>124 Wardour Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>116 Wardour Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>5 Berwick Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>123 Wardour Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Saint Annes Court<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>3 Berwick Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>119 Wardour Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>102 Wardour Street<br><strong>Number of deaths: \u003c/strong>5","<strong>Address: \u003c/strong>1 Saint Annes Court<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>117 Wardour Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Flaxman Court<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>109 Wardour Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>41 Great Windmill Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>19 A401<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>98 Wardour Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>18 Brewer Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>29 Saint Annes Court<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>113 Wardour Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Flaxman Court<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>94 Wardour Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>92 Wardour Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>13 Brewer Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>29 Saint Annes Court<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>59 Rupert Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>3 Richmond Buildings<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>5 Walkers Court<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>29 Saint Annes Court<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>29 Saint Annes Court<br><strong>Number of deaths: \u003c/strong>5","<strong>Address: \u003c/strong>29 Peter Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>29 Saint Annes Court<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>29 Saint Annes Court<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>6 Brewer Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>4 Brewer Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>29 Saint Annes Court<br><strong>Number of deaths: \u003c/strong>4","<strong>Address: \u003c/strong>29 Saint Annes Court<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Meard Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>85 Dean Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>85 Dean Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Rupert Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>13 Meard Street<br><strong>Number of deaths: \u003c/strong>2","<strong>Address: \u003c/strong>1 Meard Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>7 Meard Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>2 Bourchier Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>30 Rupert Street<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>5 Rupert Court<br><strong>Number of deaths: \u003c/strong>1","<strong>Address: \u003c/strong>1 Marlbrough Court<br><strong>Number of deaths: \u003c/strong>2"],null,null,null,null]}],"limits":{"lat":[51.5106486262242,51.5158698572933],"lng":[-0.140033817392606,-0.132529026023501]}},"evals":[],"jsHooks":[]}</script>
+<p>I won’t go into detail here about the syntax for the spatial data; <a href="http://rpubs.com/walkerke">check my other RPubs for tutorials on how to get spatial data into Leaflet</a>. I will, however, explain how I incorporate my custom tiles. Note the <code>addTiles</code> function with the <code>urlTemplate</code> parameter. This allows you to use tiles other than the default OpenStreetMap tileset. The key is, then, to specify how the tiles will be retrieved. I use the following URL:</p>
+<pre><code>http://walkerke.github.io/tiles/snow/{z}/{x}/{y}.png</code></pre>
+<p>Notice how <code>z</code>, <code>x</code>, and <code>y</code> are enclosed within curly braces; this allows these values to vary as the user pans and zooms around the map. Depending on the zoom level and extent of the map, Leaflet will retrieve appropriate tiles; notice how this corresponds to the names of my directories and images in my <code>snow</code> folder. Incorporating other external tilesets in your maps works similarly; <a href="https://gist.github.com/walkerke/12a737c4d87aca2ecc70">see this GitHub Gist for the syntax for some popular ones</a>. Of course, you should always cite your sources afterward, which can be accomplished with the <code>attribution</code> parameter. Finally, if you have generated your tiles with gdal2tiles, be sure to set the <code>tms</code> parameter to <code>TRUE</code> with <code>tileOptions</code>, or else your tiles won’t show up.</p>
+<p>If you have any comments or questions, please let me know!</p>
+
+
+
+
+</div>
+
+
+  <footer class="container">
+  <div class="container navigation no-print">
+  <h2>Navigation</h2>
+  
+  
+
+    
+    <a class="prev" href="http://walkerke.github.io/2015/02/26/mapping-religious-adherence-in-the-us-with-cartodb/" title="Mapping religious adherence in the US with CartoDB">
+      Previous
+    </a>
+    
+
+    
+    <a class="next" href="http://walkerke.github.io/2015/05/09/obesity-squares/" title="Obesity by state, 2013: a CartoDB state squares experiment">
+      Next
+    </a>
+    
+
+  
+
+
+</div>
+
+  
+
+</footer>
+
+</article>
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+
+</div>
+
+
+  
+<div class="container copyright">
+  
+  &copy; 2016 Kyle Walker
+
+
+</div>
+
+
+</div>
+
+</footer>
+
+    </main>
+    
+<script type="text/javascript">
+  (function() {
+    
+    
+    if (window.location.hostname == "localhost")
+      return;
+
+    var dsq = document.createElement('script'); dsq.async = true; dsq.type = 'text/javascript';
+    dsq.src = '//your_disqus_shortname.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+
+<script src="http://walkerke.github.io/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+    
+  </body>
+</html>
+

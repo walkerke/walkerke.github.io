@@ -1,0 +1,39 @@
+---
+title: "Spatial neighbors in R - an interactive illustration"
+author: "Kyle Walker"
+date: 2016-07-27T21:13:14-05:00
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, eval = FALSE)
+```
+
+I noticed [Ari Lamstein's call for submissions to the R Shapefile Contest](http://www.arilamstein.com/blog/2016/07/12/announcing-r-shapefile-contest/) with interest.  Commonly, we see spatial data in R used for visualization - e.g. choropleth maps.  However, R has a _massive_ ecosystem available to use spatial data in a wide variety of analyses that leverage its geographic properties.   
+
+I commonly read posts about whether spatial data is "special" or not - we geographers tend to say yes (see here: <https://www.google.com/search?q=spatial+data+special>).  I like Justin Holman's post on the topic (<http://www.justinholman.com/2012/03/20/spatial-is-indeed-special/>) which reminds us that attributes of geographic data tend to exhibit [spatial autocorrelation](https://en.wikipedia.org/wiki/Spatial_analysis#Spatial_autocorrelation), which means nearby data points in geographic space tend to be more similar than data points that are further away.   
+
+In turn, we are often interested in the concept of a _neighborhood_ in spatial analysis, which refers to those data points that we consider to be proximate to a given focal data point.  With areal vector data (polygons) this is not always straightforward, as there are multiple ways that we can measure proximity.  In R, we accomplish this with the fantastic [__spdep__](https://cran.r-project.org/web/packages/spdep/index.html) package.  __spdep__ allows for the creation of objects of class `nb`, which are lists of vectors in which each vector contains the row positions of the neighboring units.  You can read about the neighborhood functionality in the package here: https://cran.r-project.org/web/packages/spdep/vignettes/nb.pdf.  I'm going to illustrate comparisons between neighborhoods for two common neighbor types: _contiguity-based neighbors_ and _distance-based neighbors_.  
+
+Consider here the R object named `spoly` of class `SpatialPolygonsDataFrame`: 
+
+* _Contiguity-based neighbors_ consider neighboring polygons to be those that "touch" a focal polygon, and are derived in __spdep__ with the `poly2nb` function.  Calling `poly2nb(spoly)` generates a queen's-case neighborhood object, in which neighboring polygons are those that share a vertex with the focal polygon; `poly2nb(spoly, queen = FALSE)` creates a rook's case neighborhood object, in which neighbors must share a line segment (analogous to a chess board here).  
+* _Distance-based neighbors_ are those within a given proximity threshold to a focal polygon; distances are measured between polygon centroids.  `knn2nb(knearneigh(coordinates(spoly), k = n))` creates an object of class `nb` that retains the `n` nearest neighbors for each polygon.  You can also use a fixed distance band with `dnearneigh(coordinates(spoly), d1 = n1, d2 = n2)`, where `n1` is the minimum distance threshold (commonly set to `0`) and `n2` is the maximum distance at which polygons will be considered neighbors.  If your data are in a geographic coordinate system, you can supply the argument `longlat = TRUE` to use great circle distances.  
+
+This all makes more sense with an interactive illustration - so let's test this out with the Shiny app below.  Click on any Census tract in Travis County, Texas to show its neighbors for the chosen neighborhood type.  Note how the neighborhoods for any given tract change as you modify the options.  
+
+<iframe src="https://walkerke.shinyapps.io/spatial-neighbors/" height = "600" width = "100%" frameborder = "0" scrolling = "no"></iframe>
+
+I've also included an applied example that shows how the choice of neighborhood can influence the results of a spatial analysis, available on the second tab.  The map shows Getis-Ord $G^{*}_{i}$ z-scores for median household income from the 2010-2014 American Community Survey.  In a nutshell, $G^{*}_{i}$ compares the local (neighborhood) sum of attribute values (in which the focal tract is included) to the global sum, which is then converted to a z-score.  Following the __spdep__ documentation: 
+
+>  High positive values indicate the possibility of a local cluster of high values of the variable being analysed, very low relative values a similar cluster of low values.
+
+If you're interested in learning more, [take a look at Getis and Ord's paper here](http://onlinelibrary.wiley.com/doi/10.1111/j.1538-4632.1992.tb00261.x/pdf).  
+
+Change the neighborhood type to see how the values change - and how it might influence the interpretation of the results.  The app suggests that high values tend to be found to the west of downtown Austin, and low values to the east -- but the map can vary significantly depending on how you modify the input parameters.  Techniques like this can also fall victim to _edge effects_; computations for tracts on the edges of Travis County don't incorporate their full "neighborhoods," as only one county is included here!
+
+This really only scratches the surface of this topic; there is a lot more to consider, such as more complex conceptualizations of spatial relationships, how to select a spatial weights matrix, and how to explore and model your data based on these relationships.  For further reading, I'd recommend: 
+
+* [O'Sullivan and Unwin, _Geographic Information Analysis_](https://www.amazon.com/Geographic-Information-Analysis-David-OSullivan/dp/0470288574)
+* [Bivand, Pebesma, and Gomez-Rubio, _Applied Spatial Data Analysis with R_](https://www.amazon.com/Applied-Spatial-Data-Analysis-Use/dp/1461476178)
+
+All code for this Shiny app can be found on GitHub at https://gist.github.com/walkerke/6915b02ac7f0c215bc2c75a687b3d269.  

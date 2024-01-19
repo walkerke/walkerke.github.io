@@ -1,0 +1,62 @@
+---
+title: "Getting data for every Census tract in the US with purrr and tidycensus"
+author: "Kyle Walker"
+date: 2017-05-31T08:00:00
+tags: ["r", "census", "tidycensus"]
+slug: tidycensus-every-tract
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(tidycensus)
+census_api_key("5ed58a5745802102fb83d4eec5d1f7326f65ffab")
+```
+
+__Interested in more tips on working with Census data? [Click here to join my email list!](http://eepurl.com/cPGKZD)__
+
+Last week, I published the development version of my new R package, __tidycensus__.  You can read through the documentation and some examples at https://walkerke.github.io/tidycensus/.  I'm working on getting the package CRAN-ready with better error handling; in the meantime, I'm sharing a few examples to demonstrate its functionality.  
+
+If you are working on a national project that includes demographic data as a component, you might be interested in acquiring Census tract data for the entire United States.  However, Census tract data are commonly available by state (with the exception of [NHGIS](http://www.nhgis.org), which is a wonderful resource), meaning that an analyst would have to spend time piecing the data together.  
+
+__tidycensus__ solves this problem directly within R with help from the __purrr__ package, a member of the tidyverse.  In __tidycensus__, there is a built-in data frame named `fips_codes` that includes US state and county IDs; __tidycensus__ uses this data frame to handle translations between state/county names and FIPS codes.  However, this data frame can also be used to generate a vector of state codes to be fed to the `map_df` function in __purrr__.  As such, this is all it takes to get a tibble of total population estimates for all US Census tracts from the 2011-2015 ACS: 
+
+```{r}
+library(tidycensus)
+library(purrr)
+
+# Un-comment below and set your API key
+# census_api_key("YOUR KEY GOES HERE")
+
+us <- unique(fips_codes$state)[1:51]
+
+totalpop <- map_df(us, function(x) {
+  get_acs(geography = "tract", variables = "B01003_001", 
+          state = x)
+})
+
+str(totalpop)
+```
+
+Get any ACS or decennial Census data in this way.  
+
+However - what if you also want tract geometry for mapping?  This only requires a few small modifications.  `map_df` in __purrr__ uses the `bind_rows` function under the hood, which doesn't work with simple features objects (yet).  However, __sf__ does have an `rbind` method that works for `sf` objects and can be fed to __purrr__'s `reduce` function.  
+
+```{r}
+library(sf)
+options(tigris_use_cache = TRUE)
+
+totalpop_sf <- reduce(
+  map(us, function(x) {
+    get_acs(geography = "tract", variables = "B01003_001", 
+            state = x, geometry = TRUE)
+  }), 
+  rbind
+)
+
+str(totalpop_sf)
+```
+
+By declaring `geometry = TRUE`, __tidycensus__ fetches tract feature geometry using the __tigris__ package and merges it to the ACS data automatically for you.  I recommend using the caching feature in the __tigris__ package if you plan to use this workflow multiple times.  You might note the discrepancy in tracts between the geometry-enabled and regular data frames; this is due to the removal of some water-only tracts in the cartographic boundary shapefiles used by __tidycensus__.  
+
+
+

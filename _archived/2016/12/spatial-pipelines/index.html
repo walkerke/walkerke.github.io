@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Spatial analysis pipelines with simple features in R  &middot; KYLE WALKER DATA</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="R, ">
+
+
+<meta property="og:title" content="Spatial analysis pipelines with simple features in R  &middot; KYLE WALKER DATA ">
+<meta property="og:site_name" content="KYLE WALKER DATA"/>
+<meta property="og:url" content="/2016/12/spatial-pipelines/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="2016-12-27T06:15:14Z" />
+<meta property="og:article:modified_time" content="2016-12-27T06:15:14Z" />
+
+  
+    
+<meta property="og:article:tag" content="R">
+    
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@kyle_e_walker" />
+<meta name="twitter:creator" content="@kyle_e_walker" />
+<meta name="twitter:title" content="Spatial analysis pipelines with simple features in R" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="/2016/12/spatial-pipelines/" />
+<meta name="twitter:domain" content="/">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Spatial analysis pipelines with simple features in R",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "2016-12-27",
+    "description": "",
+    "wordCount":  685 
+  }
+</script>
+
+
+
+<link rel="canonical" href="../../../2016/12/spatial-pipelines/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../../touch-icon-144-precomposed.png">
+<link href="../../../favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="../../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../../css/style.css">
+<link rel="stylesheet" href="../../../css/highlight/zenburn.css">
+
+  <!DOCTYPE HTML>
+<style>
+  
+  .main_wrapper>.main_header {
+    background-color: #035004;
+    color: #fff;
+  }
+  
+  .main_wrapper>.main_content .label:hover,
+  .main_wrapper>.main_content .navigation a:hover,
+  .main_wrapper>.main_content .pagination a:hover,
+  .main_wrapper>.main_content .readlink a:hover,
+  .main_wrapper>.main_content h2 a:hover,
+  .main_wrapper>.main_header a:hover {
+    background-color: #035004;
+    color: #fff;
+    text-decoration: none; 
+}
+
+  a {
+    color: #1a730f; 
+  }
+  
+  a:active, a:focus, a:hover {
+    color: #035004;
+}
+  
+</style>
+
+
+
+
+
+
+
+</head>
+<body class="map[name:superhero]">
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="../../../">
+  KYLE WALKER DATA
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Writing about visualization, demographics, dashboards, and spatial data science. <br/><br/>Interested in learning more?  Hire me for a workshop or to consult on your next project.  See the Services page for more details.
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="../../../about">About</a>
+
+<a href="../../../post" title="Show list of posts">Posts</a>
+
+<a href="../../../tags" title="Show list of tags">Tags</a>
+
+<a href="../../../services">Services</a>
+
+<a href="https://www.r-bloggers.com/">R-Bloggers</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+<a id="contact-link-email" class="contact_link" href="mailto:kwalkerdata@gmail.com">
+  <span class="fa fa-envelope-square"></span><span>email</span></a>
+
+
+
+<a id="contact-link-github" class="contact_link" href="https://github.com/walkerke">
+  <span class="fa fa-github-square"></span><span>github</span></a>
+
+
+
+
+
+<a id="contact-link-linkedin" class="contact_link" href="https://www.linkedin.com/in/walkerke">
+  <span class="fa fa-linkedin-square"></span><span>linkedin</span></a>
+
+
+
+
+
+
+
+<a id="contact-link-twitter" class="contact_link" href="https://twitter.com/kyle_e_walker">
+  <span class="fa fa-twitter-square"></span><span>twitter</span></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1>Spatial analysis pipelines with simple features in R
+</h1>
+
+  <div class="metas">
+<time datetime="2016-12-27">27 Dec, 2016</time>
+
+
+  
+    &middot; by Kyle Walker
+  
+  &middot; Read in about 4 min
+  &middot; (685 Words)
+  <br>
+  
+<a class="label" href="../../../tags/r">R</a>
+
+
+
+</div>
+
+</header>
+
+  <div class="container content">
+
+
+<p>In November, the new <a href="https://cran.r-project.org/web/packages/sf/index.html">simple features package for R <strong>sf</strong></a> hit CRAN. The package is like <strong>rgdal</strong>, <strong>sp</strong>, and <strong>rgeos</strong> rolled into one, is much faster, and allows for data processing with dplyr verbs! Also, as <code>sf</code> objects are represented in a much simpler way than <code>sp</code> objects, it allows for spatial analysis in R within <a href="https://cran.r-project.org/web/packages/magrittr/index.html"><strong>magrittr</strong></a> pipelines.</p>
+<p>This post showcases some of this functionality in a simulated spatial analysis workflow, in which an analyst wants to determine whether customers have visited a point of interest (POI) based on GPS tracking data. In this hypothetical example, we’ll assess whether visitors to midtown Manhattan have walked through Bryant Park.</p>
+<p>Let’s take a single visitor who spent an entire day strolling around Midtown Manhattan, and left 100 GPS traces from her phone:</p>
+<pre class="r"><code>library(leaflet)
+library(sf)
+library(sp)
+library(TSP)
+library(magrittr)
+
+set.seed(1983)
+
+long &lt;- sample(seq(-73.9995, -73.9688, 0.0001), 100, replace = TRUE)
+lat &lt;- sample(seq(40.7483, 40.7646, 0.0001), 100, replace = TRUE)
+
+df &lt;- data.frame(long, lat, id = 1:100)
+
+leaflet(df) %&gt;%
+  addTiles() %&gt;%
+  addMarkers()</code></pre>
+<iframe src="https://walkerke.github.io/extras/blog/midtown_points.html" frameborder="0" scrolling="no" width="100%" height="400">
+</iframe>
+<p>A real-world example would have time-stamped data, allowing for a more realistic path. We’ll construct a hypothetical path by solving for the <a href="https://en.wikipedia.org/wiki/Hamiltonian_path">Hamiltonian Path</a> with the R package <a href="https://cran.r-project.org/web/packages/TSP/"><strong>TSP</strong></a> to simulate this (acknowledging that this hypothetical path will go through buildings).</p>
+<pre class="r"><code>path &lt;- df[,1:2] %&gt;%
+  dist() %&gt;%
+  TSP() %&gt;%
+  insert_dummy(label = &quot;cut&quot;) %&gt;%
+  solve_TSP(method = &quot;nearest_insertion&quot;) %&gt;%
+  cut_tour(cut = &quot;cut&quot;) 
+
+df2 &lt;- df[match(path, df$id), ] </code></pre>
+<p>Now that we’ve ordered our GPS traces correctly, we can generate a path with a simple features pipeline. We convert the ordered points to a matrix; generate a line with <code>st_linestring()</code>; create a simple feature collection object with <code>st_sfc()</code>; then transform to a projected coordinate system with <code>st_transform()</code>.</p>
+<pre class="r"><code>lines &lt;- df2[,1:2] %&gt;%
+  as.matrix() %&gt;%
+  st_linestring() %&gt;%
+  st_sfc(crs = 4326) %&gt;%
+  st_transform(crs = 32618)</code></pre>
+<p>We first specify the CRS as the WGS 1984 geographic coordinate system, then transform to UTM Zone 18N as we want a projected coordinate system for planar geometric operations. Let’s take a look at our lines:</p>
+<pre class="r"><code>lines_map &lt;- lines %&gt;%
+  st_transform(crs = 4326) %&gt;%
+  as(&quot;Spatial&quot;) %&gt;%
+  leaflet() %&gt;%
+  addTiles() %&gt;%
+  addPolylines()
+
+lines_map</code></pre>
+<iframe src="https://walkerke.github.io/extras/blog/midtown_lines.html" frameborder="0" scrolling="no" width="100%" height="400">
+</iframe>
+<p>Now, we need to see whether this path intersects Bryant Park. A polygon representing the boundaries of Bryant Park would be ideal; however, let’s say hypothetically that we only have XY coordinates for this point of interest. As such, we can buffer the point by 100 meters to represent the approximate extent of the park.</p>
+<pre class="r"><code>bryant_buffer &lt;- c(-73.983581, 40.753714) %&gt;%
+  st_point() %&gt;%
+  st_sfc(crs = 4326) %&gt;%
+  st_transform(32618) %&gt;%
+  st_buffer(dist = 100)
+
+buffer_for_map &lt;- bryant_buffer %&gt;%
+  st_transform(4326) %&gt;%
+  as(&quot;Spatial&quot;)
+
+lines_map %&gt;%
+  addPolygons(data = buffer_for_map)</code></pre>
+<iframe src="https://walkerke.github.io/extras/blog/midtown_buffer.html" frameborder="0" scrolling="no" width="100%" height="400">
+</iframe>
+<p>We have an approximation of the park’s extent; we’ll get some false positives here but this will work for purposes of illustration. We can then use <code>st_intersects</code> to see if our lines intersect the buffer:</p>
+<pre class="r"><code>st_intersects(lines, bryant_buffer)</code></pre>
+<pre><code>## [[1]]
+## [1] 1</code></pre>
+<p>The function returns <code>1</code>, which means that we do have an intersection. Now, let’s try testing this out over 1000 simulations, and see how many times a simulated sample of 1000 visitors walk through Bryant Park. We first need to generate 1000 paths:</p>
+<pre class="r"><code>paths &lt;- lapply(1:1000, function(x) {
+  
+  set.seed(x)
+  
+  long &lt;- sample(seq(-73.9995, -73.9688, 0.0001), 100, replace = TRUE)
+  lat &lt;- sample(seq(40.7483, 40.7646, 0.0001), 100, replace = TRUE)
+  df &lt;- data.frame(long, lat, id = 1:100)
+  
+  path &lt;- df[,1:2] %&gt;%
+    dist(diag = FALSE) %&gt;%
+    TSP() %&gt;%
+    insert_dummy(label = &quot;cut&quot;) %&gt;%
+    solve_TSP(method = &quot;nearest_insertion&quot;) %&gt;%
+    cut_tour(cut = &quot;cut&quot;) 
+  
+  df2 &lt;- df[match(path, df$id), ] 
+  
+  lines &lt;- df2[,1:2] %&gt;%
+    as.matrix() %&gt;%
+    st_linestring() %&gt;%
+    st_sfc(crs = 4326) %&gt;%
+    st_transform(32618)
+  
+  lines
+  
+})</code></pre>
+<p>We can now see how many visitors walked through Bryant Park:</p>
+<pre class="r"><code>visits &lt;- unlist(
+  lapply(paths, function(x) {
+    y &lt;- st_intersects(x, bryant_buffer)
+    if (length(y[[1]]) == 1) {
+      return(1)
+    } else {
+      return(0)
+    } 
+  })
+)
+
+table(visits)</code></pre>
+<pre><code>## 
+##   0   1 
+## 335 665</code></pre>
+<p>665 of our 1000 visitors walked through Bryant Park.</p>
+<p>This just scratches the surface of the spatial work that can be done in R with the <strong>sf</strong> package. In the future, I’ll write more about the new <code>sf</code> class, which represents spatial objects much like data frames and in turn can accept dplyr verbs for data wrangling.</p>
+
+
+
+
+</div>
+
+
+  <footer class="container">
+  <div class="container navigation no-print">
+  <h2>Navigation</h2>
+  
+  
+
+    
+    <a class="prev" href="../../../2016/12/rmd-dropdowns/" title="Dropdown menus in R Markdown with bsselectR">
+      Previous
+    </a>
+    
+
+    
+    <a class="next" href="../../../2017/01/sha-2017/" title="GIS workshop at the 2017 Society for Historical Archaeology Conference">
+      Next
+    </a>
+    
+
+  
+
+
+</div>
+
+  
+
+</footer>
+
+</article>
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+
+</div>
+
+
+  
+<div class="container copyright">
+  
+  &copy; 2017 Kyle Walker
+
+
+</div>
+
+
+</div>
+
+</footer>
+
+    </main>
+    
+<script type="text/javascript">
+  (function() {
+    
+    
+    if (window.location.hostname == "localhost")
+      return;
+
+    var dsq = document.createElement('script'); dsq.async = true; dsq.type = 'text/javascript';
+    dsq.src = '//your_disqus_shortname.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+
+<script src="../../../js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51388803-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+    
+  </body>
+</html>
+

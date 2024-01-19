@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kyle Walker">
+<meta name="dcterms.date" content="2023-01-23">
+
+<title>WALKER DATA - Distance and proximity analysis in Python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta name="twitter:title" content="WALKER DATA - Distance and proximity analysis in Python">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://walker-data.com/posts/proximity-analysis/image.png">
+<meta name="twitter:image-height" content="684">
+<meta name="twitter:image-width" content="854">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">WALKER DATA</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../workshops.html" rel="" target="">
+ <span class="menu-text">Workshops</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/walkerke" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/kyle_e_walker" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#getting-and-formatting-location-data" id="toc-getting-and-formatting-location-data" class="nav-link active" data-scroll-target="#getting-and-formatting-location-data">Getting and formatting location data</a></li>
+  <li><a href="#calculating-distances-to-trauma-centers" id="toc-calculating-distances-to-trauma-centers" class="nav-link" data-scroll-target="#calculating-distances-to-trauma-centers">Calculating distances to trauma centers</a></li>
+  <li><a href="#finding-travel-times-to-trauma-centers" id="toc-finding-travel-times-to-trauma-centers" class="nav-link" data-scroll-target="#finding-travel-times-to-trauma-centers">Finding travel-times to trauma centers</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Distance and proximity analysis in Python</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">python</div>
+    <div class="quarto-category">gis</div>
+    <div class="quarto-category">data science</div>
+    <div class="quarto-category">navigation</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kyle Walker </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 23, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Spatial data science projects frequently require the calculation of <em>proximity</em> to resources. Analysts in fields like health care, real estate, retail, education, and more are commonly tasked with finding out what resources are near to a given location, and potentially develop strategies to fill identified gaps in resource access. In Chapter 7 of my book <em>Analyzing US Census Data</em>, <a href="https://walker-data.com/census-r/spatial-analysis-with-us-census-data.html#distance-and-proximity-analysis">I illustrate a workflow that shows how to analyze accessibility from Census tracts to major trauma hospitals in Iowa</a>. In this post, I’ll show you how to reproduce the first part of that analysis in Python for the neighboring state of South Dakota.</p>
+<p>Similar to the section in my book, this post will cover how to calculate proximity in two ways: using straight-line (Euclidean) distances in a projected coordinate system, and using driving times derived from a hosted navigation service. You’ll learn how to compute distances using built-in tools in <strong>geopandas</strong>, and also use the <strong>routingpy</strong> Python package to interact with Mapbox’s Navigation APIs.</p>
+<section id="getting-and-formatting-location-data" class="level2">
+<h2 class="anchored" data-anchor-id="getting-and-formatting-location-data">Getting and formatting location data</h2>
+<p>To get started, we’ll need to acquire and format data on both Census tracts and hospitals. We can get Census tract boundaries for South Dakota using <a href="https://walker-data.com/pygris/">my <strong>pygris</strong> package</a>; we’ll then use the <a href="https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.to_crs.html"><code>.to_crs()</code></a> method to transform to an appropriate projected coordinate reference system for the area.</p>
+<p>The hospitals can be downloaded from the US Department of Homeland Security’s <a href="https://hifld-geoplatform.opendata.arcgis.com/datasets/hospitals/explore?location=36.729510%2C-96.551840%2C4.98">Homeland Infrastructure Foundation-Level Data (HIFLD) portal</a>. HIFLD includes open, frequently-updated datasets on “critical infrastructure” such as schools, pharmacies, and health care facilities. After reading in the downloaded file, we subset the data using a regular expression and <code>.str.contains()</code> to include only Level I and Level II trauma centers, and drop any duplicated records.</p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gp</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pygris <span class="im">import</span> tracts</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Coordinate system: State Plane South Dakota North</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>sd_tracts <span class="op">=</span> tracts(<span class="st">"SD"</span>, cb <span class="op">=</span> <span class="va">True</span>, </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                   year <span class="op">=</span> <span class="dv">2021</span>, </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                   cache <span class="op">=</span> <span class="va">True</span>).to_crs(<span class="dv">6571</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>hospitals <span class="op">=</span> gp.read_file(<span class="st">'Hospitals.geojson'</span>).to_crs(<span class="dv">6571</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>trauma <span class="op">=</span> hospitals.loc[hospitals[<span class="st">'TRAUMA'</span>].<span class="bu">str</span>.contains(<span class="st">"LEVEL I</span><span class="ch">\\</span><span class="st">b|LEVEL II</span><span class="ch">\\</span><span class="st">b|RTH|RTC"</span>)]</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>trauma <span class="op">=</span> trauma.drop_duplicates([<span class="st">'ID'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Using FIPS code '46' for input 'SD'</code></pre>
+</div>
+</div>
+<p>The next step is to identify those trauma hospitals that are <em>near to</em> South Dakota. While the hospitals dataset does have a <code>STATE</code> column, we don’t want to filter the dataset for only those hospitals that are located in the state. In some cases, the nearest trauma hospital might be in a different state, and we don’t want to exclude those from our analysis.</p>
+<p>The approach here identifies all trauma hospitals within 100 kilometers of the South Dakota border, or within the state itself. We use a sequence of common GIS operations with <strong>geopandas</strong> to accomplish this. Our steps include:</p>
+<ul>
+<li>Combining the South Dakota Census tracts into a single shape with the <code>.dissolve()</code> method;</li>
+<li>Drawing a new shape that extends to 100km beyond the South Dakota border with the <code>.buffer()</code> method;</li>
+<li>Using an <em>inner spatial join</em> to retain only those trauma centers that fall within the 100km buffer shape.</li>
+</ul>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>sd_buffer <span class="op">=</span> gp.GeoDataFrame(geometry <span class="op">=</span> sd_tracts.dissolve().<span class="bu">buffer</span>(<span class="dv">100000</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sd_trauma <span class="op">=</span> trauma.sjoin(sd_buffer, how <span class="op">=</span> <span class="st">"inner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>After running this operation, we can draw a quick plot to show the relationships between Census tracts and hospitals as in <a href="https://walker-data.com/census-r/spatial-analysis-with-us-census-data.html#calculating-distances">Section 7.4.1 of <em>Analyzing US Census Data</em></a>.</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize <span class="op">=</span> (<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>sd_tracts.plot(ax <span class="op">=</span> ax, color <span class="op">=</span> <span class="st">"grey"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>sd_trauma.plot(ax <span class="op">=</span> ax, color <span class="op">=</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>&lt;AxesSubplot: &gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-4-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>There are seven Level I or Level II trauma centers within 100km of South Dakota (in fact, all are Level II). In fact, only three are actually in the state, with two in Sioux Falls and one in Rapid City. Three others are in North Dakota (Bismarck and Fargo) and one is just across the border in Sioux City, Iowa.</p>
+</section>
+<section id="calculating-distances-to-trauma-centers" class="level2">
+<h2 class="anchored" data-anchor-id="calculating-distances-to-trauma-centers">Calculating distances to trauma centers</h2>
+<p>The simplest way to calculate proximity is with straight-line distances. In a projected coordinate system, this amounts to little more than Euclidean geometry, and such distance calculations are readily available to us using the <code>.distance()</code> method in <strong>geopandas</strong>. Conceptually, we’ll want to think through how to represent polygon-to-point distances. The most accurate approach would likely be to find the <em>population-weighted centroid</em> of each Census tract using some underlying dataset like Census blocks. In the example here, I’m taking a more simplistic approach by finding the geographic centroid of each tract. The centroids are found in the <code>centroid</code> attribute of any polygon <strong>GeoDataFrame</strong>.</p>
+<p>Once the centroids are identified, we can iterate over them with <code>apply</code> and build a dataset that represents a distance matrix between Census tracts and trauma hospitals. Distances are calculated in meters, the base unit of our coordinate reference system (State Plane South Dakota North).</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>tract_centroids <span class="op">=</span> sd_tracts.centroid</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>dist <span class="op">=</span> tract_centroids.geometry.<span class="bu">apply</span>(<span class="kw">lambda</span> g: sd_trauma.distance(g, align <span class="op">=</span> <span class="va">False</span>))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>dist.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">2321</th>
+<th data-quarto-table-cell-role="th">4488</th>
+<th data-quarto-table-cell-role="th">4489</th>
+<th data-quarto-table-cell-role="th">4500</th>
+<th data-quarto-table-cell-role="th">5453</th>
+<th data-quarto-table-cell-role="th">5454</th>
+<th data-quarto-table-cell-role="th">5455</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>179156.152185</td>
+<td>422441.507300</td>
+<td>422155.094660</td>
+<td>313038.398120</td>
+<td>490132.864570</td>
+<td>62861.191081</td>
+<td>61633.946651</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>315344.252959</td>
+<td>276978.438522</td>
+<td>276708.176024</td>
+<td>254769.314501</td>
+<td>384118.434400</td>
+<td>208119.760220</td>
+<td>206470.685056</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>275529.979201</td>
+<td>354138.644057</td>
+<td>353818.847981</td>
+<td>213424.554461</td>
+<td>495938.859489</td>
+<td>157302.191011</td>
+<td>156735.306982</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>187763.417249</td>
+<td>408402.306426</td>
+<td>408161.751845</td>
+<td>362094.468043</td>
+<td>419202.830653</td>
+<td>107982.166667</td>
+<td>105743.400331</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>655092.671279</td>
+<td>344550.256147</td>
+<td>344760.480163</td>
+<td>605274.028698</td>
+<td>87369.870363</td>
+<td>592598.357613</td>
+<td>590388.549939</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Let’s take a quick look at how distance to the nearest trauma center varies around South Dakota. We’ll use the <code>.min()</code> method to find the minimum distance to a hospital for each row, then divide the result by 1000 to convert the distances to kilometers. We can then draw a histogram to review the distribution.</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>min_dist <span class="op">=</span> dist.<span class="bu">min</span>(axis <span class="op">=</span> <span class="st">'columns'</span>) <span class="op">/</span> <span class="dv">1000</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>sns.histplot(min_dist, binwidth <span class="op">=</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>&lt;AxesSubplot: ylabel='Count'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-6-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Over 60 Census tracts are within 10km of a trauma center, reflecting tracts located within the population centers of Rapid City and Sioux Falls. However, many tracts in the state are beyond 100km from the nearest trauma center, with 26 200km or more away.</p>
+<p>We know that in rural areas, however, straight-line distances can be misleading. Given the geography of highway networks, accessibility to a trauma center is mediated through accessibility to that road network. Let’s take a look at an alternative approach to calculating proximity to hospitals with a hosted routing service.</p>
+</section>
+<section id="finding-travel-times-to-trauma-centers" class="level2">
+<h2 class="anchored" data-anchor-id="finding-travel-times-to-trauma-centers">Finding travel-times to trauma centers</h2>
+<p>Analysts who need to calculate proximity along a road network in Python have multiple options available to them. One way is to build a network using a tool like <a href="https://osmnx.readthedocs.io/en/stable/">OSMnx</a>; another way, shown here, is to connect to a hosted navigation service. In <em>Analyzing US Census Data</em>, I demonstrate <a href="https://walker-data.com/census-r/spatial-analysis-with-us-census-data.html#calculating-travel-times">how to use my <strong>mapboxapi</strong> R package to calculate a travel-time matrix between Census tracts and hospitals</a>. In Python, we can connect to Mapbox’s navigation services <a href="https://routingpy.readthedocs.io/en/latest/">with the <strong>routingpy</strong> package, an interface to several hosted navigation APIs</a>.</p>
+<p>In <strong>routingpy</strong>, Mapbox’s web services are referenced as <code>MapboxOSRM</code>. We’ll need a Mapbox account and access token to access these services; I’m storing mine in a variable named <code>mapbox_key</code>. I then initalize a connection to Mapbox with <code>MapboxOSRM()</code>, which I am calling <code>mb</code>.</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> routingpy.routers <span class="im">import</span> MapboxOSRM</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>mb <span class="op">=</span> MapboxOSRM(api_key <span class="op">=</span> mapbox_key)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In the <strong>mapboxapi</strong> R package, the processing required to prepare datasets for the Mapbox APIs is taken care of internally. To calculate a travel-time matrix in Python, we’ll need to do some data processing to format our Census tracts and hospitals in the correct way before we send them to the routing service.</p>
+<p>Below, I’m defining a function <code>points_to_coords()</code> to convert a given GeoDataFrame of points to a list of lists, with each list element representing the XY coordinates of a given input point in the dataset. We’ll then call the function on the Census tract centroids and the trauma hospitals datasets.</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to convert points to coordinates</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> points_to_coords(<span class="bu">input</span>):</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  geom <span class="op">=</span> <span class="bu">input</span>.to_crs(<span class="dv">4326</span>).geometry</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> [[g.x, g.y] <span class="cf">for</span> g <span class="kw">in</span> geom]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate list of coordinates</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>tract_coords <span class="op">=</span> points_to_coords(tract_centroids)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>hospital_coords <span class="op">=</span> points_to_coords(sd_trauma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next, we’ll set up some custom code that allows for the creation of a 242 by 7 travel-time matrix. This is necessary because Mapbox’s Matrix API only allows for a maximum of 25 coordinate pairs per request, and we have 249 total! Let’s run the code, then walk through the steps we took.</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>split_size <span class="op">=</span> <span class="dv">25</span> <span class="op">-</span> <span class="bu">len</span>(hospital_coords)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>chunks <span class="op">=</span> [tract_coords[x:x <span class="op">+</span> split_size] <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(tract_coords), split_size)]</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>times_list <span class="op">=</span> []</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> chunk <span class="kw">in</span> chunks:</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  all_coords <span class="op">=</span> chunk <span class="op">+</span> hospital_coords</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Find the indices of origin and destination</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  origin_ix <span class="op">=</span> [x <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(chunk), <span class="dv">1</span>)]</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  hospital_ix <span class="op">=</span> [y <span class="cf">for</span> y <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(chunk), <span class="bu">len</span>(all_coords), <span class="dv">1</span>)]</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Run the travel-time matrix</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  times <span class="op">=</span> mb.matrix(locations <span class="op">=</span> all_coords,</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>                    profile <span class="op">=</span> <span class="st">"driving"</span>,</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>                    sources <span class="op">=</span> origin_ix,</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>                    destinations <span class="op">=</span> hospital_ix)</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert to a dataframe</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>  times_df <span class="op">=</span> pd.DataFrame(times.durations)</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  times_list.append(times_df)</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>all_times <span class="op">=</span> pd.concat(times_list, ignore_index <span class="op">=</span> <span class="va">True</span>) </span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>all_times.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+<th data-quarto-table-cell-role="th">2</th>
+<th data-quarto-table-cell-role="th">3</th>
+<th data-quarto-table-cell-role="th">4</th>
+<th data-quarto-table-cell-role="th">5</th>
+<th data-quarto-table-cell-role="th">6</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>7888.9</td>
+<td>22103.4</td>
+<td>22233.8</td>
+<td>11812.5</td>
+<td>19938.0</td>
+<td>3821.1</td>
+<td>3672.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>14748.0</td>
+<td>14480.9</td>
+<td>14611.3</td>
+<td>12718.5</td>
+<td>17358.1</td>
+<td>10649.7</td>
+<td>10531.1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>10251.6</td>
+<td>18023.1</td>
+<td>18153.5</td>
+<td>7747.9</td>
+<td>22173.1</td>
+<td>6183.8</td>
+<td>6034.7</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>8646.7</td>
+<td>20428.2</td>
+<td>20558.6</td>
+<td>15953.4</td>
+<td>15610.0</td>
+<td>4548.4</td>
+<td>4429.8</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>26589.6</td>
+<td>17174.6</td>
+<td>17177.2</td>
+<td>27658.8</td>
+<td>3819.9</td>
+<td>22491.3</td>
+<td>22372.7</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>You can interpret the code above as follows:</p>
+<ul>
+<li>Given that we have far more coordinates than the Matrix API’s limit of 25, we need to split up our origin coordinates into chunks. We identify a <code>split_size</code> as 25 minus the number of hospitals (7); this is 18. We then split the Census tract centroid coordinates into chunks of 18 using a list comprehension.</li>
+<li>Next, we initialize a list to store our chunked output, and iterate through the chunks. This process involves the following:
+<ul>
+<li>We’ll combine the list of origin coordinates (for a given chunk) and the hospital coordinates in the object <code>all_coords</code>;</li>
+<li>Next, we identify the indices of the origin coordinates and the hospital coordinates in <code>all_coords</code>. This is critical information that we’ll need to pass along to the Mapbox Matrix API.<br>
+</li>
+<li>We use <code>mb.matrix()</code> to make a request to the Matrix API. The request requires a list of coordinates; a travel profile; and the source and destination indices.<br>
+</li>
+<li>Once we get the results back, we’ll create a <strong>pandas</strong> DataFrame and append to <code>times_list</code>.<br>
+</li>
+</ul></li>
+<li>Finally, we use <code>pd.concat()</code> to combine the chunked results into a single DataFrame, which you see above. Values represent the drive-time in seconds between Census tract centroids and the trauma hospitals.</li>
+</ul>
+<p>Our last steps before plotting involve finding the minimum travel-time from each Census tract to a trauma hospital, converting to minutes, then adding back to the Census tracts GeoDataFrame as a column named <code>'time'</code>. Using the GeoDataFrame method <code>.plot()</code> with some customization, we can reproduce the plot in <em>Analyzing US Census Data</em>.</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>min_times <span class="op">=</span> all_times.<span class="bu">min</span>(axis <span class="op">=</span> <span class="st">"columns"</span>) <span class="op">/</span> <span class="dv">60</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>sd_tracts[<span class="st">'time'</span>] <span class="op">=</span> min_times</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>sd_tracts.plot(column <span class="op">=</span> <span class="st">"time"</span>, legend <span class="op">=</span> <span class="va">True</span>, figsize <span class="op">=</span> (<span class="dv">8</span>, <span class="dv">5</span>),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>               cmap <span class="op">=</span> <span class="st">"magma"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>               legend_kwds <span class="op">=</span> {<span class="st">"location"</span>: <span class="st">"top"</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"shrink"</span>: <span class="fl">0.5</span>})</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Travel-time (minutes) to nearest</span><span class="ch">\n</span><span class="st">Level I or Level II trauma hospital</span><span class="ch">\n\n\n\n</span><span class="st">"</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plt.gca()</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">'Census tracts in South Dakota</span><span class="ch">\n</span><span class="st">Data sources: US Census Bureau, US DHS, Mapbox'</span>, </span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>), xycoords<span class="op">=</span><span class="st">'figure fraction'</span>,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>            fontsize<span class="op">=</span><span class="dv">8</span>, ha<span class="op">=</span><span class="st">'left'</span>, va<span class="op">=</span><span class="st">'top'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>Text(0.1, 0.1, 'Census tracts in South Dakota\nData sources: US Census Bureau, US DHS, Mapbox')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-11-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>The map shows distinct gaps in accessibility to Level II trauma centers across the state of South Dakota. While neighborhoods in Rapid City, Sioux Falls, and the southeastern corner of the state near Sioux City are a short drive from a trauma hospital, some central South Dakota Census tracts are more than three and a half hours away from the nearest Level II trauma hospital by car.</p>
+<p>If you’ve found this post useful, <a href="https://www.routledge.com/Analyzing-US-Census-Data-Methods-Maps-and-Models-in-R/Walker/p/book/9781032366449">consider picking up a copy of my book <em>Analyzing US Census Data: Methods, Maps, and Models in R</em></a>, which hits shelves next month. I’ll keep sharing Python spatial data science workflows on this blog as well, so keep an eye out for future posts!</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

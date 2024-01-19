@@ -1,0 +1,84 @@
+---
+title: 'Obesity by state, 2013: a CartoDB state squares experiment'
+author: "Kyle Walker"
+date: 2015-05-09
+slug: obesity-squares
+---
+
+In this document, I will demonstrate how I created an interactive CartoDB state squares map of obesity in the United States for 2013.  Credit is due to [Bill Dollins](https://twitter.com/billdollins) for sharing a state squares file in GeoJSON format.  You can access the file from his [GitHub repository](https://github.com/geobabbler/us-state-squares). The data processing is done in R, and the visualization is done with the CartoDB web GUI.
+
+The workflow below uses the [kwgeo](https://github.com/walkerke/kwgeo) R package to upload data directly to CartoDB.  As this package is intended for personal use, it may not meet your needs.  If this is the case, the workflow (aside from the uploading, which you'll have to do manually) can be reproduced by replacing `kwgeo` with the `rgdal` package.  
+To get started, let's load the packages and data, which I've downloaded from Bill's repository.  
+
+```{r, message=FALSE, warning=FALSE}
+
+library(kwgeo)
+library(rvest)
+library(dplyr)
+
+squares <- readOGR("state_squares.geojson", "OGRGeoJSON", verbose = FALSE)
+
+plot(squares)
+
+```
+
+Now, I need to fetch obesity data from the [CDC website](http://nccd.cdc.gov/NPAO_DTM/IndicatorSummary.aspx?category=28&indicator=29).  The scraped table has a couple elements that need to be cleaned up, so I'll do that below.  
+
+```{r, message=FALSE, warning=FALSE, eval = FALSE}
+url <- "http://nccd.cdc.gov/NPAO_DTM/IndicatorSummary.aspx?category=28&indicator=29"
+
+df <- url %>%
+  html() %>%
+  html_nodes("table") %>%
+  html_table(fill = TRUE) %>%
+  data.frame() 
+
+df_fixed <- df %>%
+  select(name = Location.Type, obesity = Location) %>%
+  filter(!(name %in% c("National", "Territories"))) %>%
+  mutate(name = ifelse(name == "States", "Alabama", name), 
+         obesity = ifelse(obesity == "Alabama", "32.4", obesity)) %>%
+  mutate(obesity = as.numeric(obesity))
+
+```
+
+I then merge the squares data with my obesity data, and upload to CartoDB with my [r2cartodb](http://rpubs.com/walkerke/r2cartodb) function.  
+
+```{r, eval=FALSE}
+
+merged_squares <- sp::merge(squares, df_fixed, by = "name", sort = FALSE)
+
+my_account_id = "kwalkertcu"
+
+my_api_key = "not_sharing_this"
+
+r2cartodb(merged_squares, "obesity_squares", my_account_id, my_api_key)
+
+```
+
+I then head to CartoDB to style my data with its web GUI.  However, there are a couple steps I need to take to display the data as squares, given that the default is to project my data in Web Mercator.  First, I change the basemap to a white background, given that my data aren't designed to align with a pre-designed basemap.  Next, I project my data using CartoDB's SQL pane so that my states appear as squares, rather than rectangles.  I use [an equirectangular (Plate Carree) projection](http://spatialreference.org/ref/epsg/32662/) to get this done, which can be accomplished with the following SQL: 
+
+```SQL
+SELECT 
+
+cartodb_id, obesity, name, abbr, 
+
+ST_Transform(the_geom, 32662) the_geom_webmercator
+
+FROM obesity_squares
+```
+I then apply some styling, creating a 5-class quantile choropleth based on the `obesity` field from the "wizards" tab.  I also label the squares with the `abbr` field, setting the "Label Offset" to `0` to center the labels.  I then add a tooltip to appear on hover that gives information about obesity in each state.  Here is the result!
+
+<iframe width='100%' height='600' frameborder='0' src='https://kwalkertcu.cartodb.com/viz/661c6e38-f63b-11e4-9085-0e853d047bba/embed_map' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+
+Pan and zoom to explore the state squares map.  What this demonstrates, I think, is that CartoDB can be used for visualizations of all types, not just maps, so long as you get the coordinates and projection right - as exemplified by [this recent visualization from the LA Times](http://graphics.latimes.com/pop-music-evolution/).  
+
+If you have any comments or questions, please let me know!   
+
+
+
+
+
+
+
+
