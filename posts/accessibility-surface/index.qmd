@@ -1,0 +1,102 @@
+---
+title: "Visualizing accessibility surfaces in R"
+author: "Kyle Walker"
+date: "2024-01-19"
+categories: [r, gis, data science, spatial analysis]
+image: day-21-raster.jpeg
+filters: 
+  - lightbox
+lightbox: auto
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+options(tigris_use_cache = TRUE)
+```
+
+
+In November, I completed the [30 Day Map Challenge](https://30daymapchallenge.com/) for the first time.  I posted all of my submissions to Twitter/X and LinkedIn, and observed how the community reacted to each of my maps through likes, reposts, and comments.  
+
+My most popular submission based on social media engagement was for Day 21: Raster.  I've been using a technique for years called an "accessibility surface" to visualize proximity to locations.  The accessibility surface is a raster dataset in which each grid cell represents the travel-time to that location from another given location, or the nearest location in a set of locations.  Accessibility surfaces are useful tools for commute and transportation planning, understanding capacity of emergency services, visualizing access to amenities, and more. 
+
+The map I submitted showed accessibility from Nike Headquarters in the Portland metropolitan area.  Let's walk through how to create it!
+
+To get started, we'll need to identify our location that we want to calculate access from, then build out a dataset that represents accessibility to that location.  I'll use Nike Headquarters in Beaverton, Oregon for this example.  This workflow could be used to plan residential locations for commuters considering jobs at Nike, or current workers thinking about where to relocate.  
+
+I'm a fan of Mapbox's tools for computing accessibility due to their ease of use, especially through the [mapboxapi R package that I wrote](https://walker-data.com/mapboxapi/).  You'll need a Mapbox account for this to work, and to set your Mapbox access token, which requires a credit card to register.  If you'd prefer not to go this route, you might consider building isochrones with self-hosted options like [OSRM](https://project-osrm.org/) or [Valhalla](https://valhalla.github.io/valhalla/).   
+
+The first step I use when computing an accessibility surface is to create _layered isochrones_.  An isochrone is a shape that represents the reachable area from a given location in a particular amount of time for a given travel mode.  I've written the function `mb_isochrone()` to make the calculation of isochrones in R straightforward; here, we'll compute layered isochrones at 1-minute drivetime intervals around the Nike HQ.  
+
+```{r}
+library(mapboxapi)
+library(leaflet)
+
+isos <- mb_isochrone(
+  location = "One Bowerman Dr, Beaverton, OR 97005",
+  profile = "driving",
+  time = 1:45
+)
+
+leaflet() %>%
+  addMapboxTiles("streets-v11", "mapbox") %>%
+  addPolygons(data = isos)
+
+```
+
+The visualization is messy - that's because we have 45 different isochrones drawn on top of one another.  We'll want to clean this up by converting to a raster using the accessibility surface visualization method.  To accomplish this, we'll turn to the fasterize R package, a package that offers speedy tools for vector-to-raster data conversion.  
+
+We'll first transform our data to a projected coordinate reference system and define a raster template with 100m grid cells.  The `fasterize()` function then computes, for each grid cell, the minimum overlapping time as defined by the isochrones that overlap the raster.  
+
+
+```{r}
+library(sf)
+library(fasterize)
+
+isos_proj <- st_transform(isos, 32618)
+
+template <- raster(isos_proj, resolution = 100)
+
+iso_surface <- fasterize(isos_proj, template, field = "time", fun = "min")
+
+iso_surface
+```
+We note that the raster dataset has a resolution of 100 meters, with values between 1 and 45 minutes for each of its 652,000 grid cells.  Let's take a look at this on the map!
+
+```{r}
+pal <- colorNumeric("plasma", isos$time, na.color = "transparent")
+
+nike_map <- leaflet() %>%
+  addMapboxTiles(style_id = "light-v9",
+                 username = "mapbox",
+                 scaling_factor = "0.5x") %>%
+  addRasterImage(iso_surface, colors = pal, opacity = 0.5) %>%
+  addLegend(values = isos$time, pal = pal,
+            title = "Drive-time from<br>Nike HQ")
+
+nike_map
+
+```
+
+The surface shows travel-times from Nike's headquarters in a much smoother way.  Far-out areas are visualized in yellow, whereas nearby areas are shown in purple; you can also see the purple "arteries" of the highway system around Portland.  
+
+You may also want to add a marker to the Leaflet map showing exactly where Nike's headquarters is located.  Here's an updated map: 
+
+```{r}
+nike_icon <- makeIcon(
+  iconUrl = "https://nike.com/favicon.ico",
+  iconWidth = 25,
+  iconHeight = 25
+)
+
+nike_hq <- mb_geocode("One Bowerman Dr, Beaverton, OR 97005")
+
+nike_map %>%
+  addMarkers(lng = nike_hq[1], lat = nike_hq[2], icon = nike_icon)
+  
+```
+
+
+Try out the accessibility surface for yourselves, and let me know what you create!  oughts 
