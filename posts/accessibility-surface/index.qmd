@@ -3,7 +3,7 @@ title: "Visualizing accessibility surfaces in R"
 author: "Kyle Walker"
 date: "2024-01-19"
 categories: [r, gis, data science, spatial analysis]
-image: day-21-raster.jpeg
+image: image.png
 filters: 
   - lightbox
 lightbox: auto
@@ -99,4 +99,4 @@ nike_map %>%
 ```
 
 
-Try out the accessibility surface for yourselves, and let me know what you create!  oughts 
+Try out the accessibility surface for yourselves, and let me know what you create! 
