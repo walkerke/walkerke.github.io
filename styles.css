@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
-.navbar-dark {
+.navbar {
     background-color: #1a730f;
     color: white !important;
   
@@ -17,7 +17,7 @@
   color: white !important;
 }
 
-.navbar-dark .navbar-nav .nav-link {
+.navbar .navbar-nav .nav-link {
   color: white !important;
 }
 

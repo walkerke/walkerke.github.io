@@ -2,58 +2,54 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://walker-data.com/blog.html</loc>
-    <lastmod>2024-01-19T19:54:12.581Z</lastmod>
+    <lastmod>2022-12-20T15:37:13.000Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/index.html</loc>
-    <lastmod>2023-11-10T14:57:43.174Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/proximity-analysis/index.html</loc>
-    <lastmod>2023-11-10T14:47:13.163Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/pygris-arcgis/index.html</loc>
-    <lastmod>2023-11-10T14:47:11.218Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/python-isochrones/index.html</loc>
-    <lastmod>2023-11-10T14:47:10.505Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/lodes-commutes/index.html</loc>
-    <lastmod>2023-11-10T14:47:08.795Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/census-regions/index.html</loc>
-    <lastmod>2023-11-10T14:47:09.885Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/lodes-2020/index.html</loc>
-    <lastmod>2023-11-10T14:47:10.878Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/esda-with-python/index.html</loc>
-    <lastmod>2023-11-10T14:47:12.363Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/workshops.html</loc>
-    <lastmod>2023-11-10T14:47:13.467Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/about.html</loc>
-    <lastmod>2024-01-16T23:46:32.318Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/indexed-mapping/index.html</loc>
-    <lastmod>2024-01-13T22:31:29.093Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/iterative-mapping/index.html</loc>
-    <lastmod>2024-01-15T21:19:52.061Z</lastmod>
+    <lastmod>2024-03-19T16:16:56.942Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/posts/accessibility-surface/index.html</loc>
-    <lastmod>2024-01-19T19:54:11.899Z</lastmod>
+    <lastmod>2024-01-19T19:54:04.669Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/esda-with-python/index.html</loc>
+    <lastmod>2022-12-20T15:36:06.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/lodes-2020/index.html</loc>
+    <lastmod>2023-05-17T18:13:53.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/census-regions/index.html</loc>
+    <lastmod>2023-06-25T15:44:41.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/lodes-commutes/index.html</loc>
+    <lastmod>2023-01-11T16:37:47.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/iterative-mapping/index.html</loc>
+    <lastmod>2024-01-15T21:04:03.624Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/python-isochrones/index.html</loc>
+    <lastmod>2023-08-10T15:20:11.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/pygris-arcgis/index.html</loc>
+    <lastmod>2023-02-28T14:07:01.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/proximity-analysis/index.html</loc>
+    <lastmod>2023-05-08T19:27:53.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/workshops.html</loc>
+    <lastmod>2023-10-24T13:02:23.169Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/about.html</loc>
+    <lastmod>2024-01-16T23:46:27.027Z</lastmod>
   </url>
 </urlset>

@@ -5,7 +5,7 @@ toc: false
 
 ```{=html}
 <center>
-  <img src="img/Logo with chart.png" style="width: 400px; display: block; margin: auto;">
+  <img src="img/Logo with chart.png" style="width: 35%; display: block; margin: auto;">
 </center>
 ```
 
