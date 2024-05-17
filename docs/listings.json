@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/overture-buildings/index.html",
       "/posts/accessibility-surface/index.html",
       "/posts/iterative-mapping/index.html",
       "/posts/python-isochrones/index.html",
