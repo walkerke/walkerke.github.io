@@ -1,0 +1,175 @@
+---
+title: "Drag-and-drop address geocoding with Mapbox in Shiny"
+author: "Kyle Walker"
+date: "2024-06-04"
+categories: [r, gis, data science, spatial analysis]
+embed-resources: false
+image: image.png
+filters: 
+  - lightbox
+lightbox: auto
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+options(tigris_use_cache = TRUE)
+```
+
+Last month, I led the workshops ["Location Intelligence with R and Mapbox" and "Building Web Mapping Applications with R and Shiny"](https://walkerdata.gumroad.com/l/li-shiny-bundle?offer_code=GEOCODE).  In each workshop, I debuted brand-new features in [the mapboxapi R package](https://walker-data.com/mapboxapi/) to interact with [Mapbox's updated geocoding services](https://docs.mapbox.com/api/search/geocoding/).  These features included batch geocoding and an interactive geocoder widget for Shiny apps.  
+
+In the concluding Q&A session of the Shiny workshop, a participant asked if it was possible to build functionality into a Shiny app where a user could upload a CSV of addresses then view the geocoded addresses on a map.  This question was too lengthy to answer in the live session, but is very well-suited to a follow-up blog post!
+
+Watch the video to take a look at the live app in action (you may want to view on YouTube for best quality), then read on to learn how you can build it yourselves.  The app uses a cleaned dataset of polling places in Tarrant County, Texas [scraped from here](https://www.tarrantcountytx.gov/content/dam/main/elections/2024/en24/locations/EN24_Vote_Center_Locations.pdf) with Tabula; [you can download the dataset from here to try out this workflow yourselves]().
+
+<iframe width="100%" height="400" src="https://www.youtube.com/embed/swWLhgfRUBY?si=rBIRdTlt7S0DytkR&hd=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+## Setting up the UI
+
+The full UI code is below; expand to view it.  You'll need a [Mapbox access token](https://walker-data.com/mapboxapi/reference/mb_access_token.html) to use the Mapbox geocoder.  
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "View UI code"
+
+library(shiny)
+library(readr)
+library(leaflet)
+library(bslib)
+library(mapboxapi)
+
+# Restart R after running this line
+# mb_access_token("YOUR TOKEN GOES HERE", install = TRUE)
+
+ui <- page_sidebar(
+  title = "Upload then Geocode with Mapbox",
+  sidebar = sidebar(
+    width = 350,
+    fileInput(
+      "file", "Choose CSV File",
+      accept = ".csv",
+      buttonLabel = "Upload..."
+    ), 
+    conditionalPanel(
+      condition = "output.fileUploaded",
+      selectInput("id_column", "Location ID:", choices = NULL),
+      selectInput("address", "Address:", choices = NULL),
+      selectInput("city", "City:", choices = NULL),
+      selectInput("state", "State:", choices = NULL),
+      selectInput("zip", "Zip:", choices = NULL),
+      actionButton("geocode", "Geocode addresses")
+    )
+  ), 
+  card(
+    full_screen = TRUE,
+    leafletOutput("map")
+  )
+)
+
+```
+
+Some highlights from the UI code: 
+
+- I'm using the bslib package to set up the UI, which has become my framework of choice for building Shiny apps.  `page_sidebar()` gets you a collapsible sidebar by default, and putting an output inside `card()` with `full_screen = TRUE` allows you to pop out the map to full screen.  
+
+- `fileInput()` handles the user's file uploads.  As you'll see in the video, users can drag-and-drop a CSV file to upload it or click the input button to browse their filesystem.  
+
+- The `conditionalPanel()` is set up to appear only once a file is uploaded.  It reveals a number of dropdown menus that will be populated with the column names of the input file (handled in the server code), and an action button to geocode the addresses.  You'll want to customize this depending on the expected input format of your CSV file and potentially include some error handling.  
+
+## Setting up the server
+
+The server code is below: expand to view it.  
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "View server code"
+
+server <- function(input, output, session) {
+  
+  output$map <- renderLeaflet({
+    leaflet() %>%
+      addMapboxTiles("streets-v12", "mapbox") %>%
+      setView(lng = -97.362, 
+              lat = 32.755,
+              zoom = 11)
+  })
+  
+  df_to_geocode <- reactive({
+    req(input$file)
+    read_csv(input$file$datapath)
+  })
+  
+  observe({
+    df <- df_to_geocode()
+    updateSelectInput(session, "id_column", choices = names(df))
+    updateSelectInput(session, "address", choices = names(df))
+    updateSelectInput(session, "city", choices = names(df))
+    updateSelectInput(session, "state", choices = names(df))
+    updateSelectInput(session, "zip", choices = names(df))
+  })
+  
+  output$fileUploaded <- reactive({
+    !is.null(input$file)
+  })
+  
+  outputOptions(output, "fileUploaded", suspendWhenHidden = FALSE)
+  
+  observe({
+    
+    df <- df_to_geocode()
+    
+    shiny::withProgress({
+      
+      incProgress(0.3)
+      
+      df_geocoded <- mb_batch_geocode(
+        data = df,
+        address_line1 = input$address,
+        place = input$city,
+        region = input$state,
+        postcode = input$zip
+      )
+      
+      incProgress(0.9)
+      
+      leafletProxy("map") %>%
+        clearMarkers() %>%
+        addMarkers(data = df_geocoded, 
+                   label = df_geocoded[[input$id_column]])
+      
+    }, message = "Geocoding addresses...")
+      
+  }) %>%
+    bindEvent(input$geocode, ignoreNULL = TRUE)
+
+}
+
+shinyApp(ui, server)
+
+```
+
+Some highlights from the server code: 
+
+- The reactive object `df_to_geocode()` represents the uploaded file.  Once the file is uploaded, the drop-down menus are populated (using `updateSelectInput()`) with the column names of the uploaded file.
+
+- This code is critical to get the app to work correctly: 
+
+```r
+output$fileUploaded <- reactive({
+  !is.null(input$file)
+})
+
+outputOptions(output, "fileUploaded", suspendWhenHidden = FALSE)
+```
+
+  The reactive `fileUploaded` output returns `TRUE` or `FALSE` depending on whether or not a file has been uploaded, and is used to trigger the conditional panel.  Setting `suspendWhenHidden = FALSE` in `outputOptions()` ensures that `fileUploaded` will update even when the UI element is hidden.  
+  
+- The app then observes the `input$geocode` button click event and uses `mb_batch_geocode()` to geocode the input addresses in bulk based on the user's column selections.  Note the use of `bindEvent()` instead of `observeEvent()`; this syntax was new to me, but is now recommended by Shiny's developers for event handling.
+
+## How to learn more
+
+If you are interested in learning more, be sure to check out the [Location Intelligence and Shiny Web Apps Workshop Bundle](https://walkerdata.gumroad.com/l/li-shiny-bundle?offer_code=GEOCODE), where you'll get 5 hours of step-by-step instruction from me along with two annotated tutorials to help you build skills in geospatial analytics and Shiny.  As a bonus - readers of this blog post get 25% off the purchase price with the code __GEOCODE__!
