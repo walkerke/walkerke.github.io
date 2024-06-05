@@ -236,5 +236,12 @@
     "title": "Drag-and-drop address geocoding with Mapbox in Shiny",
     "section": "How to learn more",
     "text": "How to learn more\nIf you are interested in learning more, be sure to check out the Location Intelligence and Shiny Web Apps Workshop Bundle, where you’ll get 5 hours of step-by-step instruction from me along with two annotated tutorials to help you build skills in geospatial analytics and Shiny. As a bonus - readers of this blog post get 25% off the purchase price with the code GEOCODE!"
+  },
+  {
+    "objectID": "workshops.html#location-intelligence-and-web-apps-with-shiny-workshops",
+    "href": "workshops.html#location-intelligence-and-web-apps-with-shiny-workshops",
+    "title": "Workshops",
+    "section": "Location Intelligence and Web Apps with Shiny Workshops",
+    "text": "Location Intelligence and Web Apps with Shiny Workshops\nLearn essential location intelligence skills like geocoding, routing, and travel-time analytics in R, and display your results in a dynamic web mapping application! This bundle gets you five hours of custom workshops and two annotated tutorials not found anywhere else.\n\n\n\n    Buy the bundle on Gumroad\n\n\n\n\nWorkshop 1: Location Intelligence with R and Mapbox\n\n\n\n\n\nAnimated isochrones around Nationals Park in Washington, DC\n\n\nThis 2.5 hour workshop is designed to help you build skills in location intelligence to benefit your business or organization. You’ll use analytical tools like R and Mapbox to identify customer and store locations, perform travel-time analytics, build sales territories, and much more.\n\n    Buy on Gumroad\n\n\n\n\nWorkshop 2: Building Web Mapping Applications with R and Shiny\n\n\n\n\n\nA geocoding app you’ll learn to build\n\n\nThis 2.5 hour workshop will teach you the fundamentals of building interactive web mapping applications using R and Shiny, R’s powerful framework for app development. By the end of the workshop, you’ll have the skills to create your own reactive mapping applications that include charts, custom design components, and more.\n\n    Buy on Gumroad"
   }
 ]

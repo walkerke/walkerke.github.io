@@ -19,6 +19,59 @@ Check out these testimonials from workshop participants:
 
 Reach out to <kyle@walker-data.com> to discuss your workshop needs today, or purchase a recorded workshop from the links below.  
 
+## Location Intelligence and Web Apps with Shiny Workshops
+
+Learn essential location intelligence skills like geocoding, routing, and travel-time analytics in R, and display your results in a dynamic web mapping application!  This bundle gets you five hours of custom workshops and two annotated tutorials not found anywhere else. 
+
+```{=html}
+<script src="https://gumroad.com/js/gumroad.js"></script>
+
+<div class="center">
+    <a href="https://walkerdata.gumroad.com/l/li-shiny-bundle"><button class="custom-button">Buy the bundle on Gumroad</button></a>
+</div>
+<br/>
+
+```
+
+<br/>
+
+__Workshop 1: Location Intelligence with R and Mapbox__
+
+::: {.column-margin}
+![Animated isochrones around Nationals Park in Washington, DC](img/isochrones2.gif)
+:::
+
+This 2.5 hour workshop is designed to help you build skills in location intelligence to benefit your business or organization. You'll use analytical tools like R and Mapbox to identify customer and store locations, perform travel-time analytics, build sales territories, and much more.
+
+```{=html}
+<div class="center">
+    <a href="https://walkerdata.gumroad.com/l/location-intelligence"><button class="custom-button">Buy on Gumroad</button></a>
+</div>
+<br/>
+
+```
+
+<br/>
+
+__Workshop 2: Building Web Mapping Applications with R and Shiny__
+
+::: {.column-margin}
+![A geocoding app you'll learn to build](img/geocoding_app.png)
+:::
+
+This 2.5 hour workshop will teach you the fundamentals of building interactive web mapping applications using R and Shiny, R's powerful framework for app development. By the end of the workshop, you'll have the skills to create your own reactive mapping applications that include charts, custom design components, and more.
+
+
+```{=html}
+<div class="center">
+    <a href="https://walkerdata.gumroad.com/l/web-mapping-shiny"><button class="custom-button">Buy on Gumroad</button></a>
+</div>
+<br/>
+
+```
+
+<br/>
+
 ## GIS and Interactive Mapping Workshops
 
 Get started with Geographic Infomation Systems, spatial data analysis, and interactive mapping in R in 5 hours of custom workshops.  The workshops are available for purchase separately or as a bundle for a $100 discount!
