@@ -6,23 +6,27 @@
   </url>
   <url>
     <loc>https://walker-data.com/index.html</loc>
-    <lastmod>2024-05-17T15:33:47.156Z</lastmod>
+    <lastmod>2024-06-05T21:22:26.000Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/posts/accessibility-surface/index.html</loc>
-    <lastmod>2024-05-17T15:47:40.656Z</lastmod>
+    <lastmod>2024-05-17T15:47:40.000Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/posts/esda-with-python/index.html</loc>
     <lastmod>2022-12-20T15:36:06.000Z</lastmod>
   </url>
   <url>
-    <loc>https://walker-data.com/posts/lodes-2020/index.html</loc>
-    <lastmod>2023-05-17T18:13:53.000Z</lastmod>
+    <loc>https://walker-data.com/posts/pygris-arcgis/index.html</loc>
+    <lastmod>2023-02-28T14:07:01.000Z</lastmod>
   </url>
   <url>
-    <loc>https://walker-data.com/posts/census-regions/index.html</loc>
-    <lastmod>2023-06-25T15:44:41.000Z</lastmod>
+    <loc>https://walker-data.com/posts/python-isochrones/index.html</loc>
+    <lastmod>2023-08-10T15:20:11.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/shiny-geocoder/index.html</loc>
+    <lastmod>2024-06-04T20:11:16.000Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/posts/lodes-commutes/index.html</loc>
@@ -30,15 +34,19 @@
   </url>
   <url>
     <loc>https://walker-data.com/posts/iterative-mapping/index.html</loc>
-    <lastmod>2024-01-15T21:04:03.624Z</lastmod>
+    <lastmod>2024-01-15T21:04:03.000Z</lastmod>
   </url>
   <url>
-    <loc>https://walker-data.com/posts/python-isochrones/index.html</loc>
-    <lastmod>2023-08-10T15:20:11.000Z</lastmod>
+    <loc>https://walker-data.com/posts/census-regions/index.html</loc>
+    <lastmod>2023-06-25T15:44:41.000Z</lastmod>
   </url>
   <url>
-    <loc>https://walker-data.com/posts/pygris-arcgis/index.html</loc>
-    <lastmod>2023-02-28T14:07:01.000Z</lastmod>
+    <loc>https://walker-data.com/posts/lodes-2020/index.html</loc>
+    <lastmod>2023-05-17T18:13:53.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://walker-data.com/posts/overture-buildings/index.html</loc>
+    <lastmod>2024-05-17T15:26:16.000Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/posts/proximity-analysis/index.html</loc>
@@ -46,18 +54,10 @@
   </url>
   <url>
     <loc>https://walker-data.com/workshops.html</loc>
-    <lastmod>2024-06-05T21:06:23.970Z</lastmod>
+    <lastmod>2024-08-23T16:42:36.676Z</lastmod>
   </url>
   <url>
     <loc>https://walker-data.com/about.html</loc>
-    <lastmod>2024-01-16T23:46:27.027Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/overture-buildings/index.html</loc>
-    <lastmod>2024-05-17T15:26:16.399Z</lastmod>
-  </url>
-  <url>
-    <loc>https://walker-data.com/posts/shiny-geocoder/index.html</loc>
-    <lastmod>2024-06-04T20:11:16.273Z</lastmod>
+    <lastmod>2024-01-16T23:46:27.000Z</lastmod>
   </url>
 </urlset>
