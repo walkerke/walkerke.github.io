@@ -59,7 +59,8 @@ catalog. The data cover 2019 through March of 2020.
 
 We can plot the data as "red dots" using standard R plotting tools (in
 this case, ggplot2) over a backdrop of the boundary of the oddly-shaped
-city of Fort Worth.
+city of Fort Worth. `st_jitter()` is used to slightly separate out dots
+at the same addresses.
 
 ```{r}
 library(mapgl)
@@ -70,7 +71,8 @@ options(tigris_use_cache = TRUE)
 
 intox <- read_csv("https://raw.githubusercontent.com/walkerke/geog30323/refs/heads/master/intoxication.csv") %>%
   na.omit() %>%
-  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>%
+  st_jitter(factor = 0.0001)
 
 ft_worth <- places(cb = TRUE, year = 2023) |> 
   filter(NAME == "Fort Worth")
@@ -308,4 +310,8 @@ for me, getting me styled pop–ups for my maps.
 
 Interested in learning more, or implementing for your organization? Send
 a note to [kyle\@walker.data.com](mailto:kyle@walker.data.com){.email}
-and let's discuss!
+and let's discuss, [or check out the official **mapgl** workshop series
+with 7.5 hours of recorded training
+videos](https://walkerdata.gumroad.com/l/mapgl-bundle?offer_code=HEATMAP).
+[Readers of this blog post get 25% off the fee with the promo code
+**HEATMAP**](https://walkerdata.gumroad.com/l/mapgl-bundle?offer_code=HEATMAP)!
