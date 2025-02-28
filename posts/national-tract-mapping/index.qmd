@@ -1,0 +1,256 @@
+---
+title: "National mapping for small areas: visualizing 85,000+ Census tracts with mapgl"
+author: "Kyle Walker"
+date: "2025-02-28"
+categories: [r, gis, census, mapping]
+embed-resources: false
+image: images/clipboard-4244304761.png
+filters: 
+  - lightbox
+lightbox: auto
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+options(tigris_use_cache = TRUE)
+```
+
+This February, [I gave a series of workshops on Census data and R with
+the University of Michigan's Social Science Data Analysis Network
+(SSDAN)](https://ssdan.net/events/the-2025-ssdan-webinar-series-2023-acs-data-with-r-mapping-tools-and-the-2020-census/).
+One of my favorite examples walked participants through how to map all
+85,000+ Census tracts across the United States using the mapgl R package
+and MapLibre. Small-area national maps for topics like Census or
+election results can be quite powerful but can be tricky to get right
+even with the capability of modern web browsers. In this post, I'll walk
+you through how to create these visualizations effectively while
+addressing some key technical challenges.
+
+## Getting national tract data with tidycensus
+
+Let's start by loading the required libraries and getting our income
+data for all US Census tracts. For this example, we'll map median
+household income (variable `B19013_001`) from the American Community
+Survey, with data acquired with the tidycensus R package. If you don't
+have the shapefiles previously cached, this operation may take a few
+minutes.
+
+```{r}
+library(tidycensus)
+library(mapgl)
+options(tigris_use_cache = TRUE)
+
+us_income <- get_acs(
+  geography = "tract",
+  variables = "B19013_001",
+  state = c(state.abb, "DC", "PR"),
+  year = 2023,
+  geometry = TRUE,
+  resolution = "5m"
+)
+
+us_income
+```
+
+Our dataset contains over 85,000 Census tracts, each with their
+estimated median household income. This is a substantial amount of data
+to visualize on a single map!
+
+## Creating our initial national tracts map
+
+Let's create a first map using the mapgl package with MapLibre as our
+mapping engine. It will take a few moments for MapLibre to render the
+map.
+
+```{r}
+#| eval: false
+
+maplibre(
+  style = carto_style("positron"),
+  center = c(-98.5795, 39.8283),
+  zoom = 3
+) |>
+  set_projection("globe") |> 
+  add_fill_layer(
+    id = "fill-layer",
+    source = us_income,
+    fill_color = interpolate(
+      column = "estimate",
+      values = c(10000, 75000, 250000),
+      stops = c("#edf8b1", "#7fcdbb", "#2c7fb8"),
+      na_color = "lightgrey"
+    ),
+    fill_opacity = 0.7,
+    tooltip = "estimate"
+  )
+```
+
+![](images/clipboard-1400961851.png)
+
+If you look closely at the map, you'll notice something strange: there
+appear to be "holes" in the map, particularly in large cities where
+Census tracts tend to be smaller. What's going on here?
+
+The issue stems from how MapLibre (and other web mapping libraries)
+handle geometry simplification. When we're zoomed out, the mapping
+engine uses the Douglas-Peucker simplification algorithm to reduce the
+complexity of geometries, making the map render faster. At zoom level 3,
+the default tolerance value (0.375) equates to roughly 5.6 kilometers on
+the ground.
+
+This means that Census tracts smaller than this threshold simply
+disappear from our map! This is particularly problematic in cities where
+Census tracts are often quite small.
+
+## Disabling simplification to fix the holes
+
+One solution is to disable the automatic simplification by setting the
+simplification tolerance to 0. We can do this by adding our data as a
+source with `add_source()` directly, using the option `tolerance = 0`:
+
+```{r}
+#| eval: false
+
+maplibre(
+  style = carto_style("positron"),
+  center = c(-98.5795, 39.8283),
+  zoom = 3
+) |>
+  set_projection("globe") |> 
+  add_source( 
+    id = "us-tracts",
+    data = us_income,
+    tolerance = 0
+  ) |> 
+  add_fill_layer(
+    id = "fill-layer",
+    source = "us-tracts",
+    fill_color = interpolate(
+      column = "estimate",
+      values = c(10000, 75000, 250000),
+      stops = c("#edf8b1", "#7fcdbb", "#2c7fb8"),
+      na_color = "lightgrey"
+    ),
+    fill_opacity = 0.7,
+    tooltip = "estimate"
+  )
+```
+
+![](images/clipboard-4244304761.png)
+
+The holes are gone, and we can now see all Census tracts, including the
+tiny ones in dense urban areas.
+
+### Understanding the trade-offs
+
+While disabling simplification solves our visual problem, it introduces
+some performance challenges:
+
+1.  **Slower loading times**: The browser now has to process and render
+    all 85,000+ tract geometries at their full complexity.
+2.  **Reduced map performance**: Panning and zooming may become sluggish
+    due to the increased data load.
+3.  **Unnecessary detail**: When zoomed out, do we really need to see
+    individual tract boundaries?
+
+## A better approach: Zoom-dependent layering
+
+Rather than forcing the browser to render every Census tract at all zoom
+levels, a more sophisticated approach is to use different geographic
+levels depending on the zoom level:
+
+-   At low zoom levels (zoomed out): Show county-level data
+-   At high zoom levels (zoomed in): Switch to tract-level data
+
+This approach gives users a smooth experience while still providing
+detailed data when they need it.
+
+Let's get the same income data but at the county level:
+
+```{r}
+us_county_income <- get_acs(
+  geography = "county",
+  variables = "B19013_001",
+  year = 2023,
+  geometry = TRUE,
+  resolution = "5m"
+) 
+```
+
+### Implementing zoom-dependent layers
+
+Now we'll create a map that transitions between county and tract data
+depending on the zoom level. We'll set tracts to appear when zoomed in
+(minimum zoom level of 8) and counties to disappear just before that
+(maximum zoom level of 7.99):
+
+```{r}
+#| eval: false
+
+maplibre(
+  style = carto_style("positron"),
+  center = c(-98.5795, 39.8283),
+  zoom = 3
+) |>
+  set_projection("globe") |> 
+  add_fill_layer(
+    id = "fill-layer",
+    source = us_income,
+    fill_color = interpolate(
+      column = "estimate",
+      values = c(10000, 75000, 250000),
+      stops = c("#edf8b1", "#7fcdbb", "#2c7fb8"),
+      na_color = "lightgrey"
+    ),
+    fill_opacity = 0.7,
+    min_zoom = 8,
+    tooltip = "estimate"
+  ) |> 
+  add_fill_layer(
+    id = "county-fill-layer",
+    source = us_county_income,
+    fill_color = interpolate(
+      column = "estimate",
+      type = "linear",
+      values = c(10000, 75000, 250000),
+      stops = c("#edf8b1", "#7fcdbb", "#2c7fb8"),
+      na_color = "lightgrey"
+    ),
+    fill_opacity = 0.7,
+    max_zoom = 7.99,
+    tooltip = "estimate"
+  ) |>
+  add_continuous_legend(
+    "Median household income",
+    values = c("$10k", "$75k", "$250k"),
+    colors = c("#edf8b1", "#7fcdbb", "#2c7fb8")
+  )
+```
+
+![](images/county-tract.gif)
+
+With this approach, you'll see counties when zoomed out, which provides
+a good overview of income patterns across the country. When you zoom in
+past level 8, the map automatically transitions to showing the more
+detailed tract-level data. This gives users the best of both worlds:
+good performance at low zoom levels and detailed data at high zoom
+levels.
+
+I've also added a continuous legend to help users interpret the colors
+on the map, which represents median household income from \$10,000 to
+\$250,000.
+
+## Next steps
+
+Give this approach a try with other variables from tidycensus, or your
+own national datasets! The technique works well for any scenario where
+you need to balance performance with detail, such as election results,
+demographic data, or economic indicators.
+
+Interested in learning more advanced mapping techniques with mapgl?
+Check out my [mapgl workshop
+series](https://walkerdata.gumroad.com/l/mapgl-bundle) for in-depth
+training on these and other visualization methods.
