@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/mapgl-sync-compare/index.html",
       "/posts/national-tract-mapping/index.html",
       "/posts/mapgl-dots/index.html",
       "/posts/shiny-geocoder/index.html",
