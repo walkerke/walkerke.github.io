@@ -1,0 +1,299 @@
+---
+title: "Building an AI-powered location explorer with Shiny and Claude"
+author: "Kyle Walker"
+date: "2025-04-03"
+categories: [r, gis, shiny, AI]
+image: "example.gif"
+filters:
+- lightbox
+lightbox: auto
+editor:
+   markdown:
+      wrap: 72
+---
+
+```{r}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+Large language models (LLMs), and the tech ecosystem around them, have
+opened up exciting new possibilities for interactive apps that combine
+spatial data and AI-powered insights. In this post, I'll walk through a
+workflow for creating a Shiny app that allows users to search for
+locations and receive AI-generated information about them using
+Anthropic's Claude model.
+
+You'll learn how to integrate brand-new tools like the **ellmer** and
+**shinychat** packages into your Shiny apps, giving the user a similar
+experience to using a familiar LLM app like Claude or ChatGPT.
+
+![](example.gif)
+
+## Application overview and tech stack
+
+We'll be using the following R packages to build the application:
+
+-   [shiny](https://shiny.posit.co/) for the web application framework;
+-   [mapgl](https://walker-data.com/mapgl/) for the interactive mapping
+    interface;
+-   [ellmer](https://ellmer.tidyverse.org/) for LLM integration;
+-   [shinychat](https://posit-dev.github.io/shinychat/) for chat UI and
+    server components in Shiny;
+-   [bslib](https://rstudio.github.io/bslib/) to help us build a modern
+    Shiny UI with minimal code.
+
+The workflow combines these tools to create an application where users
+can:
+
+1.  Search for a location using a built-in geocoder
+2.  Interact with the map
+3.  Automatically receive AI-generated information about the location
+    they've selected
+
+## Connecting to Claude
+
+The heart of our application is the LLM that will provide information
+about locations. We'll use Anthropic's Claude model, which has shown
+impressive capabilities in understanding geographical and cultural
+context. The **ellmer** package provides a straightforward interface to
+connect with Claude:
+
+``` r
+# Initialize LLM chat object using Claude
+llm_chat <- chat_claude(
+ model = "claude-3-7-sonnet-latest",
+ system_prompt = "You are a knowledgeable assistant that provides concise,
+ interesting facts about geographical locations. When given location data,
+ provide a brief overview of the location, including historical significance,
+ cultural importance, or interesting facts if applicable. Keep your response
+ conversational and engaging."
+)
+```
+
+The system prompt is crucial here - it defines the role and style of
+responses that Claude will provide. I've crafted it to generate concise,
+engaging information about locations without being overly verbose.
+
+## Building the Shiny UI
+
+For the user interface, we'll use **bslib**'s modern layout components,
+which provide a clean, responsive design with minimal code:
+
+``` r
+ui <- page_sidebar(
+  padding = 0,
+  sidebar = sidebar(
+    title = "AI-powered Location Explorer",
+    p("Search for a location using the map's search box, and I'll tell you
+      interesting facts about it!"),
+    hr(),
+    output_markdown_stream("location_info")
+  ),
+
+  mapboxglOutput("map", height = "100%")
+)
+```
+
+The UI is straightforward - a sidebar that will display location
+information and a main content area with our interactive map. The
+`output_markdown_stream()` function is a key component that allows us to
+stream the AI-generated content to the user as it's being generated,
+rather than waiting for the complete response.
+
+Setting up the interactive map
+
+For the mapping component, I'll use my **mapgl** package, which provides
+an interface to Mapbox GL JS. One particularly nice feature is the
+built-in geocoder, which allows users to search for locations:
+
+``` r
+# Initialize map with Mapbox geocoder
+output$map <- renderMapboxgl({
+ mapboxgl(
+   center = c(0, 0),
+   zoom = 1
+ ) |>
+   add_geocoder_control(
+     position = "top-right",
+     placeholder = "Search for a location...",
+     collapsed = FALSE
+   )
+})
+```
+
+The geocoder control appears as a search box on the map, allowing users
+to search for places by name. When a user selects a location from the
+search results, the map will automatically pan and zoom to that
+location.
+
+## Connecting the geocoder to Claude
+
+Now comes the exciting part - connecting the geocoder to Claude to
+generate information about the selected location. We'll use the
+`observeEvent()` function to react when a user selects a location from
+the geocoder:
+
+``` r
+# React to geocoding results
+observeEvent(input$map_geocoder, {
+ geocode_result <- input$map_geocoder$result
+
+ if (!is.null(geocode_result)) {
+   # Create prompt for the LLM
+   prompt <- paste(
+     "Please tell me about this location:",
+     toJSON(geocode_result),
+     "\nProvide a brief overview focusing on why this place is significant or teresting."
+   )
+
+   # Use ellmer's built-in streaming async functionality
+   stream <- llm_chat$stream_async(prompt)
+
+   # Stream the response to the markdown output
+   markdown_stream(
+     id = "location_info",
+     content_stream = stream,
+     operation = "replace"
+   )
+ }
+})
+```
+
+This code:
+
+1.  Detects when a user selects a location from the geocoder
+2.  Formats a prompt for Claude, including the JSON data about the
+    location returned by the geocoder;
+3.  Initiates an asynchronous stream of the AI response
+4.  Updates the sidebar with the streaming content
+
+The streaming approach we've set up works quite well as it gives the
+user a similar feel to chatting with an LLM app.
+
+## Putting it all together
+
+Here's the complete code for our AI location explorer application; only
+69 lines of R! To get this to work, you will need to get both a Mapbox
+access token and an Anthropic API key and set them as environment
+variables.
+
+``` r
+library(shiny)
+library(mapgl) # Assumes the env variable MAPBOX_PUBLIC_TOKEN is set
+library(ellmer) # Assumes the env variable ANTHROPIC_API_KEY is set
+library(shinychat)
+library(jsonlite)
+library(bslib)
+
+# Initialize LLM chat object using Claude
+llm_chat <- chat_claude(
+  model = "claude-3-7-sonnet-latest",
+  system_prompt = "You are a knowledgeable assistant that provides concise, interesting facts about geographical locations. When given location data, provide a brief overview of the location, including historical significance, cultural importance, or interesting facts if applicable. Keep your response conversational and engaging."
+)
+
+# UI with simple bslib page_sidebar
+ui <- page_sidebar(
+  padding = 0,
+  sidebar = sidebar(
+    title = "AI-powered Location Explorer",
+    p("Search for a location with the map's geocoder, and I'll tell you interesting facts about it!"),
+    hr(),
+    output_markdown_stream("location_info")
+  ),
+  
+  # Main content area with the map
+  mapboxglOutput("map", height = "100%"),
+)
+
+# Server
+server <- function(input, output, session) {
+  # Initialize map with Mapbox geocoder
+  output$map <- renderMapboxgl({
+    mapboxgl(
+      center = c(0, 0),
+      zoom = 1
+    ) |>
+      add_geocoder_control(
+        position = "top-right",
+        placeholder = "Search for a location...",
+        collapsed = FALSE
+      )
+  })
+  
+  # React to geocoding results
+  observeEvent(input$map_geocoder, {
+    geocode_result <- input$map_geocoder$result
+    
+    if (!is.null(geocode_result)) {
+      # Create prompt for the LLM
+      prompt <- paste(
+        "Please tell me about this location:",
+        toJSON(geocode_result),
+        "\nProvide a brief overview focusing on why this place is significant or interesting."
+      )
+      
+      # Use ellmer's built-in streaming async functionality
+      stream <- llm_chat$stream_async(prompt)
+      
+      # Stream the response to the markdown output
+      markdown_stream(
+        id = "location_info",
+        content_stream = stream,
+        operation = "replace"
+      )
+    }
+  })
+}
+
+# Run the app
+shinyApp(ui, server)
+```
+
+## Example usage and results
+
+Let's say a user searches for "Fort Worth, Texas" (where I live). The
+geocoder will find the location, place a marker there, and fly to the
+location. Claude then returns a brief summary of that location based on
+the information accessible to it. Here's an example response:
+
+> Fort Worth, Texas is known as "Where the West Begins" and offers a
+> fascinating blend of cowboy heritage and modern culture. Originally
+> established as an army outpost in 1849, it evolved into a major cattle
+> industry hub along the legendary Chisholm Trail. Today, the city
+> preserves its Western roots in the Stockyards National Historic
+> District while embracing arts and culture through world-class museums
+> like the Kimbell Art Museum and the Modern Art Museum. Fort Worth
+> balances its authentic Western spirit with cosmopolitan amenities,
+> hosting the famous twice-daily cattle drive and maintaining a distinct
+> identity separate from its neighbor Dallas, with whom it forms the
+> core of the DFW metroplex, one of America's largest urban areas.
+
+![](images/clipboard-2420629953.png)
+
+Typing in an address will typically get you more specific information
+about that location, depending on what Claude knows about it.
+
+## Technical and practical considerations
+
+While this application is designed as a proof-of-concept, there are
+several enhancements you'll want to consider before deploying something
+like this in a production environment. While the inputs to the LLM are
+relatively structured as they *must* correspond to a geocoded result,
+you may want to add error handling for cases where the LLM doesn't know
+how to interpret the input. I also haven't put in safeguards to control
+the output I get back from the LLM beyond a relatively simple system
+prompt. A more tailored approach might use few-shot prompting to feed
+some examples to the LLM to guide its output. You'll also need to handle
+your Mapbox and Anthropic API keys securely; I quite like how Posit
+Connect Cloud does this for deployed Shiny apps.
+
+More broadly, we're also being very trustworthy of Claude here to return
+accurate information. What we're getting is similar to a query about a
+place you might make in the Claude app. If using this in a production
+environment, you may want to consider implementing validation checks or
+use RAG to help control the information returned.
+
+If you're interested in learning more about integrating AI with your
+maps and geospatial applications, or if you'd like a custom workshop on
+these topics for your organization, please don't hesitate to reach out
+to [kyle\@walker-data.com](mailto:kyle@walker-data.com){.email}!
