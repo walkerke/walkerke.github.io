@@ -347,7 +347,7 @@
     "href": "posts/ai-location-explorer/index.html",
     "title": "Building an AI-powered location explorer with Shiny and Claude",
     "section": "",
-    "text": "knitr::opts_chunk$set(message = FALSE, warning = FALSE)\nLarge language models (LLMs), and the tech ecosystem around them, have opened up exciting new possibilities for interactive apps that combine spatial data and AI-powered insights. In this post, I’ll walk through a workflow for creating a Shiny app that allows users to search for locations and receive AI-generated information about them using Anthropic’s Claude model.\nYou’ll learn how to integrate brand-new tools like the ellmer and shinychat packages into your Shiny apps, giving the user a similar experience to using a familiar LLM app like Claude or ChatGPT."
+    "text": "Large language models (LLMs), and the tech ecosystem around them, have opened up exciting new possibilities for interactive apps that combine spatial data and AI-powered insights. In this post, I’ll walk through a workflow for creating a Shiny app that allows users to search for locations and receive AI-generated information about them using Anthropic’s Claude model.\nYou’ll learn how to integrate brand-new tools like the ellmer and shinychat packages into your Shiny apps, giving the user a similar experience to using a familiar LLM app like Claude or ChatGPT."
   },
   {
     "objectID": "posts/ai-location-explorer/index.html#application-overview-and-tech-stack",
