@@ -312,9 +312,10 @@ With respect to the implementation here:
 
 Finally, let's add AI analysis of the selected coffee shops using the
 **ellmer** and **shinychat** packages, with an approach borrowed from my
-last blog post! Try the app out - it's a fun example of how you can
-integrate interactive responses with generative AI with the lasso
-selection approach outlined in this post.
+last blog post! [Try the app
+out](https://github.com/walkerke/walkerke.github.io/blob/master/posts/lasso-selection/app/app.R) -
+it's a fun example of how you can integrate interactive responses with
+generative AI with the lasso selection approach outlined in this post.
 
 ```{r}
 #| eval: false
@@ -395,15 +396,6 @@ ui <- page_fluid(
       br(),
       br(),
       output_markdown_stream("ai_response")
-    ),
-
-    conditionalPanel(
-      condition = "!output.ai_enabled",
-      br(),
-      p(
-        "Set ANTHROPIC_API_KEY to enable AI analysis",
-        style = "font-size: 12px; color: #666;"
-      )
     )
   )
 )

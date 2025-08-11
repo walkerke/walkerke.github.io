@@ -73,15 +73,6 @@ ui <- page_fluid(
       br(),
       br(),
       output_markdown_stream("ai_response")
-    ),
-
-    conditionalPanel(
-      condition = "!output.ai_enabled",
-      br(),
-      p(
-        "Set ANTHROPIC_API_KEY to enable AI analysis",
-        style = "font-size: 12px; color: #666;"
-      )
     )
   )
 )
