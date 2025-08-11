@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/lasso-selection/index.html",
       "/posts/ai-location-explorer/index.html",
       "/posts/mapgl-sync-compare/index.html",
       "/posts/national-tract-mapping/index.html",
