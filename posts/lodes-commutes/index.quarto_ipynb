@@ -1,0 +1,302 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Analyzing labor markets in Python with LODES data\"\n",
+        "author: \"Kyle Walker\"\n",
+        "date: \"2023-01-11\"\n",
+        "categories: [python, gis, data science]\n",
+        "image: image.png\n",
+        "editor: \n",
+        "  markdown: \n",
+        "    wrap: 72\n",
+        "---\n",
+        "\n",
+        "In [Chapter 11 of my book *Analyzing US Census\n",
+        "Data*](https://walker-data.com/census-r/other-census-and-government-data-resources.html),\n",
+        "I explore a sampling of the variety of government datasets that are\n",
+        "available for the United States. One of the most useful of these\n",
+        "datasets is [LODES (LEHD Origin-Destination Employment\n",
+        "Statistics)](https://lehd.ces.census.gov/data/). LODES is a synthetic\n",
+        "dataset that represents, down to the Census block level, job counts by\n",
+        "workplace and residence as well as the flows between them.\n",
+        "\n",
+        "Given that LODES data are tabulated at the Census block level, analysts\n",
+        "will often want to merge the data to Census geographic data like what is\n",
+        "accessible in the [**pygris** package](https://walker-data.com/pygris/).\n",
+        "**pygris** includes a function, `get_lodes()`, that is modeled after the\n",
+        "excellent **lehdr** R package by [Jamaal Green, Dillon Mahmoudi, and\n",
+        "Liming Wang](https://github.com/jamgreen/lehdr).\n",
+        "\n",
+        "This post will illustrate how to analyze the origins of commuters to the\n",
+        "Census tract containing Apple's headquarters in Cupertino, CA. In doing\n",
+        "so, I'll highlight some of the data wrangling utilities in **pandas**\n",
+        "that allow for the use of method chaining, and show how to merge data to\n",
+        "**pygris** shapes for mapping. The corresponding section in *Analyzing\n",
+        "US Census Data* to this post is \"[Analyzing labor markets with\n",
+        "lehdr](https://walker-data.com/census-r/other-census-and-government-data-resources.html#analyzing-labor-markets-with-lehdr).\"\n",
+        "\n",
+        "## Acquiring and wrangling LODES data\n",
+        "\n",
+        "To get started, let's import the functions and modules we need and give\n",
+        "`get_lodes()` a try. `get_lodes()` requires specifying a state (as state\n",
+        "abbreviation) and year; we are getting data for California in 2019, the\n",
+        "most recent year currently available. The argument `lodes_type = \"od\"`\n",
+        "tells **pygris** to get origin-destination flows data, and\n",
+        "`cache = True` will download the dataset (which is nearly 100MB) to a\n",
+        "local cache directory for faster use in the future."
+      ],
+      "id": "39e30baa"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "from pygris import tracts \n",
+        "from pygris.data import get_lodes\n",
+        "import matplotlib.pyplot as plt\n",
+        "\n",
+        "ca_lodes_od = get_lodes(\n",
+        "    state = \"CA\",\n",
+        "    year = 2019,\n",
+        "    lodes_type = \"od\",\n",
+        "    cache = True\n",
+        ")\n",
+        "\n",
+        "ca_lodes_od.head()"
+      ],
+      "id": "303d7e73",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "The loaded dataset, which has nearly 16 million rows, represents\n",
+        "synthetic origin-destination flows from Census block to Census block in\n",
+        "California in 2019. Columns represent the [Census block\n",
+        "GEOIDs](https://walker-data.com/census-r/an-introduction-to-tidycensus.html#understanding-geoids)\n",
+        "for both workplace and residence, as well as job counts for flows\n",
+        "between them. `S000` represents all jobs; [see the LODES documentation\n",
+        "for how other breakouts are\n",
+        "defined](https://lehd.ces.census.gov/data/lodes/LODES7/LODESTechDoc7.5.pdf).\n",
+        "\n",
+        "16 million rows is a lot of data to deal with all at once, so we'll want\n",
+        "to do some targeted data wrangling to make this more manageable. We'll\n",
+        "do so using a *method chain*, which is my preferred way to do data\n",
+        "wrangling in Python given that I come from an R / tidyverse background.\n",
+        "The code takes the full origin-destination dataset, rolls it up to the\n",
+        "Census tract level, then returns (by Census tract) the number of\n",
+        "commuters to Apple's Census tract in Cupertino."
+      ],
+      "id": "a0374dac"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "apple = (\n",
+        "    ca_lodes_od\n",
+        "    .assign(w_tract = ca_lodes_od['w_geocode'].str.slice(stop = 11),\n",
+        "            h_tract = ca_lodes_od['h_geocode'].str.slice(stop = 11))\n",
+        "    .query('w_tract == \"06085508102\"')\n",
+        "    .groupby('h_tract', as_index = False)\n",
+        "    .agg({'S000': sum})\n",
+        "    .rename({'S000': 'apple_workers'}, axis = 1)\n",
+        ")\n",
+        "\n",
+        "apple.head()"
+      ],
+      "id": "40db03cc",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Let's step through how we did this:\n",
+        "\n",
+        "-   The `.assign()` method is used to calculate two new Census tract\n",
+        "    columns. A great thing about Census GEOIDs is that child geographies\n",
+        "    (like Census blocks) contain information about parent geographies.\n",
+        "    In turn, we can calculate Census tract GEOIDs by slicing block\n",
+        "    GEOIDs for the first 11 characters.\\\n",
+        "-   `.query()` is used to subset our data. We only want rows\n",
+        "    representing commuters to the Apple campus (or the area around it),\n",
+        "    so we query for that specific tract ID.\n",
+        "-   Next, we'll roll up our data to the tract level. We'll first group\n",
+        "    the data by home Census tract with `.groupby()`, then calculate\n",
+        "    group sums with `.agg()`.\\\n",
+        "-   Finally, we use a dictionary passed to `.rename()` to give the jobs\n",
+        "    column a more interpretable name.\n",
+        "\n",
+        "Next, we'll repeat this process to tabulate the *total number of\n",
+        "workers* by home Census tract to be used as a denominator. After that,\n",
+        "we can merge the Apple-area commuters dataset back in, and calculate a\n",
+        "rate per 1000. Note the `lambda` notation used in the final step of the\n",
+        "method chain: this allows us to refer to the dataset that is being\n",
+        "created by the chain."
+      ],
+      "id": "2b7b87de"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "apple_commuters = (\n",
+        "    ca_lodes_od\n",
+        "    .assign(h_tract = ca_lodes_od['h_geocode'].str.slice(stop = 11))\n",
+        "    .groupby('h_tract', as_index = False)\n",
+        "    .agg({'S000': sum})\n",
+        "    .rename({'S000': 'total_workers'}, axis = 1)\n",
+        "    .merge(apple, on = 'h_tract')\n",
+        "    .assign(apple_per_1000 = lambda x: 1000 * (x['apple_workers'] / x['total_workers']))\n",
+        ")\n",
+        "\n",
+        "apple_commuters.head()"
+      ],
+      "id": "b50306b7",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Mapping commute flows to Apple headquarters\n",
+        "\n",
+        "The main purpose of the **pygris** package is to make the acquisition of\n",
+        "US Census Bureau spatial data easy for Python users. Given that we have\n",
+        "aggregated our data at the Census tract level, we can use the `tracts()`\n",
+        "function to grab Census tract shapes for six counties in the San\n",
+        "Francisco Bay Area. We'll use the Cartographic Boundary shapefiles with\n",
+        "`cb = True` to exclude most water area, and make sure to specify\n",
+        "`year = 2019` to match the 2019 LODES data."
+      ],
+      "id": "516f198d"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "bay_tracts = tracts(state = \"CA\", cb = True,\n",
+        "                    county = [\"San Francisco\", \"Alameda\", \"San Mateo\",\n",
+        "                              \"Santa Clara\", \"Marin\", \"Contra Costa\"], \n",
+        "                    year = 2019, cache = True)\n",
+        "                    \n",
+        "bay_tracts.plot()"
+      ],
+      "id": "cc36f17a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "With our tracts in hand, we use the `.merge()` method to merge the\n",
+        "tabulated LODES data to the Census tract shapes, [then make a map with\n",
+        "**geopandas**' plotting\n",
+        "functionality](https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.plot.html)."
+      ],
+      "id": "e0ce0cca"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "apple_bay = bay_tracts.merge(apple_commuters, left_on = \"GEOID\", right_on = \"h_tract\",\n",
+        "                             how = \"left\")\n",
+        "\n",
+        "apple_bay.fillna(0, inplace = True)\n",
+        "\n",
+        "apple_bay.plot(column = 'apple_per_1000', legend = True, \n",
+        "               cmap = \"cividis\", figsize = (8, 8), \n",
+        "               k = 7, scheme = \"naturalbreaks\",\n",
+        "               legend_kwds = {\"loc\": \"lower left\"})\n",
+        "\n",
+        "plt.title(\"Apple-area commuters (rate per 1000 total commuters)\\n2019 LODES data, Bay Area Census tracts\", fontsize = 12)\n",
+        "\n",
+        "ax = plt.gca()\n",
+        "\n",
+        "ax.set_axis_off()"
+      ],
+      "id": "b1891423",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Commuters to Apple's tract tend to be concentrated around that tract;\n",
+        "however, several neighborhoods in San Francisco proper send dozens of\n",
+        "commuters per 1000 total commuters south to Cupertino.\n",
+        "\n",
+        "This is where the LODES section of my book chapter ends; however, a\n",
+        "static map like this can be difficult to interpret for those less\n",
+        "familiar with the Bay Area. The **geopandas** `.explore()` method can\n",
+        "make this map interactive for exploration without much more code. We'll\n",
+        "also use the built-in Census geocoding interface in **pygris** to add a\n",
+        "marker where Apple Park's visitors center is located."
+      ],
+      "id": "0043090f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "from pygris.geocode import geocode\n",
+        "\n",
+        "apple_bay_sub = apple_bay.filter(['GEOID', 'total_workers',\n",
+        "                                  'apple_workers', 'apple_per_1000',\n",
+        "                                  'geometry'])\n",
+        "\n",
+        "visitor_center = geocode(\"10600 N Tantau Ave, Cupertino, CA 95014\",\n",
+        "                         as_gdf = True)\n",
+        "\n",
+        "m = apple_bay_sub.explore(column = \"apple_per_1000\", cmap = \"cividis\",\n",
+        "                          k = 7, scheme = \"naturalbreaks\", popup = True, \n",
+        "                          tooltip = False,                   \n",
+        "                          tiles = \"CartoDB positron\", \n",
+        "                          style_kwds = {\"weight\": 0.5},\n",
+        "                          legend_kwds = {\"caption\": \"Apple-area commuters per 1000\",\n",
+        "                                          \"colorbar\": False},\n",
+        "                          popup_kwds = {\"aliases\": ['Census tract', 'Total workers',\n",
+        "                                                    'Apple-area commuters', 'Rate per 1000']})\n",
+        "\n",
+        "visitor_center.explore(m = m, marker_type = \"marker\", tooltip = False)      \n"
+      ],
+      "id": "981d3356",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "If you've found this post useful, follow along on\n",
+        "[Twitter](https://twitter.com/kyle_e_walker),\n",
+        "[LinkedIn](https://www.linkedin.com/in/walkerke/), or subscribe to my\n",
+        "newsletter for more examples of how to translate topics from my book to\n",
+        "Python in advance of the book's release next month!"
+      ],
+      "id": "321a3c59"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/Users/kylewalker/anaconda3/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
