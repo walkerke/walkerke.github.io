@@ -90,7 +90,7 @@
         "the downloaded shapefile in a local cache, which means that I won't need\n",
         "to download it again from the Census website in future projects."
       ],
-      "id": "82fcfe51"
+      "id": "29035c50"
     },
     {
       "cell_type": "code",
@@ -106,7 +106,7 @@
         "\n",
         "tc_tracts.plot()"
       ],
-      "id": "6a6b3d80",
+      "id": "83f73ab4",
       "execution_count": null,
       "outputs": []
     },
@@ -131,7 +131,7 @@
         "level for Minnesota, then merge to our Census tracts for additional\n",
         "analysis."
       ],
-      "id": "aa418cf4"
+      "id": "cd8798b5"
     },
     {
       "cell_type": "code",
@@ -152,7 +152,7 @@
         "\n",
         "mn_median_age.head()"
       ],
-      "id": "d20916a7",
+      "id": "71f4eb8b",
       "execution_count": null,
       "outputs": []
     },
@@ -187,7 +187,7 @@
         "\n",
         "With our data in hand, we can do an inner merge and map the result:"
       ],
-      "id": "cabab570"
+      "id": "e7988562"
     },
     {
       "cell_type": "code",
@@ -201,7 +201,7 @@
         "\n",
         "plt.title(\"Median age by Census tract\\nMinneapolis-St. Paul, 2017-2021 ACS\")"
       ],
-      "id": "e6efa2ba",
+      "id": "81193060",
       "execution_count": null,
       "outputs": []
     },
@@ -221,7 +221,7 @@
         "to represent relationships between Census tracts and their neighbors,\n",
         "then call the `Moran_Local()` function to calculate the LISA statistics."
       ],
-      "id": "e74570ba"
+      "id": "8ab96ab5"
     },
     {
       "cell_type": "code",
@@ -238,7 +238,7 @@
         "\n",
         "type(m)"
       ],
-      "id": "1ee19725",
+      "id": "7c800d62",
       "execution_count": null,
       "outputs": []
     },
@@ -259,7 +259,7 @@
         "Using this information, we can identify \"significant\" and\n",
         "\"non-significant\" clusters and generate some more informative labels."
       ],
-      "id": "ba24653a"
+      "id": "db12c191"
     },
     {
       "cell_type": "code",
@@ -286,7 +286,7 @@
         "\n",
         "tc_clean.head()"
       ],
-      "id": "83199096",
+      "id": "590e1ba9",
       "execution_count": null,
       "outputs": []
     },
@@ -325,7 +325,7 @@
         "    some customization of the popup to change the column names to\n",
         "    informative aliases. Click on a Census tract to see what you get!"
       ],
-      "id": "e012f76a"
+      "id": "e022d6c1"
     },
     {
       "cell_type": "code",
@@ -344,7 +344,7 @@
         "                    \"aliases\": [\"GEOID\", \"Median age\", \"LISA quadrant\", \"Pseudo p-value\"]\n",
         "                 })"
       ],
-      "id": "e6c58ba5",
+      "id": "98df8166",
       "execution_count": null,
       "outputs": []
     },
@@ -362,7 +362,7 @@
         "favorite examples from *Analyzing US Census Data* translated to Python\n",
         "over the next few months."
       ],
-      "id": "54c50a75"
+      "id": "81bce8d9"
     }
   ],
   "metadata": {
