@@ -62,8 +62,8 @@ connect with Claude:
 
 ``` r
 # Initialize LLM chat object using Claude
-llm_chat <- chat_claude(
- model = "claude-3-7-sonnet-latest",
+llm_chat <- chat_anthropic(
+ model = "claude-sonnet-4-5",
  system_prompt = "You are a knowledgeable assistant that provides concise,
  interesting facts about geographical locations. When given location data,
  provide a brief overview of the location, including historical significance,
@@ -188,8 +188,8 @@ library(jsonlite)
 library(bslib)
 
 # Initialize LLM chat object using Claude
-llm_chat <- chat_claude(
-  model = "claude-3-7-sonnet-latest",
+llm_chat <- chat_anthropic(
+  model = "claude-sonnet-4-5",
   system_prompt = "You are a knowledgeable assistant that provides concise, interesting facts about geographical locations. When given location data, provide a brief overview of the location, including historical significance, cultural importance, or interesting facts if applicable. Keep your response conversational and engaging."
 )
 
