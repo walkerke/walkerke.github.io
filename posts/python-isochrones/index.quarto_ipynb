@@ -21,7 +21,7 @@
         "\n",
         "To get started, let's import a few libraries we'll need, and make a connection to Mapbox's navigation services which are named `MapboxOSRM` in routingpy.  You'll need a Mapbox account and a Mapbox access token to get this to work; you get 100,000 isochrones for free each month, so you shouldn't have to worry about getting charged.  "
       ],
-      "id": "98f3d4e5"
+      "id": "504915b7"
     },
     {
       "cell_type": "code",
@@ -36,7 +36,7 @@
         "\n",
         "mb = MapboxOSRM(api_key = \"pk.eyJ1Ijoia3dhbGtlcnRjdSIsImEiOiJMRk9JSmRvIn0.l1y2jHZ6IARHM_rA1-X45A\")"
       ],
-      "id": "1db2358c",
+      "id": "6e9b33b5",
       "execution_count": null,
       "outputs": []
     },
@@ -53,7 +53,7 @@
         "\n",
         "mb = MapboxOSRM(api_key = \"YOUR KEY GOES HERE\")"
       ],
-      "id": "28f39eaa",
+      "id": "282465f7",
       "execution_count": null,
       "outputs": []
     },
@@ -63,7 +63,7 @@
       "source": [
         "Let's use a public libraries dataset in the city of Dallas, Texas as an example.  Mapbox's routing services will run for any location in the world covered by OpenStreetMap, so you can try this out for other datasets of interest as well.  "
       ],
-      "id": "767d8e61"
+      "id": "1f5853f7"
     },
     {
       "cell_type": "code",
@@ -73,7 +73,7 @@
         "\n",
         "dallas_libraries.explore()"
       ],
-      "id": "633923ab",
+      "id": "12d98841",
       "execution_count": null,
       "outputs": []
     },
@@ -83,7 +83,7 @@
       "source": [
         "Next comes the `mb_isochrone()` function.  I've written this to work in a similar way to `mb_ischrone()` in R, though it is much more limited.  Read through the comments in the code to get a sense of how it works.  \n"
       ],
-      "id": "658daa45"
+      "id": "2f8e9930"
     },
     {
       "cell_type": "code",
@@ -140,7 +140,7 @@
         "\n",
         "    return(isochrone_gdf)\n"
       ],
-      "id": "3d1c9887",
+      "id": "fdb96f60",
       "execution_count": null,
       "outputs": []
     },
@@ -150,7 +150,7 @@
       "source": [
         "Let's try it out!  The function runs seamlessly over a dataset of 29 input points, returning 29 5-minute isochrones that we can visualize with `.explore()`.  "
       ],
-      "id": "54984085"
+      "id": "96d3e703"
     },
     {
       "cell_type": "code",
@@ -161,7 +161,7 @@
         "\n",
         "library_isos.explore()"
       ],
-      "id": "7abdac76",
+      "id": "de2aae0b",
       "execution_count": null,
       "outputs": []
     },
@@ -171,7 +171,7 @@
       "source": [
         "One feature the R version of `mb_isochrone()` includes is the ability to get isochrones directly from an address.  Here, we'll need to geocode the address first and pass it to `mb_isochrone()`.  Our result is an interactive map of multiple travel-times around our input address. "
       ],
-      "id": "fe748e10"
+      "id": "cdcb1a31"
     },
     {
       "cell_type": "code",
@@ -183,7 +183,7 @@
         "\n",
         "dickies_isos.explore(column = \"time\")"
       ],
-      "id": "61bae3f5",
+      "id": "3528d0d8",
       "execution_count": null,
       "outputs": []
     },
@@ -193,7 +193,7 @@
       "source": [
         "A great benefit of using isochrones with GeoPandas is that the isochrone shapes can be integrated into all sorts of spatial analysis workflows.  If you are interested in integrating isochrones into your application or business workflow, or if you'd like a custom workshop to help you get up and running with these tools, please don't hesistate to reach out to <kyle@walker-data.com>!\n"
       ],
-      "id": "52953133"
+      "id": "b4bcceb4"
     }
   ],
   "metadata": {

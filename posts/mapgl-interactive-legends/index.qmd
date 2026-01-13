@@ -2,7 +2,7 @@
 title: "Interactive legends and screenshot export in mapgl"
 author: "Kyle Walker"
 date: "2026-01-13"
-categories: [r, gis, mapping, shiny]
+categories: [r, gis, mapping, mapgl]
 image: "image.png"
 filters:
 - lightbox

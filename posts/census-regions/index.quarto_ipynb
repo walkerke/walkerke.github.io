@@ -27,7 +27,7 @@
         "\n",
         "Let's grab some block data using __pygris__ for Delta County, Texas, a rural county of about 5,000 residents northeast of the Dallas-Fort Worth metro area.  If you haven't previously cached the Texas block shapefile, this will take a few minutes to download.  "
       ],
-      "id": "ea6b72ea"
+      "id": "2fefd76f"
     },
     {
       "cell_type": "code",
@@ -41,7 +41,7 @@
         "# Get the block data for a county in Texas\n",
         "delta_blocks = blocks(state = \"TX\", county = \"Delta\", year = 2020, cache = True)"
       ],
-      "id": "15d852d7",
+      "id": "9c1b2059",
       "execution_count": null,
       "outputs": []
     },
@@ -51,7 +51,7 @@
       "source": [
         "Given that Delta County is fairly small, we can use `.explore()` to make a performant interactive map of the 571 Census blocks."
       ],
-      "id": "bea7e5c9"
+      "id": "b868a061"
     },
     {
       "cell_type": "code",
@@ -59,7 +59,7 @@
       "source": [
         "delta_blocks.explore(tooltip = False, popup = True)"
       ],
-      "id": "43d6e263",
+      "id": "6dcf7973",
       "execution_count": null,
       "outputs": []
     },
@@ -69,7 +69,7 @@
       "source": [
         "There is one town of reasonable size in Delta County, Cooper.  However, Census geography above the block level makes any sort of demographic analysis tricky.  For example, we can briefly review block groups in Delta County:"
       ],
-      "id": "09df8b78"
+      "id": "c817a470"
     },
     {
       "cell_type": "code",
@@ -79,7 +79,7 @@
         "\n",
         "delta_bgs.explore(tooltip = False, popup = True)"
       ],
-      "id": "e066f327",
+      "id": "fcc23ad9",
       "execution_count": null,
       "outputs": []
     },
@@ -93,7 +93,7 @@
         "\n",
         "We'll get [data on total population and the non-Hispanic white population from the DHC](https://api.census.gov/data/2020/dec/dhc/variables.html) at the block level, requesting for Delta County.  "
       ],
-      "id": "e1037803"
+      "id": "ae09fd98"
     },
     {
       "cell_type": "code",
@@ -111,7 +111,7 @@
         "    guess_dtypes = True\n",
         ")"
       ],
-      "id": "d0ca4ec5",
+      "id": "d604e58a",
       "execution_count": null,
       "outputs": []
     },
@@ -121,7 +121,7 @@
       "source": [
         "We can then merge our block-level Census data to our block geometries and calculate some derived columns.  As the block shapes acquired with `blocks()` have a column on land area, `ALAND20`, we can calculate population density; we'll also calculate the percentage of the block population that is non-Hispanic white.  These columns will be used in the regionalization algorithm to cluster together demographically similar blocks.  "
       ],
-      "id": "1a3f07d5"
+      "id": "bb5b5857"
     },
     {
       "cell_type": "code",
@@ -138,7 +138,7 @@
         "\n",
         "delta_geo.head()"
       ],
-      "id": "09944b04",
+      "id": "d0a42fa3",
       "execution_count": null,
       "outputs": []
     },
@@ -148,7 +148,7 @@
       "source": [
         "After preparing our Census data, we can now move to spatial analysis.  `pygeoda.open()` convers a GeoPandas GeoDataFrame to an object suitable for use with pygeoda.  Next, we'll create _spatial weights_ to represent spatial relationships between Census blocks.  We'll use rook weights, which means that blocks are considered to be neighbors if they share at least one line segment between them.  This step is critical for regionalization as we want to ensure that our regions are spatially coherent.  "
       ],
-      "id": "41ced46d"
+      "id": "c57a2a10"
     },
     {
       "cell_type": "code",
@@ -160,7 +160,7 @@
         "\n",
         "w"
       ],
-      "id": "dfadc891",
+      "id": "7962301b",
       "execution_count": null,
       "outputs": []
     },
@@ -172,7 +172,7 @@
         "\n",
         "With this information in hand, we can run the regionalization algorithm.  [The algorithm we'll choose is Max-p](https://geodacenter.github.io/workbook/8_spatial_clusters/lab8.html#max-p-region-problem).  Max-P regionalization attempts to find the maximum number of clusters that are spatially contiguous and exceed a given size threshold while maximizing within-cluster homogeneity.  We'll use population density and percent non-Hispanic white as our clustering variables, and total population as our bounding variable.  Setting `min_bound` to 100 tells the algorithm that each derived region must have at least 100 people in it.  A couple other technical details: max-p is highly sensitive to the algorithm's starting point, so it is recommended to set a random-number seed (and potentially evaluate results among multiple seeds).  For more stable performance, `cpu_threads = 1` should also be used.  "
       ],
-      "id": "0dfb0c20"
+      "id": "df8edbdb"
     },
     {
       "cell_type": "code",
@@ -192,7 +192,7 @@
         "    cpu_threads = 1\n",
         ")"
       ],
-      "id": "b063b957",
+      "id": "6e1ab97d",
       "execution_count": null,
       "outputs": []
     },
@@ -202,7 +202,7 @@
       "source": [
         "Thanks to the C++ back-end of pygeoda, the function is lightning-fast.  The function returns a `dict` object with information about the regionalization solution; we'll pluck the clusters out from it and assign it to our original GeoDataFrame as a column.  We'll then use a `dissolve()` operation to build new geographies from our regionalization solution, and calculate some derived statistics for those regions.  "
       ],
-      "id": "8a16d186"
+      "id": "14351287"
     },
     {
       "cell_type": "code",
@@ -219,7 +219,7 @@
         "\n",
         "print(f'Number of regions: {delta_regions.shape[0]}\\nMinimum population: {delta_regions[\"P1_001N\"].min()}')"
       ],
-      "id": "b4bb1bc6",
+      "id": "cd7cb3a9",
       "execution_count": null,
       "outputs": []
     },
@@ -229,7 +229,7 @@
       "source": [
         "We see that the algorithm built 39 regions in Delta County.  The minimum population of any region is 101, which indicates that our minimum population threshold specification was satisfied.  Let's take a look at the derived regions: "
       ],
-      "id": "dd04d8f4"
+      "id": "34e55315"
     },
     {
       "cell_type": "code",
@@ -237,7 +237,7 @@
       "source": [
         "delta_regions.explore(column = \"region\", categorical = True, legend = False)"
       ],
-      "id": "085ae610",
+      "id": "cbf714e6",
       "execution_count": null,
       "outputs": []
     },
@@ -249,7 +249,7 @@
         "\n",
         "Regionalization is a powerful tool in spatial data science, and it can be used to solve problems in a wide range of fields.  If you want to learn more, [check out my workshops](https://walker-data.com/workshops.html) or send me a note to discuss further!"
       ],
-      "id": "6c399d7c"
+      "id": "adf52d4f"
     }
   ],
   "metadata": {

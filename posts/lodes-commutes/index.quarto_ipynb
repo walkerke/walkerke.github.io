@@ -49,7 +49,7 @@
         "`cache = True` will download the dataset (which is nearly 100MB) to a\n",
         "local cache directory for faster use in the future."
       ],
-      "id": "0203bf44"
+      "id": "951a738a"
     },
     {
       "cell_type": "code",
@@ -68,7 +68,7 @@
         "\n",
         "ca_lodes_od.head()"
       ],
-      "id": "0a6a2bdc",
+      "id": "588f879a",
       "execution_count": null,
       "outputs": []
     },
@@ -93,7 +93,7 @@
         "Census tract level, then returns (by Census tract) the number of\n",
         "commuters to Apple's Census tract in Cupertino."
       ],
-      "id": "25687e00"
+      "id": "a4d242a0"
     },
     {
       "cell_type": "code",
@@ -111,7 +111,7 @@
         "\n",
         "apple.head()"
       ],
-      "id": "9f10132e",
+      "id": "68332be1",
       "execution_count": null,
       "outputs": []
     },
@@ -142,7 +142,7 @@
         "method chain: this allows us to refer to the dataset that is being\n",
         "created by the chain."
       ],
-      "id": "da3ba9b0"
+      "id": "cbfb680a"
     },
     {
       "cell_type": "code",
@@ -160,7 +160,7 @@
         "\n",
         "apple_commuters.head()"
       ],
-      "id": "ee72831a",
+      "id": "5e3fe08d",
       "execution_count": null,
       "outputs": []
     },
@@ -178,7 +178,7 @@
         "`cb = True` to exclude most water area, and make sure to specify\n",
         "`year = 2019` to match the 2019 LODES data."
       ],
-      "id": "4e5f348e"
+      "id": "be9f63ec"
     },
     {
       "cell_type": "code",
@@ -191,7 +191,7 @@
         "                    \n",
         "bay_tracts.plot()"
       ],
-      "id": "07618259",
+      "id": "dcff1681",
       "execution_count": null,
       "outputs": []
     },
@@ -204,7 +204,7 @@
         "**geopandas**' plotting\n",
         "functionality](https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.plot.html)."
       ],
-      "id": "c7f3ed3f"
+      "id": "bcb4d136"
     },
     {
       "cell_type": "code",
@@ -226,7 +226,7 @@
         "\n",
         "ax.set_axis_off()"
       ],
-      "id": "f5e8b0dc",
+      "id": "ff2d1540",
       "execution_count": null,
       "outputs": []
     },
@@ -245,7 +245,7 @@
         "also use the built-in Census geocoding interface in **pygris** to add a\n",
         "marker where Apple Park's visitors center is located."
       ],
-      "id": "0f023b23"
+      "id": "b462414f"
     },
     {
       "cell_type": "code",
@@ -272,7 +272,7 @@
         "\n",
         "visitor_center.explore(m = m, marker_type = \"marker\", tooltip = False)      \n"
       ],
-      "id": "59f1c622",
+      "id": "62299551",
       "execution_count": null,
       "outputs": []
     },
@@ -286,7 +286,7 @@
         "newsletter for more examples of how to translate topics from my book to\n",
         "Python in advance of the book's release next month!"
       ],
-      "id": "8edb39ab"
+      "id": "be77eab6"
     }
   ],
   "metadata": {

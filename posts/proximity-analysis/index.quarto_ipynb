@@ -26,7 +26,7 @@
         "\n",
         "The hospitals can be downloaded from the US Department of Homeland Security's [Homeland Infrastructure Foundation-Level Data (HIFLD) portal](https://hifld-geoplatform.opendata.arcgis.com/datasets/hospitals/explore?location=36.729510%2C-96.551840%2C4.98).  HIFLD includes open, frequently-updated datasets on \"critical infrastructure\" such as schools, pharmacies, and health care facilities.  After reading in the downloaded file, we subset the data using a regular expression and `.str.contains()` to include only Level I and Level II trauma centers, and drop any duplicated records.    "
       ],
-      "id": "a33bb0c8"
+      "id": "d78ec04e"
     },
     {
       "cell_type": "code",
@@ -47,7 +47,7 @@
         "\n",
         "trauma = trauma.drop_duplicates(['ID'])"
       ],
-      "id": "9f4479b8",
+      "id": "3ec19b9e",
       "execution_count": null,
       "outputs": []
     },
@@ -63,7 +63,7 @@
         "* Drawing a new shape that extends to 100km beyond the South Dakota border with the `.buffer()` method;\n",
         "* Using an _inner spatial join_ to retain only those trauma centers that fall within the 100km buffer shape."
       ],
-      "id": "ee40c25f"
+      "id": "df41064a"
     },
     {
       "cell_type": "code",
@@ -73,7 +73,7 @@
         "\n",
         "sd_trauma = trauma.sjoin(sd_buffer, how = \"inner\")"
       ],
-      "id": "5ce63370",
+      "id": "5d29567a",
       "execution_count": null,
       "outputs": []
     },
@@ -83,7 +83,7 @@
       "source": [
         "After running this operation, we can draw a quick plot to show the relationships between Census tracts and hospitals as in [Section 7.4.1 of _Analyzing US Census Data_](https://walker-data.com/census-r/spatial-analysis-with-us-census-data.html#calculating-distances). "
       ],
-      "id": "14d4b45d"
+      "id": "b0525490"
     },
     {
       "cell_type": "code",
@@ -97,7 +97,7 @@
         "sd_tracts.plot(ax = ax, color = \"grey\")\n",
         "sd_trauma.plot(ax = ax, color = \"red\")\n"
       ],
-      "id": "c440c29f",
+      "id": "02fa1888",
       "execution_count": null,
       "outputs": []
     },
@@ -113,7 +113,7 @@
         "\n",
         "Once the centroids are identified, we can iterate over them with `apply` and build a dataset that represents a distance matrix between Census tracts and trauma hospitals.  Distances are calculated in meters, the base unit of our coordinate reference system (State Plane South Dakota North).   "
       ],
-      "id": "1a123a49"
+      "id": "91f3aea5"
     },
     {
       "cell_type": "code",
@@ -125,7 +125,7 @@
         "\n",
         "dist.head()"
       ],
-      "id": "162c2b2e",
+      "id": "665b9fa9",
       "execution_count": null,
       "outputs": []
     },
@@ -135,7 +135,7 @@
       "source": [
         "Let's take a quick look at how distance to the nearest trauma center varies around South Dakota.  We'll use the `.min()` method to find the minimum distance to a hospital for each row, then divide the result by 1000 to convert the distances to kilometers.  We can then draw a histogram to review the distribution. "
       ],
-      "id": "f9d515bc"
+      "id": "518a587a"
     },
     {
       "cell_type": "code",
@@ -145,7 +145,7 @@
         "\n",
         "sns.histplot(min_dist, binwidth = 10)"
       ],
-      "id": "1e526915",
+      "id": "cd99621c",
       "execution_count": null,
       "outputs": []
     },
@@ -163,7 +163,7 @@
         "\n",
         "In __routingpy__, Mapbox's web services are referenced as `MapboxOSRM`.  We'll need a Mapbox account and access token to access these services; I'm storing mine in a variable named `mapbox_key`.  I then initalize a connection to Mapbox with `MapboxOSRM()`, which I am calling `mb`.  "
       ],
-      "id": "df18dfdb"
+      "id": "ab0a0722"
     },
     {
       "cell_type": "code",
@@ -172,7 +172,7 @@
         "#| echo: false\n",
         "mapbox_key = \"pk.eyJ1Ijoia3dhbGtlcnRjdSIsImEiOiJMRk9JSmRvIn0.l1y2jHZ6IARHM_rA1-X45A\""
       ],
-      "id": "07e9a881",
+      "id": "e9d0a82d",
       "execution_count": null,
       "outputs": []
     },
@@ -184,7 +184,7 @@
         "\n",
         "mb = MapboxOSRM(api_key = mapbox_key)"
       ],
-      "id": "fc70b775",
+      "id": "1517a308",
       "execution_count": null,
       "outputs": []
     },
@@ -196,7 +196,7 @@
         "\n",
         "Below, I'm defining a function `points_to_coords()` to convert a given GeoDataFrame of points to a list of lists, with each list element representing the XY coordinates of a given input point in the dataset.  We'll then call the function on the Census tract centroids and the trauma hospitals datasets.  "
       ],
-      "id": "2f61d1b4"
+      "id": "f8253f17"
     },
     {
       "cell_type": "code",
@@ -212,7 +212,7 @@
         "tract_coords = points_to_coords(tract_centroids)\n",
         "hospital_coords = points_to_coords(sd_trauma)"
       ],
-      "id": "20094b80",
+      "id": "955d6e1a",
       "execution_count": null,
       "outputs": []
     },
@@ -222,7 +222,7 @@
       "source": [
         "Next, we'll set up some custom code that allows for the creation of a 242 by 7 travel-time matrix.  This is necessary because Mapbox's Matrix API only allows for a maximum of 25 coordinate pairs per request, and we have 249 total!  Let's run the code, then walk through the steps we took."
       ],
-      "id": "0e0b4dc9"
+      "id": "552acd3c"
     },
     {
       "cell_type": "code",
@@ -259,7 +259,7 @@
         "\n",
         "all_times.head()"
       ],
-      "id": "86f0b259",
+      "id": "a4704016",
       "execution_count": null,
       "outputs": []
     },
@@ -279,7 +279,7 @@
         "\n",
         "Our last steps before plotting involve finding the minimum travel-time from each Census tract to a trauma hospital, converting to minutes, then adding back to the Census tracts GeoDataFrame as a column named `'time'`.  Using the GeoDataFrame method `.plot()` with some customization, we can reproduce the plot in _Analyzing US Census Data_.  "
       ],
-      "id": "523fefca"
+      "id": "5cfcc2a1"
     },
     {
       "cell_type": "code",
@@ -304,7 +304,7 @@
         "            xy=(0.1, 0.1), xycoords='figure fraction',\n",
         "            fontsize=8, ha='left', va='top')"
       ],
-      "id": "d2fdebaf",
+      "id": "1df8f787",
       "execution_count": null,
       "outputs": []
     },
@@ -316,7 +316,7 @@
         "\n",
         "If you've found this post useful, [consider picking up a copy of my book _Analyzing US Census Data: Methods, Maps, and Models in R_](https://www.routledge.com/Analyzing-US-Census-Data-Methods-Maps-and-Models-in-R/Walker/p/book/9781032366449), which hits shelves next month.  I'll keep sharing Python spatial data science workflows on this blog as well, so keep an eye out for future posts!"
       ],
-      "id": "fac40c90"
+      "id": "806e164f"
     }
   ],
   "metadata": {
