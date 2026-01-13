@@ -1,0 +1,244 @@
+---
+title: "Interactive legends and screenshot export in mapgl"
+author: "Kyle Walker"
+date: "2026-01-13"
+categories: [r, gis, mapping, shiny]
+image: "image.png"
+filters:
+- lightbox
+lightbox: auto
+editor:
+   markdown:
+      wrap: 72
+---
+
+```{r}
+#| echo: false
+
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+options(tigris_use_cache = TRUE)
+```
+
+Since I first wrote mapgl, I've wanted the ability to filter data directly from the map legend. Rather than building custom UI controls, this would enable users to click on legend items to show/hide categories, or drag a slider on a continuous legend to filter by value ranges.
+
+mapgl 0.4.4 introduces *interactive legends* that do exactly this. In this post, I'll walk through how to use interactive categorical and continuous legends, and also show off a new screenshot control for exporting your maps.
+
+## Getting started: educational attainment in Miami-Dade County
+
+Let's use a tidycensus example to demonstrate these features. We'll map educational attainment (percent with a bachelor's degree or higher) by Census tract in Miami-Dade County, Florida.
+
+```{r}
+library(mapgl)
+library(tidycensus)
+library(tidyverse)
+library(sf)
+
+# Get educational attainment data
+miami <- get_acs(
+  geography = "tract",
+  variables = "DP02_0068P",  # Percent bachelor's degree or higher
+  state = "FL",
+  county = "Miami-Dade",
+  year = 2023,
+  geometry = TRUE
+)
+
+# Quick look at the distribution
+summary(miami$estimate)
+```
+
+## Interactive continuous legends
+
+For continuous color scales, mapgl's `interpolate_palette()` function automatically calculates appropriate break points and creates smooth color transitions. Let's create a continuous choropleth with an interactive legend:
+
+```{r}
+# Create a continuous scale with quantile breaks
+continuous_scale <- interpolate_palette(
+ data = miami,
+ column = "estimate",
+ method = "quantile",
+ n = 5,
+ palette = viridisLite::viridis
+)
+
+maplibre(bounds = miami) |>
+ add_fill_layer(
+   id = "education",
+   source = miami,
+   fill_color = continuous_scale$expression,
+   fill_opacity = 0.7
+ ) |>
+ add_legend(
+   "Bachelor's Degree or Higher (%)",
+   values = continuous_scale$breaks,
+   colors = continuous_scale$colors,
+   type = "continuous",
+   layer_id = "education",
+   interactive = TRUE
+ )
+```
+
+Try dragging the handles on the gradient bar. You'll see:
+
+- **Dual handles** that define a selected range
+- **Ghost overlays** on the unselected portions of the gradient
+- **Drag the middle region** to pan your selection window
+- **Instant filtering** of the map data to show only tracts within your selected range
+
+To clear your filter, click the "Reset Filter" button.
+
+Note that we pass `continuous_scale$breaks` as numeric values.  While not used here, the legend automatically formats large numbers with K/M notation for display while using the actual values for filtering.
+
+### Custom labels with filter_values
+
+If you want complete control over your legend labels while still enabling interactivity, you can use the `filter_values` parameter. This is useful when you want formatted labels that differ from the actual numeric values used for filtering:
+
+```{r}
+# Manual labels with corresponding filter values
+maplibre(bounds = miami) |>
+ add_fill_layer(
+   id = "education",
+   source = miami,
+   fill_color = interpolate(
+     column = "estimate",
+     values = c(0, 25, 50, 75, 100),
+     stops = c("#eff3ff", "#bdd7e7", "#6baed6", "#3182bd", "#08519c"), 
+     na_color = "lightgrey"
+   ),
+   fill_opacity = 0.7
+ ) |>
+ add_legend(
+   "Bachelor's Degree or Higher",
+   values = c("0%", "25%", "50%", "75%", "100%"),
+   colors = c("#eff3ff", "#bdd7e7", "#6baed6", "#3182bd", "#08519c"),
+   type = "continuous",
+   layer_id = "education",
+   interactive = TRUE,
+   filter_column = "estimate",
+   filter_values = c(0, 25, 50, 75, 100)
+ )
+```
+
+## Interactive categorical legends
+
+Cartographers might prefer binned methods for visualizing data. mapgl's classification functions like `step_quantile()` create step expressions that work great with categorical legends. Let's create a quantile classification with an interactive legend:
+
+```{r}
+# Create a quantile classification
+edu_class <- step_quantile(
+ data = miami,
+ column = "estimate",
+ n = 5,
+ colors = viridisLite::viridis(5)
+)
+
+maplibre(bounds = miami) |>
+ add_fill_layer(
+   id = "education",
+   source = miami,
+   fill_color = edu_class$expression,
+   fill_opacity = 0.7
+ ) |>
+ add_legend(
+   "Bachelor's Degree or Higher (%)",
+   type = "categorical",
+   layer_id = "education",
+   interactive = TRUE,
+   classification = edu_class
+ )
+```
+
+Click on any legend item to toggle that category's visibility. Disabled categories show reduced opacity and strikethrough text. This is a great way to let users focus on specific subsets of your data without building custom filter controls.
+
+The `classification` parameter is key here - it provides the break points that mapgl uses for range-based filtering when legend items are toggled.  This parameter works for non-interactive legends as well; you no longer need to specify the break labels and colors yourselves.
+
+## Interactive legends with quick view maps
+
+In a hurry? Interactive legends are also supported in mapgl's "quickview" functions `mapboxgl_view()` and `maplibre_view()`.  You'll need the argument `interactive_legend = TRUE`:
+
+```{r}
+maplibre_view(miami, column = "estimate", interactive_legend = TRUE)
+```
+
+You won't have the same fine-grained control over your legend as the examples above, but this is great for quick exploratory mapping.  
+
+## Screenshot control
+
+Another new feature in mapgl 0.4.4 is the screenshot control, which lets users capture and download their current map view as a PNG image.
+
+```{r}
+maplibre(bounds = miami) |>
+ add_fill_layer(
+   id = "education",
+   source = miami,
+   fill_color = continuous_scale$expression,
+   fill_opacity = 0.7
+ ) |>
+ add_legend(
+   "Bachelor's Degree or Higher (%)",
+   values = continuous_scale$breaks,
+   colors = continuous_scale$colors,
+   type = "continuous",
+   position = "bottom-left"
+ ) |>
+ add_screenshot_control(position = "top-right")
+```
+
+Click the camera icon in the top-right corner to download a screenshot. The `image_scale` parameter controls the output resolution - use `image_scale = 2` or `image_scale = 3` for higher-resolution exports suitable for presentations or print.
+
+
+## Putting it all together
+
+Here's a complete example combining interactive legends with the screenshot control:
+
+```{r}
+maplibre(
+ bounds = miami,
+ style = carto_style("positron")
+) |>
+ add_fill_layer(
+   id = "education",
+   source = miami,
+   fill_color = continuous_scale$expression,
+   fill_opacity = 0.7,
+   fill_outline_color = "white"
+ ) |>
+ add_legend(
+   "Bachelor's Degree or Higher (%)",
+   values = continuous_scale$breaks,
+   colors = continuous_scale$colors,
+   type = "continuous",
+   layer_id = "education",
+   interactive = TRUE,
+   filter_column = "estimate",
+   position = "bottom-left"
+ ) |>
+ add_screenshot_control(
+   position = "top-right",
+   image_scale = 2
+ )
+```
+
+The screenshot will capture the exact state of the map, preserving your current filter view from the interactive legend as well as your current map extent.  
+
+## Shiny integration
+
+Interactive legends work seamlessly in Shiny applications. The filter state is automatically sent to Shiny via `input$MAPID_legend_filter`, which provides:
+
+- `legendId`: The legend's unique identifier
+- `layerId`: The filtered layer
+- `type`: "categorical" or "continuous"
+- `column`: The data column being filtered
+- `enabledValues`: For categorical legends, which values are currently visible
+- `min`/`max`: For continuous legends, the selected range
+
+This means you can react to legend interactions in your server logic - for example, updating a summary table to show only the currently visible data.
+
+## Installing and learning more
+
+These features are available now - install or update with:
+```r
+install.packages("mapgl")
+```
+
+Want to learn more about building interactive mapping applications with mapgl? [Check out my workshop series](https://walkerdata.gumroad.com/l/modern-mapping-bundle) or reach out to [kyle@walker-data.com](mailto:kyle@walker-data.com) for custom training and consulting.

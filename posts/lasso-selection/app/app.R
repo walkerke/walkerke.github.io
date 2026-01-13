@@ -11,7 +11,7 @@ austin_coffee <- readRDS("austin_coffee.rds")
 llm_chat <- NULL
 if (nchar(Sys.getenv("ANTHROPIC_API_KEY")) > 0) {
   llm_chat <- chat_anthropic(
-    model = "claude-sonnet-4-20250514",
+    model = "claude-sonnet-4-5",
     system_prompt = "You are a local business analyst. Provide brief, interesting insights about coffee shop locations and patterns. Keep responses concise and engaging."
   )
 }

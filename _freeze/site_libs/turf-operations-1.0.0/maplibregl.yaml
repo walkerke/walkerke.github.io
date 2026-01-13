@@ -1,6 +1,6 @@
 dependencies:
   - name: maplibre-gl
-    version: "5.6.0"
+    version: "5.15.0"
     src: "htmlwidgets/lib/maplibre-gl"
     script:
       - "maplibre-gl.js"
@@ -18,6 +18,16 @@ dependencies:
     src: "htmlwidgets/lib/freehand-mode"
     script:
       - "freehand-mode.js"
+  - name: rectangle-mode
+    version: 1.0.0
+    src: "htmlwidgets/lib/rectangle-mode"
+    script:
+      - "rectangle-mode.js"
+  - name: radius-mode
+    version: 1.0.0
+    src: "htmlwidgets/lib/radius-mode"
+    script:
+      - "radius-mode.js"
   - name: maplibre-gl-geocoder
     version: 1.5.0
     src: "htmlwidgets/lib/maplibre-gl-geocoder"
@@ -48,7 +58,7 @@ dependencies:
     stylesheet:
       - "style.css"
   - name: turf
-    version: "7.2.0"
+    version: "7.3.0"
     src: "htmlwidgets/lib/turf"
     script:
       - "turf.min.js"
@@ -57,3 +67,15 @@ dependencies:
     src: "htmlwidgets"
     script:
       - "turf-operations.js"
+  - name: html2canvas
+    version: "1.4.1"
+    src: "htmlwidgets/lib/html2canvas"
+    script:
+      - "html2canvas.min.js"
+  - name: legend-interactivity
+    version: "1.0.0"
+    src: "htmlwidgets/lib/legend-interactivity"
+    script:
+      - "legend-interactivity.js"
+    stylesheet:
+      - "legend-interactivity.css"
