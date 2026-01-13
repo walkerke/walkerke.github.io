@@ -19,7 +19,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 options(tigris_use_cache = TRUE)
 ```
 
-Since I first wrote mapgl, I've wanted the ability to filter data directly from the map legend. Rather than building custom UI controls, this would enable users to click on legend items to show/hide categories, or drag a slider on a continuous legend to filter by value ranges.
+Since I first wrote mapgl, I've wanted the ability to filter data directly from the map legend. Rather than building custom UI controls, this would enable users to click on legend items to show/hide categories, or drag a slider on a continuous legend to filter by value ranges. 
 
 mapgl 0.4.4 introduces *interactive legends* that do exactly this. In this post, I'll walk through how to use interactive categorical and continuous legends, and also show off a new screenshot control for exporting your maps.
 
