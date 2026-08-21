@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/millions-of-parcels/index.html",
       "/posts/mapgl-interactive-legends/index.html",
       "/posts/pmtiles-texas-blocks/index.html",
       "/posts/time-aware-isochrones/index.html",

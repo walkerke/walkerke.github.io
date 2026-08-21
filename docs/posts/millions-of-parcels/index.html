@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kyle Walker">
+<meta name="dcterms.date" content="2026-08-21">
+
+<title>How to visualize millions of parcels on a map – WALKER DATA</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-c1fac2584b48ed01fb6e278e36375074.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta name="twitter:title" content="How to visualize millions of parcels on a map – WALKER DATA">
+<meta name="twitter:description" content="GIS, demographics, and data science consulting">
+<meta name="twitter:image" content="https://walker-data.com/posts/millions-of-parcels/image.png">
+<meta name="twitter:image-height" content="1708">
+<meta name="twitter:image-width" content="3012">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">WALKER DATA</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../workshops.html"> 
+<span class="menu-text">Workshops</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/walkerke"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/kyle_e_walker"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#getting-parcel-data-for-texas" id="toc-getting-parcel-data-for-texas" class="nav-link active" data-scroll-target="#getting-parcel-data-for-texas">Getting parcel data for Texas</a></li>
+  <li><a href="#preparing-parcel-data-for-visualization" id="toc-preparing-parcel-data-for-visualization" class="nav-link" data-scroll-target="#preparing-parcel-data-for-visualization">Preparing parcel data for visualization</a>
+  <ul class="collapse">
+  <li><a href="#exploring-columns-in-our-data" id="toc-exploring-columns-in-our-data" class="nav-link" data-scroll-target="#exploring-columns-in-our-data">Exploring columns in our data</a></li>
+  <li><a href="#dealing-with-parcel-stacking" id="toc-dealing-with-parcel-stacking" class="nav-link" data-scroll-target="#dealing-with-parcel-stacking">Dealing with parcel stacking</a></li>
+  </ul></li>
+  <li><a href="#preparing-the-data-for-visualization-with-freestiler" id="toc-preparing-the-data-for-visualization-with-freestiler" class="nav-link" data-scroll-target="#preparing-the-data-for-visualization-with-freestiler">Preparing the data for visualization with freestiler</a></li>
+  <li><a href="#mapping-ownership-in-texas-by-parcel" id="toc-mapping-ownership-in-texas-by-parcel" class="nav-link" data-scroll-target="#mapping-ownership-in-texas-by-parcel">Mapping ownership in Texas by parcel</a></li>
+  <li><a href="#hosting-pmtiles-on-cloudflare-r2" id="toc-hosting-pmtiles-on-cloudflare-r2" class="nav-link" data-scroll-target="#hosting-pmtiles-on-cloudflare-r2">Hosting PMTiles on Cloudflare R2</a></li>
+  <li><a href="#sharing-your-map" id="toc-sharing-your-map" class="nav-link" data-scroll-target="#sharing-your-map">Sharing your map</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">How to visualize millions of parcels on a map</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">r</div>
+    <div class="quarto-category">gis</div>
+    <div class="quarto-category">land</div>
+    <div class="quarto-category">mapping</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kyle Walker </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 21, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>If you follow me on any of my social media channels you’ve likely seen some of my “mapping millions of data points” posts. A few of these examples have covered statewide parcel data. In the industries where I consult - energy/land and real estate - parcel data is immensely valuable for understanding land ownership, right-of-way, valuation, and more. There are a tons of challenges in working with parcel data, however. High-quality parcel data can be expensive or difficult to access - and even if you get it, you’re dealing with huge files that are challenging to visualize and explore.</p>
+<p>In this post, I’ll show you how I do it.</p>
+<section id="getting-parcel-data-for-texas" class="level2">
+<h2 class="anchored" data-anchor-id="getting-parcel-data-for-texas">Getting parcel data for Texas</h2>
+<p>The public availability of parcel GIS data differs widely by state and by county. Some states, like Texas and Florida, consolidate and distribute parcel data from counties at the state level and make state-wide datasets available. Texas is a great example to work with, as the <a href="https://geographic.texas.gov/">Texas Geographic Information Office</a> makes a 2025 statewide parcel dataset available for bulk download. 253 of the state’s 254 counties are represented; only Donley County is missing.</p>
+<p><a href="https://data.geographic.texas.gov/0fa04328-872e-481c-b453-126a74777593/resources/stratmap25-landparcels_48_lp.zip">You can download the data directly from this link</a>. It’s about 2.6 GB zipped.</p>
+<p>Unzipping gets us an Esri file geodatabase a little over 7 GB in size. This is a hefty spatial dataset to work with, and file geodatabases are typically meant for use with commercial GIS software. If that’s not available to you, you’ll want to use tools for free and file formats that are more transparent. I’ll be using R and DuckDB via the <strong>duckspatial</strong> package; let’s get set up.</p>
+<p>With duckspatial, we can use DuckDB’s spatial extension to read in our 7 GB file geodatabase lazily and inspect the data quickly.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(duckspatial)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>parcels <span class="ot">&lt;-</span> <span class="fu">ddbs_open_dataset</span>(<span class="st">"~/Downloads/stratmap25-landparcels_48.gdb"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>parcels <span class="sc">|&gt;</span> </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 5
+Columns: 38
+$ OBJECTID      &lt;dbl&gt; 1, 2, 3, 4, 5
+$ Prop_ID       &lt;chr&gt; "102191", "102192", "102193", "102197", "102199"
+$ GEO_ID        &lt;chr&gt; "102050151", "102050152", "102050153", "102050201", "102…
+$ OWNER_NAME    &lt;chr&gt; "NORTH STREET DESIGN BUILD LLC", "CRUZ-FUENTES DANNY &amp; B…
+$ NAME_CARE     &lt;chr&gt; " ", " ", " ", " ", " "
+$ LEGAL_AREA    &lt;chr&gt; " ", " ", " ", " ", " "
+$ LGL_AREA_UNIT &lt;chr&gt; "Acres", "Acres", "Acres", "Acres", "Acres"
+$ GIS_AREA      &lt;chr&gt; "1.62655101", "1.63662944", "1.62956035", "2.45617199", …
+$ GIS_AREA_UNIT &lt;chr&gt; "Acres", "Acres", "Acres", "Acres", "Acres"
+$ LEGAL_DESC    &lt;chr&gt; " LOT 6 BLK E SOUTH LUND SOUTH", " LOT 5 BLK E SOUTH LUN…
+$ STAT_LAND_USE &lt;chr&gt; " ", " ", " ", " ", " "
+$ LOC_LAND_USE  &lt;chr&gt; " ", " ", " ", " ", " "
+$ LAND_VALUE    &lt;chr&gt; "0", "0", "0", "0", "0"
+$ IMP_VALUE     &lt;chr&gt; "0", "0", "0", "0", "0"
+$ MKT_VALUE     &lt;chr&gt; "90541", "75776", "65866", "308229", "143000"
+$ SITUS_ADDR    &lt;chr&gt; " , TX 78704", " , TX 78704", " , TX 78704", " , TX 7870…
+$ SITUS_NUM     &lt;chr&gt; " ", " ", " ", " ", " "
+$ SITUS_STRE    &lt;chr&gt; " ", " ", " ", " ", " "
+$ SITUS_ST_1    &lt;chr&gt; "ASHBY", "ASHBY", "ASHBY", "TREADWELL", "TREADWELL"
+$ SITUS_ST_2    &lt;chr&gt; "AVE", "AVE", "AVE", "ST", "ST"
+$ SITUS_CITY    &lt;chr&gt; " ", " ", " ", " ", " "
+$ SITUS_STAT    &lt;chr&gt; "TX", "TX", "TX", "TX", "TX"
+$ SITUS_ZIP     &lt;chr&gt; "78704", "78704", "78704", "78704", "78704"
+$ MAIL_ADDR     &lt;chr&gt; "5303 AVENUE G BLDG 2, AUSTIN, TX 78751", "1815 ASHBY AV…
+$ MAIL_LINE1    &lt;chr&gt; "5303 AVENUE G BLDG 2", "1815 ASHBY AVE", "289 FUNF KIND…
+$ MAIL_LINE2    &lt;chr&gt; " ", " ", " ", " ", " "
+$ MAIL_CITY     &lt;chr&gt; "AUSTIN", "AUSTIN", "FREDERICKSBURG", "AUSTIN", "AUSTIN"
+$ MAIL_STAT     &lt;chr&gt; "TX", "TX", "TX", "TX", "TX"
+$ MAIL_ZIP      &lt;chr&gt; "78751", "78704", "78624", "78704", "78704"
+$ SOURCE        &lt;chr&gt; "TRAVIS APPRAISAL DISTRICT", "TRAVIS APPRAISAL DISTRICT"…
+$ DATE_ACQ      &lt;chr&gt; "20250801", "20250801", "20250801", "20250801", "2025080…
+$ FIPS          &lt;chr&gt; "48453", "48453", "48453", "48453", "48453"
+$ COUNTY        &lt;chr&gt; "TRAVIS", "TRAVIS", "TRAVIS", "TRAVIS", "TRAVIS"
+$ TAX_YEAR      &lt;chr&gt; "2025", "2025", "2025", "2025", "2025"
+$ YEAR_BUILT    &lt;chr&gt; " ", " ", " ", " ", " "
+$ SHAPE_Length  &lt;dbl&gt; 117.4089, 117.7056, 117.5087, 140.8034, 145.2329
+$ SHAPE_Area    &lt;dbl&gt; 822.2100, 827.3063, 823.7297, 1241.6671, 1232.1314
+$ SHAPE         &lt;MULTIPOLYGON [m]&gt; MULTIPOLYGON (((-10883719 3..., MULTIPOLYGON (((-1088371…</code></pre>
+</div>
+</div>
+<p>There are 38 columns in the dataset that TxGIO has standardized across Texas’s counties. Our first few rows are from Travis County (Austin); we can see that some of the columns are populated, but others are not (e.g. year built is missing for these records), so we aren’t likely to have complete coverage for each column across the state.</p>
+<p>While DuckDB can read from a file geodatabase directly, let’s get our parcel data into a DuckDB database before proceeding any further.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ddbs_write_dataset</span>(parcels, <span class="st">"~/data/tx_parcels.duckdb"</span>, <span class="at">layer =</span> <span class="st">"tx_parcels"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="preparing-parcel-data-for-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="preparing-parcel-data-for-visualization">Preparing parcel data for visualization</h2>
+<p>For a normal spatial dataset, we’d likely spin up a quick interactive map in R to explore our data. In my mapgl package, the <code>mapboxgl_view()</code> and <code>maplibre_view()</code> functions are great for this purpose. For a 14.3 million row, multi-gigabyte dataset, this simply won’t work, as it’ll overload your web browser (or possibly even your GIS software) quickly.</p>
+<p>Aside from the size issue, there are several other challenges we’ll need to think through before visualizing our data. A few:</p>
+<ul>
+<li><p><strong>Column completeness</strong>. I mentioned this earlier; public statewide parcel data will likely have inconsistent or incomplete columns. If you try to map data with considerable missingness, it won’t be informative or will just look bad.</p></li>
+<li><p><strong>Polygon size</strong>. Parcels are typically very small. On an interactive map, it makes little sense to show parcels when zoomed out, as you can’t actually see most of them, especially within cities. So you’ll want to figure out a zoom-dependent strategy to handle this.</p></li>
+<li><p><strong>Parcel stacking</strong>. It’s common for parcel record datasets to include “stacked”, or repeated, geometries, as single parcels often include multiple records (e.g., a condominium complex with multiple owners). This can introduce confusing visual artifacts and obscured data.</p></li>
+</ul>
+<p>Resolving all of this will require some decision-making around both data cleaning and data formats for visualization. We’ll first take a look at our data and see what we can reasonably represent statewide, and come up with a strategy for the parcel stacking issue.</p>
+<section id="exploring-columns-in-our-data" class="level3">
+<h3 class="anchored" data-anchor-id="exploring-columns-in-our-data">Exploring columns in our data</h3>
+<p>Let’s examine column completeness to start with, and see what we might be able to visualize. Most missing data in the dataset (as we saw above) is a blank string, not <code>NA</code>, so we’ll evaluate accordingly.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>parcels <span class="ot">&lt;-</span> <span class="fu">ddbs_open_dataset</span>(<span class="st">"~/data/tx_parcels.duckdb"</span>, <span class="at">layer =</span> <span class="st">"tx_parcels"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>completeness <span class="ot">&lt;-</span> parcels <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ddbs_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">everything</span>(),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> <span class="fu">mean</span>(<span class="fu">as.numeric</span>(<span class="sc">!</span><span class="fu">is.na</span>(.x) <span class="sc">&amp;</span> <span class="fu">trimws</span>(<span class="fu">as.character</span>(.x)) <span class="sc">!=</span> <span class="st">""</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"column"</span>, <span class="at">values_to =</span> <span class="st">"share_filled"</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(completeness, <span class="fu">aes</span>(<span class="at">x =</span> share_filled, <span class="at">y =</span> <span class="fu">reorder</span>(column, share_filled))) <span class="sc">+</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1e3a8a"</span>) <span class="sc">+</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="fu">label_percent</span>()) <span class="sc">+</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Share of parcels with a non-blank value"</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-3-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Some columns are clear no-gos for statewide analysis; for example, we only have a little over 50% coverage for year built and land use. Ownership is mostly complete, as are the value columns (market, land, and improvement). However, this can be misleading. Let’s take a closer look at the value columns:<br>
+</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>zero_shares <span class="ot">&lt;-</span> parcels <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ddbs_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(MKT_VALUE, LAND_VALUE, IMP_VALUE),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> <span class="fu">mean</span>(</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as.numeric</span>(<span class="fu">try</span>(<span class="fu">as.numeric</span>(<span class="fu">regexp_replace</span>(.x, <span class="st">"[$, ]"</span>, <span class="st">""</span>, <span class="st">"g"</span>))) <span class="sc">==</span> <span class="dv">0</span>),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"column"</span>, <span class="at">values_to =</span> <span class="st">"share_zero"</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>zero_shares</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  column     share_zero
+  &lt;chr&gt;           &lt;dbl&gt;
+1 MKT_VALUE       0.204
+2 LAND_VALUE      0.295
+3 IMP_VALUE       0.560</code></pre>
+</div>
+</div>
+<p>20 percent of the market value, 30 percent of the land value, and 56 percent of the improvement value columns are zero! So if we tried to visualize any of these columns, we’d be dealing with substantial coverage gaps. Beyond this, though, the zero-values likely mean substantively different things. A “0” improvement value may actually be meaningful, as vacant land won’t have improvements on it. However, in many cases, the “0” is also representing missing data here. So we have to proceed with caution, and really shouldn’t visualize the data statewide.</p>
+<p>So we need to figure out what we <em>can</em> show. Ownership is often one of the most interesting parcel characteristics for energy / land / real estate clients. A compelling map might be a visualization of non-Texas ownership; specifically parcels where the listed owner is either in another state or international. Let’s take a quick look:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>parcels <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ddbs_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(MAIL_STAT, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   MAIL_STAT        n
+   &lt;chr&gt;        &lt;dbl&gt;
+ 1 "TX"      11691906
+ 2 " "        1276788
+ 3 "TEXAS"     619666
+ 4 "CA"        152220
+ 5 "FL"         68933
+ 6 "NC"         46225
+ 7 "AZ"         41322
+ 8 "GA"         39592
+ 9 "LA"         23694
+10 "CO"         23013</code></pre>
+</div>
+</div>
+<p>Around 11.7 million parcels list an owner in Texas; another 1.27 million are blank (though most of these are in Tarrant County, where “TX” is appended to the city in the data); and another 620,000 list “TEXAS”. Other states are well-represented, notably over 150k in California.</p>
+<p>This does suggest an interesting map idea: the geography of out-of-state owners. We’ll come back to this when it’s time to prep the data for visualization.</p>
+</section>
+<section id="dealing-with-parcel-stacking" class="level3">
+<h3 class="anchored" data-anchor-id="dealing-with-parcel-stacking">Dealing with parcel stacking</h3>
+<p>Our next data wrangling step is handling the parcel stacking issue - duplicate geometries in our data that represent separate parcel records. Let’s first diagnose the issue. The geometry column is named <code>SHAPE</code> in this dataset, so we can use that as a unique identifier in our diagnosis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>parcels <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(SHAPE) <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">parcels =</span> <span class="fu">n</span>(),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">stacked_parcels =</span> <span class="fu">sum</span>(<span class="fu">as.numeric</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">records_in_stacks =</span> <span class="fu">sum</span>(<span class="fu">if_else</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>, n, <span class="dv">0</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">largest_stack =</span> <span class="fu">max</span>(n, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+   parcels stacked_parcels records_in_stacks largest_stack
+     &lt;dbl&gt;           &lt;dbl&gt;             &lt;dbl&gt;         &lt;dbl&gt;
+1 13556378          140834            932104         11371</code></pre>
+</div>
+</div>
+<p>Of the 14.3 million parcel records, we have around 13.5 million unique shapes. Around 932,000 records are in stacked parcels; the largest stack has over 11,300 records! Let’s take a look at the biggest stacks:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>parcels <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(SHAPE) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">records =</span> <span class="fu">n</span>(),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">accounts =</span> <span class="fu">n_distinct</span>(Prop_ID),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">owners =</span> <span class="fu">n_distinct</span>(OWNER_NAME),</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">counties =</span> <span class="fu">n_distinct</span>(COUNTY),</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(records <span class="sc">&gt;</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">missing_geometry =</span> <span class="fu">is.na</span>(SHAPE)) <span class="sc">|&gt;</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>SHAPE) <span class="sc">|&gt;</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  records accounts owners counties missing_geometry
+    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;           
+1    1210        1   1083        1 FALSE           
+2   11371     1311    935       97 TRUE            </code></pre>
+</div>
+</div>
+<p>The biggest “stack” actually represents all parcel records that don’t have geometry. The other example - a parcel with 1210 records and 1083 owners - is a manufactured home community in Pflugerville, outside Austin. Each of the records represents a single mobile-home space but they all share the same parcel. For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>boulder_ridge <span class="ot">&lt;-</span> parcels <span class="sc">|&gt;</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(COUNTY <span class="sc">==</span> <span class="st">"TRAVIS"</span>, Prop_ID <span class="sc">==</span> <span class="st">"702976"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect</span>() </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>boulder_ridge</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 1210 features and 37 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -10866140 ymin: 3555513 xmax: -10864970 ymax: 3557514
+Projected CRS: WGS 84 / Pseudo-Mercator
+# A tibble: 1,210 × 38
+   OBJECTID Prop_ID GEO_ID    OWNER_NAME      NAME_CARE LEGAL_AREA LGL_AREA_UNIT
+ *    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;        
+ 1   440552 702976  259410216 SUN BOULDER RI… " "       " "        Acres        
+ 2   440585 702976  259410216 KIRK MARK       " "       " "        Acres        
+ 3   440586 702976  259410216 PEREZ SERGIO    " "       " "        Acres        
+ 4   440593 702976  259410216 TRIOLA ANGELA   " "       " "        Acres        
+ 5   440594 702976  259410216 BARRERA VARGAS… " "       " "        Acres        
+ 6   440595 702976  259410216 MARTIN ROBERT … " "       " "        Acres        
+ 7   440596 702976  259410216 STOWERS CHARLE… " "       " "        Acres        
+ 8   440599 702976  259410216 COOK ALOHA (OW… " "       " "        Acres        
+ 9   440600 702976  259410216 WOODALL LORANA… " "       " "        Acres        
+10   440601 702976  259410216 ROBERTS JAMES   " "       " "        Acres        
+# ℹ 1,200 more rows
+# ℹ 31 more variables: GIS_AREA &lt;chr&gt;, GIS_AREA_UNIT &lt;chr&gt;, LEGAL_DESC &lt;chr&gt;,
+#   STAT_LAND_USE &lt;chr&gt;, LOC_LAND_USE &lt;chr&gt;, LAND_VALUE &lt;chr&gt;, IMP_VALUE &lt;chr&gt;,
+#   MKT_VALUE &lt;chr&gt;, SITUS_ADDR &lt;chr&gt;, SITUS_NUM &lt;chr&gt;, SITUS_STRE &lt;chr&gt;,
+#   SITUS_ST_1 &lt;chr&gt;, SITUS_ST_2 &lt;chr&gt;, SITUS_CITY &lt;chr&gt;, SITUS_STAT &lt;chr&gt;,
+#   SITUS_ZIP &lt;chr&gt;, MAIL_ADDR &lt;chr&gt;, MAIL_LINE1 &lt;chr&gt;, MAIL_LINE2 &lt;chr&gt;,
+#   MAIL_CITY &lt;chr&gt;, MAIL_STAT &lt;chr&gt;, MAIL_ZIP &lt;chr&gt;, SOURCE &lt;chr&gt;, …</code></pre>
+</div>
+</div>
+<p>But when we map it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapgl)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">maplibre_view</span>(boulder_ridge, <span class="at">style =</span> <span class="fu">openfreemap_style</span>(<span class="st">"liberty"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><a href="images/paste-6.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="images/paste-6.png" class="img-fluid"></a></p>
+<p>You can see the issue in the map; <code>maplibre_view()</code> typically shows shapes as semi-transparent, but the “stacking” renders the shape fully opaque.</p>
+<p>We’ll need to clean this up, ideally retaining as much information from the stacks as possible.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>parcels_clean <span class="ot">&lt;-</span> parcels <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(SHAPE)) <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">owner =</span> <span class="fu">na_if</span>(<span class="fu">trimws</span>(OWNER_NAME), <span class="st">""</span>),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">nullif</span>(<span class="fu">try</span>(<span class="fu">as.numeric</span>(<span class="fu">regexp_replace</span>(MKT_VALUE, <span class="st">"[$, ]"</span>, <span class="st">""</span>, <span class="st">"g"</span>))), <span class="dv">0</span>),</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">st =</span> <span class="fu">toupper</span>(<span class="fu">trimws</span>(MAIL_STAT)),</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">city_st =</span> <span class="fu">regexp_extract</span>(<span class="fu">toupper</span>(MAIL_CITY), <span class="st">",</span><span class="sc">\\</span><span class="st">s*([A-Z]{2})</span><span class="sc">\\</span><span class="st">s*$"</span>, <span class="dv">1</span>L),</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">mail_city =</span> <span class="fu">na_if</span>(<span class="fu">trimws</span>(MAIL_CITY), <span class="st">""</span>),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">owner_origin =</span> <span class="fu">case_when</span>(</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>      st <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"TX"</span>, <span class="st">"TEXAS"</span>) <span class="sc">|</span> city_st <span class="sc">==</span> <span class="st">"TX"</span> <span class="sc">~</span> <span class="st">"Texas owner"</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>      st <span class="sc">==</span> <span class="st">""</span> <span class="sc">&amp;</span> city_st <span class="sc">==</span> <span class="st">""</span> <span class="sc">~</span> <span class="st">"Unknown"</span>,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Out-of-state owner"</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">owner_location =</span> <span class="fu">case_when</span>(</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>      city_st <span class="sc">!=</span> <span class="st">""</span> <span class="sc">~</span> mail_city,</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>      <span class="sc">!</span><span class="fu">is.na</span>(mail_city) <span class="sc">&amp;</span> st <span class="sc">!=</span> <span class="st">""</span> <span class="sc">~</span> <span class="fu">paste0</span>(mail_city, <span class="st">", "</span>, st),</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>      st <span class="sc">!=</span> <span class="st">""</span> <span class="sc">~</span> st,</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="cn">NA</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">situs =</span> <span class="fu">if_else</span>(<span class="fu">regexp_matches</span>(SITUS_ADDR, <span class="st">"[A-Za-z0-9]"</span>), <span class="fu">trimws</span>(SITUS_ADDR), <span class="cn">NA</span>)</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(SHAPE, Prop_ID) <span class="sc">|&gt;</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">owners_list =</span> <span class="fu">list_distinct</span>(<span class="fu">array_agg</span>(owner)),</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">owner_rep =</span> <span class="fu">min</span>(owner, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">owner_origin =</span> <span class="fu">mode</span>(owner_origin),</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">owner_location =</span> <span class="fu">arg_min</span>(owner_location, owner),</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">max</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">situs_addr =</span> <span class="fu">min</span>(situs, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">county =</span> <span class="fu">min</span>(COUNTY, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop_last"</span></span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">accounts =</span> <span class="fu">n</span>(),</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">owners_all =</span> <span class="fu">list_sort</span>(<span class="fu">list_distinct</span>(<span class="fu">flatten</span>(<span class="fu">array_agg</span>(owners_list)))),</span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">owner_origin =</span> <span class="fu">mode</span>(owner_origin),</span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">owner_location =</span> <span class="fu">arg_min</span>(owner_location, owner_rep),</span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">situs_addr =</span> <span class="fu">min</span>(situs_addr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">county =</span> <span class="fu">min</span>(county, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_value =</span> <span class="fu">sum</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_owners =</span> <span class="fu">len</span>(owners_all),</span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">owner_names =</span> <span class="fu">array_to_string</span>(<span class="fu">list_slice</span>(owners_all, <span class="dv">1</span>L, <span class="dv">3</span>L), <span class="st">"; "</span>),</span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">stacked =</span> <span class="fu">as.integer</span>(accounts <span class="sc">&gt;</span> <span class="dv">1</span>)</span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_duckspatial_df</span>(<span class="at">crs =</span> <span class="dv">3857</span>, <span class="at">geom_col =</span> <span class="st">"SHAPE"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>It’s worth talking through the code a bit here:</p>
+<ul>
+<li><p>We first do some wrangling inside the database to identify Texas and non-Texas owners, and clean up areas where we have data missingness (e.g.&nbsp;converting true blanks to <code>NA</code> in the address column).</p></li>
+<li><p>We’ll then summarize twice over parcels grouped by their geometry and property ID. The first summarize collapses ownership records into tax accounts; the second collapses tax accounts into specific parcel geometries, collecting metadata along the way.</p></li>
+<li><p>Handling owner information without losing anything is tricky, as we’ll in some cases have to condense 100s of owners into a single row of our dataset. We’ll do a couple things here: create an <code>owners_all</code> column that handles all of the owners, then an <code>owner_names</code> column that shows the first few owners in a multi-owner parcel.</p></li>
+<li><p>Given that we grouped by the <code>SHAPE</code> column (the warning message we get), <code>as_duckspatial_df()</code> reconstructs the geometry for us, which we’ll need in the next step.</p></li>
+</ul>
+</section>
+</section>
+<section id="preparing-the-data-for-visualization-with-freestiler" class="level2">
+<h2 class="anchored" data-anchor-id="preparing-the-data-for-visualization-with-freestiler">Preparing the data for visualization with freestiler</h2>
+<p>We’ve handled column inspection and wrangled our data. Now, we’ll need to iron out the visualization issues. Even though we’ve cleaned up the stacked geometry, we still have 13.5 million unique polygons to visualize… which is way too many to load directly into a modern web map.</p>
+<p>The solution is to convert to <em>vector tiles</em>, which is the format Google Maps, Mapbox, and other modern web mapping providers use to visualize millions of data points. We’ll be using <strong>freestiler</strong> to do this, a tool I developed earlier this year to build vector tiles directly from your data.</p>
+<p>Let’s first write our data from R to a file to save our progress. We’ll be writing to a Parquet file, which is an excellent format for storing large datasets - including geospatial ones - in efficient ways. We’ll need to drop the <code>owners_all</code> column first, which is in a format that our vector tiles won’t work well with.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>parcels_clean <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>owners_all) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ddbs_transform</span>(<span class="st">"EPSG:4326"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ddbs_write_dataset</span>(<span class="st">"~/data/tx_parcels_tiles.parquet"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I built freestiler for speed and interoperability. freestiler can tile directly from an R or Python spatial object; a DuckDB database or query; or even a file on disk, like a Parquet file. Its backend is written in Rust for speed. We’re choosing Parquet here to avoid reading the full dataset into R and to have an intermediate data artifact pre-tiling. The function to generate tiles from a file is <code>freestile_file()</code>; the output is a PMTiles file, a single file that stores all of the data as vector tiles.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(freestiler)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">freestile_file</span>(</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"~/data/tx_parcels_tiles.parquet"</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">output =</span> <span class="st">"~/data/tx_parcels.pmtiles"</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">layer_name =</span> <span class="st">"parcels"</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_zoom =</span> <span class="dv">10</span>,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_zoom =</span> <span class="dv">14</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In my test run, the tiling itself took around 5 minutes. In the call to <code>freestile_file()</code>, note the min zoom and max zoom. Individual parcels don’t really show up visually past zoom level 10 anyway, so there really isn’t need to make them available at smaller zooms. The max zoom of 14 simply has to do with level of detail; parcels will remain visible past zoom 14 due to overzooming.</p>
+<p>To view the tiles, we’ll need a local tile server that supports HTTP range requests. The <code>view_tiles()</code> function in freestiler will spin up a local server to handle this, but doesn’t work well with tilesets larger than 1GB. To view our large tileset, let’s start a local server, then use mapgl’s <code>add_pmtiles_source()</code>.</p>
+<p>In a terminal, I recommend installing node’s <code>http-server</code>:</p>
+<pre><code>npm install --global http-server</code></pre>
+<p>Then, <code>cd</code> into the folder that contains your tileset, and type in your terminal:</p>
+<pre><code>http-server -p 8002 --cors</code></pre>
+<p>You can pick whatever port you want, but make sure to use the <code>--cors</code> flag to allow for cross-origin requests. We can now view our tiles on a simple map:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">maplibre</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">style =</span> <span class="fu">openfreemap_style</span>(<span class="st">"positron"</span>),</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">center =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">97.74</span>, <span class="fl">30.27</span>),</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">zoom =</span> <span class="dv">11</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_pmtiles_source</span>(</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> <span class="st">"parcel-tiles"</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">url =</span> <span class="st">"http://localhost:8002/tx_parcels.pmtiles"</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_fill_layer</span>(</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> <span class="st">"parcels"</span>,</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">source =</span> <span class="st">"parcel-tiles"</span>,</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">source_layer =</span> <span class="st">"parcels"</span>,</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill_color =</span> <span class="st">"navy"</span>,</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill_opacity =</span> <span class="fl">0.5</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><a href="images/paste-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="images/paste-1.png" class="img-fluid"></a></p>
+<p>Parcels render fast and crisp due to quite a bit of internal optimization freestiler does under the hood to make it possible. However, we haven’t yet solved the last problem fully - zooming out. Our tiles start at zoom 10, so when you zoom out, you’ll see a blank map:</p>
+<p><a href="images/paste-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="images/paste-2.png" class="img-fluid"></a></p>
+<p>We’ll want to fill that space, but fortunately R and mapgl make that straightforward.</p>
+</section>
+<section id="mapping-ownership-in-texas-by-parcel" class="level2">
+<h2 class="anchored" data-anchor-id="mapping-ownership-in-texas-by-parcel">Mapping ownership in Texas by parcel</h2>
+<p>Let’s finish building out the map into something that visualizes ownership in Texas without gaps. We can pull in county geometries with the R tigris package - but since we have county information in the parcel data, let’s use our DuckDB database to calculate some interesting stats, and merge that in to the counties so we can show information when the map is zoomed out.</p>
+<p>In the code block below, we’ll parse the owners in the parcel data, then roll up that information to the county level and pull that information into R.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>county_stats <span class="ot">&lt;-</span> parcels <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ddbs_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">owner =</span> <span class="fu">na_if</span>(<span class="fu">trimws</span>(OWNER_NAME), <span class="st">""</span>),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">st =</span> <span class="fu">toupper</span>(<span class="fu">trimws</span>(MAIL_STAT)),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">city_st =</span> <span class="fu">regexp_extract</span>(<span class="fu">toupper</span>(MAIL_CITY), <span class="st">",</span><span class="sc">\\</span><span class="st">s*([A-Z]{2})</span><span class="sc">\\</span><span class="st">s*$"</span>, <span class="dv">1</span>L),</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">owner_origin =</span> <span class="fu">case_when</span>(</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>      st <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"TX"</span>, <span class="st">"TEXAS"</span>) <span class="sc">|</span> city_st <span class="sc">==</span> <span class="st">"TX"</span> <span class="sc">~</span> <span class="st">"Texas owner"</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>      st <span class="sc">==</span> <span class="st">""</span> <span class="sc">&amp;</span> city_st <span class="sc">==</span> <span class="st">""</span> <span class="sc">~</span> <span class="st">"Unknown"</span>,</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Out-of-state owner"</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(COUNTY) <span class="sc">|&gt;</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">parcel_records =</span> <span class="fu">n</span>(),</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">unique_owners =</span> <span class="fu">n_distinct</span>(owner),</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">out_of_state =</span> <span class="fu">sum</span>(<span class="fu">as.numeric</span>(owner_origin <span class="sc">==</span> <span class="st">"Out-of-state owner"</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect</span>() <span class="sc">|&gt;</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pct_out_of_state =</span> <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> out_of_state <span class="sc">/</span> parcel_records, <span class="dv">1</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(pct_out_of_state))</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>county_stats</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 253 × 5
+   COUNTY     parcel_records unique_owners out_of_state pct_out_of_state
+   &lt;chr&gt;               &lt;dbl&gt;         &lt;dbl&gt;        &lt;dbl&gt;            &lt;dbl&gt;
+ 1 HUDSPETH            23954         10211         9803             40.9
+ 2 LOVING               1918           577          597             31.1
+ 3 PRESIDIO            18436          7313         4794             26  
+ 4 CULBERSON           13333          4437         3382             25.4
+ 5 JEFF DAVIS           7176          2330         1675             23.3
+ 6 TRAVIS             834936        332721       163977             19.6
+ 7 COCHRAN              5735          2634         1005             17.5
+ 8 REEVES              14975          7304         2608             17.4
+ 9 SHERMAN              3531          1571          614             17.4
+10 MARION              19841         12227         3347             16.9
+# ℹ 243 more rows</code></pre>
+</div>
+</div>
+<p>We notice the counties with the largest shares of out-of-state ownership are typically smaller counties in West Texas; the exception is Travis County, where nearly 1 in 5 parcels are externally owned.</p>
+<p>We’ll now grab county geometry from tigris and merge in our tabulated data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tigris)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>tx_counties <span class="ot">&lt;-</span> <span class="fu">counties</span>(<span class="st">"TX"</span>, <span class="at">cb =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">county_key =</span> <span class="fu">toupper</span>(NAME)) <span class="sc">|&gt;</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(county_stats, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"county_key"</span> <span class="ot">=</span> <span class="st">"COUNTY"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With our county data in hand, we’ll build out the map with the mapgl package. mapgl allows you to stack and compose layers using R; it may take a few lines of code to get what you want, but mapgl exposes quite a bit of the Mapbox / MapLibre APIs. Here’s our mapping code, with some notes to follow:<br>
+</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapgl)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>ownership_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Texas owner"</span> <span class="ot">=</span> <span class="st">"#3b5bdb"</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Out-of-state owner"</span> <span class="ot">=</span> <span class="st">"#ea580c"</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Unknown"</span> <span class="ot">=</span> <span class="st">"#94a3b8"</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>parcel_popup <span class="ot">&lt;-</span> <span class="fu">concat</span>(</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"&lt;strong&gt;"</span>, <span class="fu">get_column</span>(<span class="st">"owner_names"</span>), <span class="st">"&lt;/strong&gt;&lt;br&gt;"</span>,</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Owners: "</span>, <span class="fu">get_column</span>(<span class="st">"n_owners"</span>),</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">" | Tax accounts: "</span>, <span class="fu">get_column</span>(<span class="st">"accounts"</span>), <span class="st">"&lt;br&gt;"</span>,</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">if_else_expr</span>(</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">is_blank</span>(<span class="st">"situs_addr"</span>),</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">""</span>,</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">concat</span>(<span class="fu">get_column</span>(<span class="st">"situs_addr"</span>), <span class="st">"&lt;br&gt;"</span>)</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Owner location: "</span>,</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">if_else_expr</span>(</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">is_blank</span>(<span class="st">"owner_location"</span>),</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Not listed"</span>,</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_column</span>(<span class="st">"owner_location"</span>)</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"&lt;br&gt;"</span>,</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_column</span>(<span class="st">"county"</span>), <span class="st">" County&lt;br&gt;"</span>,</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">if_else_expr</span>(</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">is_blank</span>(<span class="st">"total_value"</span>),</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"No market value reported"</span>,</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">concat</span>(</span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Total value: "</span>,</span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>      mapgl<span class="sc">::</span><span class="fu">number_format</span>(</span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">"total_value"</span>,</span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">style =</span> <span class="st">"currency"</span>,</span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">currency =</span> <span class="st">"USD"</span>,</span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">maximum_fraction_digits =</span> <span class="dv">0</span></span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a><span class="fu">maplibre</span>(</span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">style =</span> <span class="fu">openfreemap_style</span>(<span class="st">"positron"</span>),</span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">center =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">97.74</span>, <span class="fl">30.27</span>),</span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">zoom =</span> <span class="dv">11</span></span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_pmtiles_source</span>(</span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> <span class="st">"parcel-tiles"</span>,</span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">url =</span> <span class="st">"http://localhost:8002/tx_parcels.pmtiles"</span></span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_fill_layer</span>(</span>
+<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> <span class="st">"parcels"</span>,</span>
+<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">source =</span> <span class="st">"parcel-tiles"</span>,</span>
+<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">source_layer =</span> <span class="st">"parcels"</span>,</span>
+<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill_color =</span> <span class="fu">match_expr</span>(</span>
+<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a>      <span class="at">column =</span> <span class="st">"owner_origin"</span>,</span>
+<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="fu">names</span>(ownership_colors),</span>
+<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a>      <span class="at">stops =</span> <span class="fu">unname</span>(ownership_colors),</span>
+<span id="cb25-58"><a href="#cb25-58" aria-hidden="true" tabindex="-1"></a>      <span class="at">default =</span> <span class="st">"#94a3b8"</span></span>
+<span id="cb25-59"><a href="#cb25-59" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb25-60"><a href="#cb25-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill_opacity =</span> <span class="fl">0.5</span>,</span>
+<span id="cb25-61"><a href="#cb25-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">popup =</span> parcel_popup,</span>
+<span id="cb25-62"><a href="#cb25-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">hover_options =</span> <span class="fu">list</span>(<span class="at">fill_opacity =</span> <span class="fl">0.9</span>)</span>
+<span id="cb25-63"><a href="#cb25-63" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb25-64"><a href="#cb25-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_fill_layer</span>(</span>
+<span id="cb25-65"><a href="#cb25-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> <span class="st">"counties"</span>,</span>
+<span id="cb25-66"><a href="#cb25-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">source =</span> tx_counties,</span>
+<span id="cb25-67"><a href="#cb25-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill_color =</span> <span class="fu">interpolate</span>(</span>
+<span id="cb25-68"><a href="#cb25-68" aria-hidden="true" tabindex="-1"></a>      <span class="at">column =</span> <span class="st">"pct_out_of_state"</span>,</span>
+<span id="cb25-69"><a href="#cb25-69" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">40</span>),</span>
+<span id="cb25-70"><a href="#cb25-70" aria-hidden="true" tabindex="-1"></a>      <span class="at">stops =</span> <span class="fu">c</span>(<span class="st">"#fff7ed"</span>, <span class="st">"#7c2d12"</span>),</span>
+<span id="cb25-71"><a href="#cb25-71" aria-hidden="true" tabindex="-1"></a>      <span class="at">na_color =</span> <span class="st">"#e5e7eb"</span></span>
+<span id="cb25-72"><a href="#cb25-72" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb25-73"><a href="#cb25-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill_opacity =</span> <span class="fu">interpolate</span>(</span>
+<span id="cb25-74"><a href="#cb25-74" aria-hidden="true" tabindex="-1"></a>      <span class="at">property =</span> <span class="st">"zoom"</span>,</span>
+<span id="cb25-75"><a href="#cb25-75" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">11</span>),</span>
+<span id="cb25-76"><a href="#cb25-76" aria-hidden="true" tabindex="-1"></a>      <span class="at">stops =</span> <span class="fu">c</span>(<span class="fl">0.85</span>, <span class="dv">0</span>)</span>
+<span id="cb25-77"><a href="#cb25-77" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb25-78"><a href="#cb25-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_zoom =</span> <span class="dv">11</span>,</span>
+<span id="cb25-79"><a href="#cb25-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">popup =</span> <span class="st">"&lt;strong&gt;{NAME} County&lt;/strong&gt;&lt;br&gt;</span></span>
+<span id="cb25-80"><a href="#cb25-80" aria-hidden="true" tabindex="-1"></a><span class="st">             Parcel records: {parcel_records}&lt;br&gt;</span></span>
+<span id="cb25-81"><a href="#cb25-81" aria-hidden="true" tabindex="-1"></a><span class="st">             Unique owners: {unique_owners}&lt;br&gt;</span></span>
+<span id="cb25-82"><a href="#cb25-82" aria-hidden="true" tabindex="-1"></a><span class="st">             Out-of-state owners: {pct_out_of_state}%"</span></span>
+<span id="cb25-83"><a href="#cb25-83" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb25-84"><a href="#cb25-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_line_layer</span>(</span>
+<span id="cb25-85"><a href="#cb25-85" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> <span class="st">"county-borders"</span>,</span>
+<span id="cb25-86"><a href="#cb25-86" aria-hidden="true" tabindex="-1"></a>    <span class="at">source =</span> tx_counties,</span>
+<span id="cb25-87"><a href="#cb25-87" aria-hidden="true" tabindex="-1"></a>    <span class="at">line_color =</span> <span class="st">"#7c2d12"</span>,</span>
+<span id="cb25-88"><a href="#cb25-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">line_width =</span> <span class="fl">0.5</span>,</span>
+<span id="cb25-89"><a href="#cb25-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">line_opacity =</span> <span class="fu">interpolate</span>(</span>
+<span id="cb25-90"><a href="#cb25-90" aria-hidden="true" tabindex="-1"></a>      <span class="at">property =</span> <span class="st">"zoom"</span>,</span>
+<span id="cb25-91"><a href="#cb25-91" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">11</span>),</span>
+<span id="cb25-92"><a href="#cb25-92" aria-hidden="true" tabindex="-1"></a>      <span class="at">stops =</span> <span class="fu">c</span>(<span class="fl">0.6</span>, <span class="dv">0</span>)</span>
+<span id="cb25-93"><a href="#cb25-93" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb25-94"><a href="#cb25-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_zoom =</span> <span class="dv">11</span></span>
+<span id="cb25-95"><a href="#cb25-95" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb25-96"><a href="#cb25-96" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_legend</span>(</span>
+<span id="cb25-97"><a href="#cb25-97" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend_title =</span> <span class="st">"Share of out-of-state owners"</span>,</span>
+<span id="cb25-98"><a href="#cb25-98" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"continuous"</span>,</span>
+<span id="cb25-99"><a href="#cb25-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"0%"</span>, <span class="st">"40%+"</span>),</span>
+<span id="cb25-100"><a href="#cb25-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"#fff7ed"</span>, <span class="st">"#7c2d12"</span>),</span>
+<span id="cb25-101"><a href="#cb25-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_zoom =</span> <span class="dv">10</span></span>
+<span id="cb25-102"><a href="#cb25-102" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb25-103"><a href="#cb25-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_legend</span>(</span>
+<span id="cb25-104"><a href="#cb25-104" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend_title =</span> <span class="st">"Parcel ownership"</span>,</span>
+<span id="cb25-105"><a href="#cb25-105" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"categorical"</span>,</span>
+<span id="cb25-106"><a href="#cb25-106" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">names</span>(ownership_colors),</span>
+<span id="cb25-107"><a href="#cb25-107" aria-hidden="true" tabindex="-1"></a>    <span class="at">colors =</span> <span class="fu">unname</span>(ownership_colors),</span>
+<span id="cb25-108"><a href="#cb25-108" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_zoom =</span> <span class="dv">10</span>, </span>
+<span id="cb25-109"><a href="#cb25-109" aria-hidden="true" tabindex="-1"></a>    <span class="at">add =</span> <span class="cn">TRUE</span></span>
+<span id="cb25-110"><a href="#cb25-110" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I’ve written extensively about mapgl elsewhere (including on this blog), but a few features of note here.</p>
+<ul>
+<li><p>We interpolate the county fill opacity on zoom intentionally between zoom levels 10 and 11; this creates a “fade away” effect where the counties fade away to parcels as the user zooms in. We’ll do this both for county fill and county borders (as line widths for fill layers aren’t configurable).</p></li>
+<li><p>There are a lot of different ways to configure popups in mapgl, but one relatively new feature I’ve added is the ability to pass columns directly to popups with <code>{column}</code> syntax inside the popup string.</p></li>
+<li><p>The parcel popup is set up a different way, using an overhaul to the popup engine I’ve introduced that allows for conditional popups. This is important for building highly customized popups that will differ based on the data in a given location.</p></li>
+<li><p>I just added a new feature to mapgl that allows you to show and hide different legends on zoom with <code>min_zoom</code> and <code>max_zoom</code> arguments. So you’ll need to make sure you have the latest version of mapgl (either from GitHub or R-Universe) to use this.</p></li>
+</ul>
+<p>We have a map! And there’s a lot to explore. In Travis County, for example, you can find a lot of areas that have out-of-state owners, particularly around commercial corridors and on investor-owned land.</p>
+<p><a href="images/paste-3.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="images/paste-3.png" class="img-fluid"></a></p>
+<p>Around the state, you’ll still see some quirks of parcel data show up. Even though we consolidated duplicate geometries, you’ll still see areas with <em>overlapping</em> geometries. Data missingness is also an issue; for example, no parcels in Travis County carry the city name for their addresses.</p>
+<p>The map is great - but it’s just running locally on my machine. You can’t save this out - it’s a mapping equivalent of the joke “take a look at my project, it’s at http://localhost:8002”. So we’ll need to find somewhere to host the PMTiles so we can actually share the visualization.</p>
+</section>
+<section id="hosting-pmtiles-on-cloudflare-r2" class="level2">
+<h2 class="anchored" data-anchor-id="hosting-pmtiles-on-cloudflare-r2">Hosting PMTiles on Cloudflare R2</h2>
+<p>Per the <a href="https://docs.protomaps.com/pmtiles/cloud-storage">PMTiles documentation</a>,</p>
+<blockquote class="blockquote">
+<p>PMTiles is designed to work on any S3-compatible cloud storage platform that supports HTTP Range Requests. Proper support for Cross-Origin Resource Sharing is required if your map frontend is hosted on a different domain than your storage platform.</p>
+</blockquote>
+<p>That may not mean a lot to you if you’re used to visualizing data locally on your computer. Basically, we can host our data on any number of popular cloud storage platforms (Google Cloud, Amazon S3, Microsoft Azure) so long as we configure it correctly for that specific provider. The easiest way to host PMTiles in my opinion is on GitHub Pages, which does support range requests; however, our PMTiles file is 4.7 GB in size and too large for that option. So we’ll want to upload to a cloud storage bucket.</p>
+<p>My provider of choice is <a href="https://www.cloudflare.com/products/r2/">Cloudflare R2</a>. It’s quite affordable and has zero egress fees, which means you don’t have to pay for data transfer out to the internet. Plus, if you connect a custom domain to your bucket (which you can buy through Cloudflare easily), you can use a Worker to benefit from Cloudflare’s edge caching (making it quite fast to load once set up). I’ll just show the simplest setup here.</p>
+<p>To get started, you will need <a href="https://dash.cloudflare.com/sign-up">to sign up for a Cloudflare account</a>, if you don’t have one already. You can use OAuth with Google, Apple, or GitHub, so it’s pretty painless. In the left-hand menu once you’re in, navigate to <strong>Storage &amp; databases</strong> &gt; <strong>R2 Object Storage</strong>. You will need to put in a credit card at this stage, but you get 10GB/month hosting for free, which means that our PMTiles will sit comfortably within the free tier.</p>
+<p>Once you’re in, look for the blue button that says <strong>Create bucket</strong> to create your first bucket. I’m naming my bucket <code>parcel-data</code>, but you can name yours whatever you want. Keep the other options as they are, then choose <strong>Create bucket</strong>. You’ll be taken to your bucket’s screen.</p>
+<p><a href="images/paste-4.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="images/paste-4.png" class="img-fluid"></a></p>
+<p>Note that you can drag-and-drop files smaller than 300MB into your bucket. For more contained PMTiles files, this is a nice option. However, our data is too big to drag-and-drop, so we’ll need to use the S3 Compatibility API. Fortunately, another one of my R packages, <strong>pmtiles</strong>, makes this straightforward.</p>
+<p>The pmtiles package wraps the <a href="https://docs.protomaps.com/pmtiles/cli">pmtiles CLI</a>, which includes a variety of utilities for working with PMTiles files. One very useful utility is <code>pmtiles upload</code> which helps you upload your PMTiles files to cloud storage. In the R package, the wrapper function is <code>pm_upload()</code>.</p>
+<p>You’ll first need to grab a couple keys to access your bucket. Head back to the main R2 Object Storage page in Cloudflare, and look at the lower-right of the screen; you’ll see a button that says “Manage API Tokens.” Click there. Create a User API token. Give it a name, set the Permissions to “Object Read and Write,” and scope it to your specific bucket. Keep the other options as they are, then scroll down and create the token.</p>
+<p>Copy and securely store your Access Key ID and Secret Access Key; you won’t be able to see these values again. I’d recommend putting them in your <code>.Renviron</code> file, which you can edit with <code>usethis::edit_r_environ()</code>. I’ll store mine as two lines in <code>.Renviron</code>: <code>CLOUDFLARE_PARCELS_KEY</code> and <code>CLOUDFLARE_PARCELS_SECRET</code>.</p>
+<p>With these credentials in hand, we can use <code>pm_upload()</code> to move our data to our bucket. You’ll need one more value: your Cloudflare account ID, which is in the same Account Details panel on the R2 Object Storage page where you found the Manage API Tokens button.</p>
+<p>The <code>r2_bucket()</code> helper in the pmtiles package takes it from there. R2’s S3-compatible API has some fiddly requirements - a specific URL format, a required <code>region=auto</code> parameter - and the helper assembles all of this correctly from just your bucket name and account ID. Your credentials are passed along to the upload process only, so they never get written into your R session’s environment variables. (There are companion helpers for other providers, too: <code>s3_bucket()</code>, <code>gcs_bucket()</code>, <code>azure_bucket()</code>, and <code>s3_compatible_bucket()</code>.) Let’s upload the tiles to our bucket:<br>
+</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pmtiles)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pm_upload</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"~/data/tx_parcels.pmtiles"</span>,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">remote =</span> <span class="st">"tx_parcels.pmtiles"</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">bucket =</span> <span class="fu">r2_bucket</span>(</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"parcel-data"</span>,</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">account_id =</span> <span class="st">"your-cloudflare-account-id"</span>,</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">access_key =</span> <span class="fu">Sys.getenv</span>(<span class="st">"CLOUDFLARE_PARCELS_KEY"</span>),</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">secret_key =</span> <span class="fu">Sys.getenv</span>(<span class="st">"CLOUDFLARE_PARCELS_SECRET"</span>)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If your tiles have uploaded successfully you’ll get a success message in R. Head back to Cloudflare R2 in your web browser and you should see them there.</p>
+<p><a href="images/paste-5.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="images/paste-5.png" class="img-fluid"></a></p>
+<p>Now, click the Settings tab. As I mentioned earlier, if you want to deploy your data “in production” - so for a work project, or for a wide audience - you’ll want to connect a custom domain. I have a couple domains through Cloudflare that I use, and tile performance is just as fast as when I serve it on my local computer (example: https://walker-data.com/freestiler/lodes). I’ll show you here the quickest way (but not the highest-performance way) to share your tiles. Enable the Public Development URL - you’ll get a warning that this will be lower-performance than using a custom domain. Next, set the CORS policy, so your tiles can be viewed in a web map not hosted at the same domain. The CORS policy you want is this (with one caveat):</p>
+<pre><code>[
+  {
+    "AllowedOrigins": ["*"],
+    "AllowedMethods": ["GET", "HEAD"],
+    "AllowedHeaders": ["range", "if-match"],
+    "ExposeHeaders": ["etag", "content-range", "content-length"],
+    "MaxAgeSeconds": 3600
+  }
+]</code></pre>
+<p>Using this block will allow <em>any</em> origin to access your tiles. If you’re building your maps into arbitrary projects (local work in R / Positron, various Shiny apps, etc.) this is probably what you want. However, if you do plan to share your work in a public map (and don’t want to set up a custom domain) then you might consider locking it to your site’s origin (e.g.&nbsp;https://walker-data.com for me).</p>
+<p>Your PMTiles will now be accessible at <code>{YOUR_PUBLIC_DEVELOPMENT_URL}/tx_parcels.pmtiles}</code>, and can be used in <code>add_pmtiles_source()</code>.</p>
+</section>
+<section id="sharing-your-map" class="level2">
+<h2 class="anchored" data-anchor-id="sharing-your-map">Sharing your map</h2>
+<p>With the Cloudflare setup ready to go, you’ll now be able to share your map. Use the mapping code I shared above, but swap in your deployed PMTiles URL in place of the localhost one. You should be able to see the hosted tiles in R. To share your map with others, here’s what I recommend doing:</p>
+<ul>
+<li>Assign your map to a variable (e.g.&nbsp;<code>m1</code>) then write it out to disk as an HTML file with <code>htmlwidgets::saveWidget()</code>. If you want a single-file map use <code>selfcontained = TRUE</code>; I’ll recommend <code>selfcontained = FALSE</code> to keep your HTML smaller (just remember to move the directory together, not just the file).</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">maplibre</span>(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">style =</span> <span class="fu">openfreemap_style</span>(<span class="st">"positron"</span>),</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">center =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">97.74</span>, <span class="fl">30.27</span>),</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">zoom =</span> <span class="dv">11</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_pmtiles_source</span>(</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> <span class="st">"parcel-tiles"</span>,</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">url =</span> <span class="st">"YOUR_R2_PMTILES_URL"</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># the rest of the mapping code follows here</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>htmlwidgets<span class="sc">::</span><span class="fu">saveWidget</span>(m1, <span class="st">"/path/to/your/directory/index.html"</span>, <span class="at">selfcontained =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Publish your map and mapping assets to your web server of choice. I like to use GitHub Pages; I host most of my websites there because it’s easy to version control my web content with git.</li>
+</ul>
+<p>My live map is now available at https://walker-data.com/maps/texas-parcel-owners:</p>
+<iframe width="100%" height="600" src="https://walker-data.com/maps/texas-parcel-owners" title="Texas parcels by owner origin" frameborder="0" allow="fullscreen" loading="lazy" style="border: 1px solid #e2e8f0; border-radius: 6px;"></iframe>
+<p>We’ve now gone end to end: downloading a 7GB geodatabase from TxGIO and visualizing those millions of parcels on a map. This tech stack (R, DuckDB, freestiler, pmtiles, and mapgl) is the same one I use in most of my projects.</p>
+<p>One of the most important take-aways for me is not the impressive end-product but rather the series of decisions you need to make to get there. We had to figure out inconsistencies and missingness in our dataset, we had to come up with a solution for the stacked parcel problem, and we had to decide which data we were comfortable with collapsing / consolidating. These are all human decision points that are highly relevant to actual applications of this workflow, e.g.&nbsp;in investment, land acquisition, or right-of-way analyses. You can offload that stuff to your agent I suppose, but people who inject human expertise there are going to stand out.</p>
+<p>Everything here transfers to your own projects, too. Florida and New York publish statewide parcel files that work with this exact pipeline, and the same pattern applies to any other massive spatial dataset you need to get on a map. Swap in your data source, make your own cleaning decisions, and keep the plumbing.</p>
+<p>Finally - if your team works with parcel, ownership, or land data and wants to build workflows like this, this is exactly what I do. Reach out to <a href="mailto:kyle@walker-data.com">kyle@walker-data.com</a> to discuss your idea. And if you make something with this stack, let me know what you create!</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/walker-data\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>

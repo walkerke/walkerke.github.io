@@ -203,3 +203,102 @@
     background: #444;
     border-color: #666;
 }
+
+/* ===========================================
+   Collapsible Legends
+   =========================================== */
+
+/* Hide everything except the title and the toggle button when collapsed.
+   Uses direct-child selector so dynamically appended elements (e.g. the
+   reset-filter button added by interactive categorical legends) are also
+   hidden without any extra bookkeeping. */
+.mapgl-legend-collapsed > *:not(.mapgl-legend-title):not(.mapgl-legend-collapse-btn) {
+    display: none !important;
+}
+
+/* Reserve space on the title so it doesn't run under the toggle button. */
+.mapboxgl-legend[data-collapsible="true"] .mapgl-legend-title {
+    padding-right: 34px;
+}
+
+/* Toggle button. Legend root is already position: absolute, so absolute
+   positioning on the button anchors to the legend. */
+.mapgl-legend-collapse-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    font-family: inherit;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.mapgl-legend-collapse-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.mapgl-legend-collapse-btn:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 1px;
+}
+
+/* ===========================================
+   Draggable Legends
+   =========================================== */
+
+/* Draggable legend styling */
+.mapboxgl-legend.legend-draggable {
+    cursor: grab;
+}
+
+.mapboxgl-legend.legend-draggable h2 {
+    cursor: grab;
+}
+
+/* While dragging */
+.mapboxgl-legend.legend-dragging {
+    cursor: grabbing;
+    opacity: 0.9;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 2000 !important;
+}
+
+.mapboxgl-legend.legend-dragging h2 {
+    cursor: grabbing;
+}
+
+/* Allow clicking on interactive elements without starting drag */
+.mapboxgl-legend.legend-draggable .legend-item {
+    cursor: pointer;
+}
+
+.mapboxgl-legend.legend-draggable .legend-gradient-handle {
+    cursor: ew-resize;
+}
+
+.mapboxgl-legend.legend-draggable .legend-gradient-middle {
+    cursor: grab;
+}
+
+.mapboxgl-legend.legend-dragging .legend-gradient-middle {
+    cursor: grabbing;
+}
+
+/* Zoom-based legend visibility (data-min-zoom / data-max-zoom).
+   Uses a class so it composes with the layers control, which toggles
+   inline display for layer-based show/hide. */
+.mapboxgl-legend.mapgl-legend-zoom-hidden,
+.maplibregl-legend.mapgl-legend-zoom-hidden {
+    display: none !important;
+}
