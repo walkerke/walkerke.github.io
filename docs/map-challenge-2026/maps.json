@@ -22,7 +22,7 @@
     "date": "2026-11-02",
     "title": "The Texas pipeline network",
     "blurb": "365,000 miles of pipeline mapped by the Railroad Commission of Texas, 316,000 of them in service, colored by commodity. Gathering lines that collect oil and gas from wells make up 60% of the mileage and form the dense mesh in the Permian Basin and Eagle Ford.",
-    "alt": "Dark map of Texas covered in a dense web of colored lines: natural gas in blue, crude oil in orange, NGLs in green, refined products in yellow, and CO2 in purple. The mesh is densest in the Permian Basin, the Eagle Ford, and around Houston.",
+    "alt": "Dark map of Texas covered in a dense web of colored lines: natural gas in blue, crude oil in orange, NGLs in green, refined products in yellow, and CO2 in purple. Abandoned and removed lines appear as thin gray strokes, most visible along the Gulf Coast. The mesh is densest in the Permian Basin, the Eagle Ford, and around Houston.",
     "tags": [
       "Infra",
       "O&G",
@@ -30,9 +30,9 @@
     ],
     "image": "map-challenge-2026/img/day02.jpg",
     "thumb": "map-challenge-2026/img/day02-thumb.jpg",
-    "live": null,
+    "live": "map-challenge-2026/maps/day02/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 3,
