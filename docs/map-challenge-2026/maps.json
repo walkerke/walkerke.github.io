@@ -3,8 +3,8 @@
     "day": 1,
     "theme": "Points",
     "date": "2026-11-01",
-    "title": "ERCOT real-time prices at generator nodes",
-    "blurb": "Real-time electricity prices at 1,087 ERCOT generator settlement points for one 15-minute interval, 2:45 to 3:00 pm CT on Sunday, November 1, 2026. The Houston load zone settled at $73.66/MWh while North and West Texas sat near $11.",
+    "title": "ERCOT prices at generator nodes",
+    "blurb": "Real-Time Market settlement prices at 1,087 ERCOT generator settlement points for one 15-minute interval, 2:45 to 3:00 pm CT on Sunday, November 1, 2026. The Houston load zone settled at $73.66/MWh while North and West Texas sat near $11.",
     "alt": "Dark map of Texas with dots at generator locations on a continuous color scale from blue (negative prices) through teal and yellow to red ($170/MWh and up), over faint load zone outlines. North and West Texas dots are teal, near $10; South Texas dots are yellow-green, near $45; dots along the Houston Ship Channel are orange and red, above $100.",
     "tags": [
       "Infra",

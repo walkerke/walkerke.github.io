@@ -21,7 +21,7 @@ resources:
 <div class="mc" id="mc">
   <header class="mc-head">
     <h1 class="mc-title">#30DayMapChallenge 2026</h1>
-    <p class="mc-lede">Thirty maps of energy infrastructure, one for each day of November: power plants, pipelines, transmission, wells, and the places they meet. Each map follows the day's prompt from the <a href="https://30daymapchallenge.com/">#30DayMapChallenge</a>.</p>
+    <p class="mc-lede">Thirty maps of energy infrastructure, one for each day of November. Each map follows the day's prompt from the <a href="https://30daymapchallenge.com/">#30DayMapChallenge</a>.</p>
 
     <div class="mc-progress">
       <p class="mc-progress-label" id="mc-progress-label">Loading maps</p>
