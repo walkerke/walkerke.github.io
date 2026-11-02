@@ -10,6 +10,8 @@ website:
   favicon: favicon.png
   navbar:
     right:
+      - text: Map Challenge
+        href: map-challenge-2026.qmd
       - text: About
         href: about.qmd
       - text: Blog

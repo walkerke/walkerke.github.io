@@ -1,0 +1,65 @@
+---
+title: "#30DayMapChallenge 2026"
+description: "Thirty maps of energy infrastructure, one for each day of November 2026."
+image: map-challenge-2026/img/day01-thumb.jpg
+page-layout: full
+toc: false
+resources:
+  - map-challenge-2026/maps.json
+  - map-challenge-2026/gallery.css
+  - map-challenge-2026/gallery.js
+  - map-challenge-2026/img/*.jpg
+  - map-challenge-2026/maps/**
+---
+
+```{=html}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="map-challenge-2026/gallery.css">
+
+<div class="mc" id="mc">
+  <header class="mc-head">
+    <h1 class="mc-title">#30DayMapChallenge 2026</h1>
+    <p class="mc-lede">Thirty maps of energy infrastructure, one for each day of November: power plants, pipelines, transmission, wells, and the places they meet. Each map follows the day's prompt from the <a href="https://30daymapchallenge.com/">#30DayMapChallenge</a>.</p>
+
+    <div class="mc-progress">
+      <p class="mc-progress-label" id="mc-progress-label">Loading maps</p>
+      <ol class="mc-strip" id="mc-strip" aria-hidden="true"></ol>
+    </div>
+  </header>
+
+  <div class="mc-filters" id="mc-filters" role="group" aria-label="Filter maps by tag" hidden></div>
+  <p class="mc-status" id="mc-status" role="status" aria-live="polite"></p>
+
+  <ol class="mc-grid" id="mc-grid"></ol>
+
+  <noscript><p>This gallery needs JavaScript to load the maps.</p></noscript>
+
+  <dialog class="mc-lb" id="mc-lb" aria-labelledby="mc-lb-title">
+    <div class="mc-lb-inner">
+      <figure class="mc-lb-figure">
+        <img id="mc-lb-img" alt="">
+      </figure>
+      <div class="mc-lb-side">
+        <button type="button" class="mc-lb-close" id="mc-lb-close" aria-label="Close">
+          <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <p class="mc-lb-day"><span class="mc-lb-num" id="mc-lb-num"></span><span id="mc-lb-theme"></span></p>
+        <h2 class="mc-lb-title" id="mc-lb-title"></h2>
+        <p class="mc-lb-date" id="mc-lb-date"></p>
+        <p class="mc-lb-blurb" id="mc-lb-blurb"></p>
+        <ul class="mc-lb-tags" id="mc-lb-tags" aria-label="Tags"></ul>
+        <div class="mc-lb-actions" id="mc-lb-actions"></div>
+        <nav class="mc-lb-nav" aria-label="Browse maps">
+          <button type="button" id="mc-lb-prev"><span aria-hidden="true">&larr;</span> Previous</button>
+          <span class="mc-lb-pos" id="mc-lb-pos"></span>
+          <button type="button" id="mc-lb-next">Next <span aria-hidden="true">&rarr;</span></button>
+        </nav>
+      </div>
+    </div>
+  </dialog>
+</div>
+
+<script src="map-challenge-2026/gallery.js" defer></script>
+```
