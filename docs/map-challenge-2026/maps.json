@@ -38,17 +38,17 @@
     "day": 3,
     "theme": "Polygons",
     "date": "2026-11-03",
-    "title": "America's solar farms, by year online",
-    "blurb": "Footprints of 6,611 US solar facilities of 1 MW AC or more, colored by the year they came online. More than 70% of the 131.6 GW AC mapped came online in 2020 or later, and 2025 is only partly captured in the source data.",
-    "alt": "Dark globe view of the contiguous United States with solar facilities shown as dots colored from purple (2012 or earlier) to pale yellow (2024 to 2025). Recent facilities cluster in Texas, the Midwest, and the Southeast.",
+    "title": "Where America's solar farms are",
+    "blurb": "6,611 US solar facilities of 1 MW AC or more, 131.6 GW AC in all, grouped into hexagons by capacity and drawn as their real footprints over satellite imagery as you zoom in. Texas and California each hold about 17% of the capacity. Facilities under 10 MW are 77% of the count but 11% of the capacity.",
+    "alt": "Satellite globe view of the contiguous United States covered in hexagons colored from dark purple (under 10 MW AC) to pale yellow (1,000 MW AC or more). The brightest hexagons are in the California and Arizona deserts, around Las Vegas, and in West Texas and Houston. Small purple hexagons fill the Northeast, Minnesota, and the Carolinas.",
     "tags": [
       "Infra"
     ],
     "image": "map-challenge-2026/img/day03.jpg",
     "thumb": "map-challenge-2026/img/day03-thumb.jpg",
-    "live": null,
+    "live": "map-challenge-2026/maps/day03/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 4,
