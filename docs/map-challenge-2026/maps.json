@@ -56,7 +56,7 @@
     "date": "2026-11-04",
     "title": "Every US power plant",
     "blurb": "Every operating US power plant in EIA Form 860M (September 2026), clustered on the map, with each ring showing the cluster's nameplate capacity by fuel. Gas is 41% of the 1,417 GW, while solar is 12% even though half of all plants are solar. Texas has the most battery storage, 19.4 GW to California's 16.5 GW.",
-    "alt": "Dark map of the lower 48 covered in donut-shaped clusters, each labeled with its total capacity, from 296 MW in northern Maine to 221 GW around Indiana and Ohio. Ring segments show the fuel mix: mostly coral gas across Texas and the Southeast, blue hydro in the Pacific Northwest, green wind on the Plains, and yellow solar with purple batteries in Southern California.",
+    "alt": "Dark globe view of the United States covered in donut-shaped clusters, each labeled with its total capacity, from 296 MW in northern Maine to 221 GW around Indiana and Ohio, with Hawaii's 3.7 GW at the left edge. Ring segments show the fuel mix: mostly coral gas across Texas and the Southeast, blue hydro in the Pacific Northwest, green wind on the Plains, and yellow solar with purple batteries in Southern California.",
     "tags": [
       "Infra"
     ],
