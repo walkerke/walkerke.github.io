@@ -5,6 +5,7 @@ image: map-challenge-2026/img/day01-thumb.jpg
 page-layout: full
 toc: false
 resources:
+  - map-challenge-2026/index.html
   - map-challenge-2026/maps.json
   - map-challenge-2026/gallery.css
   - map-challenge-2026/gallery.js
