@@ -70,15 +70,18 @@
     "day": 5,
     "theme": "Sight",
     "date": "2026-11-05",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "Within sight of a wind turbine",
+    "blurb": "Where the blade tips of 1,666 wind turbines in Nolan and Taylor counties, Texas, are in line of sight from the ground, out to 25 miles, computed from USGS elevation data with earth curvature. At least one blade tip is in line of sight from 74% of the land within 25 miles of these turbines. Click a turbine to see its own viewshed, banded at 10 and 20 miles.",
+    "alt": "Tilted 3D satellite view of the rolling ranchland around Sweetwater and Abilene, Texas, with a large rounded patch of color centered on two counties of wind farms. White dots mark 1,666 turbines in long rows along the ridges and mesas. The overlay shades each spot by how many blade tips are in line of sight from it: deep purple on the high ground near the turbine rows, where more than 1,000 tips can be in view, fading through red and orange to pale yellow at the outer edge, about 25 miles from the turbines.",
+    "tags": [
+      "Infra",
+      "Texas"
+    ],
+    "image": "map-challenge-2026/img/day05.jpg",
+    "thumb": "map-challenge-2026/img/day05-thumb.jpg",
+    "live": "map-challenge-2026/maps/day05/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 6,
