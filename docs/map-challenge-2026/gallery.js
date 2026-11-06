@@ -34,7 +34,10 @@
     return node;
   }
 
-  var isPublished = function (m) { return m.status === "published" && m.image; };
+  // A published map appears once its date arrives (in the viewer's time zone), so days can be published ahead.
+  var now = new Date();
+  var today = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
+  var isPublished = function (m) { return m.status === "published" && m.image && m.date <= today; };
   var isVisible = function (m) {
     return !activeTag || (isPublished(m) && (m.tags || []).indexOf(activeTag) !== -1);
   };

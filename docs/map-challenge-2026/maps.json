@@ -104,29 +104,35 @@
     "day": 7,
     "theme": "10 minute map",
     "date": "2026-11-07",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "Ten minutes from a fast charger",
+    "blurb": "About 58% of Texans live within a 10-minute drive from a public DC fast charger, on 3.5% of the state's area. Drive times run outward from each of the 890 charging locations in and near Texas. Click anywhere or search a Texas town to draw your own 10-minute drive and count the chargers inside it.",
+    "alt": "Light map of Texas with small teal shapes marking the area within a 10-minute drive of each public DC fast charging location, shown as dark dots. The shapes merge into large patches around Dallas-Fort Worth, Houston, Austin and San Antonio and run in chains along the interstates, while most of West Texas and the Panhandle is uncovered.",
+    "tags": [
+      "Infra",
+      "Texas"
+    ],
+    "image": "map-challenge-2026/img/day07.jpg",
+    "thumb": "map-challenge-2026/img/day07-thumb.jpg",
+    "live": "map-challenge-2026/maps/day07/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 8,
     "theme": "Utopia",
     "date": "2026-11-08",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "ERCOT, if every listed project gets built",
+    "blurb": "Swipe between ERCOT's 182.6 GW of generating and storage capacity today and a grid where all 1,680 publicly listed projects in its interconnection queue get built, about 616 GW in all. Operating plants are filled dots and queued projects are rings, colored by fuel; most of the new capacity is solar and batteries.",
+    "alt": "Dark swipe map of Texas split down the middle. On the left, filled dots for operating power plants, with wind in the west and gas, solar and batteries in the east. On the right, the same plants plus many more colored rings for queued projects, crowded across Central, East and South Texas and around Houston, mostly yellow solar and purple batteries. A legend lists capacity by fuel today and if all were built.",
+    "tags": [
+      "Infra",
+      "Texas"
+    ],
+    "image": "map-challenge-2026/img/day08.jpg",
+    "thumb": "map-challenge-2026/img/day08-thumb.jpg",
+    "live": "map-challenge-2026/maps/day08/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 9,
