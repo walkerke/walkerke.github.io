@@ -141,7 +141,7 @@
     "title": "153 million US jobs by sector",
     "blurb": "One dot for each of about 153 million jobs, placed at random within the census block where the job is recorded and colored by industry sector, from the Census Bureau's 2024 LODES workplace data. Michigan (2021) and Alaska (2016) use their latest available years.",
     "alt": "Dark map of the central United States covered in tiny colored dots, one per job. Dots cluster densely in Chicago, Minneapolis, Kansas City, Denver and Atlanta and thin out across the Plains. A legend lists 20 sectors from Agriculture to Public Admin.",
-    "tags": ["Infra"],
+    "tags": ["Jobs"],
     "image": "map-challenge-2026/img/day09.jpg",
     "thumb": "map-challenge-2026/img/day09-thumb.jpg",
     "live": "map-challenge-2026/maps/day09/",
