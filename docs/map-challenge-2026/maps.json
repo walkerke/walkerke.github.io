@@ -152,15 +152,15 @@
     "day": 10,
     "theme": "Prompting only",
     "date": "2026-11-10",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "US data centers by operator type",
+    "blurb": "1,529 US data center sites from the IM3 Open Source Data Center Atlas (PNNL, derived from OpenStreetMap), colored by operator type and sized by footprint. Built in Claude Code from two prompts. Click a legend category to filter the map.",
+    "alt": "Dark globe view of the United States with colored circles for data centers. Large yellow hyperscale circles spread across the Midwest, Southeast and Pacific Northwest, and smaller blue colocation circles cluster in Northern Virginia, Dallas, Phoenix, Chicago and the Bay Area. A legend lists four operator types.",
+    "tags": ["Infra", "AI"],
+    "image": "map-challenge-2026/img/day10.jpg",
+    "thumb": "map-challenge-2026/img/day10-thumb.jpg",
+    "live": "map-challenge-2026/maps/day10/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 11,
