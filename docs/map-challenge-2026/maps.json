@@ -153,7 +153,7 @@
     "theme": "Prompting only",
     "date": "2026-11-10",
     "title": "The data center skyline",
-    "blurb": "Data center building footprints from the IM3 Open Source Data Center Atlas (PNNL, from OpenStreetMap), stacked into 3D towers for 124 metro regions and colored by operator group. Northern Virginia holds 49.4M of the 235.2M sq ft mapped. Step the slider to rebuild the skyline for one operator group, or pick a hub to see its buildings in 3D. Built in R with mapgl from a single prompt in Claude Code, with no custom JavaScript. The prompt is on the map.",
+    "blurb": "Data center building footprints from the IM3 Open Source Data Center Atlas (PNNL, from OpenStreetMap), stacked into 3D towers for 124 metro regions and colored by operator group. Northern Virginia holds 49.4M of the 235.2M sq ft mapped. Step the slider to rebuild the skyline for one operator group, or pick a hub to see its buildings in 3D. Built in R with mapgl from a single prompt in Claude Code, with no custom JavaScript. The prompt and the full R code are on the map.",
     "alt": "Dark globe view of the United States with hexagonal 3D towers rising from metro areas, each stacked in colors by data center operator group. The Northern Virginia tower is several times taller than any other, followed by Columbus, Dallas-Fort Worth, Hermiston, Atlanta and Phoenix. A panel on the left ranks the ten largest hubs and a legend lists eight operator groups.",
     "tags": ["Infra", "AI"],
     "image": "map-challenge-2026/img/day10.jpg",
