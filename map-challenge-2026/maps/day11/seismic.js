@@ -5,7 +5,8 @@
   var CFG = window.DAY11 || {};
   var SPM = CFG.secPerMonth || 0.5;          // playback seconds per month
   var PULSE = CFG.pulseMonths || 2.5;        // how long a ring keeps expanding, in months
-  var LON = [-106.65, -93.5];                // Texas, west to east, for stereo position
+  // stereo: centered on longitude -100, fully left by -104 (the Permian) and fully right by -96 (Fort Worth, Eagle Ford)
+  var PAN_CENTER = -100, PAN_HALF = 4;
   var map, rates, totals, pendN, months, quakes = [], NK = 0;
   var t = 0, playing = false, lastK = -1, qi = 0;
   var actx = null, master = null, soundOn = false, noiseBuf = null;
@@ -26,7 +27,7 @@
   function makeReverb(ctx) {
     var sr = ctx.sampleRate, n = Math.floor(sr * 2.6), ir = ctx.createBuffer(2, n, sr);
     for (var c = 0; c < 2; c++) {
-      var d = ir.getChannelData(c), r = seeded(777 + c), lp = 0;
+      var d = ir.getChannelData(c), r = seeded(777), lp = 0;   // same response both sides, so the reverb keeps each sound's place
       for (var i = 0; i < n; i++) { lp = lp * 0.82 + r() * 0.18; d[i] = lp * Math.exp(-i / (sr * 0.62)) * (i < sr * 0.012 ? i / (sr * 0.012) : 1); }
     }
     var cv = ctx.createConvolver(); cv.buffer = ir; return cv;
@@ -63,7 +64,7 @@
     var m = Math.max(0, mag - 2.5), k = Math.min(1, m / 2.9);       // k: 0 at M2.5, 1 at M5.4
     var amp = 0.06 * Math.pow(10, 0.36 * m);                         // M2.5 0.06 -> M5.4 about 0.66
     var pan = ctx.createStereoPanner();
-    pan.pan.value = Math.max(-1, Math.min(1, ((lon - LON[0]) / (LON[1] - LON[0])) * 2 - 1)) * 0.6;
+    pan.pan.value = Math.max(-1, Math.min(1, (lon - PAN_CENTER) / PAN_HALF)) * 0.9;
     pan.connect(bus);
     if (kind === "boom") {
       var shaper = ctx.createWaveShaper(), curve = new Float32Array(1024);
@@ -220,10 +221,13 @@
     return ctx.startRendering().then(function (buf) { window.day11Wav = wavBase64(buf); return window.day11Wav.length; });
   };
   // Single hits from M2.5 to M5.4, for auditioning a voice
-  window.day11RenderHits = function (kind) {
-    var mags = [2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.4], sr = 44100, gap = 1.8;
-    var ctx = new OfflineAudioContext(2, Math.ceil(sr * (mags.length * gap + 3)), sr), m = makeMaster(ctx), nb = makeNoise(ctx);
-    mags.forEach(function (g, i) { voice(ctx, m, nb, 0.3 + i * gap, g, -100.1, kind); });
+  // (or, given longitudes, one M3.5 hit at each, for checking stereo placement)
+  window.day11RenderHits = function (kind, lons) {
+    var hits = lons ? lons.map(function (l) { return Array.isArray(l) ? l : [3.5, l]; })
+                    : [2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.4].map(function (g) { return [g, -100.1]; });
+    var sr = 44100, gap = 1.8;
+    var ctx = new OfflineAudioContext(2, Math.ceil(sr * (hits.length * gap + 3)), sr), m = makeMaster(ctx), nb = makeNoise(ctx);
+    hits.forEach(function (h, i) { voice(ctx, m, nb, 0.3 + i * gap, h[0], h[1], kind); });
     return ctx.startRendering().then(function (buf) { window.day11Wav = wavBase64(buf); return window.day11Wav.length; });
   };
 
