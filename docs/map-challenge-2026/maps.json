@@ -166,15 +166,15 @@
     "day": 11,
     "theme": "Sound",
     "date": "2026-11-11",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "The sound of Texas earthquakes",
+    "blurb": "Monthly saltwater disposal at 10,884 Texas wells from the Railroad Commission's H-10 reports, with every cataloged M2.5+ earthquake inside Texas from USGS and TexNet, January 2015 through December 2025. Press play and each earthquake sounds as a timpani strike, lower and louder for larger ones. Injection grew from 4.37 billion barrels in 2015 to 7.77 billion in 2024, and earthquakes from 60 to a peak of 816 in 2022. Late 2025 reports are still coming in; wells not yet on file show as gray rings.",
+    "alt": "Dark map of Texas with thousands of small cyan and violet dots for saltwater disposal wells, densest in the Permian Basin of West Texas, around Fort Worth and in East and South Texas. Orange dots and rings mark earthquakes, clustered heavily in the Permian Basin and along a band southwest of San Antonio. Gray rings mark wells whose late 2025 reports are not yet on file. A player panel at top right shows December 2025, 18.8 million barrels a day reported so far and 3,980 earthquakes.",
+    "tags": ["Texas", "O&G"],
+    "image": "map-challenge-2026/img/day11.jpg",
+    "thumb": "map-challenge-2026/img/day11-thumb.jpg",
+    "live": "map-challenge-2026/maps/day11/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 12,
