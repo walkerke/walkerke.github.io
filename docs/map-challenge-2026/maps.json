@@ -180,15 +180,15 @@
     "day": 12,
     "theme": "Power",
     "date": "2026-11-12",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "The U.S. power grid, November 2026",
+    "blurb": "Transmission lines and substations across the United States. The base is the HIFLD archive, which is no longer updated: 94,619 line segments as of September 2024 and 79,687 substations as of 2022. Added on top are 45,265 lines (66,425 miles) and 6,633 substations from a November 2026 OpenStreetMap pull that are not already in HIFLD. Line color shows voltage class; click a legend entry to filter, or press and hold one to show only that class.",
+    "alt": "Dark map of the contiguous United States covered in a dense web of glowing transmission lines, mostly violet and purple for lines under 161 kV, with cyan 220-287 kV, green 345 kV and yellow 500 kV lines forming long corridors across the West and through the Southeast. A title panel at top left and a voltage class legend at bottom left.",
+    "tags": ["Infra"],
+    "image": "map-challenge-2026/img/day12.jpg",
+    "thumb": "map-challenge-2026/img/day12-thumb.jpg",
+    "live": "map-challenge-2026/maps/day12/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 13,
