@@ -194,15 +194,15 @@
     "day": 13,
     "theme": "Interactions",
     "date": "2026-11-13",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "Where Upton County's royalty owners get their mail",
+    "blurb": "Click a survey in Upton County, Texas and lines show where the owners on its mineral appraisal records get their mail. Shown are the 240,363 royalty and overriding royalty records on the county appraisal district's 2026 mineral roll that could be matched to a survey and a mailing ZIP code: 11,636 owners across 558 surveys, with addresses in 3,493 ZIP codes in all 50 states and D.C. About 64% of owners have a Texas address. A panel counts owners, ZIP codes and states for the survey you pick and lists its most common mailing cities. Lines show appraisal records by mailing ZIP code, not income or ownership share.",
+    "alt": "Dark map of the lower 48 states with thin teal lines fanning out from a circle in West Texas to hundreds of small white dots across the country, heaviest toward Dallas and Houston, with one long arc to Omaha. A panel at top left reads Survey A-1306: 844 owners, 1,335 appraisal records, 516 mailing ZIP codes, 43 states and D.C., and 57% of owners with a Texas address, followed by a list of the most common mailing cities and a Reset view button.",
+    "tags": ["O&G", "Texas"],
+    "image": "map-challenge-2026/img/day13.jpg",
+    "thumb": "map-challenge-2026/img/day13-thumb.jpg",
+    "live": "map-challenge-2026/maps/day13/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 14,
