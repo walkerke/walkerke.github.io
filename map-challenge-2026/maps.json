@@ -209,7 +209,7 @@
     "theme": "Borgesian map",
     "date": "2026-11-14",
     "title": "Every mapped transmission tower in Texas",
-    "blurb": "OpenStreetMap volunteers have mapped 359,632 transmission towers across Texas. Zoomed out, they trace the grid. Zoom in, or press \"Stand next to one\", and each becomes a 3D tower you can look at up close. The idea comes from a one-paragraph story by Jorge Luis Borges about a map as large as the land it showed. Tower shapes and heights are illustrative, based on mapped tags and line voltage.",
+    "blurb": "The 359,632 transmission towers in Texas that are mapped in OpenStreetMap, drawn as 3D models when you zoom in. Tower shapes and heights are illustrative, based on mapped tags and line voltage. Inspired by Jorge Luis Borges, “On Exactitude in Science.”",
     "alt": "Low aerial view over South Texas brush country with a row of white 3D lattice transmission towers, in pairs, running from the foreground toward the horizon and casting long shadows, beside a large electrical substation at lower right. A panel at top left reads Every mapped transmission tower in Texas, with buttons labeled Stand next to one and Back to Texas.",
     "tags": [
       "Infra",
