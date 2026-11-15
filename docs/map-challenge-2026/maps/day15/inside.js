@@ -138,15 +138,20 @@ function buildBlock(i, d) {
     walls.push(g); group.add(g);
   });
   // the top of each unit as a sheet through the block
+  const underFloor = new THREE.Plane(new THREE.Vector3(0, 1, 0), depth);   // keeps what is above the floor
   shown.forEach((u) => {
     const pos = [], idx = [];
-    for (let j = 0; j <= G; j++) for (let k = 0; k <= G; k++) pos.push(xs[k], -(at(u, j, k) ?? 0), xs[j]);
+    // The sheet keeps the model's own depths and is cut where it passes below the block. Held at the floor instead, it
+    // would lie in the floor's plane and the two would flicker.
+    const raw = (j, k) => u.z[j * (G + 1) + k];
+    for (let j = 0; j <= G; j++) for (let k = 0; k <= G; k++) pos.push(xs[k], -(raw(j, k) ?? 0), xs[j]);
     for (let j = 0; j < G; j++) for (let k = 0; k < G; k++) {            // cells with an unsupported corner are left open
-      if ([at(u, j, k), at(u, j, k + 1), at(u, j + 1, k), at(u, j + 1, k + 1)].some((v) => v == null)) continue;
+      const cell = [raw(j, k), raw(j, k + 1), raw(j + 1, k), raw(j + 1, k + 1)];
+      if (cell.some((v) => v == null) || cell.every((v) => v >= depth)) continue;
       const a = j * (G + 1) + k; idx.push(a, a + G + 1, a + 1, a + 1, a + G + 1, a + G + 2);
     }
     const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); geo.setIndex(idx);
-    group.add(new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: u.color, transparent: true, opacity: 0.2, side: THREE.DoubleSide, depthWrite: false })));
+    group.add(new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: u.color, transparent: true, opacity: 0.2, side: THREE.DoubleSide, depthWrite: false, clippingPlanes: [underFloor] })));
   });
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(side, side), new THREE.MeshBasicMaterial({ color: "#0e1418", side: THREE.DoubleSide }));
   floor.rotation.x = -Math.PI / 2; floor.position.y = -depth; group.add(floor);
@@ -242,7 +247,7 @@ function buildBlock(i, d) {
 // ---- the viewer --------------------------------------------------------------------------------------------------------
 function setupView() {
   const host = el("scene"), renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
-  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1)); renderer.setClearColor("#05080b");
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1)); renderer.setClearColor("#05080b"); renderer.localClippingEnabled = true;
   host.appendChild(renderer.domElement);
   const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(32, 1, 10, 200000);
   const controls = new OrbitControls(camera, renderer.domElement);
