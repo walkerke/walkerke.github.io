@@ -225,15 +225,18 @@
     "day": 15,
     "theme": "Inside out",
     "date": "2026-11-15",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "Inside the wells of Upton County, Texas",
+    "blurb": "Click any of the 14,584 wells in Upton County, Texas to see it in 3D: the rock layers it passes through, where it was perforated, and the wells around it. 1,687 wells follow the directional survey filed for them with the Railroad Commission of Texas; the rest are sketches. The rock layers are a model built from formation tops that operators reported, not a geologist’s interpretation.",
+    "alt": "A 3D block of ground in West Texas with its satellite-image surface lifted like a lid. Below it are colored rock layers labeled from Rustler to Wolfcamp, a depth scale to 10,000 ft, and a white well that runs straight down and then sideways for about four miles, drawn in orange where it was perforated. Thin white lines are neighbouring wells. A panel at top left reads Dorcus Cindy Kay (SA) E: depth 8,909 ft, length of the hole 30,160 ft, sideways reach 21,729 ft, with buttons labeled Back to the map and Another well.",
+    "tags": [
+      "O&G",
+      "Texas"
+    ],
+    "image": "map-challenge-2026/img/day15.jpg",
+    "thumb": "map-challenge-2026/img/day15-thumb.jpg",
+    "live": "map-challenge-2026/maps/day15/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 16,
