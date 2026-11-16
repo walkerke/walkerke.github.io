@@ -274,15 +274,18 @@
     "day": 18,
     "theme": "NULL",
     "date": "2026-11-18",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "The 12,473 wells on Texas’s orphan list",
+    "blurb": "For the NULL prompt, the Railroad Commission of Texas orphan list for October 2026. The Commission lists inactive wells whose operator’s state registration has been delinquent for more than a year, and color shows for how long. Hover a well for its type, depth, year completed and the last month its lease reported production, from Railroad Commission records compiled by Clearfork Intelligence. Another 197 wells on the list have no usable coordinates and can’t be drawn.",
+    "alt": "A dark map of Texas scattered with about twelve thousand small dots in purple, pink, coral, orange and pale yellow. They are densest west of Fort Worth, around Abilene, near Pecos and Fort Stockton in West Texas, in the eastern Panhandle, and across South Texas between San Antonio and Corpus Christi. A legend gives the colors as how long the operator’s state registration has been delinquent, from 1 to 2 years (4,287 wells) to more than 20 years (448), with a last row for 197 wells with no usable coordinates.",
+    "tags": [
+      "O&G",
+      "Texas"
+    ],
+    "image": "map-challenge-2026/img/day18.jpg",
+    "thumb": "map-challenge-2026/img/day18-thumb.jpg",
+    "live": "map-challenge-2026/maps/day18/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 19,
