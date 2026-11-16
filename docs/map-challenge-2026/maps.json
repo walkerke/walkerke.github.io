@@ -257,15 +257,18 @@
     "day": 17,
     "theme": "Light & dark",
     "date": "2026-11-17",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "The Permian Basin, day and night",
+    "blurb": "Drag the bar to compare the Permian Basin by day and at night. By day it is desert, ranch land and well pads. At night the oil field is lit. White is light seen from orbit, from NASA’s Black Marble images. Orange marks places where a satellite saw heat on 3 or more nights in the past year, more than 800 of them in the Permian. In an oil field much of that heat is gas flares, but the satellite can’t tell a flare from a gas plant or a refinery.",
+    "alt": "A map split down the middle by a drag bar. The left half is daytime satellite imagery of West Texas and southeastern New Mexico: tan desert with towns labeled from Carlsbad to Fort Stockton, scattered with small orange rings. The right half is the same region at night on a dark background: a wide patch of white light around Midland and Odessa, larger than the lights of Abilene and San Angelo to its east, dotted with orange points. A legend sizes the points by the number of nights heat was seen in the past year: 3, 30, 150 or more.",
+    "tags": [
+      "O&G",
+      "Texas"
+    ],
+    "image": "map-challenge-2026/img/day17.jpg",
+    "thumb": "map-challenge-2026/img/day17-thumb.jpg",
+    "live": "map-challenge-2026/maps/day17/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 18,
