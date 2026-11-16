@@ -30,7 +30,7 @@
    }
    ```
 
-   `live` and `post` take a URL or `null`. Their buttons only appear when set. Tag chips are built from the tags on published days.
+   `live` and `post` take a URL or `null`. Their buttons only appear when set. The `live` button reads "Open interactive map" unless the entry has a `live_label` (Day 16 links out to a product and uses one). Tag chips are built from the tags on published days.
 
 3. Render the page: `quarto render map-challenge-2026.qmd`.
 

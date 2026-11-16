@@ -150,7 +150,7 @@
 
     var actions = $("mc-lb-actions");
     actions.textContent = "";
-    if (m.live) actions.appendChild(el("a", { class: "mc-btn mc-btn-primary", href: m.live, target: "_blank", rel: "noopener", text: "Open interactive map" }));
+    if (m.live) actions.appendChild(el("a", { class: "mc-btn mc-btn-primary", href: m.live, target: "_blank", rel: "noopener", text: m.live_label || "Open interactive map" }));
     if (m.post) actions.appendChild(el("a", { class: "mc-btn mc-btn-secondary", href: m.post, target: "_blank", rel: "noopener", text: "View post" }));
     actions.appendChild(el("a", { class: "mc-lb-full", href: m.image, target: "_blank", rel: "noopener", text: "Full-size image" }));
 
