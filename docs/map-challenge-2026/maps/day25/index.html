@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<style>body{background-color:white;}</style>
+
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>The Texas grid as a transit diagram · #30DayMapChallenge Day 25</title>
+  <style>*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#0b0f14;color:#f1f3f5;font-family:Arial,Helvetica,sans-serif}
+.wrap{display:flex;height:100vh;overflow:hidden}
+.side{flex:0 0 430px;padding:18px 8px 14px 22px;display:flex;flex-direction:column;overflow:auto;scrollbar-color:#37434f #0b0f14}
+.side h1{margin:0;font-size:30px;letter-spacing:-.5px;line-height:1.08}.side p{margin:8px 0 0;font-size:15px;line-height:1.38;color:#dfe4ea}.side p.tag{font-size:13px;color:#b4bcc6;margin-top:6px}
+.key{list-style:none;margin:16px 0 0;padding:0;font-size:13px;line-height:1.3}.key li{display:grid;grid-template-columns:34px auto;column-gap:9px;align-items:center;margin:0 0 7px}
+.key i{grid-row:1/3;height:7px;border-radius:4px}.key b{font-weight:bold}.key span{grid-column:2;color:#b4bcc6}
+.note{font-size:12.5px!important;color:#b4bcc6!important}.grow{flex:1}
+.stage{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;padding:6px 6px 6px 0}
+#dg{display:block;max-width:100%;max-height:100%;height:100%}
+.lk{cursor:pointer}.lk:hover{stroke-width:11}.st{fill:#0b0f14;stroke:#f1f3f5;stroke-width:2.6;cursor:pointer}.st.x{stroke-width:3.4}.st:hover{fill:#f1f3f5}
+.lb{fill:#f1f3f5;paint-order:stroke;stroke:#0b0f14;stroke-width:4px;stroke-linejoin:round;pointer-events:none}
+#tip{position:fixed;z-index:9;max-width:290px;padding:8px 11px;border-radius:7px;background:#f1f3f5;color:#10151b;font-size:13px;line-height:1.38;box-shadow:0 4px 16px #000a;pointer-events:none;display:none}
+#tip b{display:block;margin-bottom:2px}
+details{margin-top:12px;font-size:13px}summary{list-style:none;cursor:pointer;display:inline-block;color:#f1f3f5;font-weight:bold;background:#27303a;border-radius:4px;padding:4px 9px;user-select:none}
+summary::-webkit-details-marker{display:none}summary:hover,details[open] summary{background:#37434f}summary:focus-visible{outline:2px solid #f1f3f5;outline-offset:2px}
+.about{margin-top:9px;color:#dfe4ea;line-height:1.45;background:#10161dee;border:1px solid #37434f;border-radius:8px;padding:11px 13px}.about p{margin:0 0 8px;font-size:13px}.about p:last-child{margin-bottom:0}
+.about a,.src a{color:#e9eef0;text-decoration:underline;text-decoration-color:#e9eef080;text-underline-offset:2px}.src{font-size:12px!important;color:#b4bcc6!important}
+.hint{display:none}
+@media(max-width:900px){.wrap{display:block;height:auto;overflow:visible}.side{padding:12px 14px 4px}.side h1{font-size:22px}.side p{font-size:14px}.grow{display:none}
+  .stage{display:block;overflow:auto;-webkit-overflow-scrolling:touch;padding:0;border-top:1px solid #27303a;border-bottom:1px solid #27303a;margin-top:8px}
+  #dg{height:auto;max-width:none;max-height:none;width:1080px}.hint{display:block}.below{padding:4px 14px 20px}.below .how{display:none}}
+@media(min-width:901px){.below{display:contents}}</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="side">
+    <h1>The Texas grid as a transit diagram</h1>
+    <p>58 of the state's 345 kV substations, drawn as stations on 9 lines. Two stations are joined where the source data has 345 kV transmission lines running between them. It is not to scale, and it leaves out most of the grid.</p>
+    <p class="tag">#30DayMapChallenge Day 25: Is this a map?</p>
+    <p class="note hint">Drag the diagram sideways to see all of it. Tap a station or a link for details.</p>
+    <div class="below desk">
+      <ul class="key">
+        <li>
+          <i style="background:#e4572e"></i>
+          <b>Panhandle</b>
+          <span>Gray to San Angelo Red Creek</span>
+        </li>
+        <li>
+          <i style="background:#f3a712"></i>
+          <b>Rolling Plains</b>
+          <span>Gray to Brown</span>
+        </li>
+        <li>
+          <i style="background:#29b6f6"></i>
+          <b>West Texas</b>
+          <span>Zorn to Parker</span>
+        </li>
+        <li>
+          <i style="background:#66bb6a"></i>
+          <b>Central</b>
+          <span>Big Hill to Calaveras</span>
+        </li>
+        <li>
+          <i style="background:#ab47bc"></i>
+          <b>Brazos Valley</b>
+          <span>Cedar Hill SW to King Reit</span>
+        </li>
+        <li>
+          <i style="background:#ef5da8"></i>
+          <b>Dallas-Fort Worth loop</b>
+          <span>loop through Parker</span>
+        </li>
+        <li>
+          <i style="background:#8d6e63"></i>
+          <b>East Texas</b>
+          <span>Tri-Corner to Zenith</span>
+        </li>
+        <li>
+          <i style="background:#26a69a"></i>
+          <b>Houston loop</b>
+          <span>loop through Zenith</span>
+        </li>
+        <li>
+          <i style="background:#c0ca33"></i>
+          <b>Coast and Valley</b>
+          <span>Parish to Calaveras</span>
+        </li>
+      </ul>
+      <p class="note">A ring is a station. A larger ring is a station on two or more lines.</p>
+      <p class="note how">Hover or tap a station or a link for what the source says.</p>
+      <div class="grow"></div>
+      <details id="about">
+        <summary>About the data</summary>
+        <div class="about">
+          <p>
+            <b>Source: </b>
+            transmission lines and substations from the federal <a href="https://hifld-geoplatform.hub.arcgis.com/" target="_blank" rel="noopener">HIFLD</a> open data, which was retired and is frozen: lines as of September 2024, substations as of April 2022. Lines marked inactive are left out. Nothing built since then is here, and the source's gaps and errors are repeated.
+          </p>
+          <p>
+            <b>Stations: </b>
+            picked by hand. In the source, 549 lines at 345 kV touch Texas and the largest connected group of them has 171 named substations in the state. These 58 were chosen to include the places where the most lines meet and to reach each part of the state. Names are the source's own, in reading case; Calaveras 345 Switchyard is shortened to Calaveras.
+          </p>
+          <p>
+            <b>Links: </b>
+            two neighboring stations are joined only when the source has a chain of 345 kV lines between them that passes through no other station on the diagram. 34 of the 66 links are a single line in the source. The other 32 run through one to 3 substations that are not shown. Together the links follow 115 of the source's lines. The source marks 91 of those as in service and gives no status for the other 24.
+          </p>
+          <p>
+            <b>Lines and colors: </b>
+            a drawing device, as on a subway map. They are not circuit names, owners or operating paths, and the line names are made up for this page.
+          </p>
+          <p>
+            <b>What it can't tell you: </b>
+            distances, directions and positions are not to scale. A missing link does not mean two stations are unconnected, and a drawn link says only that the source has lines between them. Do not use it to judge how power flows or what is connected to what.
+          </p>
+        </div>
+      </details>
+      <p class="src">Data: HIFLD transmission lines (September 2024) and substations (April 2022), archived copies.</p>
+    </div>
+  </div>
+  <div class="stage" id="stage"><svg id="dg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1472 1176" role="img" aria-label="Transit-style diagram of 58 Texas 345 kV substations on 9 colored lines">
+<g fill="none" stroke-width="8.0" stroke-linecap="round" stroke-linejoin="round"><path class="lk" d="M448.0 64.0 L328.0 64.0" stroke="#e4572e" data-tip="Gray to Alibates|Panhandle line. The source has one 345 kV line between them, about  41 miles of line."/>
+<path class="lk" d="M328.0 64.0 L328.0 184.0" stroke="#e4572e" data-tip="Alibates to Tule Canyon|Panhandle line. The source has one 345 kV line between them, about  66 miles of line."/>
+<path class="lk" d="M328.0 184.0 L328.0 304.0" stroke="#e4572e" data-tip="Tule Canyon to Cottonwood|Panhandle line. The source has one 345 kV line between them, about  66 miles of line."/>
+<path class="lk" d="M328.0 304.0 L328.0 384.0" stroke="#e4572e" data-tip="Cottonwood to Dermott|Panhandle line. The source has one 345 kV line between them, about  76 miles of line."/>
+<path class="lk" d="M328.0 384.0 L368.0 424.0" stroke="#e4572e" data-tip="Dermott to Tonkawa|Panhandle line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about  47 miles of line."/>
+<path class="lk" d="M368.0 424.0 L396.1 452.1 Q408.0 464.0 424.8 464.0 L448.0 464.0" stroke="#e4572e" data-tip="Tonkawa to Sweetwater East|Panhandle line. The source has one 345 kV line between them, about  31 miles of line."/>
+<path class="lk" d="M448.0 464.0 L448.0 584.0" stroke="#e4572e" data-tip="Sweetwater East to San Angelo Red Creek|Panhandle line. The source has 3 345 kV lines end to end between them, through 2 substations not shown, about  96 miles of line."/>
+<path class="lk" d="M448.0 64.0 L476.1 92.1 Q488.0 104.0 488.0 120.8 L488.0 184.0" stroke="#f3a712" data-tip="Gray to Tesla|Rolling Plains line. The source has one 345 kV line between them, about 109 miles of line."/>
+<path class="lk" d="M488.0 184.0 L528.0 224.0" stroke="#f3a712" data-tip="Tesla to Edith Clark|Rolling Plains line. The source has one 345 kV line between them, about  55 miles of line."/>
+<path class="lk" d="M528.0 224.0 L528.0 344.0" stroke="#f3a712" data-tip="Edith Clark to Clear Crossing|Rolling Plains line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about  79 miles of line."/>
+<path class="lk" d="M528.0 344.0 L556.1 315.9 Q568.0 304.0 584.8 304.0 L728.0 304.0" stroke="#f3a712" data-tip="Clear Crossing to Jacksboro|Rolling Plains line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about 128 miles of line."/>
+<path class="lk" d="M728.0 304.0 L756.1 332.1 Q768.0 344.0 784.8 344.0 L808.0 344.0" stroke="#f3a712" data-tip="Jacksboro to Parker|Rolling Plains line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about  41 miles of line."/>
+<path class="lk" d="M808.0 344.0 L808.0 504.0" stroke="#f3a712" data-tip="Parker to Comanche Peak|Rolling Plains line. The source has one 345 kV line between them, about  42 miles of line."/>
+<path class="lk" d="M808.0 504.0 L704.8 504.0 Q688.0 504.0 676.1 515.9 L608.0 584.0" stroke="#f3a712" data-tip="Comanche Peak to Brown|Rolling Plains line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about 109 miles of line."/>
+<path class="lk" d="M808.0 784.0 L648.0 784.0" stroke="#29b6f6" data-tip="Zorn to Kendall|West Texas line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about  64 miles of line."/>
+<path class="lk" d="M648.0 784.0 L619.9 755.9 Q608.0 744.0 591.2 744.0 L528.0 744.0" stroke="#29b6f6" data-tip="Kendall to Edison|West Texas line. The source has one 345 kV line between them, about  51 miles of line."/>
+<path class="lk" d="M528.0 744.0 L419.9 635.9 Q408.0 624.0 391.2 624.0 L368.0 624.0" stroke="#29b6f6" data-tip="Edison to Big Hill|West Texas line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about  88 miles of line."/>
+<path class="lk" d="M368.0 624.0 L208.0 624.0" stroke="#29b6f6" data-tip="Big Hill to Bakersfield|West Texas line. The source has one 345 kV line between them, about 111 miles of line."/>
+<path class="lk" d="M208.0 624.0 L179.9 595.9 Q168.0 584.0 168.0 567.2 L168.0 504.0" stroke="#29b6f6" data-tip="Bakersfield to Odessa|West Texas line. The source has 3 345 kV lines end to end between them, through 2 substations not shown, about  76 miles of line."/>
+<path class="lk" d="M168.0 504.0 L391.2 504.0 Q408.0 504.0 419.9 492.1 L448.0 464.0" stroke="#29b6f6" data-tip="Odessa to Sweetwater East|West Texas line. The source has 4 345 kV lines end to end between them, through 3 substations not shown, about 133 miles of line."/>
+<path class="lk" d="M448.0 464.0 L528.0 464.0" stroke="#29b6f6" data-tip="Sweetwater East to Abilene Mulberry Creek|West Texas line. The source has one 345 kV line between them, about  23 miles of line."/>
+<path class="lk" d="M528.0 464.0 L671.2 464.0 Q688.0 464.0 699.9 452.1 L808.0 344.0" stroke="#29b6f6" data-tip="Abilene Mulberry Creek to Parker|West Texas line. The source has 3 345 kV lines end to end between them, through 2 substations not shown, about 144 miles of line."/>
+<path class="lk" d="M368.0 624.0 L396.1 595.9 Q408.0 584.0 424.8 584.0 L448.0 584.0" stroke="#66bb6a" data-tip="Big Hill to San Angelo Red Creek|Central line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about  56 miles of line."/>
+<path class="lk" d="M448.0 584.0 L608.0 584.0" stroke="#66bb6a" data-tip="San Angelo Red Creek to Brown|Central line. The source has one 345 kV line between them, about  71 miles of line."/>
+<path class="lk" d="M608.0 584.0 L768.0 584.0" stroke="#66bb6a" data-tip="Brown to Killeen|Central line. The source has one 345 kV line between them, about 123 miles of line."/>
+<path class="lk" d="M768.0 584.0 L796.1 612.1 Q808.0 624.0 824.8 624.0 L888.0 624.0" stroke="#66bb6a" data-tip="Killeen to Temple Switching|Central line. The source has 3 345 kV lines end to end between them, through 2 substations not shown, about  31 miles of line."/>
+<path class="lk" d="M888.0 624.0 L888.0 704.0" stroke="#66bb6a" data-tip="Temple Switching to Austrop|Central line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about  72 miles of line."/>
+<path class="lk" d="M888.0 704.0 L848.0 744.0" stroke="#66bb6a" data-tip="Austrop to Lytton Springs|Central line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about  21 miles of line."/>
+<path class="lk" d="M848.0 744.0 L808.0 784.0" stroke="#66bb6a" data-tip="Lytton Springs to Zorn|Central line. The source has one 345 kV line between them, about  23 miles of line."/>
+<path class="lk" d="M808.0 784.0 L779.9 812.1 Q768.0 824.0 751.2 824.0 L728.0 824.0" stroke="#66bb6a" data-tip="Zorn to Skyline|Central line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about  34 miles of line."/>
+<path class="lk" d="M728.0 824.0 L728.0 904.0" stroke="#66bb6a" data-tip="Skyline to Calaveras|Central line. The source has one 345 kV line between them, about  21 miles of line."/>
+<path class="lk" d="M928.0 424.0 L928.0 504.0" stroke="#ab47bc" data-tip="Cedar Hill SW to Venus|Brazos Valley line. The source has 3 345 kV lines end to end between them, through 2 substations not shown, about  21 miles of line."/>
+<path class="lk" d="M928.0 504.0 L1008.0 584.0" stroke="#ab47bc" data-tip="Venus to Twin Oak|Brazos Valley line. The source has 3 345 kV lines end to end between them, through 2 substations not shown, about 113 miles of line."/>
+<path class="lk" d="M1008.0 584.0 L1168.0 744.0" stroke="#ab47bc" data-tip="Twin Oak to Singleton|Brazos Valley line. The source has 3 345 kV lines end to end between them, through 2 substations not shown, about  57 miles of line."/>
+<path class="lk" d="M1168.0 744.0 L1196.1 772.1 Q1208.0 784.0 1208.0 800.8 L1208.0 824.0" stroke="#ab47bc" data-tip="Singleton to King Reit|Brazos Valley line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about  79 miles of line."/>
+<path class="lk" d="M808.0 344.0 L836.1 372.1 Q848.0 384.0 848.0 400.8 L848.0 424.0" stroke="#ef5da8" data-tip="Parker to Everman|Dallas-Fort Worth loop line. The source has 4 345 kV lines end to end between them, through 3 substations not shown, about  45 miles of line."/>
+<path class="lk" d="M848.0 424.0 L928.0 424.0" stroke="#ef5da8" data-tip="Everman to Cedar Hill SW|Dallas-Fort Worth loop line. The source has 3 345 kV lines end to end between them, through 2 substations not shown, about  21 miles of line."/>
+<path class="lk" d="M928.0 424.0 L1008.0 424.0" stroke="#ef5da8" data-tip="Cedar Hill SW to Watermill|Dallas-Fort Worth loop line. The source has one 345 kV line between them, about  17 miles of line."/>
+<path class="lk" d="M1008.0 424.0 L1088.0 424.0" stroke="#ef5da8" data-tip="Watermill to Tri-Corner|Dallas-Fort Worth loop line. The source has one 345 kV line between them, about  11 miles of line."/>
+<path class="lk" d="M1088.0 424.0 L1128.0 384.0" stroke="#ef5da8" data-tip="Tri-Corner to Forney SW|Dallas-Fort Worth loop line. The source has one 345 kV line between them, about  15 miles of line."/>
+<path class="lk" d="M1128.0 384.0 L1128.0 304.0" stroke="#ef5da8" data-tip="Forney SW to Royse|Dallas-Fort Worth loop line. The source has one 345 kV line between them, about  17 miles of line."/>
+<path class="lk" d="M1128.0 304.0 L1128.0 224.0" stroke="#ef5da8" data-tip="Royse to Farmersville|Dallas-Fort Worth loop line. The source has one 345 kV line between them, about  15 miles of line."/>
+<path class="lk" d="M1128.0 224.0 L1099.9 195.9 Q1088.0 184.0 1071.2 184.0 L1048.0 184.0" stroke="#ef5da8" data-tip="Farmersville to Anna|Dallas-Fort Worth loop line. The source has one 345 kV line between them, about  26 miles of line."/>
+<path class="lk" d="M1048.0 184.0 L979.9 252.1 Q968.0 264.0 951.2 264.0 L928.0 264.0" stroke="#ef5da8" data-tip="Anna to Northwest Carrollton|Dallas-Fort Worth loop line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about  31 miles of line."/>
+<path class="lk" d="M928.0 264.0 L859.9 332.1 Q848.0 344.0 831.2 344.0 L808.0 344.0" stroke="#ef5da8" data-tip="Northwest Carrollton to Parker|Dallas-Fort Worth loop line. The source has 4 345 kV lines end to end between them, through 3 substations not shown, about  59 miles of line."/>
+<path class="lk" d="M1088.0 424.0 L1168.0 504.0" stroke="#8d6e63" data-tip="Tri-Corner to Trinidad|East Texas line. The source has one 345 kV line between them, about  40 miles of line."/>
+<path class="lk" d="M1168.0 504.0 L1168.0 584.0" stroke="#8d6e63" data-tip="Trinidad to Big Brown|East Texas line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about  27 miles of line."/>
+<path class="lk" d="M1168.0 584.0 L1168.0 664.0" stroke="#8d6e63" data-tip="Big Brown to Jewett|East Texas line. The source has one 345 kV line between them, about  33 miles of line."/>
+<path class="lk" d="M1168.0 664.0 L1168.0 744.0" stroke="#8d6e63" data-tip="Jewett to Singleton|East Texas line. The source has one 345 kV line between them, about  50 miles of line."/>
+<path class="lk" d="M1168.0 744.0 L1088.0 824.0" stroke="#8d6e63" data-tip="Singleton to Zenith|East Texas line. The source has one 345 kV line between them, about  53 miles of line."/>
+<path class="lk" d="M1088.0 824.0 L1208.0 824.0" stroke="#26a69a" data-tip="Zenith to King Reit|Houston loop line. The source has 3 345 kV lines end to end between them, through 2 substations not shown, about  36 miles of line."/>
+<path class="lk" d="M1208.0 824.0 L1236.1 852.1 Q1248.0 864.0 1264.8 864.0 L1288.0 864.0" stroke="#26a69a" data-tip="King Reit to Cedar Bayou Plant|Houston loop line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about  29 miles of line."/>
+<path class="lk" d="M1288.0 864.0 L1288.0 944.0" stroke="#26a69a" data-tip="Cedar Bayou Plant to PH Robinson|Houston loop line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about  43 miles of line."/>
+<path class="lk" d="M1288.0 944.0 L1259.9 972.1 Q1248.0 984.0 1231.2 984.0 L1208.0 984.0" stroke="#26a69a" data-tip="PH Robinson to Oasis|Houston loop line. The source has 3 345 kV lines end to end between them, through 2 substations not shown, about  21 miles of line."/>
+<path class="lk" d="M1208.0 984.0 L1128.0 984.0" stroke="#26a69a" data-tip="Oasis to Parish|Houston loop line. The source has one 345 kV line between them, about  20 miles of line."/>
+<path class="lk" d="M1128.0 984.0 L1099.9 955.9 Q1088.0 944.0 1088.0 927.2 L1088.0 904.0" stroke="#26a69a" data-tip="Parish to O&#39;Brien|Houston loop line. The source has one 345 kV line between them, about  17 miles of line."/>
+<path class="lk" d="M1088.0 904.0 L1088.0 824.0" stroke="#26a69a" data-tip="O&#39;Brien to Zenith|Houston loop line. The source has one 345 kV line between them, about  17 miles of line."/>
+<path class="lk" d="M1128.0 984.0 L1099.9 1012.1 Q1088.0 1024.0 1071.2 1024.0 L1008.0 1024.0" stroke="#c0ca33" data-tip="Parish to Sotex5|Coast and Valley line. The source has one 345 kV line between them, about  68 miles of line."/>
+<path class="lk" d="M1008.0 1024.0 L984.8 1024.0 Q968.0 1024.0 956.1 1012.1 L808.0 864.0" stroke="#c0ca33" data-tip="Sotex5 to Elm Creek|Coast and Valley line. The source has one 345 kV line between them, about 139 miles of line."/>
+<path class="lk" d="M808.0 864.0 L739.9 932.1 Q728.0 944.0 711.2 944.0 L688.0 944.0" stroke="#c0ca33" data-tip="Elm Creek to San Miguel|Coast and Valley line. The source has one 345 kV line between them, about  63 miles of line."/>
+<path class="lk" d="M688.0 944.0 L608.0 1024.0" stroke="#c0ca33" data-tip="San Miguel to Cenizo|Coast and Valley line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about 132 miles of line."/>
+<path class="lk" d="M608.0 1024.0 L636.1 1052.1 Q648.0 1064.0 648.0 1080.8 L648.0 1104.0" stroke="#c0ca33" data-tip="Cenizo to Del Sol|Coast and Valley line. The source has one 345 kV line between them, about  82 miles of line."/>
+<path class="lk" d="M648.0 1104.0 L768.0 1104.0" stroke="#c0ca33" data-tip="Del Sol to North Edinburg|Coast and Valley line. The source has 2 345 kV lines end to end between them, through 1 substation not shown, about  46 miles of line."/>
+<path class="lk" d="M768.0 1104.0 L888.0 1104.0" stroke="#c0ca33" data-tip="North Edinburg to Rio Hondo|Coast and Valley line. The source has one 345 kV line between them, about  38 miles of line."/>
+<path class="lk" d="M888.0 1104.0 L859.9 1075.9 Q848.0 1064.0 848.0 1047.2 L848.0 944.0" stroke="#c0ca33" data-tip="Rio Hondo to Pawnee|Coast and Valley line. The source has 4 345 kV lines end to end between them, through 3 substations not shown, about 193 miles of line."/>
+<path class="lk" d="M848.0 944.0 L819.9 915.9 Q808.0 904.0 791.2 904.0 L728.0 904.0" stroke="#c0ca33" data-tip="Pawnee to Calaveras|Coast and Valley line. The source has one 345 kV line between them, about  46 miles of line."/></g>
+<g><circle class="st x" cx="448.0" cy="64.0" r="10.4" data-tip="Gray|Substation named GRAY in the source, near Lefors, Gray County. 5 345 kV lines end there in the source. On the diagram: Panhandle, Rolling Plains."/>
+<circle class="st" cx="328.0" cy="64.0" r="8.0" data-tip="Alibates|Substation named ALIBATES in the source, near Conway, Carson County. 5 345 kV lines end there in the source. On the diagram: Panhandle."/>
+<circle class="st" cx="328.0" cy="184.0" r="8.0" data-tip="Tule Canyon|Substation named TULE CANYON in the source, near Silverton, Briscoe County. 10 345 kV lines end there in the source. On the diagram: Panhandle."/>
+<circle class="st" cx="328.0" cy="304.0" r="8.0" data-tip="Cottonwood|Substation named COTTONWOOD in the source, near Glenn, Dickens County. 6 345 kV lines end there in the source. On the diagram: Panhandle."/>
+<circle class="st" cx="328.0" cy="384.0" r="8.0" data-tip="Dermott|Substation named DERMOTT in the source, near Dermott, Scurry County. 6 345 kV lines end there in the source. On the diagram: Panhandle."/>
+<circle class="st" cx="368.0" cy="424.0" r="8.0" data-tip="Tonkawa|Substation named TONKAWA in the source, near Inadale, Scurry County. 10 345 kV lines end there in the source. On the diagram: Panhandle."/>
+<circle class="st x" cx="448.0" cy="464.0" r="10.4" data-tip="Sweetwater East|Substation named SWEETWATER EAST in the source, near Tesco, Nolan County. 8 345 kV lines end there in the source. On the diagram: Panhandle, West Texas."/>
+<circle class="st x" cx="448.0" cy="584.0" r="10.4" data-tip="San Angelo Red Creek|Substation named SAN ANGELO RED CREEK in the source, near Orient, Tom Green County. 5 345 kV lines end there in the source. On the diagram: Central, Panhandle."/>
+<circle class="st" cx="488.0" cy="184.0" r="8.0" data-tip="Tesla|Substation named TESLA in the source, near Kirkland, Childress County. 5 345 kV lines end there in the source. On the diagram: Rolling Plains."/>
+<circle class="st" cx="528.0" cy="224.0" r="8.0" data-tip="Edith Clark|Substation named EDITH CLARK in the source, near Crowell, Foard County. 7 345 kV lines end there in the source. On the diagram: Rolling Plains."/>
+<circle class="st" cx="528.0" cy="344.0" r="8.0" data-tip="Clear Crossing|Substation named CLEAR CROSSING in the source, near Avoca, Haskell County. 7 345 kV lines end there in the source. On the diagram: Rolling Plains."/>
+<circle class="st" cx="728.0" cy="304.0" r="8.0" data-tip="Jacksboro|Substation named JACKSBORO in the source, near Jacksboro, Jack County. 5 345 kV lines end there in the source. On the diagram: Rolling Plains."/>
+<circle class="st x" cx="808.0" cy="344.0" r="10.4" data-tip="Parker|Substation named PARKER in the source, near Willow Park, Parker County. 11 345 kV lines end there in the source. On the diagram: Dallas-Fort Worth loop, Rolling Plains, West Texas."/>
+<circle class="st" cx="168.0" cy="504.0" r="8.0" data-tip="Odessa|Substation named ODESSA in the source, near Odessa, Ector County. 6 345 kV lines end there in the source. On the diagram: West Texas."/>
+<circle class="st" cx="528.0" cy="464.0" r="8.0" data-tip="Abilene Mulberry Creek|Substation named ABILENE MULBERRY CREEK in the source, near Impact, Jones County. 6 345 kV lines end there in the source. On the diagram: West Texas."/>
+<circle class="st" cx="208.0" cy="624.0" r="8.0" data-tip="Bakersfield|Substation named BAKERSFIELD in the source, near Bakersfield, Pecos County. 3 345 kV lines end there in the source. On the diagram: West Texas."/>
+<circle class="st x" cx="368.0" cy="624.0" r="10.4" data-tip="Big Hill|Substation named BIG HILL in the source, near Christoval, Schleicher County. 4 345 kV lines end there in the source. On the diagram: Central, West Texas."/>
+<circle class="st" cx="528.0" cy="744.0" r="8.0" data-tip="Edison|Substation named EDISON in the source, near Junction, Kimble County. 4 345 kV lines end there in the source. On the diagram: West Texas."/>
+<circle class="st" cx="648.0" cy="784.0" r="8.0" data-tip="Kendall|Substation named KENDALL in the source, near Comfort, Kendall County. 4 345 kV lines end there in the source. On the diagram: West Texas."/>
+<circle class="st x" cx="808.0" cy="784.0" r="10.4" data-tip="Zorn|Substation named ZORN in the source, near Hunter, Guadalupe County. 7 345 kV lines end there in the source. On the diagram: Central, West Texas."/>
+<circle class="st x" cx="608.0" cy="584.0" r="10.4" data-tip="Brown|Substation named BROWN in the source, near Winchell, Brown County. 8 345 kV lines end there in the source. On the diagram: Central, Rolling Plains."/>
+<circle class="st" cx="768.0" cy="584.0" r="8.0" data-tip="Killeen|Substation named KILLEEN in the source, near Killeen, Bell County. 4 345 kV lines end there in the source. On the diagram: Central."/>
+<circle class="st" cx="888.0" cy="624.0" r="8.0" data-tip="Temple Switching|Substation named TEMPLE SWITCHING in the source, near Temple, Bell County. 3 345 kV lines end there in the source. On the diagram: Central."/>
+<circle class="st" cx="1008.0" cy="584.0" r="8.0" data-tip="Twin Oak|Substation named TWIN OAK in the source, near Easterly, Robertson County. 7 345 kV lines end there in the source. On the diagram: Brazos Valley."/>
+<circle class="st x" cx="1168.0" cy="744.0" r="10.4" data-tip="Singleton|Substation named SINGLETON in the source, near Singleton, Grimes County. 8 345 kV lines end there in the source. On the diagram: Brazos Valley, East Texas."/>
+<circle class="st" cx="808.0" cy="504.0" r="8.0" data-tip="Comanche Peak|Substation named COMANCHE PEAK in the source, near Glen Rose, Somervell County. 9 345 kV lines end there in the source. On the diagram: Rolling Plains."/>
+<circle class="st x" cx="928.0" cy="424.0" r="10.4" data-tip="Cedar Hill SW|Substation named CEDAR HILL SW in the source, near Dallas, Dallas County. 5 345 kV lines end there in the source. On the diagram: Brazos Valley, Dallas-Fort Worth loop."/>
+<circle class="st" cx="928.0" cy="504.0" r="8.0" data-tip="Venus|Substation named VENUS in the source, near Venus, Ellis County. 13 345 kV lines end there in the source. On the diagram: Brazos Valley."/>
+<circle class="st" cx="888.0" cy="704.0" r="8.0" data-tip="Austrop|Substation named AUSTROP in the source, near Webberville, Travis County. 5 345 kV lines end there in the source. On the diagram: Central."/>
+<circle class="st" cx="848.0" cy="744.0" r="8.0" data-tip="Lytton Springs|Substation named LYTTON SPRINGS in the source, near Mendoza, Caldwell County. 6 345 kV lines end there in the source. On the diagram: Central."/>
+<circle class="st" cx="728.0" cy="824.0" r="8.0" data-tip="Skyline|Substation named SKYLINE in the source, near San Antonio, Bexar County. 5 345 kV lines end there in the source. On the diagram: Central."/>
+<circle class="st x" cx="728.0" cy="904.0" r="10.4" data-tip="Calaveras|Substation named CALAVERAS 345 SWITCHYARD in the source, near Elmendorf, Bexar County. 5 345 kV lines end there in the source. On the diagram: Central, Coast and Valley."/>
+<circle class="st" cx="848.0" cy="424.0" r="8.0" data-tip="Everman|Substation named EVERMAN in the source, near Fort Worth, Tarrant County. 8 345 kV lines end there in the source. On the diagram: Dallas-Fort Worth loop."/>
+<circle class="st" cx="1008.0" cy="424.0" r="8.0" data-tip="Watermill|Substation named WATERMILL in the source, near Lancaster, Dallas County. 8 345 kV lines end there in the source. On the diagram: Dallas-Fort Worth loop."/>
+<circle class="st x" cx="1088.0" cy="424.0" r="10.4" data-tip="Tri-Corner|Substation named TRI-CORNER in the source, near Combine, Dallas County. 5 345 kV lines end there in the source. On the diagram: Dallas-Fort Worth loop, East Texas."/>
+<circle class="st" cx="1128.0" cy="384.0" r="8.0" data-tip="Forney SW|Substation named FORNEY SW in the source, near Forney, Kaufman County. 5 345 kV lines end there in the source. On the diagram: Dallas-Fort Worth loop."/>
+<circle class="st" cx="1128.0" cy="304.0" r="8.0" data-tip="Royse|Substation named ROYSE in the source, near Royse City, Rockwall County. 9 345 kV lines end there in the source. On the diagram: Dallas-Fort Worth loop."/>
+<circle class="st" cx="1128.0" cy="224.0" r="8.0" data-tip="Farmersville|Substation named FARMERSVILLE in the source, near Farmersville, Collin County. 4 345 kV lines end there in the source. On the diagram: Dallas-Fort Worth loop."/>
+<circle class="st" cx="1048.0" cy="184.0" r="8.0" data-tip="Anna|Substation named ANNA in the source, near Weston, Collin County. 6 345 kV lines end there in the source. On the diagram: Dallas-Fort Worth loop."/>
+<circle class="st" cx="928.0" cy="264.0" r="8.0" data-tip="Northwest Carrollton|Substation named NORTHWEST CARROLLTON in the source, near Carrollton, Dallas County. 6 345 kV lines end there in the source. On the diagram: Dallas-Fort Worth loop."/>
+<circle class="st" cx="1168.0" cy="504.0" r="8.0" data-tip="Trinidad|Substation named TRINIDAD in the source, near Trinidad, Henderson County. 7 345 kV lines end there in the source. On the diagram: East Texas."/>
+<circle class="st" cx="1168.0" cy="584.0" r="8.0" data-tip="Big Brown|Substation named BIG BROWN in the source, near Fairfield, Freestone County. 5 345 kV lines end there in the source. On the diagram: East Texas."/>
+<circle class="st" cx="1168.0" cy="664.0" r="8.0" data-tip="Jewett|Substation named JEWETT in the source, near Jewett, Leon County. 6 345 kV lines end there in the source. On the diagram: East Texas."/>
+<circle class="st x" cx="1088.0" cy="824.0" r="10.4" data-tip="Zenith|Substation named ZENITH in the source, near Katy, Harris County. 6 345 kV lines end there in the source. On the diagram: East Texas, Houston loop."/>
+<circle class="st x" cx="1208.0" cy="824.0" r="10.4" data-tip="King Reit|Substation named KING REIT in the source, near Houmont Park, Harris County. 5 345 kV lines end there in the source. On the diagram: Brazos Valley, Houston loop."/>
+<circle class="st" cx="1288.0" cy="864.0" r="8.0" data-tip="Cedar Bayou Plant|Substation named CEDAR BAYOU PLANT in the source, near Baytown, Chambers County. 4 345 kV lines end there in the source. On the diagram: Houston loop."/>
+<circle class="st" cx="1288.0" cy="944.0" r="8.0" data-tip="PH Robinson|Substation named PH ROBINSON in the source, near Bacliff, Galveston County. 4 345 kV lines end there in the source. On the diagram: Houston loop."/>
+<circle class="st" cx="1208.0" cy="984.0" r="8.0" data-tip="Oasis|Substation named OASIS in the source, near Manvel, Brazoria County. 5 345 kV lines end there in the source. On the diagram: Houston loop."/>
+<circle class="st x" cx="1128.0" cy="984.0" r="10.4" data-tip="Parish|Substation named PARISH in the source, near Thompsons, Fort Bend County. 13 345 kV lines end there in the source. On the diagram: Coast and Valley, Houston loop."/>
+<circle class="st" cx="1088.0" cy="904.0" r="8.0" data-tip="O&#39;Brien|Substation named O&#39;BRIEN in the source, near Pecan Grove, Fort Bend County. 5 345 kV lines end there in the source. On the diagram: Houston loop."/>
+<circle class="st" cx="1008.0" cy="1024.0" r="8.0" data-tip="Sotex5|Substation named SOTEX5 in the source, near Buckeye, Matagorda County. 13 345 kV lines end there in the source. On the diagram: Coast and Valley."/>
+<circle class="st" cx="808.0" cy="864.0" r="8.0" data-tip="Elm Creek|Substation named ELM CREEK in the source, near New Berlin, Guadalupe County. 7 345 kV lines end there in the source. On the diagram: Coast and Valley."/>
+<circle class="st" cx="688.0" cy="944.0" r="8.0" data-tip="San Miguel|Substation named SAN MIGUEL in the source, near Christine, Atascosa County. 4 345 kV lines end there in the source. On the diagram: Coast and Valley."/>
+<circle class="st" cx="608.0" cy="1024.0" r="8.0" data-tip="Cenizo|Substation named CENIZO in the source, near Laredo, Webb County. 3 345 kV lines end there in the source. On the diagram: Coast and Valley."/>
+<circle class="st" cx="648.0" cy="1104.0" r="8.0" data-tip="Del Sol|Substation named DEL SOL in the source, near Rio Grande City, Starr County. 4 345 kV lines end there in the source. On the diagram: Coast and Valley."/>
+<circle class="st" cx="768.0" cy="1104.0" r="8.0" data-tip="North Edinburg|Substation named NORTH EDINBURG in the source, near Edinburg, Hidalgo County. 3 345 kV lines end there in the source. On the diagram: Coast and Valley."/>
+<circle class="st" cx="888.0" cy="1104.0" r="8.0" data-tip="Rio Hondo|Substation named RIO HONDO in the source, near Rio Hondo, Cameron County. 3 345 kV lines end there in the source. On the diagram: Coast and Valley."/>
+<circle class="st" cx="848.0" cy="944.0" r="8.0" data-tip="Pawnee|Substation named PAWNEE in the source, near Lenz, Karnes County. 4 345 kV lines end there in the source. On the diagram: Coast and Valley."/></g><g font-size="14.4"><text class="lb" x="464.8" y="68.9" text-anchor="start">Gray</text>
+<text class="lb" x="311.2" y="68.9" text-anchor="end">Alibates</text>
+<text class="lb" x="311.2" y="188.9" text-anchor="end">Tule Canyon</text>
+<text class="lb" x="311.2" y="308.9" text-anchor="end">Cottonwood</text>
+<text class="lb" x="311.2" y="388.9" text-anchor="end">Dermott</text>
+<text class="lb" x="351.2" y="428.9" text-anchor="end">Tonkawa</text>
+<text class="lb" x="448.0" y="439.2" text-anchor="middle">Sweetwater East</text>
+<text class="lb" x="460.6" y="611.5" text-anchor="start">San Angelo Red Creek</text>
+<text class="lb" x="504.8" y="188.9" text-anchor="start">Tesla</text>
+<text class="lb" x="544.8" y="228.9" text-anchor="start">Edith Clark</text>
+<text class="lb" x="511.2" y="348.9" text-anchor="end">Clear Crossing</text>
+<text class="lb" x="728.0" y="279.2" text-anchor="middle">Jacksboro</text>
+<text class="lb" x="808.0" y="319.2" text-anchor="middle">Parker</text>
+<text class="lb" x="168.0" y="479.2" text-anchor="middle">Odessa</text>
+<text class="lb" x="528.0" y="497.7" text-anchor="middle">Abilene Mulberry Creek</text>
+<text class="lb" x="208.0" y="657.7" text-anchor="middle">Bakersfield</text>
+<text class="lb" x="368.0" y="657.7" text-anchor="middle">Big Hill</text>
+<text class="lb" x="528.0" y="777.7" text-anchor="middle">Edison</text>
+<text class="lb" x="648.0" y="759.2" text-anchor="middle">Kendall</text>
+<text class="lb" x="824.8" y="788.9" text-anchor="start">Zorn</text>
+<text class="lb" x="595.4" y="565.4" text-anchor="end">Brown</text>
+<text class="lb" x="768.0" y="559.2" text-anchor="middle">Killeen</text>
+<text class="lb" x="904.8" y="628.9" text-anchor="start">Temple Switching</text>
+<text class="lb" x="1024.8" y="588.9" text-anchor="start">Twin Oak</text>
+<text class="lb" x="1184.8" y="748.9" text-anchor="start">Singleton</text>
+<text class="lb" x="808.0" y="537.7" text-anchor="middle">Comanche Peak</text>
+<text class="lb" x="928.0" y="399.2" text-anchor="middle">Cedar Hill SW</text>
+<text class="lb" x="944.8" y="508.9" text-anchor="start">Venus</text>
+<text class="lb" x="904.8" y="708.9" text-anchor="start">Austrop</text>
+<text class="lb" x="864.8" y="748.9" text-anchor="start">Lytton Springs</text>
+<text class="lb" x="711.2" y="828.9" text-anchor="end">Skyline</text>
+<text class="lb" x="711.2" y="908.9" text-anchor="end">Calaveras</text>
+<text class="lb" x="848.0" y="457.7" text-anchor="middle">Everman</text>
+<text class="lb" x="1008.0" y="457.7" text-anchor="middle">Watermill</text>
+<text class="lb" x="1104.8" y="428.9" text-anchor="start">Tri-Corner</text>
+<text class="lb" x="1144.8" y="388.9" text-anchor="start">Forney SW</text>
+<text class="lb" x="1144.8" y="308.9" text-anchor="start">Royse</text>
+<text class="lb" x="1144.8" y="228.9" text-anchor="start">Farmersville</text>
+<text class="lb" x="1048.0" y="159.2" text-anchor="middle">Anna</text>
+<text class="lb" x="915.4" y="245.4" text-anchor="end">Northwest Carrollton</text>
+<text class="lb" x="1184.8" y="508.9" text-anchor="start">Trinidad</text>
+<text class="lb" x="1184.8" y="588.9" text-anchor="start">Big Brown</text>
+<text class="lb" x="1184.8" y="668.9" text-anchor="start">Jewett</text>
+<text class="lb" x="1071.2" y="828.9" text-anchor="end">Zenith</text>
+<text class="lb" x="1220.6" y="805.4" text-anchor="start">King Reit</text>
+<text class="lb" x="1304.8" y="868.9" text-anchor="start">Cedar Bayou Plant</text>
+<text class="lb" x="1304.8" y="948.9" text-anchor="start">PH Robinson</text>
+<text class="lb" x="1208.0" y="1017.7" text-anchor="middle">Oasis</text>
+<text class="lb" x="1140.6" y="1011.5" text-anchor="start">Parish</text>
+<text class="lb" x="1071.2" y="908.9" text-anchor="end">O'Brien</text>
+<text class="lb" x="1008.0" y="1057.7" text-anchor="middle">Sotex5</text>
+<text class="lb" x="824.8" y="868.9" text-anchor="start">Elm Creek</text>
+<text class="lb" x="671.2" y="948.9" text-anchor="end">San Miguel</text>
+<text class="lb" x="591.2" y="1028.9" text-anchor="end">Cenizo</text>
+<text class="lb" x="648.0" y="1137.7" text-anchor="middle">Del Sol</text>
+<text class="lb" x="768.0" y="1137.7" text-anchor="middle">North Edinburg</text>
+<text class="lb" x="888.0" y="1137.7" text-anchor="middle">Rio Hondo</text>
+<text class="lb" x="835.4" y="971.5" text-anchor="end">Pawnee</text></g></svg></div>
+</div>
+<div id="tip"></div>
+<script>(function(){var t=document.getElementById('tip'),pin=null;
+function show(el,x,y){var p=el.getAttribute('data-tip').split('|');t.innerHTML='<b></b><span></span>';t.firstChild.textContent=p[0];t.lastChild.textContent=p[1]||'';t.style.display='block';
+ var w=t.offsetWidth,h=t.offsetHeight,X=Math.min(Math.max(8,x+14),innerWidth-w-8),Y=y+16+h>innerHeight?y-h-12:y+16;t.style.left=X+'px';t.style.top=Math.max(8,Y)+'px';}
+document.querySelectorAll('[data-tip]').forEach(function(el){
+ el.addEventListener('mousemove',function(e){if(!pin)show(el,e.clientX,e.clientY);});
+ el.addEventListener('mouseleave',function(){if(!pin)t.style.display='none';});
+ el.addEventListener('click',function(e){e.stopPropagation();pin=el;show(el,e.clientX,e.clientY);});});
+document.addEventListener('click',function(){pin=null;t.style.display='none';});
+var s=document.getElementById('stage');s.addEventListener('scroll',function(){pin=null;t.style.display='none';});
+if(matchMedia('(max-width:900px)').matches){var b=document.querySelector('.below'),w=document.querySelector('.wrap');w.appendChild(b);s.scrollLeft=(s.scrollWidth-s.clientWidth)*.55;}
+})();</script>
+</body>
+</html>

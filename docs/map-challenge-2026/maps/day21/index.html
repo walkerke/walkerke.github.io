@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<style>body{background-color:white;}</style>
+<script src="lib/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.34.2/mapbox-gl.css" rel="stylesheet" />
+<link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.css" rel="stylesheet" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.34.2/mapbox-gl.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.1/mapbox-gl-draw.css" rel="stylesheet" />
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.1/mapbox-gl-draw.js"></script>
+<script src="lib/freehand-mode-1.0.0/freehand-mode.js"></script>
+<script src="lib/rectangle-mode-1.0.0/rectangle-mode.js"></script>
+<script src="lib/radius-mode-1.0.0/radius-mode.js"></script>
+<script src="lib/terra-draw-1.32.2/terra-draw.umd.js"></script>
+<script src="lib/terra-draw-mapbox-gl-adapter-1.4.0/terra-draw-mapbox-gl-adapter.umd.js"></script>
+<link href="lib/mapgl-terra-draw-control-1.1.0/terra-draw-control.css" rel="stylesheet" />
+<script src="lib/mapgl-terra-draw-control-1.1.0/terra-draw-curve-mode.js"></script>
+<script src="lib/mapgl-terra-draw-control-1.1.0/terra-draw-control.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" rel="stylesheet" />
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+<script src="lib/mapbox-gl-globe-minimap-1.2.1/bundle.js"></script>
+<link href="lib/legend-interactivity-1.0.0/legend-interactivity.css" rel="stylesheet" />
+<script src="lib/legend-interactivity-1.0.0/legend-interactivity.js"></script>
+<script src="lib/mapgl-expressions-1.0.0/mapgl-expressions.js"></script>
+<script src="lib/mapgl-cluster-donut-1.0.0/cluster-donut.js"></script>
+<script src="lib/mapboxgl_compare-binding-0.5.3.9000/mapboxgl_compare.js"></script>
+<link href="lib/layers-control-2.0.0/layers-control.css" rel="stylesheet" />
+<script src="lib/layers-control-2.0.0/layers-control.js"></script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>What OpenStreetMap shows of Texas pipelines · #30DayMapChallenge Day 21</title>
+  <style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b0f14;font-family:Arial,Helvetica,sans-serif}.html-widget{width:100%!important;height:100%!important}
+.title{position:absolute;top:18px;left:22px;z-index:5;color:#f1f3f5;pointer-events:none;text-shadow:0 1px 4px #000;max-width:min(940px,calc(100% - 60px))}
+.title h1{margin:0;font-size:30px;letter-spacing:-.5px}.title p{margin:6px 0 0;font-size:15px;line-height:1.35;color:#dfe4ea}.title p.tag{font-size:13px;color:#b4bcc6;margin-top:4px}
+.shade{position:absolute;top:0;left:0;right:0;height:180px;z-index:4;pointer-events:none;background:linear-gradient(#05080ce6,#05080c00)}
+.side{position:absolute;top:150px;z-index:5;color:#f1f3f5;font-size:14px;font-weight:bold;background:#0b0f14d9;padding:4px 9px;border-radius:5px;pointer-events:none}
+.side small{display:block;font-weight:normal;font-size:12px;color:#c4ccd6;margin-top:1px}.side.l{left:22px}.side.r{right:22px;text-align:right}
+.src{position:absolute;right:10px;bottom:30px;z-index:6;display:flex;align-items:center;gap:8px;color:#c4ccd6;font-size:12px;background:#0b0f14d9;padding:4px 5px 4px 9px;border-radius:5px}
+.src a,.about a{color:#e9eef0;text-decoration:underline;text-decoration-color:#e9eef080;text-underline-offset:2px}.src a:hover,.about a:hover{color:#fff}
+.src details{position:relative}.src summary{list-style:none;cursor:pointer;color:#f1f3f5;font-weight:bold;background:#27303a;border-radius:4px;padding:3px 8px;user-select:none}
+.src summary::-webkit-details-marker{display:none}.src summary:hover,.src details[open] summary{background:#37434f}
+.src summary:focus-visible{outline:2px solid #f1f3f5;outline-offset:2px}
+.about{position:absolute;right:-5px;bottom:calc(100% + 10px);width:460px;max-width:calc(100vw - 30px);max-height:calc(100vh - 220px);overflow:auto;
+  color:#dfe4ea;font-size:13px;line-height:1.45;background:#0b0f14f5;border:1px solid #37434f;border-radius:8px;padding:12px 14px;box-shadow:0 4px 16px #0008}
+.about h2{margin:0 0 6px;font-size:14px;color:#f1f3f5}.about p{margin:0 0 8px}.about p:last-child{margin-bottom:0}
+.short,.key{display:none}
+@media(max-width:700px){.title{top:10px;left:12px;max-width:calc(100% - 24px)}.title h1{font-size:19px}.title p{font-size:13px}.title p.tag{font-size:11px}
+  .long{display:none}.short{display:inline}.shade{height:150px}#feature-map>div{grid-template-columns:1fr!important;grid-template-rows:1fr 1fr}
+  .side{font-size:12px;left:10px!important;right:auto!important;text-align:left!important}.side.l{top:auto;bottom:calc(50% + 6px)}.side.r{top:calc(50% + 6px)}
+  .src span{display:none}.src{bottom:30px}#leg{display:none!important}
+  .key{display:block;position:absolute;left:10px;right:10px;bottom:64px;z-index:5;color:#f1f3f5;font-size:12px;line-height:1.5;background:#0b0f14d9;padding:6px 9px;border-radius:5px;pointer-events:none}
+  .key i{display:inline-block;width:14px;height:3px;margin:0 4px 3px 0;vertical-align:middle}.key span{white-space:nowrap;margin-right:9px}}</style>
+</head>
+<body>
+<div style="position:relative;width:100vw;height:100vh">
+  <div class="shade"></div>
+  <div class="side l">
+    OpenStreetMap
+    <small>108,884 miles tagged as pipeline</small>
+  </div>
+  <div class="side r">
+    Railroad Commission of Texas
+    <small>315,730 miles in service</small>
+  </div>
+  <div class="key">
+    <span>
+      <i style="background:#4cc9ff"></i>
+      Natural gas
+    </span>
+    <span>
+      <i style="background:#ff8a3d"></i>
+      Crude oil
+    </span>
+    <span>
+      <i style="background:#5dfdaa"></i>
+      NGLs
+    </span>
+    <span>
+      <i style="background:#ffe14d"></i>
+      Refined products
+    </span>
+    <span>
+      <i style="background:#cf84ff"></i>
+      CO₂
+    </span>
+    <span>
+      <i style="background:#ff7fb0"></i>
+      Other
+    </span>
+    <span>
+      <i style="background:#aeb7c0"></i>
+      Not tagged
+    </span>
+    <span>
+      <i style="background:#6f7a86"></i>
+      Abandoned or removed
+    </span>
+  </div>
+  <div class="src">
+    <span>
+      Data: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a> and the <a href="https://www.rrc.texas.gov/resource-center/research/data-sets-available-for-download/" target="_blank" rel="noopener">Railroad Commission of Texas</a></span>
+    <details id="about">
+      <summary>About the data</summary>
+      <div class="about">
+        <h2>About the data</h2>
+        <p>
+          <b>OpenStreetMap: </b>
+          every way tagged man_made=pipeline inside Texas, from OpenStreetMap data through November 10, 2026: 56,664 ways and 108,884 miles, cut at the state line and the shoreline. Color follows the substance tag. 16,691 miles carry no substance tag. 48,186 of the ways were last edited in 2022. Lines mapped only with an abandoned or disused tag are not included. 84 ways (280 miles) carry the pipeline tag along with an abandoned or disused tag; they are drawn, and their tooltips say so. <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>, Open Database License.
+        </p>
+        <p>
+          <b>Railroad Commission: </b>
+          the Commission's pipeline layer as downloaded on June 22, 2026 and compiled by <a href="https://clearforkintelligence.com" target="_blank" rel="noopener">Clearfork Intelligence</a>: 498,369 segments and 365,060 miles, of which 315,730 miles are in service and 49,330 are abandoned or removed. It includes some offshore lines.
+        </p>
+        <p>
+          <b>Why they differ: </b>
+          the two are made in different ways. The Commission's layer is the state's own published pipeline map. OpenStreetMap is drawn and tagged by volunteers, and a line there need not be split, classed or even traced the same way. The totals describe each source. They are not a score of one against the other.
+        </p>
+        <p>
+          <b>One place the difference shows: </b>
+          OpenStreetMap has 49,866 miles tagged as transmission lines, 30,609 tagged as gathering lines and 28,332 with no usage tag. The Commission classes 77,638 in-service miles as transmission, 187,621 as gathering and 50,471 as other system types. The two sets of classes are not defined the same way.
+        </p>
+        <p>
+          <b>Reading the map: </b>
+          at wide zooms both sides leave out short lines. The Commission's side drops its shortest lines where they are dense so the map can load, and OpenStreetMap's side drops lines too short to draw at that scale. Zooming in reveals more detail, though some very short OpenStreetMap ways remain too small to draw.
+        </p>
+      </div>
+    </details>
+  </div>
+  <script>document.addEventListener('click',function(e){var d=document.getElementById('about');if(d&&d.open&&!d.contains(e.target))d.open=false;});
+      document.addEventListener('keydown',function(e){var d=document.getElementById('about');if(e.key==='Escape'&&d&&d.open){d.open=false;d.querySelector('summary').focus();}});</script>
+  <div class="title">
+    <h1>What OpenStreetMap shows of Texas pipelines</h1>
+    <p>
+      <span class="long">Left: every line tagged as a pipeline in OpenStreetMap in Texas, about 109,000 miles. Right: the Railroad Commission of Texas pipeline layer, about 316,000 miles in service. The two are made differently and do not count the same things. Move either map and the other follows.</span>
+      <span class="short">Top: pipelines in OpenStreetMap. Bottom: the Railroad Commission of Texas pipeline layer. Move either map and the other follows.</span>
+    </p>
+    <p class="tag">#30DayMapChallenge Day 21: OpenStreetMap</p>
+  </div>
+  <div id="feature-map" style="width:100%;height:500px;" class="mapboxgl_compare html-widget"></div>
+  <script type="application/json" data-for="feature-map">{"x":{"map1":{"style":"mapbox://styles/mapbox/standard","center":[-100.1,31.35],"zoom":4.95,"bearing":0,"pitch":0,"projection":"globe","parallels":null,"access_token":"pk.eyJ1Ijoia3dhbGtlcnRjdSIsImEiOiJjbXZ6a3FnZzcwMGY3MzRvaDNwZDAzZjE1In0.3sxcPs3M7maeGtwkl8FZQQ","additional_params":{"config":{"basemap":{"lightPreset":"night","theme":"monochrome","showPointOfInterestLabels":false,"showTransitLabels":false,"showRoadLabels":false}},"minZoom":4,"maxZoom":14,"preserveDrawingBuffer":true,"fadeDuration":0,"attributionControl":{"customAttribution":"Pipelines: © OpenStreetMap contributors"}},"sources":[{"id":"osm","type":"vector","url":"web/osm_pipelines.pmtiles"}],"layers":[{"id":"osm-lines","type":"line","source":"osm","source_layer":"osm","paint":{"line-color":["match",["get","grp"],1,"#4cc9ff",2,"#ff8a3d",3,"#5dfdaa",4,"#ffe14d",5,"#cf84ff",6,"#ff7fb0",7,"#aeb7c0","#aeb7c0"],"line-emissive-strength":1,"line-opacity":0.9,"line-translate-anchor":"map","line-width":["interpolate",["linear"],["zoom"],5,0.7,9,1.2,13,2.4]},"layout":{"line-sort-key":["-",8,["get","grp"]],"visibility":"visible"},"slot":null,"minzoom":null,"maxzoom":null,"popup":null,"tooltip":["concat","<b>",["get","name"],"<\/b><br>Substance: ",["get","substance"],"<br>Operator: ",["get","operator"],"<br>Usage: ",["get","usage"]," · diameter: ",["get","diameter"],["get","life"],"<br>OpenStreetMap"],"tooltip_style":null,"popup_style":null,"hover_options":null,"before_id":null,"filter":null}]},"map2":{"style":"mapbox://styles/mapbox/standard","center":[-100.1,31.35],"zoom":4.95,"bearing":0,"pitch":0,"projection":"globe","parallels":null,"access_token":"pk.eyJ1Ijoia3dhbGtlcnRjdSIsImEiOiJjbXZ6a3FnZzcwMGY3MzRvaDNwZDAzZjE1In0.3sxcPs3M7maeGtwkl8FZQQ","additional_params":{"config":{"basemap":{"lightPreset":"night","theme":"monochrome","showPointOfInterestLabels":false,"showTransitLabels":false,"showRoadLabels":false}},"minZoom":4,"maxZoom":14,"preserveDrawingBuffer":true,"fadeDuration":0,"attributionControl":{"customAttribution":"Pipelines: Railroad Commission of Texas"}},"sources":[{"id":"rrc","type":"vector","url":"https://clearfork-wells.walker-tiles.com/texas_pipelines_v2.json"}],"layers":[{"id":"rrc-ghost","type":"line","source":"rrc","source_layer":"pipelines","paint":{"line-color":"#6f7a86","line-emissive-strength":1,"line-opacity":0.7,"line-translate-anchor":"map","line-width":["interpolate",["linear"],["zoom"],5,0.7,9,1.2,13,2.4]},"layout":{"visibility":"visible"},"slot":null,"minzoom":null,"maxzoom":null,"popup":null,"tooltip":["concat","<b>",["get","cmdty_desc"],"<\/b><br>",["get","operator"],"<br>",["get","systype_label"]," · ",["get","status"],"<br>Railroad Commission of Texas"],"tooltip_style":null,"popup_style":null,"hover_options":null,"before_id":null,"filter":["!=",["get","status"],"In Service"]},{"id":"rrc-lines","type":"line","source":"rrc","source_layer":"pipelines","paint":{"line-color":["match",["get","commodity"],"Natural Gas","#4cc9ff","Crude Oil","#ff8a3d","Highly Volatile Liquids","#5dfdaa","Refined Products","#ffe14d","Carbon Dioxide","#cf84ff","Other","#ff7fb0","#ff7fb0"],"line-emissive-strength":1,"line-opacity":0.9,"line-translate-anchor":"map","line-width":["interpolate",["linear"],["zoom"],5,0.7,9,1.2,13,2.4]},"layout":{"visibility":"visible"},"slot":null,"minzoom":null,"maxzoom":null,"popup":null,"tooltip":["concat","<b>",["get","cmdty_desc"],"<\/b><br>",["get","operator"],"<br>",["get","systype_label"]," · ",["get","status"],"<br>Railroad Commission of Texas"],"tooltip_style":null,"popup_style":null,"hover_options":null,"before_id":null,"filter":["==",["get","status"],"In Service"]}]},"elementId":"feature-map","mousemove":false,"orientation":"vertical","mode":"sync","swiper_color":"#f1f3f5","laser":{"enabled":false,"color":"#ff2d55","size":14},"compare_legends":[{"html":"<div id=\"leg\" class=\"mapboxgl-legend bottom-left\"><h2 class=\"mapgl-legend-title\">What the line carries<\/h2><div class=\"legend-item\"><div class=\"legend-patch-container\" style=\"width:30px; height:12px;\"><span class=\"legend-color legend-shape-line\" style=\"background-color:#4cc9ff; width: 30px; height: 12px; display: block;\"><\/span><\/div><span class=\"legend-text\">Natural gas<\/span><\/div><div class=\"legend-item\"><div class=\"legend-patch-container\" style=\"width:30px; height:12px;\"><span class=\"legend-color legend-shape-line\" style=\"background-color:#ff8a3d; width: 30px; height: 12px; display: block;\"><\/span><\/div><span class=\"legend-text\">Crude oil<\/span><\/div><div class=\"legend-item\"><div class=\"legend-patch-container\" style=\"width:30px; height:12px;\"><span class=\"legend-color legend-shape-line\" style=\"background-color:#5dfdaa; width: 30px; height: 12px; display: block;\"><\/span><\/div><span class=\"legend-text\">NGLs and other HVLs<\/span><\/div><div class=\"legend-item\"><div class=\"legend-patch-container\" style=\"width:30px; height:12px;\"><span class=\"legend-color legend-shape-line\" style=\"background-color:#ffe14d; width: 30px; height: 12px; display: block;\"><\/span><\/div><span class=\"legend-text\">Refined products<\/span><\/div><div class=\"legend-item\"><div class=\"legend-patch-container\" style=\"width:30px; height:12px;\"><span class=\"legend-color legend-shape-line\" style=\"background-color:#cf84ff; width: 30px; height: 12px; display: block;\"><\/span><\/div><span class=\"legend-text\">CO₂<\/span><\/div><div class=\"legend-item\"><div class=\"legend-patch-container\" style=\"width:30px; height:12px;\"><span class=\"legend-color legend-shape-line\" style=\"background-color:#ff7fb0; width: 30px; height: 12px; display: block;\"><\/span><\/div><span class=\"legend-text\">Other<\/span><\/div><div class=\"legend-item\"><div class=\"legend-patch-container\" style=\"width:30px; height:12px;\"><span class=\"legend-color legend-shape-line\" style=\"background-color:#aeb7c0; width: 30px; height: 12px; display: block;\"><\/span><\/div><span class=\"legend-text\">No substance tagged (OpenStreetMap)<\/span><\/div><div class=\"legend-item\"><div class=\"legend-patch-container\" style=\"width:30px; height:12px;\"><span class=\"legend-color legend-shape-line\" style=\"background-color:#6f7a86; width: 30px; height: 12px; display: block;\"><\/span><\/div><span class=\"legend-text\">Abandoned or removed (Railroad Commission)<\/span><\/div><\/div>","css":"\n    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');\n    #leg h2 {\n      font-size: 14px;\n      font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;\n      line-height: 20px;\n      margin-bottom: 10px;\n      margin-top: 0px;\n      white-space: nowrap;\n      max-width: 100%;\n      overflow: hidden;\n      text-overflow: ellipsis;\n    }\n    #leg {\n      position: absolute;\n      border-radius: 10px;\n      margin: 10px;\n      width: 310;\n      background-color: #ffffff80;\n      padding: 10px 20px;\n      z-index: 1002;\n    }\n    #leg.top-left {\n      top: 10px;\n      left: 10px;\n    }\n    #leg.bottom-left {\n      bottom: 10px;\n      left: 10px;\n    }\n    #leg.top-right {\n      top: 10px;\n      right: 10px;\n    }\n    #leg.bottom-right {\n      bottom: 10px;\n      right: 10px;\n    }\n    #leg .legend-item {\n      display: flex;\n      align-items: center;\n      margin-bottom: 5px;\n      font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;\n      white-space: nowrap;\n      max-width: 100%;\n      overflow: hidden;\n    }\n    #leg .legend-patch-container {\n      display: flex;\n      justify-content: center;\n      align-items: center;\n      margin-right: 5px;\n    }\n    #leg .legend-color {\n      display: inline-block;\n      flex-shrink: 0;\n    }\n    #leg .legend-shape-line {\n      align-self: center;\n      image-rendering: pixelated;\n      image-rendering: -moz-crisp-edges;\n      image-rendering: crisp-edges;\n      transform: translateZ(0);\n      -webkit-transform: translateZ(0);\n    }\n    #leg .legend-shape-hexagon {\n      display: block;\n    }\n    #leg .legend-shape-custom {\n      display: block;\n    }\n    #leg .legend-text {\n      flex-grow: 1;\n      text-overflow: ellipsis;\n      overflow: hidden;\n    }\n  \n#leg {\n  background-color: rgba(11, 15, 20, 0.90) !important;\n  border: 0px solid gray !important;\n  border-radius: 6px !important;\n}\n#leg h2 {\n  color: #ffffff !important;\n  font-size: 13px !important;\n}\n#leg .legend-text {\n  color: #f1f3f5 !important;\n  font-size: 13px !important;\n}\n#leg .legend-labels span {\n  color: #f1f3f5 !important;\n  font-size: 13px !important;\n}\n#leg .mapgl-legend-collapse-btn {\n  color: #f1f3f5 !important;\n}\n","target":"compare","add":false,"interactivity":null}]},"evals":[],"jsHooks":[]}</script>
+</div>
+</body>
+</html>

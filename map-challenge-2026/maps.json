@@ -291,15 +291,18 @@
     "day": 19,
     "theme": "Smell",
     "date": "2026-11-19",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "Sour gas in Texas",
+    "blurb": "For the Smell prompt: hydrogen sulfide, the gas known for its rotten-egg odor at low concentrations. Each dot is one of 153,770 wells on a lease with a hydrogen sulfide certificate on file with the Railroad Commission of Texas, colored by the concentration reported on the certificate, from 0 ppm recorded to more than 10%. The values are what the certificates report for the lease, not measurements of the air.",
+    "alt": "A dark map of Texas with wells drawn as small dots in purple, teal, green and yellow. They cover the Permian Basin in West Texas, much of it green and yellow, a band across South Texas from the Rio Grande toward Victoria, the eastern Panhandle, and scattered patches in East Texas. A legend gives the colors as the hydrogen sulfide concentration reported on the lease’s certificate, from 0 ppm recorded (6,016 wells) to more than 10% (4,732 wells).",
+    "tags": [
+      "O&G",
+      "Texas"
+    ],
+    "image": "map-challenge-2026/img/day19.jpg",
+    "thumb": "map-challenge-2026/img/day19-thumb.jpg",
+    "live": "map-challenge-2026/maps/day19/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 20,
@@ -319,71 +322,83 @@
     "day": 21,
     "theme": "OpenStreetMap",
     "date": "2026-11-21",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "What OpenStreetMap shows of Texas pipelines",
+    "blurb": "Two maps of Texas side by side that move together. Left: every line tagged as a pipeline in OpenStreetMap, about 109,000 miles, colored by what its tags say it carries. Right: the Railroad Commission of Texas pipeline layer, about 316,000 miles in service. The two are made in different ways and do not count the same things, so each total describes its own source rather than scoring one against the other.",
+    "alt": "Two dark maps of Texas side by side. On the left, OpenStreetMap’s pipelines, labeled 108,884 miles tagged as pipeline: a sparse web of lines, many of them gray for no substance tagged, densest along the Gulf Coast and in South Texas. On the right, the Railroad Commission of Texas layer, labeled 315,730 miles in service: a much denser web of blue natural gas lines with orange crude oil and green NGL lines, filling the Panhandle, the Permian Basin and the eastern half of the state. A shared legend gives the colors by what the line carries.",
+    "tags": [
+      "O&G",
+      "Texas"
+    ],
+    "image": "map-challenge-2026/img/day21.jpg",
+    "thumb": "map-challenge-2026/img/day21-thumb.jpg",
+    "live": "map-challenge-2026/maps/day21/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 22,
     "theme": "Projections",
     "date": "2026-11-22",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "Where U.S. LNG went in 2025",
+    "blurb": "The United States exported 5,509 billion cubic feet of liquefied natural gas in 2025, from the Energy Information Administration. Each line joins an export terminal to a country it sent gas to, drawn as a great circle on an Equal Earth projection, and each circle is sized by what that country received. The Netherlands received the most, 646 billion cubic feet. The lines are trade connections, not shipping routes.",
+    "alt": "A dark world map on an Equal Earth projection. Thin blue lines fan out from a cluster of white terminal dots on the U.S. Gulf Coast: a thick bundle east across the Atlantic to Europe, where the largest gold circles sit, and other lines arcing to South America, the Middle East, India and East Asia. A legend gives circle sizes of 25, 200 and 600 billion cubic feet.",
+    "tags": [
+      "O&G"
+    ],
+    "image": "map-challenge-2026/img/day22.jpg",
+    "thumb": "map-challenge-2026/img/day22-thumb.jpg",
+    "live": "map-challenge-2026/maps/day22/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 23,
     "theme": "Taste",
     "date": "2026-11-23",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "Corn into fuel",
+    "blurb": "For the Taste prompt. The United States had 189 fuel ethanol plants at the start of 2026, with the capacity to make 18.4 billion gallons a year, from the Energy Information Administration. 175 of them are in the Midwest. Gold shows the share of land mapped as corn in 2025 in the USDA’s Cropland Data Layer, a year when farmers planted 98.7 million acres of it.",
+    "alt": "A light map of the contiguous United States with a broad gold band across the Corn Belt, from the Dakotas and Nebraska through Iowa, Minnesota, Illinois and Indiana into Ohio. Green dots mark ethanol plants, sized by capacity, packed into the same band and thinning out beyond it, with a few in Texas, California and the Southeast. Legends give the corn share from 3% to 60% or more and plant capacities of 50, 150 and 400 million gallons a year.",
+    "tags": [
+      "Infra"
+    ],
+    "image": "map-challenge-2026/img/day23.jpg",
+    "thumb": "map-challenge-2026/img/day23-thumb.jpg",
+    "live": "map-challenge-2026/maps/day23/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 24,
     "theme": "Network",
     "date": "2026-11-24",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "Electricity moving between grid operators",
+    "blurb": "Electricity in the Lower 48 is managed by balancing authorities, each matching supply and demand in its own area. Each arrow is the net interchange reported between two neighboring authorities in September 2026, from the Energy Information Administration’s hourly Form EIA-930 reports, and points to the one that received more. Hover an arrow for how often it ran that way and what each side reported.",
+    "alt": "A dark map of the United States with circles for the 60 U.S. balancing authorities and their Canadian and Mexican neighbors, placed near the middle of the areas they serve and joined by arrows shaded from dark teal to pale yellow. The widest, lightest arrows run from PJM toward MISO and New York, from MISO toward TVA, from Manitoba into MISO, and among the authorities of the Pacific Northwest, California and Arizona. A key reads net interchange reported, September 2026, with the largest at 3,163 GWh.",
+    "tags": [
+      "Infra"
+    ],
+    "image": "map-challenge-2026/img/day24.jpg",
+    "thumb": "map-challenge-2026/img/day24-thumb.jpg",
+    "live": "map-challenge-2026/maps/day24/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 25,
     "theme": "Is this a map?",
     "date": "2026-11-25",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "The Texas grid as a transit diagram",
+    "blurb": "For the prompt Is this a map? 58 of Texas’s 345 kV substations drawn as stations on 9 colored lines, in the style of a transit diagram. Two stations are joined where the archived HIFLD data has 345 kV transmission lines running between them. It is not to scale, and it leaves out most of the grid.",
+    "alt": "A transit-style diagram on a dark background: nine colored lines with white station rings, drawn only horizontally, vertically and at 45 degrees. The lines include Panhandle, West Texas, Dallas-Fort Worth loop, Houston loop and Coast and Valley, with stations such as Odessa, Parker, Zorn, Singleton and Rio Hondo. A key on the left lists each line and its ends.",
+    "tags": [
+      "Infra",
+      "Texas"
+    ],
+    "image": "map-challenge-2026/img/day25.jpg",
+    "thumb": "map-challenge-2026/img/day25-thumb.jpg",
+    "live": "map-challenge-2026/maps/day25/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 26,

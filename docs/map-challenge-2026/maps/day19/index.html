@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<style>body{background-color:white;}</style>
+<script src="lib/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.34.2/mapbox-gl.css" rel="stylesheet" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.34.2/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.1/mapbox-gl-draw.css" rel="stylesheet" />
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.1/mapbox-gl-draw.js"></script>
+<script src="lib/freehand-mode-1.0.0/freehand-mode.js"></script>
+<script src="lib/rectangle-mode-1.0.0/rectangle-mode.js"></script>
+<script src="lib/radius-mode-1.0.0/radius-mode.js"></script>
+<script src="lib/bezier-mode-1.1.0/bezier-mode.js"></script>
+<script src="lib/terra-draw-1.32.2/terra-draw.umd.js"></script>
+<script src="lib/terra-draw-mapbox-gl-adapter-1.4.0/terra-draw-mapbox-gl-adapter.umd.js"></script>
+<link href="lib/mapgl-terra-draw-control-1.1.0/terra-draw-control.css" rel="stylesheet" />
+<script src="lib/mapgl-terra-draw-control-1.1.0/terra-draw-curve-mode.js"></script>
+<script src="lib/mapgl-terra-draw-control-1.1.0/terra-draw-control.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" rel="stylesheet" />
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+<script src="lib/mapbox-gl-globe-minimap-1.2.1/bundle.js"></script>
+<script src="lib/turf-7.3.0/turf.min.js"></script>
+<script src="lib/turf-operations-1.0.0/turf-operations.js"></script>
+<script src="lib/html2canvas-1.4.1/html2canvas.min.js"></script>
+<script src="lib/screenshot-1.0.0/screenshot.js"></script>
+<link href="lib/legend-interactivity-1.0.0/legend-interactivity.css" rel="stylesheet" />
+<script src="lib/legend-interactivity-1.0.0/legend-interactivity.js"></script>
+<script src="lib/mapgl-slider-1.0.0/slider.js"></script>
+<link href="lib/mapgl-slider-css-1.0.0/slider-control.css" rel="stylesheet" />
+<script src="lib/mapgl-expressions-1.0.0/mapgl-expressions.js"></script>
+<script src="lib/mapgl-cluster-donut-1.0.0/cluster-donut.js"></script>
+<script src="lib/mapboxgl-binding-0.5.3.9000/mapboxgl.js"></script>
+<link href="lib/layers-control-2.0.0/layers-control.css" rel="stylesheet" />
+<script src="lib/layers-control-2.0.0/layers-control.js"></script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Sour gas in Texas · #30DayMapChallenge Day 19</title>
+  <style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b0f14;font-family:Arial,Helvetica,sans-serif}.html-widget{width:100%!important;height:100%!important}
+.title{position:absolute;top:18px;left:22px;z-index:5;color:#f1f3f5;pointer-events:none;text-shadow:0 1px 4px #000;max-width:min(880px,calc(100% - 60px))}
+.title h1{margin:0;font-size:30px;letter-spacing:-.5px}.title p{margin:6px 0 0;font-size:15px;line-height:1.35;color:#dfe4ea}.title p.tag{font-size:13px;color:#b4bcc6;margin-top:4px}
+.shade{position:absolute;top:0;left:0;right:0;height:170px;z-index:4;pointer-events:none;background:linear-gradient(#05080ce6,#05080c00)}
+.src{position:absolute;right:10px;bottom:30px;z-index:6;display:flex;align-items:center;gap:8px;color:#c4ccd6;font-size:12px;background:#0b0f14d9;padding:4px 5px 4px 9px;border-radius:5px}
+.src a,.about a{color:#e9eef0;text-decoration:underline;text-decoration-color:#e9eef080;text-underline-offset:2px}.src a:hover,.about a:hover{color:#fff}
+.src details{position:relative}.src summary{list-style:none;cursor:pointer;color:#f1f3f5;font-weight:bold;background:#27303a;border-radius:4px;padding:3px 8px;user-select:none}
+.src summary::-webkit-details-marker{display:none}.src summary:hover,.src details[open] summary{background:#37434f}
+.src summary:focus-visible{outline:2px solid #f1f3f5;outline-offset:2px}
+.about{position:absolute;right:-5px;bottom:calc(100% + 10px);width:440px;max-width:calc(100vw - 30px);max-height:calc(100vh - 220px);overflow:auto;
+  color:#dfe4ea;font-size:13px;line-height:1.45;background:#0b0f14f5;border:1px solid #37434f;border-radius:8px;padding:12px 14px;box-shadow:0 4px 16px #0008}
+.about h2{margin:0 0 6px;font-size:14px;color:#f1f3f5}.about p{margin:0 0 8px}.about p:last-child{margin-bottom:0}
+.short{display:none}
+@media(max-width:700px){.title{top:10px;left:12px;max-width:calc(100% - 24px)}.title h1{font-size:20px}.title p{font-size:13px}.title p.tag{font-size:11px}
+  .long{display:none}.short{display:inline}.shade{height:150px}.src span{display:none}.src{bottom:30px}#leg{bottom:62px!important}}</style>
+</head>
+<body>
+<div style="position:relative;width:100vw;height:100vh">
+  <div class="shade"></div>
+  <div class="src">
+    <span>
+      Data: <a href="https://www.rrc.texas.gov/oil-and-gas/research-and-statistics/field-data/hydrogen-sulfide-h2s/" target="_blank" rel="noopener">Railroad Commission of Texas</a> H-9 certificates, July 2026, with well records compiled by <a href="https://clearforkintelligence.com" target="_blank" rel="noopener">Clearfork Intelligence</a></span>
+    <details id="about">
+      <summary>About the data</summary>
+      <div class="about">
+        <h2>About the data</h2>
+        <p>
+          <b>Certificates: </b>
+          operators working where there is hydrogen sulfide file a Form H-9 certificate with the Railroad Commission of Texas under Statewide Rule 36. Each one reports a hydrogen sulfide concentration for a lease or facility, in parts per million. This is the Commission's <a href="https://www.rrc.texas.gov/oil-and-gas/research-and-statistics/field-data/hydrogen-sulfide-h2s/" target="_blank" rel="noopener">H-9 table</a>, in the file dated July 2026.
+        </p>
+        <p>
+          <b>What is drawn: </b>
+          for each oil lease or gas well, the most recently approved or amended record is taken, and kept if it is marked active and has no termination date. That is 57,200 leases. These are selections from the July 2026 table, not independently verified current operating conditions. 41,282 of them could be tied by lease number to wells that have coordinates and are not marked plugged, and those 153,770 wells are the dots. Wells on the same oil lease share the lease's value.
+        </p>
+        <p>
+          <b>What is missing: </b>
+          the link from certificate to well is incomplete. About 76% of gas-well certificates and 93% of oil-lease certificates found a well record. 78 more lease records were set aside because the table identifies their lease in two ways that disagree.
+        </p>
+        <p>
+          <b>Units: </b>
+          parts per million. 10,000 ppm is 1%. Zero means the table records 0 ppm; it does not establish that every associated well was tested or that hydrogen sulfide is absent.
+        </p>
+        <p>
+          <b>Injection: </b>
+          274 of the selected lease records cover hydrogen sulfide injection, accounting for 19,421 wells on the map. Those values are not necessarily the composition of gas the wells naturally produce. Their tooltips say so.
+        </p>
+        <p>
+          <b>What it can't tell you: </b>
+          values are concentrations reported on H-9 certificates for leases or facilities, and a certificate may be decades old. They do not measure outdoor air, smell or exposure.
+        </p>
+        <p>
+          <b>Well records: </b>
+          Railroad Commission wellbore records compiled by <a href="https://clearforkintelligence.com" target="_blank" rel="noopener">Clearfork Intelligence</a>, October 2026.
+        </p>
+      </div>
+    </details>
+  </div>
+  <script>document.addEventListener('click',function(e){var d=document.getElementById('about');if(d&&d.open&&!d.contains(e.target))d.open=false;});
+      document.addEventListener('keydown',function(e){var d=document.getElementById('about');if(e.key==='Escape'&&d&&d.open){d.open=false;d.querySelector('summary').focus();}});</script>
+  <div class="title">
+    <h1>Sour gas in Texas</h1>
+    <p>
+      <span class="long">Hydrogen sulfide is known for its rotten-egg odor at low concentrations. Each dot is one of 153,770 wells on a lease with a hydrogen sulfide certificate on file with the Railroad Commission of Texas. Color is the concentration reported on the certificate, not in the air.</span>
+      <span class="short">Wells on leases with a hydrogen sulfide certificate on file with the state, colored by the concentration reported on the certificate.</span>
+    </p>
+    <p class="tag">#30DayMapChallenge Day 19: Smell</p>
+  </div>
+  <div id="htmlwidget-7f5b592be9417f78fac3" style="width:1600px;height:900px;" class="mapboxgl html-widget"></div>
+  <script type="application/json" data-for="htmlwidget-7f5b592be9417f78fac3">{"x":{"style":"mapbox://styles/mapbox/standard","center":[-99.59999999999999,31.3],"zoom":5.5,"bearing":0,"pitch":0,"projection":"globe","parallels":null,"access_token":"pk.eyJ1Ijoia3dhbGtlcnRjdSIsImEiOiJjbXZ6a3FnZzcwMGY3MzRvaDNwZDAzZjE1In0.3sxcPs3M7maeGtwkl8FZQQ","additional_params":{"config":{"basemap":{"lightPreset":"night","theme":"monochrome","showPointOfInterestLabels":false,"showTransitLabels":false,"showRoadLabels":false}},"minZoom":4,"maxZoom":15,"preserveDrawingBuffer":true,"fadeDuration":0,"attributionControl":{"customAttribution":"Hydrogen sulfide certificates: Railroad Commission of Texas, July 2026"},"elementId":"feature-map"},"sources":[{"id":"sour","type":"vector","url":"web/sour_wells.pmtiles"}],"layers":[{"id":"wells","type":"circle","source":"sour","source_layer":"wells","paint":{"circle-color":["match",["get","k"],1,"#6b7480",2,"#46327e",3,"#277f8e",4,"#1fa187",5,"#a0da39",6,"#fde725","#888888"],"circle-emissive-strength":1,"circle-opacity":["interpolate",["linear"],["zoom"],5,0.8,9,0.95],"circle-radius":["interpolate",["linear"],["zoom"],5,1.05,8,1.9,11,3.6,14,6.5],"circle-stroke-color":"#0b0f14","circle-stroke-width":["interpolate",["linear"],["zoom"],9,0,12,0.8],"circle-translate-anchor":"map"},"layout":{"circle-sort-key":["get","ppm"],"visibility":"visible"},"slot":null,"minzoom":null,"maxzoom":null,"popup":null,"tooltip":["concat","<b>",["get","lease"],"<\/b><br>",["get","kind"]," · ",["get","field"],"<br>Hydrogen sulfide concentration reported on the certificate: <b>",["get","ppm_text"],"<\/b>",["get","note"],"<br>Certificate approved or last amended in ",["get","year"]],"tooltip_style":null,"popup_style":null,"hover_options":{"circle_stroke_color":"#ffffff","circle_stroke_width":2},"before_id":null,"filter":null}],"legend_html":"<div id=\"leg\" class=\"mapboxgl-legend bottom-left\"><h2 class=\"mapgl-legend-title\">Hydrogen sulfide reported on the lease's certificate<\/h2><div class=\"legend-item\"><div class=\"legend-patch-container\" style=\"width:11px; height:11px;\"><span class=\"legend-color legend-shape-circle\" style=\"background-color:#6b7480; width: 11px; height: 11px; border-radius: 50%;\"><\/span><\/div><span class=\"legend-text\">0 ppm recorded  (6,016 wells)<\/span><\/div><div class=\"legend-item\"><div class=\"legend-patch-container\" style=\"width:11px; height:11px;\"><span class=\"legend-color legend-shape-circle\" style=\"background-color:#46327e; width: 11px; height: 11px; border-radius: 50%;\"><\/span><\/div><span class=\"legend-text\">Under 100 ppm  (39,058 wells)<\/span><\/div><div class=\"legend-item\"><div class=\"legend-patch-container\" style=\"width:11px; height:11px;\"><span class=\"legend-color legend-shape-circle\" style=\"background-color:#277f8e; width: 11px; height: 11px; border-radius: 50%;\"><\/span><\/div><span class=\"legend-text\">100 to 999 ppm  (18,305 wells)<\/span><\/div><div class=\"legend-item\"><div class=\"legend-patch-container\" style=\"width:11px; height:11px;\"><span class=\"legend-color legend-shape-circle\" style=\"background-color:#1fa187; width: 11px; height: 11px; border-radius: 50%;\"><\/span><\/div><span class=\"legend-text\">1,000 to 9,999 ppm  (38,992 wells)<\/span><\/div><div class=\"legend-item\"><div class=\"legend-patch-container\" style=\"width:11px; height:11px;\"><span class=\"legend-color legend-shape-circle\" style=\"background-color:#a0da39; width: 11px; height: 11px; border-radius: 50%;\"><\/span><\/div><span class=\"legend-text\">1% to 10%  (46,667 wells)<\/span><\/div><div class=\"legend-item\"><div class=\"legend-patch-container\" style=\"width:11px; height:11px;\"><span class=\"legend-color legend-shape-circle\" style=\"background-color:#fde725; width: 11px; height: 11px; border-radius: 50%;\"><\/span><\/div><span class=\"legend-text\">More than 10%  (4,732 wells)<\/span><\/div><\/div>","legend_css":"\n    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');\n    #leg h2 {\n      font-size: 14px;\n      font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;\n      line-height: 20px;\n      margin-bottom: 10px;\n      margin-top: 0px;\n      white-space: nowrap;\n      max-width: 100%;\n      overflow: hidden;\n      text-overflow: ellipsis;\n    }\n    #leg {\n      position: absolute;\n      border-radius: 10px;\n      margin: 10px;\n      width: 300;\n      background-color: #ffffff80;\n      padding: 10px 20px;\n      z-index: 1002;\n    }\n    #leg.top-left {\n      top: 10px;\n      left: 10px;\n    }\n    #leg.bottom-left {\n      bottom: 10px;\n      left: 10px;\n    }\n    #leg.top-right {\n      top: 10px;\n      right: 10px;\n    }\n    #leg.bottom-right {\n      bottom: 10px;\n      right: 10px;\n    }\n    #leg .legend-item {\n      display: flex;\n      align-items: center;\n      margin-bottom: 5px;\n      font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;\n      white-space: nowrap;\n      max-width: 100%;\n      overflow: hidden;\n    }\n    #leg .legend-patch-container {\n      display: flex;\n      justify-content: center;\n      align-items: center;\n      margin-right: 5px;\n    }\n    #leg .legend-color {\n      display: inline-block;\n      flex-shrink: 0;\n    }\n    #leg .legend-shape-line {\n      align-self: center;\n      image-rendering: pixelated;\n      image-rendering: -moz-crisp-edges;\n      image-rendering: crisp-edges;\n      transform: translateZ(0);\n      -webkit-transform: translateZ(0);\n    }\n    #leg .legend-shape-hexagon {\n      display: block;\n    }\n    #leg .legend-shape-custom {\n      display: block;\n    }\n    #leg .legend-text {\n      flex-grow: 1;\n      text-overflow: ellipsis;\n      overflow: hidden;\n    }\n  \n#leg {\n  background-color: rgba(11, 15, 20, 0.90) !important;\n  border: 0px solid gray !important;\n  border-radius: 6px !important;\n}\n#leg h2 {\n  color: #ffffff !important;\n  font-size: 13px !important;\n}\n#leg .legend-text {\n  color: #f1f3f5 !important;\n  font-size: 13px !important;\n}\n#leg .legend-labels span {\n  color: #f1f3f5 !important;\n  font-size: 13px !important;\n}\n#leg .mapgl-legend-collapse-btn {\n  color: #f1f3f5 !important;\n}\n"},"evals":[],"jsHooks":[]}</script>
+</div>
+</body>
+</html>
