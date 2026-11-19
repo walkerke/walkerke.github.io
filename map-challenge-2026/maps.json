@@ -404,29 +404,32 @@
     "day": 26,
     "theme": "Water",
     "date": "2026-11-26",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "Produced water disposal on the Texas side of the Delaware Basin",
+    "blurb": "For the Water prompt. 885 disposal wells on the Texas side of the Delaware Basin injected 3.2 billion barrels of water in 2024, from Railroad Commission of Texas injection reports: 42% of all disposal reported in Texas that year. Numbered circles show where shared recycling hubs would sit to be closest to that water, found with the spopt R package. Move the slider to change the number of hubs from 3 to 10. Distances are straight lines, so this shows a method, not proposed sites.",
+    "alt": "A light map of the Texas side of the Delaware Basin, outlined with a dashed line and filled with dots for disposal wells, each sized by the water it injected in 2024. With the slider at 5 hubs, the wells are colored in five groups, blue, green, red, purple and orange, each joined by thin lines to a numbered hub circle. A table gives the average miles from a barrel to its hub, from 11.6 with 3 hubs to 6.1 with 10.",
+    "tags": [
+      "O&G",
+      "Texas"
+    ],
+    "image": "map-challenge-2026/img/day26.jpg",
+    "thumb": "map-challenge-2026/img/day26-thumb.jpg",
+    "live": "map-challenge-2026/maps/day26/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 27,
     "theme": "New tool",
     "date": "2026-11-27",
-    "title": null,
-    "blurb": null,
-    "alt": null,
+    "title": "What the map challenge added to mapgl",
+    "blurb": "For the New tool prompt: mapgl, the R package behind this month’s maps. When a map needed something the package could not do, the package was changed instead of the map. Fifteen changes landed during the challenge, and thirteen grew out of work on the daily maps. Six have a small live map on the page, each using data from the day that needed it, and all fifteen are in mapgl’s development version.",
+    "alt": "A page of six cards in a grid, each with a title, a line of R code, the challenge day it came from and a small live map: donut clusters of power plant megawatts across Texas, 3D wind turbine models on satellite imagery, a legend mixing a drive-time area and a circle over Dallas-Fort Worth, a jobs-by-sector legend over Houston, colored wells on a light map, and a flow map of electricity interchange across North America.",
     "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "image": "map-challenge-2026/img/day27.jpg",
+    "thumb": "map-challenge-2026/img/day27-thumb.jpg",
+    "live": "map-challenge-2026/maps/day27/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 28,
@@ -446,15 +449,18 @@
     "day": 29,
     "theme": "Raster",
     "date": "2026-11-29",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "The cheapest path across a cost surface",
+    "blurb": "For the Raster prompt: a cost surface of 100 meter cells between Kerrville and Brenham, built from public land cover, elevation, protected area and critical habitat data. The blue line is the cheapest path between two existing substations, found with route_corridor() from the spopt R package: 145 miles against 132 in a straight line, at 34% less modeled cost. It demonstrates a method and is not a proposed line.",
+    "alt": "A raster map of Central Texas from Kerrville to Brenham, shaded from pale cream on open land to dark red-brown in Austin, San Antonio and other costly areas, with dark slate patches for land closed to the route. A dark blue line runs east from the Kendall substation to the Fayetteville substation, bending south of the dashed straight line between them, with two lighter blue alternatives looping north past Bastrop and south past New Braunfels. A legend gives the cost to cross from 1x to 100x or more against flat open land.",
+    "tags": [
+      "Infra",
+      "Texas"
+    ],
+    "image": "map-challenge-2026/img/day29.jpg",
+    "thumb": "map-challenge-2026/img/day29-thumb.jpg",
+    "live": "map-challenge-2026/maps/day29/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 30,

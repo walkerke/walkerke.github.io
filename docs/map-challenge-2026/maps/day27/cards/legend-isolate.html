@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<style>body{background-color:white;}</style>
+<script src="lib/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="lib/maplibre-gl-5.24.0/maplibre-gl.css" rel="stylesheet" />
+<script src="lib/maplibre-gl-5.24.0/maplibre-gl.js"></script>
+<link href="lib/mapbox-gl-draw-1.5.1/mapbox-gl-draw.css" rel="stylesheet" />
+<script src="lib/mapbox-gl-draw-1.5.1/mapbox-gl-draw.js"></script>
+<script src="lib/freehand-mode-1.0.0/freehand-mode.js"></script>
+<script src="lib/rectangle-mode-1.0.0/rectangle-mode.js"></script>
+<script src="lib/radius-mode-1.0.0/radius-mode.js"></script>
+<script src="lib/bezier-mode-1.1.0/bezier-mode.js"></script>
+<script src="lib/terra-draw-1.32.2/terra-draw.umd.js"></script>
+<script src="lib/terra-draw-maplibre-gl-adapter-1.4.1/terra-draw-maplibre-gl-adapter.umd.js"></script>
+<link href="lib/mapgl-terra-draw-control-1.1.0/terra-draw-control.css" rel="stylesheet" />
+<script src="lib/mapgl-terra-draw-control-1.1.0/terra-draw-curve-mode.js"></script>
+<script src="lib/mapgl-terra-draw-control-1.1.0/terra-draw-control.js"></script>
+<link href="lib/maplibre-gl-geocoder-1.5.0/maplibre-gl-geocoder.css" rel="stylesheet" />
+<script src="lib/maplibre-gl-geocoder-1.5.0/maplibre-gl-geocoder.min.js"></script>
+<script src="lib/mapbox-gl-globe-minimap-1.2.1/bundle.js"></script>
+<script src="lib/pmtiles-4.4.0/pmtiles.js"></script>
+<script src="lib/h3j-h3t-0.9.7/h3j_h3t.js"></script>
+<link href="lib/maptiler-geocoding-control-2.1.7/style.css" rel="stylesheet" />
+<script src="lib/maptiler-geocoding-control-2.1.7/maplibregl.umd.js"></script>
+<script src="lib/turf-7.3.0/turf.min.js"></script>
+<script src="lib/turf-operations-1.0.0/turf-operations.js"></script>
+<script src="lib/html2canvas-1.4.1/html2canvas.min.js"></script>
+<script src="lib/screenshot-1.0.0/screenshot.js"></script>
+<link href="lib/legend-interactivity-1.0.0/legend-interactivity.css" rel="stylesheet" />
+<script src="lib/legend-interactivity-1.0.0/legend-interactivity.js"></script>
+<script src="lib/mapgl-slider-1.0.0/slider.js"></script>
+<link href="lib/mapgl-slider-css-1.0.0/slider-control.css" rel="stylesheet" />
+<script src="lib/mapgl-expressions-1.0.0/mapgl-expressions.js"></script>
+<script src="lib/mapgl-cluster-donut-1.0.0/cluster-donut.js"></script>
+<script src="lib/maplibregl-binding-0.5.3.9000/maplibregl.js"></script>
+<link href="lib/layers-control-2.0.0/layers-control.css" rel="stylesheet" />
+<script src="lib/layers-control-2.0.0/layers-control.js"></script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>legend-isolate</title>
+  <style>html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,Helvetica,sans-serif}.html-widget{width:100%!important;height:100%!important}</style>
+</head>
+<body>
+<div id="htmlwidget-11ce7573d48272f8ebf1" style="width:100%;height:100%;" class="maplibregl html-widget"></div>
+<script type="application/json" data-for="htmlwidget-11ce7573d48272f8ebf1">{"x":{"style":"https://api.maptiler.com/maps/dataviz-light/style.json?key=PVhOrNnfJElnZGQ8Cl6z","center":[-95.37,29.76],"zoom":8.6,"bearing":0,"pitch":0,"projection":"globe","additional_params":{"cooperativeGestures":true},"sources":[{"id":"jobs","type":"vector","url":"https://jobs.walker-tiles.com/us_jobs_dots_2024.json"}],"layers":[{"id":"job-dots","type":"circle","source":"jobs","source_layer":"jobs","paint":{"circle-color":["match",["get","naics"],"CNS02","#b15928","CNS04","#f2b134","CNS05","#c2185b","CNS16","#2e7d32","#cccccc"],"circle-opacity":0.8,"circle-radius":["interpolate",["linear"],["zoom"],6,1.2,10,1.8,14,3],"circle-translate-anchor":"map"},"layout":{"visibility":"visible"},"slot":null,"minzoom":null,"maxzoom":null,"popup":null,"tooltip":null,"tooltip_style":null,"popup_style":null,"hover_options":null,"before_id":null,"filter":["in",["get","naics"],["literal",["CNS02","CNS04","CNS05","CNS16"]]]}],"legend_html":"<div id=\"legend-3d8bf\" class=\"mapboxgl-legend top-left\" data-layer-id=\"job-dots\" data-interactive=\"true\" data-legend-type=\"categorical\"><h2 class=\"mapgl-legend-title\">Jobs by sector<\/h2><div class=\"legend-item\" data-value=\"Mining, oil and gas\" data-enabled=\"true\"><div class=\"legend-patch-container\" style=\"width:9px; height:9px;\"><span class=\"legend-color legend-shape-circle\" style=\"background-color:#b15928; width: 9px; height: 9px; border-radius: 50%;\"><\/span><\/div><span class=\"legend-text\">Mining, oil and gas<\/span><\/div><div class=\"legend-item\" data-value=\"Construction\" data-enabled=\"true\"><div class=\"legend-patch-container\" style=\"width:9px; height:9px;\"><span class=\"legend-color legend-shape-circle\" style=\"background-color:#f2b134; width: 9px; height: 9px; border-radius: 50%;\"><\/span><\/div><span class=\"legend-text\">Construction<\/span><\/div><div class=\"legend-item\" data-value=\"Manufacturing\" data-enabled=\"true\"><div class=\"legend-patch-container\" style=\"width:9px; height:9px;\"><span class=\"legend-color legend-shape-circle\" style=\"background-color:#c2185b; width: 9px; height: 9px; border-radius: 50%;\"><\/span><\/div><span class=\"legend-text\">Manufacturing<\/span><\/div><div class=\"legend-item\" data-value=\"Health care\" data-enabled=\"true\"><div class=\"legend-patch-container\" style=\"width:9px; height:9px;\"><span class=\"legend-color legend-shape-circle\" style=\"background-color:#2e7d32; width: 9px; height: 9px; border-radius: 50%;\"><\/span><\/div><span class=\"legend-text\">Health care<\/span><\/div><\/div>","legend_css":"\n    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');\n    #legend-3d8bf h2 {\n      font-size: 14px;\n      font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;\n      line-height: 20px;\n      margin-bottom: 10px;\n      margin-top: 0px;\n      white-space: nowrap;\n      max-width: 100%;\n      overflow: hidden;\n      text-overflow: ellipsis;\n    }\n    #legend-3d8bf {\n      position: absolute;\n      border-radius: 10px;\n      margin: 10px;\n      width: 190;\n      background-color: #ffffff80;\n      padding: 10px 20px;\n      z-index: 1002;\n    }\n    #legend-3d8bf.top-left {\n      top: 10px;\n      left: 10px;\n    }\n    #legend-3d8bf.bottom-left {\n      bottom: 10px;\n      left: 10px;\n    }\n    #legend-3d8bf.top-right {\n      top: 10px;\n      right: 10px;\n    }\n    #legend-3d8bf.bottom-right {\n      bottom: 10px;\n      right: 10px;\n    }\n    #legend-3d8bf .legend-item {\n      display: flex;\n      align-items: center;\n      margin-bottom: 5px;\n      font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;\n      white-space: nowrap;\n      max-width: 100%;\n      overflow: hidden;\n    }\n    #legend-3d8bf .legend-patch-container {\n      display: flex;\n      justify-content: center;\n      align-items: center;\n      margin-right: 5px;\n    }\n    #legend-3d8bf .legend-color {\n      display: inline-block;\n      flex-shrink: 0;\n    }\n    #legend-3d8bf .legend-shape-line {\n      align-self: center;\n      image-rendering: pixelated;\n      image-rendering: -moz-crisp-edges;\n      image-rendering: crisp-edges;\n      transform: translateZ(0);\n      -webkit-transform: translateZ(0);\n    }\n    #legend-3d8bf .legend-shape-hexagon {\n      display: block;\n    }\n    #legend-3d8bf .legend-shape-custom {\n      display: block;\n    }\n    #legend-3d8bf .legend-text {\n      flex-grow: 1;\n      text-overflow: ellipsis;\n      overflow: hidden;\n    }\n  \n#legend-3d8bf {\n  background-color: rgba(255, 255, 255, 0.92) !important;\n  border: 0px solid gray !important;\n  border-radius: 6px !important;\n}\n#legend-3d8bf h2 {\n  color: #111827 !important;\n  font-size: 12px !important;\n}\n#legend-3d8bf .legend-text {\n  color: #1f2933 !important;\n  font-size: 12px !important;\n}\n#legend-3d8bf .legend-labels span {\n  color: #1f2933 !important;\n  font-size: 12px !important;\n}\n#legend-3d8bf .mapgl-legend-collapse-btn {\n  color: #1f2933 !important;\n}\n","legend_interactivity":[{"legendId":"legend-3d8bf","layerId":"job-dots","type":"categorical","values":["Mining, oil and gas","Construction","Manufacturing","Health care"],"colors":["#b15928","#f2b134","#c2185b","#2e7d32"],"filterColumn":"naics","filterValues":["CNS02","CNS04","CNS05","CNS16"],"breaks":null,"onlyButton":true}],"navigation_control":{"show_compass":true,"show_zoom":true,"visualize_pitch":false,"position":"top-right","orientation":"vertical"}},"evals":[],"jsHooks":[]}</script>
+</body>
+</html>

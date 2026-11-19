@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<style>body{background-color:white;}</style>
+
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>What the map challenge added to mapgl · #30DayMapChallenge Day 27</title>
+  <style>*{box-sizing:border-box}html,body{margin:0;overflow-x:hidden;background:#f5f6f8;color:#1f2933;font-family:Arial,Helvetica,sans-serif}
+main{max-width:1560px;margin:0 auto;padding:18px 22px 40px}
+h1{margin:0;font-size:30px;letter-spacing:-.5px;color:#111827}
+.lede{margin:6px 0 0;font-size:15px;line-height:1.4;max-width:980px}.tag{margin:4px 0 14px;font-size:13px;color:#52606d}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{min-width:0;background:#fff;border:1px solid #dde1e6;border-radius:8px;padding:11px 12px 9px;display:flex;flex-direction:column}
+.card h2{margin:0;font-size:16px;color:#111827}.what{margin:4px 0 6px;font-size:13px;line-height:1.35;min-height:35px}
+.meta{margin:0 0 8px;font-size:12px;line-height:1.9;display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px;color:#52606d}
+code{font-family:Menlo,Consolas,monospace;font-size:12px;background:#eef1f4;color:#102a43;border-radius:4px;padding:2px 5px;white-space:nowrap}
+.meta code{white-space:normal;overflow-wrap:anywhere}
+a{color:#102a43;text-underline-offset:2px}
+iframe{width:100%;height:210px;border:0;border-radius:6px;background:#e9ecef;display:block}
+.try{margin:6px 0 0;font-size:12px;color:#52606d}
+h3{margin:26px 0 6px;font-size:18px;color:#111827}
+.more{margin:0;padding-left:18px;font-size:14px;line-height:1.5;max-width:1100px}.more li{margin:0 0 9px}.more .from{margin:0 8px;font-size:12px;color:#52606d}
+.note{font-size:13px;line-height:1.5;color:#3e4c59;max-width:1100px}.note p{margin:0 0 8px}
+@media(max-width:1100px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){main{padding:12px 12px 30px}h1{font-size:22px}.lede{font-size:14px}.grid{grid-template-columns:minmax(0,1fr)}iframe{height:300px}.what{min-height:0}code{white-space:normal;overflow-wrap:anywhere}}</style>
+</head>
+<body>
+<main>
+  <h1>What the map challenge added to mapgl</h1>
+  <p class="lede"><a href="https://walker-data.com/mapgl/" target="_blank" rel="noopener">mapgl</a> is the R package this month's maps are built with. When a map needed something the package could not do, the package was changed instead of the map. Fifteen changes landed during the challenge. Thirteen grew out of work on the daily maps. All 15 are in mapgl's development version. Each map below is live.
+  </p>
+  <p class="tag">#30DayMapChallenge Day 27: New tool</p>
+  <div class="grid">
+    <article class="card">
+      <h2>Donut clusters sized by what they add up to</h2>
+      <p class="what">A cluster's size follows the total it holds, here megawatts, not the number of points inside it.</p>
+      <p class="meta">
+        <code>cluster_options(donut_weight = "mw")</code>
+        <span class="from">
+          From <a href="https://walker-data.com/map-challenge-2026/maps/day04/" target="_blank" rel="noopener">Day 4: Clusters</a></span>
+      </p>
+      <iframe src="cards/donut-clusters.html" title="Live map: Donut clusters sized by what they add up to" loading="lazy"></iframe>
+      <p class="try">Zoom in and the rings split into plants.</p>
+    </article>
+    <article class="card">
+      <h2>3D models at points</h2>
+      <p class="what">Draw a 3D model at every point, sized from the data. Each turbine here is scaled to its own hub height and rotor.</p>
+      <p class="meta">
+        <code>add_model() · add_model_layer()</code>
+        <span class="from">
+          From <a href="https://walker-data.com/map-challenge-2026/maps/day05/" target="_blank" rel="noopener">Day 5: Sight</a></span>
+      </p>
+      <iframe src="cards/model-layer.html" title="Live map: 3D models at points" loading="lazy"></iframe>
+      <p class="try">Zoom and turn the view to walk through the wind farm.</p>
+    </article>
+    <article class="card">
+      <h2>A different shape for each legend row</h2>
+      <p class="what">One legend can mix shapes. The first patch here is a real 10-minute drive area, the second a circle.</p>
+      <p class="meta">
+        <code>patch_shape = list(drive_area, "circle")</code>
+        <span class="from">
+          From <a href="https://walker-data.com/map-challenge-2026/maps/day07/" target="_blank" rel="noopener">Day 7: 10 minute map</a></span>
+      </p>
+      <iframe src="cards/legend-shapes.html" title="Live map: A different shape for each legend row" loading="lazy"></iframe>
+      <p class="try">Look at the legend.</p>
+    </article>
+    <article class="card">
+      <h2>Hold a legend row to show it alone</h2>
+      <p class="what">Press and hold a row to show that category alone, and hold it again to bring the rest back. A click still hides one row.</p>
+      <p class="meta">
+        <code>add_legend(interactive = TRUE, layer_id = "job-dots", only_button = TRUE)</code>
+        <span class="from">
+          From <a href="https://walker-data.com/map-challenge-2026/maps/day09/" target="_blank" rel="noopener">Day 9: Urban-rural</a></span>
+      </p>
+      <iframe src="cards/legend-isolate.html" title="Live map: Hold a legend row to show it alone" loading="lazy"></iframe>
+      <p class="try">Hold "Construction", or use the "only" button beside a row.</p>
+    </article>
+    <article class="card">
+      <h2>Tooltips that leave on their own</h2>
+      <p class="what">A tooltip can clear itself after a set time, which also removes one left behind by a tap on a phone.</p>
+      <p class="meta">
+        <code>tooltip_style(hide_after = 3)</code>
+        <span class="from">
+          Asked for in <a href="https://github.com/walkerke/mapgl/issues/194" target="_blank" rel="noopener">mapgl issue 194</a></span>
+      </p>
+      <iframe src="cards/timed-tooltip.html" title="Live map: Tooltips that leave on their own" loading="lazy"></iframe>
+      <p class="try">Rest on a well and hold still for three seconds.</p>
+    </article>
+    <article class="card">
+      <h2>Flow map arrows can show any column</h2>
+      <p class="what">An arrow's tooltip can use extra columns of the data. The last line here is one of them.</p>
+      <p class="meta">
+        <code>add_flowmap(tooltip = list(flow = ...))</code>
+        <span class="from">
+          From <a href="https://walker-data.com/map-challenge-2026/maps/day24/" target="_blank" rel="noopener">Day 24: Network</a></span>
+      </p>
+      <iframe src="cards/flow-tooltips.html" title="Live map: Flow map arrows can show any column" loading="lazy"></iframe>
+      <p class="try">Hover an arrow. Zoom in and the labels appear.</p>
+    </article>
+  </div>
+  <h3>Also changed</h3>
+  <ul class="more">
+    <li>
+      <b>Tile files by relative path on Mapbox maps.</b>
+       
+      A PMTiles file that sits beside the page loads on Mapbox maps, and compare maps keep their extra source options.
+       
+      <code>map |&gt; add_pmtiles_source("wells", url = "tiles/data.pmtiles")</code>
+      <span class="from">
+        From <a href="https://walker-data.com/map-challenge-2026/maps/day06/" target="_blank" rel="noopener">Day 6: Vintage</a></span>
+    </li>
+    <li>
+      <b>Smaller saved maps.</b>
+       
+      A saved map carries only the libraries it uses. The saved maps for Days 6 to 8 each shed about 10 MB.
+       
+      <code>save_html()</code>
+      <span class="from">Landed November 8</span>
+    </li>
+    <li>
+      <b>Legends that leave the logo alone.</b>
+       
+      Legends in the bottom corners sit above the map's logo and credit line instead of covering them.
+       
+      <code>position = "bottom-left"</code>
+      <span class="from">
+        From <a href="https://walker-data.com/map-challenge-2026/maps/day07/" target="_blank" rel="noopener">Day 7: 10 minute map</a> and <a href="https://walker-data.com/map-challenge-2026/maps/day08/" target="_blank" rel="noopener">Day 8: Utopia</a></span>
+    </li>
+    <li>
+      <b>Hollow legend shapes.</b>
+       
+      A custom legend shape can be an outline, such as a ring.
+       
+      <code>patch_shape = "&lt;circle ... fill='none' /&gt;"</code>
+      <span class="from">
+        From <a href="https://walker-data.com/map-challenge-2026/maps/day08/" target="_blank" rel="noopener">Day 8: Utopia</a></span>
+    </li>
+    <li>
+      <b>Terrain on saved maps.</b>
+       
+      Terrain added without a stated maximum zoom now carries its elevation on saved maps.
+       
+      <code>add_raster_dem_source()</code>
+      <span class="from">
+        From <a href="https://walker-data.com/map-challenge-2026/maps/day05/" target="_blank" rel="noopener">Day 5: Sight</a></span>
+    </li>
+    <li>
+      <b>GeoJSON files by relative path.</b>
+       
+      A GeoJSON file that sits beside the page can be a source, so large data no longer has to be written into the page.
+       
+      <code>map |&gt; add_source("lines", data = "data/lines.geojson")</code>
+      <span class="from">
+        From <a href="https://walker-data.com/map-challenge-2026/maps/day07/" target="_blank" rel="noopener">Day 7: 10 minute map</a></span>
+    </li>
+    <li>
+      <b>Every model drawn.</b>
+       
+      Mapbox thins 3D models where they crowd. This turns off density-based thinning.
+       
+      <code>model_allow_density_reduction = FALSE</code>
+      <span class="from">
+        From <a href="https://walker-data.com/map-challenge-2026/maps/day14/" target="_blank" rel="noopener">Day 14: Borgesian map</a></span>
+    </li>
+    <li>
+      <b>Legend rows that stay put.</b>
+       
+      In a legend at the bottom of the map, the rows no longer shift when the "Reset Filter" button appears.
+       
+      <code>add_legend(interactive = TRUE)</code>
+      <span class="from">
+        From <a href="https://walker-data.com/map-challenge-2026/maps/day18/" target="_blank" rel="noopener">Day 18: NULL</a></span>
+    </li>
+    <li>
+      <b>Flow map labels that wait for a zoom.</b>
+       
+      Place labels on a flow map can stay hidden until the map is zoomed in far enough to read them.
+       
+      <code>flow_location_labels_min_zoom = 4</code>
+      <span class="from">
+        From <a href="https://walker-data.com/map-challenge-2026/maps/day24/" target="_blank" rel="noopener">Day 24: Network</a></span>
+    </li>
+  </ul>
+  <h3>About this page</h3>
+  <div class="note">
+    <p>
+      "In the development version" means the change is merged into mapgl on <a href="https://github.com/walkerke/mapgl" target="_blank" rel="noopener">GitHub</a>. None of these changes is in the CRAN release yet.
+    </p>
+    <p>Mapbox GL JS, the library under mapgl's Mapbox maps, was also updated to v3.34.2 during the month.</p>
+    <p>The maps use small pieces of public data from the days named: power plants from the U.S. Energy Information Administration (Form 860M); turbines from the U.S. Wind Turbine Database; fast chargers from the Alternative Fuels Data Center; jobs from the Census Bureau's LODES data; orphan wells from the Railroad Commission of Texas; interchange between grid operators from the Energy Information Administration (Form 930).</p>
+    <p>To move a map, drag it. To zoom, use its buttons, pinch, or hold Ctrl (Command on a Mac) while scrolling.</p>
+  </div>
+</main>
+</body>
+</html>
