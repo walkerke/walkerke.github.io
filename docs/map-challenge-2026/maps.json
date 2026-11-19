@@ -435,15 +435,17 @@
     "day": 28,
     "theme": "Feeling",
     "date": "2026-11-28",
-    "title": null,
-    "blurb": null,
-    "alt": null,
-    "tags": [],
-    "image": null,
-    "thumb": null,
-    "live": null,
+    "title": "Energy bills as a share of household income",
+    "blurb": "For the Feeling prompt: how much of a household’s income goes to electricity, gas and other home fuels, from the U.S. Department of Energy’s LEAD Tool estimates. Across the United States and Puerto Rico it is 2.3%. For households below the federal poverty line, their estimated average energy cost comes to 19.6% of their average income. Counties are shown when zoomed out and census tracts when zoomed in, and a search box finds an address.",
+    "alt": "A light map of the contiguous United States with counties shaded from pale yellow to dark brown by the share of household income spent on energy. Darker counties stretch across the northern Plains from Montana through the Dakotas and Nebraska, through Appalachia and the inland South, and into Maine, with paler counties along the West Coast and around large cities. A legend runs from under 1.5% to 6% or more, with gray for no estimate shown, and a search box sits in the top right corner.",
+    "tags": [
+      "Infra"
+    ],
+    "image": "map-challenge-2026/img/day28.jpg",
+    "thumb": "map-challenge-2026/img/day28-thumb.jpg",
+    "live": "map-challenge-2026/maps/day28/",
     "post": null,
-    "status": "upcoming"
+    "status": "published"
   },
   {
     "day": 29,
