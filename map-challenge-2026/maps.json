@@ -310,7 +310,7 @@
     "date": "2026-11-20",
     "title": "Well density in state oil and gas records",
     "blurb": "For the Hexagons prompt: more than four million wells and wellbores in the records of 32 state oil and gas agencies, counted in hexagons by how closely they are spaced. Producing, idle, plugged and dry holes are counted alike, and repeat records of the same well are grouped. Zoom in and the hexagons get smaller. State records also hold a small number of other wells, such as water and geothermal wells.",
-    "alt": "A dark map of the contiguous United States tiled with hexagons shaded from dark purple to pale yellow by wells per square mile. The densest hexagons, in orange and yellow, run through the Appalachian Basin from western New York into West Virginia, across Ohio and Michigan, through Oklahoma and Kansas, the Permian Basin and East Texas, along the Gulf Coast and in California’s San Joaquin Valley. A legend runs from fewer than 0.1 to 100 or more wells per square mile.",
+    "alt": "A dark map of the contiguous United States tiled with hexagons shaded from dark purple to pale yellow by wells per square mile. The densest hexagons, in orange, run through the Appalachian Basin from western New York into West Virginia, across Ohio and Michigan, through Oklahoma and Kansas, the Permian Basin and East Texas, along the Gulf Coast and in California’s San Joaquin Valley. A legend runs from fewer than 0.1 to 100 or more wells per square mile; the pale yellow for 100 or more appears only when zoomed in.",
     "tags": [
       "O&G"
     ],
