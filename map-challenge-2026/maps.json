@@ -291,7 +291,7 @@
     "day": 19,
     "theme": "Smell",
     "date": "2026-11-19",
-    "title": "Sour gas in Texas",
+    "title": "Hydrogen sulfide in Texas oil and gas wells",
     "blurb": "For the Smell prompt: hydrogen sulfide, the gas known for its rotten-egg odor at low concentrations. Each dot is one of 153,770 wells on a lease with a hydrogen sulfide certificate on file with the Railroad Commission of Texas, colored by the concentration reported on the certificate, from 0 ppm recorded to more than 10%. The values are what the certificates report for the lease, not measurements of the air.",
     "alt": "A dark map of Texas with wells drawn as small dots in purple, teal, green and yellow. They cover the Permian Basin in West Texas, much of it green and yellow, a band across South Texas from the Rio Grande toward Victoria, the eastern Panhandle, and scattered patches in East Texas. A legend gives the colors as the hydrogen sulfide concentration reported on the lease’s certificate, from 0 ppm recorded (6,016 wells) to more than 10% (4,732 wells).",
     "tags": [
