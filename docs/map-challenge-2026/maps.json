@@ -371,7 +371,7 @@
     "day": 24,
     "theme": "Network",
     "date": "2026-11-24",
-    "title": "Electricity moving between grid operators",
+    "title": "Electricity exchanges between grid operators",
     "blurb": "Electricity in the Lower 48 is managed by balancing authorities, each matching supply and demand in its own area. Each arrow is the net interchange reported between two neighboring authorities in September 2026, from the Energy Information Administration’s hourly Form EIA-930 reports, and points to the one that received more. Hover an arrow for how often it ran that way and what each side reported.",
     "alt": "A dark map of the United States with circles for the 60 U.S. balancing authorities and their Canadian and Mexican neighbors, placed near the middle of the areas they serve and joined by arrows shaded from dark teal to pale yellow. The widest, lightest arrows run from PJM toward MISO and New York, from MISO toward TVA, from Manitoba into MISO, and among the authorities of the Pacific Northwest, California and Arizona. A key reads net interchange reported, September 2026, with the largest at 3,163 GWh.",
     "tags": [
