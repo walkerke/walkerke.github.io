@@ -358,7 +358,7 @@
     "theme": "Taste",
     "date": "2026-11-23",
     "title": "Corn into fuel",
-    "blurb": "For the Taste prompt. The United States had 189 fuel ethanol plants at the start of 2026, with the capacity to make 18.4 billion gallons a year, from the Energy Information Administration. 175 of them are in the Midwest. Gold shows the share of land mapped as corn in 2025 in the USDA’s Cropland Data Layer, a year when farmers planted 98.7 million acres of it.",
+    "blurb": "For the Taste prompt. The United States had 189 fuel ethanol plants at the start of 2026, with the capacity to make 18.4 billion gallons a year, from the Energy Information Administration. 175 of them were in EIA\u2019s Midwest region. Gold shows the share of land mapped as corn in 2025 in the USDA’s Cropland Data Layer, a year when farmers planted 98.7 million acres of it.",
     "alt": "A light map of the contiguous United States with a broad gold band across the Corn Belt, from the Dakotas and Nebraska through Iowa, Minnesota, Illinois and Indiana into Ohio. Green dots mark ethanol plants, sized by capacity, packed into the same band and thinning out beyond it, with a few in Texas, California and the Southeast. Legends give the corn share from 3% to 60% or more and plant capacities of 50, 150 and 400 million gallons a year.",
     "tags": [
       "Infra"
